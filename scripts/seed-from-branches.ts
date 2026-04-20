@@ -9,6 +9,8 @@ import {
   branchTranslation,
   eventOffering,
   eventOfferingTranslation,
+  footerLink,
+  legalPage,
   menuCategory,
   menuCategoryTranslation,
   menuItem,
@@ -246,6 +248,86 @@ async function seedBranch(b: (typeof branches)[number], now: Date) {
   return rowsInserted
 }
 
+const LEGAL_PAGE_SLUGS = ["terms", "privacy", "accessibility"] as const
+
+const LEGAL_LINK_LABELS: Record<
+  (typeof LEGAL_PAGE_SLUGS)[number],
+  Record<(typeof routing.locales)[number], string>
+> = {
+  terms: {
+    en: "Terms of service",
+    ru: "Условия использования",
+    he: "תנאי שימוש",
+    ar: "شروط الخدمة",
+  },
+  privacy: {
+    en: "Privacy policy",
+    ru: "Политика конфиденциальности",
+    he: "מדיניות פרטיות",
+    ar: "سياسة الخصوصية",
+  },
+  accessibility: {
+    en: "Accessibility",
+    ru: "Доступность",
+    he: "נגישות",
+    ar: "إمكانية الوصول",
+  },
+}
+
+async function seedFooterAndLegal(): Promise<number> {
+  let inserted = 0
+
+  const existingLegal = await db
+    .select({ slug: legalPage.slug })
+    .from(legalPage)
+  const existingLegalSlugs = new Set(existingLegal.map((r) => r.slug))
+  for (const slug of LEGAL_PAGE_SLUGS) {
+    if (existingLegalSlugs.has(slug)) continue
+    await db.insert(legalPage).values({
+      slug,
+      titleHe: null,
+      titleEn: null,
+      titleRu: null,
+      titleAr: null,
+      bodyMarkdownHe: null,
+      bodyMarkdownEn: null,
+      bodyMarkdownRu: null,
+      bodyMarkdownAr: null,
+      published: false,
+      sortOrder: LEGAL_PAGE_SLUGS.indexOf(slug),
+    })
+    inserted++
+    console.log(`[seed] legal_page "${slug}": inserted (unpublished)`)
+  }
+
+  const existingLinkCount = await db
+    .select({ id: footerLink.id })
+    .from(footerLink)
+  if (existingLinkCount.length === 0) {
+    for (const locale of routing.locales) {
+      for (let i = 0; i < LEGAL_PAGE_SLUGS.length; i++) {
+        const slug = LEGAL_PAGE_SLUGS[i]!
+        await db.insert(footerLink).values({
+          id: crypto.randomUUID(),
+          locale,
+          groupKey: "legal",
+          label: LEGAL_LINK_LABELS[slug][locale],
+          href: `/legal/${slug}`,
+          sortOrder: i,
+        })
+        inserted++
+      }
+    }
+    console.log(
+      `[seed] footer_link: inserted ${inserted - LEGAL_PAGE_SLUGS.length} rows`
+    )
+  } else {
+    console.log(`[seed] footer_link: skipping, already populated`)
+  }
+
+  return inserted
+}
+
 async function main() {
   if (!process.env.DATABASE_URL) {
     console.error("[seed] DATABASE_URL is required")
@@ -285,6 +367,9 @@ async function main() {
       `[seed]   TODO(sub-project G): google rating/count/reviews skipped`
     )
   }
+
+  const footerRows = await seedFooterAndLegal()
+  totalRows += footerRows
 
   console.log(
     `[seed] done — ${insertedBranches} branch(es) inserted, ${totalRows} rows total`

@@ -226,6 +226,32 @@ export async function reorderBranchesAction(
   return toFormState(result)
 }
 
+export async function updateBranchContactAction(
+  _prev: FormState,
+  formData: FormData
+): Promise<FormState<{ id: string; slug: string }>> {
+  try {
+    await requireAdmin()
+  } catch (error) {
+    if (error instanceof ForbiddenError) return forbiddenState()
+    throw error
+  }
+
+  const id = readString(formData, "id")
+  if (!id) {
+    return { status: "error", fieldErrors: { id: ["missing branch id"] } }
+  }
+
+  const result = await services.branches.update({
+    id,
+    phone: readString(formData, "phone"),
+    whatsapp: readString(formData, "whatsapp"),
+    email: readString(formData, "email"),
+    mapUrl: readString(formData, "mapUrl"),
+  })
+  return toFormState(result)
+}
+
 export async function deleteBranchAction(
   formData: FormData
 ): Promise<FormState<{ id: string }>> {

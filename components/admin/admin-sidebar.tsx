@@ -5,7 +5,9 @@ import { useTranslations } from "next-intl"
 import {
   IconBuildingStore,
   IconChevronUp,
+  IconLayoutBottombar,
   IconLogout,
+  IconPhone,
   IconPhoto,
 } from "@tabler/icons-react"
 
@@ -44,7 +46,7 @@ type AdminSidebarProps = {
 
 type NavItem = {
   href: string
-  labelKey: "branches" | "media"
+  labelKey: "branches" | "media" | "contact" | "footer"
   icon: React.ComponentType<{ className?: string }>
   match: (pathname: string) => boolean
 }
@@ -57,10 +59,22 @@ const NAV_ITEMS: NavItem[] = [
     match: (p) => /\/admin\/branches(\/|$)/.test(p),
   },
   {
+    href: "/admin/contact",
+    labelKey: "contact",
+    icon: IconPhone,
+    match: (p) => /\/admin\/contact(\/|$)/.test(p),
+  },
+  {
     href: "/admin/media",
     labelKey: "media",
     icon: IconPhoto,
     match: (p) => /\/admin\/media(\/|$)/.test(p),
+  },
+  {
+    href: "/admin/footer",
+    labelKey: "footer",
+    icon: IconLayoutBottombar,
+    match: (p) => /\/admin\/footer(\/|$)/.test(p),
   },
 ]
 

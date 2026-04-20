@@ -1,6 +1,8 @@
 export * as branches from "./branches"
 export * as events from "./events"
+export * as footer from "./footer"
 export * as hours from "./hours"
+export * as legal from "./legal"
 export * as media from "./media"
 export * as menu from "./menu"
 export * as packages from "./packages"
