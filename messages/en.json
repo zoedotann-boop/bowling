@@ -141,6 +141,16 @@
       "delete": "Delete",
       "save": "Save"
     },
+    "translate": {
+      "fillAll": "Fill translations",
+      "fillField": "Translate from Hebrew",
+      "translating": "Translating…",
+      "rateLimit": "Translation limit reached. Try again in an hour.",
+      "tooManyFields": "Too many fields to translate at once.",
+      "gatewayError": "Translation service unavailable. Try again.",
+      "needSource": "Fill at least one Hebrew field first.",
+      "emptySource": "Write Hebrew content first."
+    },
     "toasts": {
       "branchCreated": "Branch created",
       "branchSaved": "Branch saved",
@@ -208,7 +218,6 @@
         "googlePlaceIdHint": "Sub-project G will wire the Places API",
         "create": "Create branch",
         "save": "Save changes",
-        "aiComingSoon": "AI translation coming soon",
         "needsReview": "Needs review",
         "dangerZone": "Danger zone",
         "dangerZoneDescription": "Deleting a branch removes all related content. This cannot be undone.",

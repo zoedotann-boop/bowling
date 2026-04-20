@@ -75,6 +75,7 @@ export default async function EditBranchPage({
     }
   }
   const needsReview: string[] = []
+  const aiGeneratedLocales: Locale[] = []
   for (const tr of translationRows) {
     const loc = tr.locale as Locale
     if (!routing.locales.includes(loc)) continue
@@ -89,6 +90,7 @@ export default async function EditBranchPage({
       seoDescription: tr.seoDescription,
     }
     if (tr.aiGenerated && !tr.reviewedAt) {
+      aiGeneratedLocales.push(loc)
       for (const field of TRANSLATION_FIELDS) {
         if (tr[field] !== null && tr[field] !== undefined) {
           needsReview.push(`${field}.${loc}`)
@@ -113,6 +115,7 @@ export default async function EditBranchPage({
     sortOrder: row.sortOrder,
     translations,
     needsReview,
+    aiGeneratedLocales,
   }
 
   const displayName = translations[locale as Locale]?.displayName ?? row.slug
