@@ -160,6 +160,18 @@
       "packageCreated": "חבילה נוצרה",
       "packageSaved": "חבילה נשמרה",
       "packageDeleted": "חבילה נמחקה",
+      "priceCreated": "שורת מחיר נוצרה",
+      "priceSaved": "שורת מחיר נשמרה",
+      "priceDeleted": "שורת מחיר נמחקה",
+      "eventCreated": "אירוע נוצר",
+      "eventSaved": "אירוע נשמר",
+      "eventDeleted": "אירוע נמחק",
+      "categoryCreated": "קטגוריה נוצרה",
+      "categorySaved": "קטגוריה נשמרה",
+      "categoryDeleted": "קטגוריה נמחקה",
+      "itemCreated": "פריט נוצר",
+      "itemSaved": "פריט נשמר",
+      "itemDeleted": "פריט נמחק",
       "genericError": "משהו השתבש"
     },
     "packages": {
@@ -172,6 +184,53 @@
       "reorder": "גרור כדי לשנות סדר",
       "confirmDeleteTitle": "למחוק את החבילה?",
       "confirmDeleteDescription": "החבילה תוסר מכל הסניפים שמשתמשים בה. לא ניתן לבטל."
+    },
+    "prices": {
+      "title": "מחירים",
+      "add": "שורת מחיר חדשה",
+      "empty": "אין עדיין שורות מחיר.",
+      "kind": "סוג",
+      "weekday": "ימי חול (אגורות)",
+      "weekend": "סופ״ש (אגורות)",
+      "label": "תווית",
+      "reorder": "גרור כדי לשנות סדר",
+      "kinds": {
+        "hourly": "מסלול לפי שעה",
+        "adult": "מבוגר",
+        "child": "ילד",
+        "shoe": "השכרת נעליים"
+      },
+      "confirmDeleteTitle": "למחוק את שורת המחיר?",
+      "confirmDeleteDescription": "לא ניתן לבטל."
+    },
+    "events": {
+      "title": "אירועים",
+      "add": "אירוע חדש",
+      "empty": "אין עדיין אירועים.",
+      "image": "תמונה",
+      "titleLabel": "כותרת האירוע",
+      "description": "תיאור",
+      "reorder": "גרור כדי לשנות סדר",
+      "confirmDeleteTitle": "למחוק את האירוע?",
+      "confirmDeleteDescription": "לא ניתן לבטל."
+    },
+    "menu": {
+      "title": "תפריט",
+      "addCategory": "קטגוריה חדשה",
+      "addItem": "פריט חדש",
+      "empty": "אין עדיין קטגוריות.",
+      "categoryTitle": "שם קטגוריה",
+      "itemsTitle": "פריטים",
+      "itemsEmpty": "אין פריטים בקטגוריה.",
+      "amount": "מחיר (אגורות)",
+      "itemName": "שם פריט",
+      "itemTag": "תווית",
+      "reorderCategory": "גרור כדי לשנות סדר קטגוריה",
+      "reorderItem": "גרור כדי לשנות סדר פריט",
+      "confirmDeleteCategoryTitle": "למחוק את הקטגוריה?",
+      "confirmDeleteCategoryDescription": "כל הפריטים בקטגוריה יימחקו. לא ניתן לבטל.",
+      "confirmDeleteItemTitle": "למחוק את הפריט?",
+      "confirmDeleteItemDescription": "לא ניתן לבטל."
     },
     "media": {
       "title": "מדיה",

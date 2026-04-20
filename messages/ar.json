@@ -160,6 +160,18 @@
       "packageCreated": "Package created",
       "packageSaved": "Package saved",
       "packageDeleted": "Package deleted",
+      "priceCreated": "Price row created",
+      "priceSaved": "Price row saved",
+      "priceDeleted": "Price row deleted",
+      "eventCreated": "Event created",
+      "eventSaved": "Event saved",
+      "eventDeleted": "Event deleted",
+      "categoryCreated": "Category created",
+      "categorySaved": "Category saved",
+      "categoryDeleted": "Category deleted",
+      "itemCreated": "Item created",
+      "itemSaved": "Item saved",
+      "itemDeleted": "Item deleted",
       "genericError": "Something went wrong"
     },
     "packages": {
@@ -172,6 +184,53 @@
       "reorder": "Drag to reorder",
       "confirmDeleteTitle": "Delete package?",
       "confirmDeleteDescription": "This removes the package. Cannot be undone."
+    },
+    "prices": {
+      "title": "Prices",
+      "add": "New price row",
+      "empty": "No price rows yet.",
+      "kind": "Kind",
+      "weekday": "Weekday (cents)",
+      "weekend": "Weekend (cents)",
+      "label": "Label",
+      "reorder": "Drag to reorder",
+      "kinds": {
+        "hourly": "Hourly lane",
+        "adult": "Adult",
+        "child": "Child",
+        "shoe": "Shoe rental"
+      },
+      "confirmDeleteTitle": "Delete price row?",
+      "confirmDeleteDescription": "This removes the row. Cannot be undone."
+    },
+    "events": {
+      "title": "Events",
+      "add": "New event",
+      "empty": "No events yet.",
+      "image": "Image",
+      "titleLabel": "Event title",
+      "description": "Description",
+      "reorder": "Drag to reorder",
+      "confirmDeleteTitle": "Delete event?",
+      "confirmDeleteDescription": "This removes the event. Cannot be undone."
+    },
+    "menu": {
+      "title": "Menu",
+      "addCategory": "New category",
+      "addItem": "New item",
+      "empty": "No menu categories yet.",
+      "categoryTitle": "Category title",
+      "itemsTitle": "Items",
+      "itemsEmpty": "No items in this category yet.",
+      "amount": "Price (cents)",
+      "itemName": "Item name",
+      "itemTag": "Tag",
+      "reorderCategory": "Drag to reorder category",
+      "reorderItem": "Drag to reorder item",
+      "confirmDeleteCategoryTitle": "Delete category?",
+      "confirmDeleteCategoryDescription": "This removes the category and all its items. Cannot be undone.",
+      "confirmDeleteItemTitle": "Delete item?",
+      "confirmDeleteItemDescription": "This removes the item. Cannot be undone."
     },
     "media": {
       "title": "Media",
