@@ -72,8 +72,8 @@
   },
   "knip": {
     "ignore": [
-      "lib/services/events.ts",
       "lib/services/format.ts",
+      "lib/services/events.ts",
       "lib/services/menu.ts",
       "lib/services/packages.ts",
       "lib/services/prices.ts"
