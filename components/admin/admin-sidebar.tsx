@@ -11,6 +11,7 @@ import {
 
 import { Link, usePathname, useRouter } from "@/i18n/navigation"
 import { authClient } from "@/lib/auth-client"
+import { BowlingLogo } from "@/components/brand/bowling-logo"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -71,17 +72,21 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <div className="flex h-10 items-center gap-2 px-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
-          <div
+        <Link
+          href="/admin"
+          aria-label={t("brand")}
+          className="flex h-14 items-center px-2 py-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0"
+        >
+          <span className="group-data-[collapsible=icon]:hidden">
+            <BowlingLogo city={t("brand")} size="xs" />
+          </span>
+          <span
             aria-hidden
-            className="grid size-6 shrink-0 place-items-center bg-ink text-[10px] font-semibold text-surface"
+            className="hidden size-7 shrink-0 -rotate-2 place-items-center rounded-md bg-ticket-red font-display text-sm leading-none text-paper group-data-[collapsible=icon]:grid"
           >
             B
-          </div>
-          <span className="truncate text-sm font-semibold tracking-tight text-ink group-data-[collapsible=icon]:hidden">
-            {t("brand")}
           </span>
-        </div>
+        </Link>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
