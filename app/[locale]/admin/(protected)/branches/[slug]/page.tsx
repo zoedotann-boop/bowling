@@ -1,12 +1,17 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { getTranslations } from "next-intl/server"
-import { eq } from "drizzle-orm"
+import { asc, eq, inArray } from "drizzle-orm"
 
 import { Link } from "@/i18n/navigation"
 import { routing, type Locale } from "@/i18n/routing"
 import { db } from "@/lib/db"
-import { branch, branchTranslation } from "@/lib/db/schema/content"
+import {
+  branch,
+  branchTranslation,
+  offeringPackage,
+  offeringPackageTranslation,
+} from "@/lib/db/schema/content"
 import { mediaAsset } from "@/lib/db/schema/media"
 import * as services from "@/lib/services"
 import {
@@ -14,6 +19,10 @@ import {
   type BranchFormInitial,
 } from "@/components/admin/branch-form"
 import { BranchHoursForm } from "@/components/admin/branch-hours-form"
+import {
+  BranchPackagesForm,
+  type PackageFormRow,
+} from "@/components/admin/branch-packages-form"
 
 export const metadata: Metadata = {
   title: "Admin · Edit branch",
@@ -60,6 +69,53 @@ export default async function EditBranchPage({
     .where(eq(branchTranslation.branchId, row.id))
 
   const hoursInitial = await services.hours.listByBranch(slug)
+
+  const packageRows = await db
+    .select()
+    .from(offeringPackage)
+    .where(eq(offeringPackage.branchId, row.id))
+    .orderBy(asc(offeringPackage.sortOrder))
+  const packageTranslationRows = packageRows.length
+    ? await db
+        .select()
+        .from(offeringPackageTranslation)
+        .where(
+          inArray(
+            offeringPackageTranslation.packageId,
+            packageRows.map((p) => p.id)
+          )
+        )
+    : []
+  const packageInitial: PackageFormRow[] = packageRows.map((pkg) => {
+    const perLocale = {} as PackageFormRow["translations"]
+    for (const loc of routing.locales) {
+      perLocale[loc] = { title: null, perks: null }
+    }
+    const pkgNeedsReview: string[] = []
+    const pkgAiLocales: Locale[] = []
+    for (const tr of packageTranslationRows) {
+      if (tr.packageId !== pkg.id) continue
+      const loc = tr.locale as Locale
+      if (!routing.locales.includes(loc)) continue
+      perLocale[loc] = { title: tr.title, perks: tr.perks }
+      if (tr.aiGenerated && !tr.reviewedAt) {
+        pkgAiLocales.push(loc)
+        for (const field of ["title", "perks"] as const) {
+          if (tr[field] !== null && tr[field] !== undefined) {
+            pkgNeedsReview.push(`${field}.${loc}`)
+          }
+        }
+      }
+    }
+    return {
+      id: pkg.id,
+      amountCents: pkg.amountCents,
+      sortOrder: pkg.sortOrder,
+      translations: perLocale,
+      needsReview: pkgNeedsReview,
+      aiGeneratedLocales: pkgAiLocales,
+    }
+  })
 
   let heroImage: BranchFormInitial["heroImage"] = null
   if (row.heroImageId) {
@@ -155,6 +211,13 @@ export default async function EditBranchPage({
           {tTabs("hours")}
         </h2>
         <BranchHoursForm branchId={row.id} initialRows={hoursInitial} />
+      </section>
+      <section className="flex flex-col gap-3 border-t border-line pt-6">
+        <BranchPackagesForm
+          branchId={row.id}
+          slug={row.slug}
+          initialRows={packageInitial}
+        />
       </section>
     </div>
   )

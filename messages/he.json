@@ -162,7 +162,21 @@
       "hoursSaved": "שעות הפעילות נשמרו",
       "mediaUpdated": "הקובץ עודכן",
       "mediaDeleted": "הקובץ נמחק",
+      "packageCreated": "חבילה נוצרה",
+      "packageSaved": "חבילה נשמרה",
+      "packageDeleted": "חבילה נמחקה",
       "genericError": "משהו השתבש"
+    },
+    "packages": {
+      "title": "חבילות",
+      "add": "חבילה חדשה",
+      "empty": "אין עדיין חבילות.",
+      "amount": "מחיר (אגורות)",
+      "titleLabel": "שם החבילה",
+      "perks": "פירוט",
+      "reorder": "גרור כדי לשנות סדר",
+      "confirmDeleteTitle": "למחוק את החבילה?",
+      "confirmDeleteDescription": "החבילה תוסר מכל הסניפים שמשתמשים בה. לא ניתן לבטל."
     },
     "media": {
       "title": "מדיה",

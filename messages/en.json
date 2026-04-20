@@ -162,7 +162,21 @@
       "hoursSaved": "Hours saved",
       "mediaUpdated": "Media updated",
       "mediaDeleted": "Media deleted",
+      "packageCreated": "Package created",
+      "packageSaved": "Package saved",
+      "packageDeleted": "Package deleted",
       "genericError": "Something went wrong"
+    },
+    "packages": {
+      "title": "Packages",
+      "add": "New package",
+      "empty": "No packages yet.",
+      "amount": "Price (cents)",
+      "titleLabel": "Package name",
+      "perks": "Perks",
+      "reorder": "Drag to reorder",
+      "confirmDeleteTitle": "Delete package?",
+      "confirmDeleteDescription": "This removes the package. Cannot be undone."
     },
     "media": {
       "title": "Media",
