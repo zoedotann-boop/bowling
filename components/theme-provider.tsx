@@ -34,6 +34,14 @@ function isTypingTarget(target: EventTarget | null) {
   )
 }
 
+function isTypingContext(event: KeyboardEvent) {
+  return (
+    isTypingTarget(event.target) ||
+    isTypingTarget(event.composedPath?.()[0] ?? null) ||
+    isTypingTarget(document.activeElement)
+  )
+}
+
 function ThemeHotkey() {
   const { resolvedTheme, setTheme } = useTheme()
 
@@ -47,11 +55,11 @@ function ThemeHotkey() {
         return
       }
 
-      if (event.key.toLowerCase() !== "d") {
+      if (event.key !== "d" && event.key !== "D") {
         return
       }
 
-      if (isTypingTarget(event.target)) {
+      if (isTypingContext(event)) {
         return
       }
 
