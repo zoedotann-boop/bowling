@@ -124,5 +124,112 @@
   "WhatsApp": {
     "label": "Чат в WhatsApp",
     "prefilled": "Здравствуйте! Хотел бы забронировать дорожки в {branch}. Поможете?"
+  },
+  "Admin": {
+    "nav": {
+      "brand": "Bowling Admin",
+      "branches": "Branches"
+    },
+    "home": {
+      "eyebrow": "Admin area",
+      "greeting": "Hi, {name}",
+      "branchesTitle": "Branches",
+      "branchesSummary": "{published} published / {total} total"
+    },
+    "common": {
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "save": "Save"
+    },
+    "toasts": {
+      "branchCreated": "Branch created",
+      "branchSaved": "Branch saved",
+      "branchDeleted": "Branch deleted",
+      "branchPublished": "Branch published",
+      "branchUnpublished": "Branch unpublished",
+      "orderSaved": "Order saved",
+      "hoursSaved": "Hours saved",
+      "genericError": "Something went wrong"
+    },
+    "branches": {
+      "list": {
+        "title": "Branches",
+        "newBranch": "New branch",
+        "slug": "Slug",
+        "name": "Name",
+        "actions": "Actions",
+        "edit": "Edit",
+        "delete": "Delete",
+        "dragToReorder": "Drag to reorder",
+        "togglePublished": "Toggle published",
+        "confirmDeleteTitle": "Delete branch?",
+        "confirmDeleteDescription": "This removes the branch and all related content (hours, prices, packages, events, menu). Cannot be undone.",
+        "empty": "No branches yet. Create the first one."
+      },
+      "tabs": {
+        "info": "Info",
+        "hours": "Hours",
+        "hero": "Hero",
+        "seo": "SEO",
+        "prices": "Prices",
+        "packages": "Packages",
+        "menu": "Menu",
+        "events": "Events",
+        "reviews": "Reviews",
+        "soon": "Soon",
+        "comingSoon": "Coming soon"
+      },
+      "form": {
+        "newTitle": "New branch",
+        "editTitle": "Edit {name}",
+        "slug": "Slug",
+        "sortOrder": "Sort order",
+        "phone": "Phone",
+        "whatsapp": "WhatsApp",
+        "email": "Email",
+        "mapUrl": "Map URL",
+        "latitude": "Latitude",
+        "longitude": "Longitude",
+        "brandAccent": "Brand accent",
+        "brandAccentCherry": "Cherry",
+        "brandAccentTeal": "Teal",
+        "published": "Published",
+        "displayName": "Display name",
+        "shortName": "Short name",
+        "address": "Address",
+        "city": "City",
+        "heroImageId": "Hero image ID",
+        "heroImageIdHint": "Media picker lands in sub-project D",
+        "heroHeadline": "Hero headline",
+        "heroTagline": "Hero tagline",
+        "seoTitle": "SEO title",
+        "seoDescription": "SEO description",
+        "googlePlaceId": "Google Place ID",
+        "googlePlaceIdHint": "Sub-project G will wire the Places API",
+        "create": "Create branch",
+        "save": "Save changes",
+        "aiComingSoon": "AI translation coming soon",
+        "needsReview": "Needs review",
+        "dangerZone": "Danger zone",
+        "dangerZoneDescription": "Deleting a branch removes all related content. This cannot be undone.",
+        "confirmDeleteTitle": "Delete branch?",
+        "confirmDeleteDescription": "This removes the branch and all related content. Cannot be undone."
+      },
+      "hours": {
+        "days": {
+          "0": "Sunday",
+          "1": "Monday",
+          "2": "Tuesday",
+          "3": "Wednesday",
+          "4": "Thursday",
+          "5": "Friday",
+          "6": "Saturday"
+        },
+        "closed": "Closed",
+        "openTime": "Open",
+        "closeTime": "Close",
+        "save": "Save hours"
+      }
+    }
   }
 }

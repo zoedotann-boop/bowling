@@ -124,5 +124,112 @@
   "WhatsApp": {
     "label": "צ'אט בוואטסאפ",
     "prefilled": "היי! מתעניין בהזמנת מסלולים ב{branch}. תוכלו לעזור?"
+  },
+  "Admin": {
+    "nav": {
+      "brand": "ניהול באולינג",
+      "branches": "סניפים"
+    },
+    "home": {
+      "eyebrow": "אזור ניהול",
+      "greeting": "שלום, {name}",
+      "branchesTitle": "סניפים",
+      "branchesSummary": "{published} מפורסמים / {total} סך הכול"
+    },
+    "common": {
+      "cancel": "ביטול",
+      "delete": "מחיקה",
+      "save": "שמירה"
+    },
+    "toasts": {
+      "branchCreated": "סניף נוצר",
+      "branchSaved": "סניף נשמר",
+      "branchDeleted": "סניף נמחק",
+      "branchPublished": "הסניף פורסם",
+      "branchUnpublished": "פרסום הסניף בוטל",
+      "orderSaved": "הסדר נשמר",
+      "hoursSaved": "שעות הפעילות נשמרו",
+      "genericError": "משהו השתבש"
+    },
+    "branches": {
+      "list": {
+        "title": "סניפים",
+        "newBranch": "סניף חדש",
+        "slug": "מזהה",
+        "name": "שם",
+        "actions": "פעולות",
+        "edit": "עריכה",
+        "delete": "מחיקה",
+        "dragToReorder": "גרור כדי לשנות סדר",
+        "togglePublished": "פרסום/השהיה",
+        "confirmDeleteTitle": "למחוק את הסניף?",
+        "confirmDeleteDescription": "פעולה זו מוחקת את הסניף ואת כל התוכן המשויך (שעות, מחירים, חבילות, אירועים, תפריט). לא ניתן לבטל.",
+        "empty": "אין סניפים עדיין. צרו את הראשון."
+      },
+      "tabs": {
+        "info": "כללי",
+        "hours": "שעות",
+        "hero": "באנר",
+        "seo": "SEO",
+        "prices": "מחירים",
+        "packages": "חבילות",
+        "menu": "תפריט",
+        "events": "אירועים",
+        "reviews": "ביקורות",
+        "soon": "בקרוב",
+        "comingSoon": "בקרוב"
+      },
+      "form": {
+        "newTitle": "סניף חדש",
+        "editTitle": "עריכת {name}",
+        "slug": "מזהה",
+        "sortOrder": "סדר",
+        "phone": "טלפון",
+        "whatsapp": "וואטסאפ",
+        "email": "אימייל",
+        "mapUrl": "קישור למפה",
+        "latitude": "קו רוחב",
+        "longitude": "קו אורך",
+        "brandAccent": "צבע מותג",
+        "brandAccentCherry": "דובדבן",
+        "brandAccentTeal": "טורקיז",
+        "published": "מפורסם",
+        "displayName": "שם הסניף",
+        "shortName": "שם מקוצר",
+        "address": "כתובת",
+        "city": "עיר",
+        "heroImageId": "מזהה תמונת באנר",
+        "heroImageIdHint": "בחירת מדיה תתווסף בתת-פרויקט D",
+        "heroHeadline": "כותרת הבאנר",
+        "heroTagline": "תקציר הבאנר",
+        "seoTitle": "כותרת SEO",
+        "seoDescription": "תיאור SEO",
+        "googlePlaceId": "מזהה Google Place",
+        "googlePlaceIdHint": "תת-פרויקט G יחבר את Places API",
+        "create": "יצירת סניף",
+        "save": "שמירת שינויים",
+        "aiComingSoon": "תרגום AI בקרוב",
+        "needsReview": "דורש סקירה",
+        "dangerZone": "אזור מסוכן",
+        "dangerZoneDescription": "מחיקת סניף מסירה את כל התוכן המשויך. לא ניתן לבטל.",
+        "confirmDeleteTitle": "למחוק את הסניף?",
+        "confirmDeleteDescription": "פעולה זו מוחקת את הסניף ואת כל התוכן המשויך. לא ניתן לבטל."
+      },
+      "hours": {
+        "days": {
+          "0": "ראשון",
+          "1": "שני",
+          "2": "שלישי",
+          "3": "רביעי",
+          "4": "חמישי",
+          "5": "שישי",
+          "6": "שבת"
+        },
+        "closed": "סגור",
+        "openTime": "פתיחה",
+        "closeTime": "סגירה",
+        "save": "שמירת שעות"
+      }
+    }
   }
 }

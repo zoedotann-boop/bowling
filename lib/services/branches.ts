@@ -127,6 +127,7 @@ function localize(
   }
 }
 
+/** @public Consumed in sub-project H when public site cuts over to services. */
 export async function getBySlug(
   slug: string,
   locale: Locale
