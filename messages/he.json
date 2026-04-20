@@ -129,7 +129,8 @@
     "nav": {
       "brand": "ניהול באולינג",
       "branches": "סניפים",
-      "media": "מדיה"
+      "media": "מדיה",
+      "signOut": "התנתקות"
     },
     "home": {
       "eyebrow": "אזור ניהול",
@@ -180,6 +181,7 @@
     },
     "media": {
       "title": "מדיה",
+      "description": "תמונות וקבצי מדיה המשמשים בכל הסניפים.",
       "upload": "העלאה",
       "uploading": "מעלה…",
       "file": "קובץ",
@@ -209,9 +211,13 @@
     "branches": {
       "list": {
         "title": "סניפים",
+        "description": "ניהול סניפי הבאולינג והסטטוס שלהם.",
         "newBranch": "סניף חדש",
         "slug": "מזהה",
         "name": "שם",
+        "status": "סטטוס",
+        "published": "מפורסם",
+        "draft": "טיוטה",
         "actions": "פעולות",
         "edit": "עריכה",
         "delete": "מחיקה",

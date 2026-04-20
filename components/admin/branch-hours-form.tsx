@@ -7,8 +7,16 @@ import { toast } from "sonner"
 
 import type { OpeningHoursRow } from "@/lib/services/hours"
 import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
 import { bulkUpsertHoursAction } from "@/app/[locale]/admin/(protected)/_actions/branches"
 import { idleState } from "@/app/[locale]/admin/(protected)/_actions/types"
@@ -44,6 +52,7 @@ export function BranchHoursForm({
   initialRows: OpeningHoursRow[]
 }) {
   const t = useTranslations("Admin.branches.hours")
+  const tTabs = useTranslations("Admin.branches.tabs")
   const tt = useTranslations("Admin.toasts")
   const [state, formAction, pending] = useActionState(
     bulkUpsertHoursAction,
@@ -64,64 +73,71 @@ export function BranchHoursForm({
   }
 
   return (
-    <form action={formAction} className="flex flex-col gap-4">
+    <form action={formAction}>
       <input type="hidden" name="branchId" value={branchId} />
-      <div className="flex flex-col gap-2">
-        {DAYS_OF_WEEK.map((day) => {
-          const state = days[day]!
-          return (
-            <div
-              key={day}
-              className="grid grid-cols-[8rem_auto_1fr_1fr] items-center gap-3 border border-line bg-surface p-3"
-            >
-              <span className="text-sm font-medium text-ink">
-                {t(`days.${day}`)}
-              </span>
-              <label className="flex items-center gap-2 text-xs text-ink-muted">
-                <Switch
-                  checked={state.isClosed}
-                  onCheckedChange={(v) => updateDay(day, { isClosed: v })}
-                  name={`isClosed.${day}`}
-                />
-                {t("closed")}
-              </label>
-              <Field>
-                <FieldLabel className="sr-only">
-                  {t("openTime")} — {t(`days.${day}`)}
-                </FieldLabel>
-                <Input
-                  type="time"
-                  name={`openTime.${day}`}
-                  value={state.openTime}
-                  onChange={(e) => updateDay(day, { openTime: e.target.value })}
-                  disabled={state.isClosed}
-                  placeholder={t("openTime")}
-                />
-              </Field>
-              <Field>
-                <FieldLabel className="sr-only">
-                  {t("closeTime")} — {t(`days.${day}`)}
-                </FieldLabel>
-                <Input
-                  type="time"
-                  name={`closeTime.${day}`}
-                  value={state.closeTime}
-                  onChange={(e) =>
-                    updateDay(day, { closeTime: e.target.value })
-                  }
-                  disabled={state.isClosed}
-                  placeholder={t("closeTime")}
-                />
-              </Field>
-            </div>
-          )
-        })}
-      </div>
-      <div className="flex justify-end">
-        <Button type="submit" size="sm" disabled={pending}>
-          {t("save")}
-        </Button>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>{tTabs("hours")}</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col">
+          {DAYS_OF_WEEK.map((day, idx) => {
+            const state = days[day]!
+            return (
+              <React.Fragment key={day}>
+                {idx > 0 ? <Separator className="my-3" /> : null}
+                <div className="grid grid-cols-[8rem_auto_1fr_1fr] items-center gap-3">
+                  <span className="text-sm font-medium text-ink">
+                    {t(`days.${day}`)}
+                  </span>
+                  <label className="flex items-center gap-2 text-xs text-ink-muted">
+                    <Switch
+                      checked={state.isClosed}
+                      onCheckedChange={(v) => updateDay(day, { isClosed: v })}
+                      name={`isClosed.${day}`}
+                    />
+                    {t("closed")}
+                  </label>
+                  <Field>
+                    <FieldLabel className="sr-only">
+                      {t("openTime")} — {t(`days.${day}`)}
+                    </FieldLabel>
+                    <Input
+                      type="time"
+                      name={`openTime.${day}`}
+                      value={state.openTime}
+                      onChange={(e) =>
+                        updateDay(day, { openTime: e.target.value })
+                      }
+                      disabled={state.isClosed}
+                      placeholder={t("openTime")}
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel className="sr-only">
+                      {t("closeTime")} — {t(`days.${day}`)}
+                    </FieldLabel>
+                    <Input
+                      type="time"
+                      name={`closeTime.${day}`}
+                      value={state.closeTime}
+                      onChange={(e) =>
+                        updateDay(day, { closeTime: e.target.value })
+                      }
+                      disabled={state.isClosed}
+                      placeholder={t("closeTime")}
+                    />
+                  </Field>
+                </div>
+              </React.Fragment>
+            )
+          })}
+        </CardContent>
+        <CardFooter className="justify-end">
+          <Button type="submit" size="sm" disabled={pending}>
+            {t("save")}
+          </Button>
+        </CardFooter>
+      </Card>
     </form>
   )
 }
