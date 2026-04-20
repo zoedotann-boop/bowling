@@ -22,6 +22,16 @@ import { toast } from "sonner"
 
 import { cn } from "@/lib/utils"
 import { reorderBranchesAction } from "@/app/[locale]/admin/(protected)/_actions/branches"
+import { Badge } from "@/components/ui/badge"
+import { Card } from "@/components/ui/card"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
 import { BranchRowActions } from "./branch-row-actions"
 
@@ -35,9 +45,13 @@ export type BranchListItem = {
 function SortableRow({
   item,
   gripLabel,
+  publishedLabel,
+  draftLabel,
 }: {
   item: BranchListItem
   gripLabel: string
+  publishedLabel: string
+  draftLabel: string
 }) {
   const {
     attributes,
@@ -49,18 +63,16 @@ function SortableRow({
   } = useSortable({ id: item.id })
 
   return (
-    <tr
+    <TableRow
       ref={setNodeRef}
       style={{
         transform: CSS.Transform.toString(transform),
         transition,
       }}
-      className={cn(
-        "border-b border-line bg-surface transition-colors",
-        isDragging && "opacity-60"
-      )}
+      data-dragging={isDragging ? "" : undefined}
+      className={cn("data-[dragging]:bg-muted/40 data-[dragging]:opacity-60")}
     >
-      <td className="w-10 px-3 py-2.5 align-middle">
+      <TableCell className="w-10 ps-4">
         <button
           type="button"
           className="flex size-6 cursor-grab items-center justify-center text-ink-muted hover:text-ink focus-visible:outline-none"
@@ -70,21 +82,26 @@ function SortableRow({
         >
           <IconGripVertical className="size-4" />
         </button>
-      </td>
-      <td className="px-3 py-2.5 align-middle font-mono text-xs text-ink-muted">
+      </TableCell>
+      <TableCell className="text-sm text-ink">{item.displayName}</TableCell>
+      <TableCell className="font-mono text-xs text-ink-muted">
         {item.slug}
-      </td>
-      <td className="px-3 py-2.5 align-middle text-sm text-ink">
-        {item.displayName}
-      </td>
-      <td className="px-3 py-2.5 text-end align-middle">
+      </TableCell>
+      <TableCell>
+        {item.published ? (
+          <Badge variant="default">{publishedLabel}</Badge>
+        ) : (
+          <Badge variant="secondary">{draftLabel}</Badge>
+        )}
+      </TableCell>
+      <TableCell className="pe-4 text-end">
         <BranchRowActions
           id={item.id}
           slug={item.slug}
           published={item.published}
         />
-      </td>
-    </tr>
+      </TableCell>
+    </TableRow>
   )
 }
 
@@ -126,9 +143,9 @@ export function BranchList({ items }: { items: BranchListItem[] }) {
 
   if (rows.length === 0) {
     return (
-      <div className="border border-line bg-surface p-6 text-center text-sm text-ink-muted">
+      <Card className="p-10 text-center text-sm text-ink-muted">
         {t("empty")}
-      </div>
+      </Card>
     )
   }
 
@@ -142,27 +159,30 @@ export function BranchList({ items }: { items: BranchListItem[] }) {
         items={rows.map((r) => r.id)}
         strategy={verticalListSortingStrategy}
       >
-        <div className="relative w-full overflow-auto border border-line bg-surface">
-          <table className="w-full border-collapse text-sm">
-            <thead className="bg-muted/40 text-xs font-medium tracking-wide text-ink-muted uppercase">
-              <tr className="border-b border-line">
-                <th className="w-10 px-3 py-2 text-start" aria-hidden />
-                <th className="px-3 py-2 text-start">{t("slug")}</th>
-                <th className="px-3 py-2 text-start">{t("name")}</th>
-                <th className="px-3 py-2 text-end">{t("actions")}</th>
-              </tr>
-            </thead>
-            <tbody>
+        <Card className="py-0">
+          <Table className="text-sm">
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="w-10 ps-4" aria-hidden />
+                <TableHead>{t("name")}</TableHead>
+                <TableHead>{t("slug")}</TableHead>
+                <TableHead>{t("status")}</TableHead>
+                <TableHead className="pe-4 text-end">{t("actions")}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {rows.map((item) => (
                 <SortableRow
                   key={item.id}
                   item={item}
                   gripLabel={t("dragToReorder")}
+                  publishedLabel={t("published")}
+                  draftLabel={t("draft")}
                 />
               ))}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </Card>
       </SortableContext>
     </DndContext>
   )

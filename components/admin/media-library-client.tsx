@@ -13,6 +13,7 @@ import {
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import {
   Dialog,
   DialogClose,
@@ -25,6 +26,7 @@ import {
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { PageHeader } from "@/components/admin/page-header"
 import { uploadMedia } from "@/lib/admin/upload-media"
 import type { MediaAssetRead } from "@/lib/services/media"
 import {
@@ -48,32 +50,35 @@ export function MediaLibraryClient({ items }: { items: MediaAssetRead[] }) {
 
   return (
     <div className="flex flex-col gap-6">
-      <header className="flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold text-ink">{t("title")}</h1>
-        <UploadButton />
-      </header>
+      <PageHeader
+        title={t("title")}
+        description={t("description")}
+        actions={<UploadButton />}
+      />
       {items.length === 0 ? (
-        <div className="border border-line bg-surface p-6 text-center text-sm text-ink-muted">
+        <Card className="p-10 text-center text-sm text-ink-muted">
           {t("empty")}
-        </div>
+        </Card>
       ) : (
         <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
           {items.map((item) => (
-            <li key={item.id}>
-              <button
-                type="button"
-                onClick={() => setSelected(item)}
-                className="group relative block aspect-square w-full overflow-hidden border border-line bg-muted/40 transition-colors outline-none focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring/50"
-              >
-                <Image
-                  src={item.blobUrl}
-                  alt={item.altTextEn ?? item.filename ?? ""}
-                  fill
-                  sizes="(min-width: 768px) 25vw, 50vw"
-                  className="object-cover transition-transform group-hover:scale-105"
-                />
-              </button>
-              <p className="mt-1 truncate font-mono text-xs text-ink-muted">
+            <li key={item.id} className="flex flex-col gap-1.5">
+              <Card className="py-0 ring-0 transition-all focus-within:ring-2 focus-within:ring-ring/50 hover:ring-1 hover:ring-ring/40">
+                <button
+                  type="button"
+                  onClick={() => setSelected(item)}
+                  className="group relative block aspect-square w-full overflow-hidden bg-muted/40 outline-none"
+                >
+                  <Image
+                    src={item.blobUrl}
+                    alt={item.altTextEn ?? item.filename ?? ""}
+                    fill
+                    sizes="(min-width: 768px) 25vw, 50vw"
+                    className="object-cover transition-transform group-hover:scale-105"
+                  />
+                </button>
+              </Card>
+              <p className="truncate px-1 font-mono text-xs text-ink-muted">
                 {item.filename ?? item.id.slice(0, 8)}
               </p>
             </li>

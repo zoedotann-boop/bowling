@@ -14,8 +14,22 @@ import {
 } from "@/app/[locale]/admin/(protected)/_actions/branches"
 import type { FormState } from "@/app/[locale]/admin/(protected)/_actions/types"
 import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsList, TabsTab, TabsPanel } from "@/components/ui/tabs"
 
@@ -207,197 +221,238 @@ export function BranchForm(props: Props) {
           </TabsList>
 
           <TabsPanel value="info">
-            <div className="grid gap-4 md:grid-cols-2">
-              <Field>
-                <FieldLabel>{t("slug")}</FieldLabel>
-                <Input
-                  name="slug"
-                  defaultValue={initial?.slug ?? ""}
-                  required
-                  placeholder="ramat-gan"
-                />
-              </Field>
-              <Field>
-                <FieldLabel>{t("sortOrder")}</FieldLabel>
-                <Input
-                  name="sortOrder"
-                  type="number"
-                  defaultValue={initial?.sortOrder ?? 0}
-                />
-              </Field>
-              <Field>
-                <FieldLabel>{t("phone")}</FieldLabel>
-                <Input
-                  name="phone"
-                  defaultValue={initial?.phone ?? ""}
-                  required
-                />
-              </Field>
-              <Field>
-                <FieldLabel>{t("whatsapp")}</FieldLabel>
-                <Input
-                  name="whatsapp"
-                  defaultValue={initial?.whatsapp ?? ""}
-                  required
-                />
-              </Field>
-              <Field>
-                <FieldLabel>{t("email")}</FieldLabel>
-                <Input
-                  name="email"
-                  type="email"
-                  defaultValue={initial?.email ?? ""}
-                  required
-                />
-              </Field>
-              <Field>
-                <FieldLabel>{t("mapUrl")}</FieldLabel>
-                <Input
-                  name="mapUrl"
-                  type="url"
-                  defaultValue={initial?.mapUrl ?? ""}
-                  required
-                />
-              </Field>
-              <Field>
-                <FieldLabel>{t("latitude")}</FieldLabel>
-                <Input
-                  name="latitude"
-                  type="number"
-                  step="any"
-                  defaultValue={initial?.latitude ?? ""}
-                  required
-                />
-              </Field>
-              <Field>
-                <FieldLabel>{t("longitude")}</FieldLabel>
-                <Input
-                  name="longitude"
-                  type="number"
-                  step="any"
-                  defaultValue={initial?.longitude ?? ""}
-                  required
-                />
-              </Field>
-              <Field>
-                <FieldLabel>{t("brandAccent")}</FieldLabel>
-                <select
-                  name="brandAccent"
-                  defaultValue={initial?.brandAccent ?? "cherry"}
-                  className="flex h-8 w-full rounded-none border border-border bg-background px-2.5 py-1 text-sm text-foreground shadow-xs outline-none focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring/50"
-                >
-                  <option value="cherry">{t("brandAccentCherry")}</option>
-                  <option value="teal">{t("brandAccentTeal")}</option>
-                </select>
-              </Field>
-              <Field className="md:col-span-2">
-                <label className="flex items-center gap-2 text-xs font-medium text-ink">
-                  <Switch
-                    name="published"
-                    defaultChecked={initial?.published ?? true}
-                  />
-                  {t("published")}
-                </label>
-              </Field>
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle>{tTabs("info")}</CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-6">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <Field>
+                    <FieldLabel>{t("slug")}</FieldLabel>
+                    <Input
+                      name="slug"
+                      defaultValue={initial?.slug ?? ""}
+                      required
+                      placeholder="ramat-gan"
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel>{t("sortOrder")}</FieldLabel>
+                    <Input
+                      name="sortOrder"
+                      type="number"
+                      defaultValue={initial?.sortOrder ?? 0}
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel>{t("phone")}</FieldLabel>
+                    <Input
+                      name="phone"
+                      defaultValue={initial?.phone ?? ""}
+                      required
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel>{t("whatsapp")}</FieldLabel>
+                    <Input
+                      name="whatsapp"
+                      defaultValue={initial?.whatsapp ?? ""}
+                      required
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel>{t("email")}</FieldLabel>
+                    <Input
+                      name="email"
+                      type="email"
+                      defaultValue={initial?.email ?? ""}
+                      required
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel>{t("mapUrl")}</FieldLabel>
+                    <Input
+                      name="mapUrl"
+                      type="url"
+                      defaultValue={initial?.mapUrl ?? ""}
+                      required
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel>{t("latitude")}</FieldLabel>
+                    <Input
+                      name="latitude"
+                      type="number"
+                      step="any"
+                      defaultValue={initial?.latitude ?? ""}
+                      required
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel>{t("longitude")}</FieldLabel>
+                    <Input
+                      name="longitude"
+                      type="number"
+                      step="any"
+                      defaultValue={initial?.longitude ?? ""}
+                      required
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel>{t("brandAccent")}</FieldLabel>
+                    <Select
+                      name="brandAccent"
+                      defaultValue={initial?.brandAccent ?? "cherry"}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="cherry">
+                          {t("brandAccentCherry")}
+                        </SelectItem>
+                        <SelectItem value="teal">
+                          {t("brandAccentTeal")}
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                  <Field className="md:col-span-2">
+                    <label className="flex items-center gap-2 text-xs font-medium text-ink">
+                      <Switch
+                        name="published"
+                        defaultChecked={initial?.published ?? true}
+                      />
+                      {t("published")}
+                    </label>
+                  </Field>
+                </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
-              <TranslatableInput
-                name="displayName"
-                label={t("displayName")}
-                defaultValues={localesValues(initial, "displayName")}
-                needsReviewLocales={needsReviewLocalesFor(
-                  initial,
-                  "displayName"
-                )}
-                required
-                aiLabel={aiLabel}
-                reviewLabel={reviewLabel}
-              />
-              <TranslatableInput
-                name="shortName"
-                label={t("shortName")}
-                defaultValues={localesValues(initial, "shortName")}
-                needsReviewLocales={needsReviewLocalesFor(initial, "shortName")}
-                aiLabel={aiLabel}
-                reviewLabel={reviewLabel}
-              />
-              <TranslatableInput
-                name="address"
-                label={t("address")}
-                defaultValues={localesValues(initial, "address")}
-                needsReviewLocales={needsReviewLocalesFor(initial, "address")}
-                aiLabel={aiLabel}
-                reviewLabel={reviewLabel}
-              />
-              <TranslatableInput
-                name="city"
-                label={t("city")}
-                defaultValues={localesValues(initial, "city")}
-                needsReviewLocales={needsReviewLocalesFor(initial, "city")}
-                aiLabel={aiLabel}
-                reviewLabel={reviewLabel}
-              />
-            </div>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <TranslatableInput
+                    name="displayName"
+                    label={t("displayName")}
+                    defaultValues={localesValues(initial, "displayName")}
+                    needsReviewLocales={needsReviewLocalesFor(
+                      initial,
+                      "displayName"
+                    )}
+                    required
+                    aiLabel={aiLabel}
+                    reviewLabel={reviewLabel}
+                  />
+                  <TranslatableInput
+                    name="shortName"
+                    label={t("shortName")}
+                    defaultValues={localesValues(initial, "shortName")}
+                    needsReviewLocales={needsReviewLocalesFor(
+                      initial,
+                      "shortName"
+                    )}
+                    aiLabel={aiLabel}
+                    reviewLabel={reviewLabel}
+                  />
+                  <TranslatableInput
+                    name="address"
+                    label={t("address")}
+                    defaultValues={localesValues(initial, "address")}
+                    needsReviewLocales={needsReviewLocalesFor(
+                      initial,
+                      "address"
+                    )}
+                    aiLabel={aiLabel}
+                    reviewLabel={reviewLabel}
+                  />
+                  <TranslatableInput
+                    name="city"
+                    label={t("city")}
+                    defaultValues={localesValues(initial, "city")}
+                    needsReviewLocales={needsReviewLocalesFor(initial, "city")}
+                    aiLabel={aiLabel}
+                    reviewLabel={reviewLabel}
+                  />
+                </div>
+              </CardContent>
+            </Card>
           </TabsPanel>
 
           <TabsPanel value="hero">
-            <MediaPicker
-              name="heroImageId"
-              label={t("heroImageId")}
-              initial={initial?.heroImage ?? null}
-            />
-            <TranslatableInput
-              name="heroHeadline"
-              label={t("heroHeadline")}
-              defaultValues={localesValues(initial, "heroHeadline")}
-              needsReviewLocales={needsReviewLocalesFor(
-                initial,
-                "heroHeadline"
-              )}
-              aiLabel={aiLabel}
-              reviewLabel={reviewLabel}
-            />
-            <TranslatableTextarea
-              name="heroTagline"
-              label={t("heroTagline")}
-              defaultValues={localesValues(initial, "heroTagline")}
-              needsReviewLocales={needsReviewLocalesFor(initial, "heroTagline")}
-              aiLabel={aiLabel}
-              reviewLabel={reviewLabel}
-              rows={2}
-            />
+            <Card>
+              <CardHeader>
+                <CardTitle>{tTabs("hero")}</CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-4">
+                <MediaPicker
+                  name="heroImageId"
+                  label={t("heroImageId")}
+                  initial={initial?.heroImage ?? null}
+                />
+                <TranslatableInput
+                  name="heroHeadline"
+                  label={t("heroHeadline")}
+                  defaultValues={localesValues(initial, "heroHeadline")}
+                  needsReviewLocales={needsReviewLocalesFor(
+                    initial,
+                    "heroHeadline"
+                  )}
+                  aiLabel={aiLabel}
+                  reviewLabel={reviewLabel}
+                />
+                <TranslatableTextarea
+                  name="heroTagline"
+                  label={t("heroTagline")}
+                  defaultValues={localesValues(initial, "heroTagline")}
+                  needsReviewLocales={needsReviewLocalesFor(
+                    initial,
+                    "heroTagline"
+                  )}
+                  aiLabel={aiLabel}
+                  reviewLabel={reviewLabel}
+                  rows={2}
+                />
+              </CardContent>
+            </Card>
           </TabsPanel>
 
           <TabsPanel value="seo">
-            <TranslatableInput
-              name="seoTitle"
-              label={t("seoTitle")}
-              defaultValues={localesValues(initial, "seoTitle")}
-              needsReviewLocales={needsReviewLocalesFor(initial, "seoTitle")}
-              aiLabel={aiLabel}
-              reviewLabel={reviewLabel}
-            />
-            <TranslatableTextarea
-              name="seoDescription"
-              label={t("seoDescription")}
-              defaultValues={localesValues(initial, "seoDescription")}
-              needsReviewLocales={needsReviewLocalesFor(
-                initial,
-                "seoDescription"
-              )}
-              aiLabel={aiLabel}
-              reviewLabel={reviewLabel}
-              rows={3}
-            />
-            <Field>
-              <FieldLabel>{t("googlePlaceId")}</FieldLabel>
-              <Input
-                name="googlePlaceId"
-                defaultValue={initial?.googlePlaceId ?? ""}
-                placeholder={t("googlePlaceIdHint")}
-              />
-            </Field>
+            <Card>
+              <CardHeader>
+                <CardTitle>{tTabs("seo")}</CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-4">
+                <TranslatableInput
+                  name="seoTitle"
+                  label={t("seoTitle")}
+                  defaultValues={localesValues(initial, "seoTitle")}
+                  needsReviewLocales={needsReviewLocalesFor(
+                    initial,
+                    "seoTitle"
+                  )}
+                  aiLabel={aiLabel}
+                  reviewLabel={reviewLabel}
+                />
+                <TranslatableTextarea
+                  name="seoDescription"
+                  label={t("seoDescription")}
+                  defaultValues={localesValues(initial, "seoDescription")}
+                  needsReviewLocales={needsReviewLocalesFor(
+                    initial,
+                    "seoDescription"
+                  )}
+                  aiLabel={aiLabel}
+                  reviewLabel={reviewLabel}
+                  rows={3}
+                />
+                <Field>
+                  <FieldLabel>{t("googlePlaceId")}</FieldLabel>
+                  <Input
+                    name="googlePlaceId"
+                    defaultValue={initial?.googlePlaceId ?? ""}
+                    placeholder={t("googlePlaceIdHint")}
+                  />
+                </Field>
+              </CardContent>
+            </Card>
           </TabsPanel>
         </Tabs>
 
@@ -409,14 +464,14 @@ export function BranchForm(props: Props) {
         </div>
 
         {mode === "edit" && initial ? (
-          <section className="mt-4 border border-destructive/40 bg-destructive/5 p-4">
-            <h3 className="text-sm font-medium text-destructive">
-              {t("dangerZone")}
-            </h3>
-            <p className="mt-1 text-xs text-ink-muted">
-              {t("dangerZoneDescription")}
-            </p>
-            <div className="mt-3">
+          <Card className="ring-destructive/30">
+            <CardHeader>
+              <CardTitle className="text-destructive">
+                {t("dangerZone")}
+              </CardTitle>
+              <CardDescription>{t("dangerZoneDescription")}</CardDescription>
+            </CardHeader>
+            <CardContent>
               <ConfirmDeleteDialog
                 trigger={
                   <Button
@@ -435,8 +490,8 @@ export function BranchForm(props: Props) {
                 pending={deletePending}
                 onConfirm={handleDelete}
               />
-            </div>
-          </section>
+            </CardContent>
+          </Card>
         ) : null}
       </form>
     </TranslationStateProvider>

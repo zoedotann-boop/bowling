@@ -129,13 +129,8 @@
     "nav": {
       "brand": "Bowling Admin",
       "branches": "Branches",
-      "media": "Media"
-    },
-    "home": {
-      "eyebrow": "Admin area",
-      "greeting": "Hi, {name}",
-      "branchesTitle": "Branches",
-      "branchesSummary": "{published} published / {total} total"
+      "media": "Media",
+      "signOut": "Sign out"
     },
     "common": {
       "cancel": "Cancel",
@@ -180,6 +175,7 @@
     },
     "media": {
       "title": "Media",
+      "description": "Images and assets used across all branches.",
       "upload": "Upload",
       "uploading": "Uploading…",
       "file": "File",
@@ -209,9 +205,13 @@
     "branches": {
       "list": {
         "title": "Branches",
+        "description": "Manage your bowling branches and their publish status.",
         "newBranch": "New branch",
         "slug": "Slug",
         "name": "Name",
+        "status": "Status",
+        "published": "Published",
+        "draft": "Draft",
         "actions": "Actions",
         "edit": "Edit",
         "delete": "Delete",

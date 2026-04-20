@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation"
 import type { Locale } from "@/i18n/routing"
 import * as services from "@/lib/services"
 import { Button } from "@/components/ui/button"
+import { PageHeader } from "@/components/admin/page-header"
 import { BranchList, type BranchListItem } from "@/components/admin/branch-list"
 
 export const metadata: Metadata = {
@@ -31,18 +32,21 @@ export default async function AdminBranchesPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <header className="flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold text-ink">{t("title")}</h1>
-        <Button
-          render={
-            <Link href="/admin/branches/new">
-              <IconPlus className="size-4" />
-              {t("newBranch")}
-            </Link>
-          }
-          size="sm"
-        />
-      </header>
+      <PageHeader
+        title={t("title")}
+        description={t("description")}
+        actions={
+          <Button
+            render={
+              <Link href="/admin/branches/new">
+                <IconPlus className="size-4" />
+                {t("newBranch")}
+              </Link>
+            }
+            size="sm"
+          />
+        }
+      />
       <BranchList items={items} />
     </div>
   )
