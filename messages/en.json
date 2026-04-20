@@ -128,7 +128,8 @@
   "Admin": {
     "nav": {
       "brand": "Bowling Admin",
-      "branches": "Branches"
+      "branches": "Branches",
+      "media": "Media"
     },
     "home": {
       "eyebrow": "Admin area",
@@ -159,7 +160,37 @@
       "branchUnpublished": "Branch unpublished",
       "orderSaved": "Order saved",
       "hoursSaved": "Hours saved",
+      "mediaUpdated": "Media updated",
+      "mediaDeleted": "Media deleted",
       "genericError": "Something went wrong"
+    },
+    "media": {
+      "title": "Media",
+      "upload": "Upload",
+      "uploading": "Uploading…",
+      "file": "File",
+      "fileHint": "JPEG, PNG, WebP, or AVIF. Up to 5MB.",
+      "cancel": "Cancel",
+      "empty": "No media yet.",
+      "uploadSuccess": "Upload complete",
+      "untitled": "Untitled",
+      "altTextLabel": "Alt text ({locale})",
+      "picker": {
+        "title": "Select media",
+        "select": "Select image",
+        "change": "Change image",
+        "clear": "Clear",
+        "empty": "No images yet.",
+        "loading": "Loading…"
+      },
+      "errors": {
+        "tooLarge": "File is too large (max 5MB).",
+        "badType": "Unsupported file type.",
+        "empty": "File is empty.",
+        "forbidden": "You do not have permission for this action.",
+        "uploadFailed": "Upload failed. Try again.",
+        "loadFailed": "Failed to load media."
+      }
     },
     "branches": {
       "list": {
@@ -208,8 +239,7 @@
         "shortName": "Short name",
         "address": "Address",
         "city": "City",
-        "heroImageId": "Hero image ID",
-        "heroImageIdHint": "Media picker lands in sub-project D",
+        "heroImageId": "Hero image",
         "heroHeadline": "Hero headline",
         "heroTagline": "Hero tagline",
         "seoTitle": "SEO title",

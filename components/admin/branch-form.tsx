@@ -21,6 +21,7 @@ import { Tabs, TabsList, TabsTab, TabsPanel } from "@/components/ui/tabs"
 
 import { ConfirmDeleteDialog } from "./confirm-delete-dialog"
 import { FillTranslationsButton } from "./fill-translations-button"
+import { MediaPicker } from "./media-picker"
 import { TranslatableInput } from "./translatable-input"
 import { TranslatableTextarea } from "./translatable-textarea"
 import { TranslationStateProvider } from "./translation-state-context"
@@ -36,6 +37,11 @@ export type BranchFormInitial = {
   longitude: number
   brandAccent: "cherry" | "teal"
   heroImageId: string | null
+  heroImage: {
+    id: string
+    blobUrl: string
+    filename: string | null
+  } | null
   googlePlaceId: string | null
   published: boolean
   sortOrder: number
@@ -336,14 +342,11 @@ export function BranchForm(props: Props) {
           </TabsPanel>
 
           <TabsPanel value="hero">
-            <Field>
-              <FieldLabel>{t("heroImageId")}</FieldLabel>
-              <Input
-                name="heroImageId"
-                defaultValue={initial?.heroImageId ?? ""}
-                placeholder={t("heroImageIdHint")}
-              />
-            </Field>
+            <MediaPicker
+              name="heroImageId"
+              label={t("heroImageId")}
+              initial={initial?.heroImage ?? null}
+            />
             <TranslatableInput
               name="heroHeadline"
               label={t("heroHeadline")}

@@ -23,7 +23,7 @@ export function ConfirmDeleteDialog({
   onConfirm,
   pending,
 }: {
-  trigger: React.ReactNode
+  trigger: React.ReactElement
   title: string
   description: string
   cancelLabel: string
@@ -35,7 +35,7 @@ export function ConfirmDeleteDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={<>{trigger}</>} />
+      <DialogTrigger render={trigger} />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
