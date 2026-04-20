@@ -23,7 +23,7 @@ export function PageHeader({
       )}
     >
       <div className="flex min-w-0 flex-col gap-1">
-        <h1 className="truncate text-2xl font-semibold tracking-tight text-ink">
+        <h1 className="font-heading truncate text-2xl text-ink sm:text-3xl">
           {title}
         </h1>
         {description ? (

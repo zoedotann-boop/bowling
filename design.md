@@ -1,19 +1,21 @@
-# Bowling - Design System
+# Bowling - Design Language
 
-Single source of truth for the visual language across both branches (`Bowling Ramat Gan`, `Bowling Rishon LeTsiyon`). Update this file whenever a pattern is added, changed, or retired. **The site is mobile-first**, defaults to Hebrew (RTL), and runs in HE / EN / RU / AR.
+Single source of truth for the visual language shared across every surface - public marketing, admin panel, and auth flows. **The site is mobile-first**, defaults to Hebrew (RTL), and runs in HE / EN / RU / AR.
+
+This document is design language only: tokens, typography, shapes, shadows, motion, direction, and accessibility. Page inventory, section order, and component file listings live next to the code they describe.
 
 ---
 
 ## Principles
 
-1. **Vintage bowling-alley signage, not 2020s SaaS.** Warm cream paper, chocolate ink, hand-drawn-feeling chunky type. The reference is a 1970s American bowling poster, not a modern dashboard.
-2. **One accent per branch.** `--brand-accent` is set once at the `(site)` root by branch and is the only color used for emphasis. Never introduce a new hue per section - reach for accent, weight, or scale first.
-3. **Sharp on sharp, hard on hard.** 2px solid ink borders. 4px hard-offset block shadows (no blur). Reserve `rounded-2xl` for cards/tickets; reserve `rounded-full` for pill chips and the floating CTA. **No bubble shapes** (`rounded-3xl`+ on every surface).
-4. **No gradients - including blurred color fades.** Flat color only. No `bg-gradient-*`, no `linear-gradient`, no `radial-gradient`, no neon glows, no colored box-shadows, no glassmorphism (`backdrop-blur-*`). The single allowed exception: `mask-image` gradients, which are a pixel-reveal effect, not a visual gradient.
-5. **Editorial spacing.** Generous whitespace, asymmetric offsets, single accent bars under headlines. Sections breathe - never wall-to-wall content.
-6. **Logical CSS, always.** Hebrew + Arabic flip the layout at runtime. Use Tailwind logical utilities (`ps-*`, `pe-*`, `ms-*`, `me-*`, `start-*`, `end-*`, `text-start`, `text-end`) and CSS logical properties (`inset-inline-start/end`, `padding-inline`). No `pl-*` / `pr-*` / `left-*` / `right-*` / `text-left` / `text-right` for direction-mirrored properties. The `:dir(rtl)` selector handles shadow flips.
+1. **Modern hospitality, warm on warm.** Warm white canvas, near-black ink, restrained color. The reference is a premium hospitality brand - calm surfaces, generous whitespace, one quiet accent per branch.
+2. **One accent per branch.** `--brand-accent` is set once at the `(site)` root and is the only color used for emphasis in marketing surfaces. Never introduce a new hue per section - reach for weight, scale, or whitespace first.
+3. **Soft edges, soft shadows.** Thin `border-line` hairlines, layered `shadow-soft` / `shadow-card` elevation, `rounded-2xl` cards, `rounded-full` pills and CTAs. No hard offsets, no colored glows.
+4. **No gradients.** Flat color only. No `bg-gradient-*`, no `linear-gradient`, no `radial-gradient`, no neon glows, no colored box-shadows. The single allowed exception: `mask-image` gradients, which are a pixel-reveal effect, not a visual gradient. `backdrop-blur-md` is permitted on sticky headers only.
+5. **Editorial spacing.** Generous whitespace, centered section headers, short accent dot / eyebrow label above headings. Sections breathe - never wall-to-wall content.
+6. **Logical CSS, always.** Hebrew + Arabic flip the layout at runtime. Use Tailwind logical utilities (`ps-*`, `pe-*`, `ms-*`, `me-*`, `start-*`, `end-*`, `text-start`, `text-end`) and CSS logical properties (`inset-inline-start/end`, `padding-inline`). No `pl-*` / `pr-*` / `left-*` / `right-*` / `text-left` / `text-right` for direction-mirrored properties.
 7. **Mobile-first, no exceptions.** Default styles target a 360px viewport. Tap targets ≥44px. `sm:` / `md:` / `lg:` only enhance - never _fix_ a broken mobile state.
-8. **Motion is soft, not showy.** Hover lifts (`translate-y-[1px]` + shadow drop), nothing that bounces or flashes. Honor `prefers-reduced-motion: reduce`.
+8. **Motion is soft, not showy.** Hover nudges (`scale-[1.02]`, shadow promotion from `shadow-soft` to `shadow-card`, small color shifts), nothing that bounces or flashes. Honor `prefers-reduced-motion: reduce`.
 
 ---
 
@@ -23,38 +25,43 @@ Defined as `@theme` CSS variables in `app/globals.css` (Tailwind v4 - CSS-first 
 
 ### Surfaces & ink
 
-| Token      | OKLCH            | Usage                                    |
-| ---------- | ---------------- | ---------------------------------------- |
-| `paper`    | `0.955 0.018 80` | Page background, card surfaces           |
-| `cream`    | `0.92 0.035 75`  | Recessed surfaces, footer, table headers |
-| `ink`      | `0.22 0.035 50`  | Body text, all borders, all hard shadows |
-| `ink-soft` | `0.45 0.04 55`   | Secondary copy, eyebrow labels           |
+| Token            | Role                                                                      |
+| ---------------- | ------------------------------------------------------------------------- |
+| `canvas`         | Page background - warm white, slightly off-white to reduce glare          |
+| `surface`        | Cards, popovers, sticky header background                                 |
+| `surface-muted`  | Recessed surfaces, secondary chips, footer rows, input backgrounds        |
+| `surface-warm`   | Hero / spotlight section tint - warm cream                                |
+| `surface-cool`   | Alternate spotlight tint - dim mint                                       |
+| `surface-deep`   | Near-ink panel for high-contrast blocks                                   |
+| `paper`          | Text color on red ticket and dark panels - the "logo paper" cream         |
+| `ink`            | Body text, primary buttons, all borders when an emphasis border is needed |
+| `ink-soft`       | Secondary copy, eyebrow labels                                            |
+| `ink-muted`      | Tertiary copy, placeholders, meta text                                    |
+| `line`           | All hairline borders, dividers, input outlines                            |
 
-### Brand accents (per-branch swap)
+Light is the default. Dark mode inverts the surface/ink pair at lower lightness; shapes and rules stay identical.
 
-`<div data-branch-accent="...">` at `(site)/layout.tsx` swaps `--brand-accent` to one of these:
+### Brand accents
 
-| Token          | OKLCH          | Branch                                                           |
-| -------------- | -------------- | ---------------------------------------------------------------- |
-| `ticket-red`   | `0.62 0.22 25` | `ramat-gan` (`cherry` key) - matches the logo's red ticket field |
-| `banner-teal`  | `0.7 0.1 200`  | `rishon-letsiyon` (`teal` key) - matches the logo's banner       |
-| `brand-cherry` | `0.5 0.2 25`   | Display headline tint, link hover                                |
+| Token          | Purpose                                                                                |
+| -------------- | -------------------------------------------------------------------------------------- |
+| `ticket-red`   | Branch accent for Ramat Gan (`cherry` key), the `BowlingLogo` red ticket field         |
+| `banner-teal`  | Branch accent for Rishon LeTsiyon (`teal` key), the `BowlingLogo` city banner          |
+| `brand-accent` | Per-branch accent resolved at the `(site)` root via `data-branch-accent`               |
+| `brand-accent-soft` | 10% mix of `brand-accent` over `surface` for tints                                |
 
-The two accent keys (`cherry`, `teal`) deliberately pull from the logo so each branch wears one half of the ticket-stub palette.
+The two accent keys (`cherry`, `teal`) deliberately pull from the logo so each branch wears one half of the ticket-stub palette. The logo itself always uses the fixed `ticket-red` + `banner-teal` pair regardless of accent.
 
-### Logo & special-purpose
+### Functional colors
 
-| Token         | OKLCH           | Usage                                                            |
-| ------------- | --------------- | ---------------------------------------------------------------- |
-| `ticket-red`  | `0.62 0.22 25`  | The `BowlingLogo` red ticket field - fixed across branches       |
-| `banner-teal` | `0.7 0.1 200`   | The `BowlingLogo` teal city-banner - fixed across branches       |
-| `whatsapp`    | `0.62 0.16 155` | Floating WhatsApp CTA only - brand color carries instant meaning |
+| Token             | Purpose                                                                          |
+| ----------------- | -------------------------------------------------------------------------------- |
+| `whatsapp`        | Floating WhatsApp CTA only - brand color carries instant meaning                 |
+| `whatsapp-hover`  | Hover state for the WhatsApp pill                                                |
+| `destructive`     | Errors, delete actions, aria-invalid states                                      |
+| `ring`            | Focus outline color - resolves to `ink`                                          |
 
-External brand colors (WhatsApp, Google) are allowed for floating CTAs only and must be declared as tokens - never inline.
-
-### Dark mode
-
-Same hues at lower lightness (`paper` → deep cocoa, `ink` → cream). Same shapes, inverted ink. Dark is _not_ the default - light cream paper is.
+External brand colors (WhatsApp, Google) are only allowed on calls-to-action that carry brand meaning, and must be declared as tokens - never inline.
 
 ---
 
@@ -62,131 +69,114 @@ Same hues at lower lightness (`paper` → deep cocoa, `ink` → cream). Same sha
 
 Three roles, four scripts. All loaded via `next/font/google` in `app/[locale]/layout.tsx`, scoped via `:lang(...)` in `globals.css` - never branched in component code.
 
-| Role                                                    | Latin (default)  | Cyrillic (`ru`)           | Hebrew (`he`)    | Arabic (`ar`)    |
-| ------------------------------------------------------- | ---------------- | ------------------------- | ---------------- | ---------------- |
-| Display headlines + `BOWLING` wordmark (`font-display`) | `Bagel Fat One`  | `Russo One`               | `Suez One`       | `Lalezar`        |
-| Body, labels, eyebrows (`font-sans`)                    | `Geist`          | `Geist` (cyrillic subset) | `Heebo`          | `Cairo`          |
-| Numerics - prices, hours (`font-mono`)                  | `JetBrains Mono` | `JetBrains Mono`          | `JetBrains Mono` | `JetBrains Mono` |
+| Role                                          | Latin (default)  | Cyrillic (`ru`)           | Hebrew (`he`)    | Arabic (`ar`)    |
+| --------------------------------------------- | ---------------- | ------------------------- | ---------------- | ---------------- |
+| Body + headings (`font-sans`, `font-heading`) | `Geist`          | `Geist` (cyrillic subset) | `Heebo`          | `Cairo`          |
+| Numerics - prices, hours (`font-mono`)        | `JetBrains Mono` | `JetBrains Mono`          | `JetBrains Mono` | `JetBrains Mono` |
+| Logo wordmark only (`font-display`)           | `Bagel Fat One`  | `Russo One`               | `Suez One`       | `Lalezar`        |
 
-Each script gets a chunky retro display companion that holds the same weight as `Bagel Fat One` so headlines stay loud across all four locales. The `BOWLING` wordmark in the logo always renders in `Bagel Fat One` (Latin string, never localized); only the city banner below switches script.
+Body and headings share a single family per script - emphasis comes from weight and size, not a second face. The `font-display` family is reserved for the `BowlingLogo` wordmark; never use it for UI headings.
 
-Tracking: Latin headlines use `letter-spacing: -0.02em`; Cyrillic headlines use `-0.01em`; Hebrew + Arabic reset to `0` (tight tracking is a Latin convention). Eyebrows always use `tracking-[0.18em]` wide uppercase regardless of script.
+The `BOWLING` wordmark in the logo always renders in `Bagel Fat One` (Latin string, never localized); only the city banner below switches script.
+
+**Tracking.** Latin headings use `letter-spacing: -0.02em` (applied automatically to `h1`-`h4` / `.font-heading`). Hebrew + Arabic reset to `0` (tight tracking is a Latin convention). Eyebrows always use `tracking-[0.18em]` wide uppercase regardless of script.
+
+**Weights.** Body copy is `font-medium` at 400; headings are `font-semibold` 600 to `font-bold` 700. Eyebrow labels are `font-medium` uppercase at 11-12px.
 
 ---
 
-## Signature Patterns
+## Shapes & Elevation
 
-### Eyebrow + Heading + Accent Bar
+### Radius scale
 
-Every major section follows this rhythm:
+| Token          | Use                                                         |
+| -------------- | ----------------------------------------------------------- |
+| `rounded-none` | Table cells, full-bleed utility rows                        |
+| `rounded-md`   | Inline chips, compact controls                              |
+| `rounded-xl`   | Inputs, nested controls, small cards                        |
+| `rounded-2xl`  | Primary cards, ticket-stub panels, info tiles               |
+| `rounded-full` | Pills, CTAs, floating action buttons, status dots, avatars  |
+
+`rounded-3xl`+ on every surface reads bubble-y — don't use it as a default.
+
+### Borders
+
+| Utility           | Use                                                                         |
+| ----------------- | --------------------------------------------------------------------------- |
+| `border border-line` | Default hairline on cards, inputs, dividers                              |
+| `border-b border-line` | Sticky header / section divider                                        |
+| `border-2 border-dashed border-paper` | Only inside `BowlingLogo` - the stamped-ticket perforation |
+
+No 2px+ ink borders in UI — reserve thick dashed borders for the logo mark only.
+
+### Shadows
+
+| Token          | Use                                                                                 |
+| -------------- | ----------------------------------------------------------------------------------- |
+| `shadow-soft`  | Default card rest state, inputs, pill CTAs                                          |
+| `shadow-card`  | Featured cards, hover-promoted state from `shadow-soft`                             |
+| `shadow-hover` | Heaviest lift, reserved for primary CTAs on hover                                   |
+
+Shadows are soft, layered, and color-free (`rgb(0 0 0 / …)`). No hard offsets, no colored glows, no `shadow-block`-style rigid stamps.
+
+---
+
+## Signature patterns
+
+### Eyebrow + heading + subtitle
+
+The section-header rhythm. `SectionHeader` wraps it:
 
 ```tsx
-<Eyebrow>Prices</Eyebrow>
-<h2 className="font-display text-3xl sm:text-4xl md:text-5xl">
-  Bowl all night, <span className="text-brand-cherry">every night</span>.
-</h2>
-<AccentBar className="mt-5" />
+<SectionHeader
+  eyebrow="Prices"
+  title="Bowl all night, every night"
+  subtitle="Per game, per lane, shoe rental — all in one table."
+/>
 ```
 
-- `Eyebrow`: small uppercase tracked-out label in `text-ink-soft`.
-- Headline: display font, ink color, optional `text-brand-cherry` highlight on the closing word.
-- `AccentBar`: 12–20px wide, 3px tall solid `bg-brand-accent` block.
+- `Eyebrow`: 11px, `font-medium`, `tracking-[0.18em]`, `uppercase`, `text-ink-muted`.
+- Heading: `font-heading text-4xl sm:text-5xl text-ink`.
+- Subtitle: `text-base sm:text-lg text-ink-soft`.
 
-### Ticket card
-
-The signature surface - a torn-edge ticket stub in paper or accent color:
+### Card surface
 
 ```
-rounded-2xl border-2 border-ink bg-paper shadow-block p-5 sm:p-6
+rounded-2xl border border-line bg-surface shadow-soft p-5 sm:p-6
 ```
 
 Variants:
 
-- **Default** (`bg-paper`): for content cards.
-- **Featured** (`bg-brand-accent text-paper`): for the events teaser headline panel.
-- **Hover lift**: `hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-block-sm` for clickable cards/buttons. Never on static cards.
+- **Default** (`bg-surface` on `bg-canvas` pages): for content cards.
+- **Warm feature** (`bg-surface-warm`): for hero panels and highlighted info blocks.
+- **Deep contrast** (`bg-surface-deep text-paper`): for a single high-impact block per page.
 
-### Buttons
+### Buttons & CTAs
 
-| Variant   | Classes                                                                                                                 |
-| --------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Primary   | `rounded-xl border-2 border-ink bg-brand-accent font-bold text-paper shadow-block`                                      |
-| Secondary | `rounded-xl border-2 border-ink bg-paper font-bold text-ink shadow-block`                                               |
-| Ghost     | text-only, no border, no shadow                                                                                         |
-| Pill chip | `rounded-full border-2 border-ink bg-paper px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em]` - for tags only |
+| Variant          | Shape & surface                                                                                         |
+| ---------------- | ------------------------------------------------------------------------------------------------------- |
+| Primary pill     | `rounded-full bg-whatsapp text-white px-7 h-12 shadow-soft hover:shadow-card hover:bg-whatsapp-hover`   |
+| Secondary pill   | `rounded-full border border-line bg-surface text-ink px-7 h-12 shadow-soft hover:bg-surface-muted`      |
+| Compact link     | `inline-flex items-center gap-2 text-sm font-medium text-ink hover:gap-3` - gap-grow is the affordance  |
+| Status badge     | `inline-flex gap-2 rounded-full border border-line bg-surface px-3 py-1.5 text-xs text-ink-soft`        |
 
-Press state: `hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-block-sm`. The shadow shrinks as the button "presses into" it.
+Hover: shadow promotion (`shadow-soft` → `shadow-card`), a 2% scale, or a small gap increase on link arrows. Press state: `translate-y-px` via the Button primitive. Never rely on color pulse or glow.
 
-### Marquee band
+### Floating WhatsApp
 
-Horizontally-scrolling uppercase strip in `bg-brand-accent text-paper`, used as a section divider. Linear, 22s per loop, duplicated track for seamless wrap. Pauses on hover. Honors `prefers-reduced-motion`.
-
----
-
-## Shared Components
-
-| Component          | File                                      | Purpose                                                                                                                                 |
-| ------------------ | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ---- | ------ |
-| `BowlingLogo`      | `components/brand/bowling-logo.tsx`       | The ticket-stub logo: red rectangle + dashed white border + chunky `BOWLING` wordmark + teal city banner. Branch-aware via `city` prop. |
-| `Eyebrow`          | `components/common/eyebrow.tsx`           | Small tracked-out uppercase label above a heading.                                                                                      |
-| `AccentBar`        | `components/common/accent-bar.tsx`        | 3px tall block in `bg-brand-accent`. Width via `size="sm"                                                                               | "md" | "lg"`. |
-| `Marquee`          | `components/common/marquee.tsx`           | Scrolling uppercase band, RTL-aware.                                                                                                    |
-| `FloatingWhatsApp` | `components/layout/floating-whatsapp.tsx` | Fixed bottom-end pill in `--whatsapp` brand green, branch-aware link.                                                                   |
-
-### When to extract a new component
-
-Extract when a visual pattern appears in **two different places** AND at least one is true:
-
-- It has non-trivial structure (multiple wrappers, pseudo-elements).
-- It takes props that vary meaningfully between uses.
-- Getting it wrong would break the design language.
-
-Don't extract a one-off block, a trivial Tailwind combo, or a pattern that hasn't stabilized - copy it twice first.
-
----
-
-## Logo
-
-`BowlingLogo` is the brand mark. Composition:
-
-1. **Outer ticket field**: red rounded rectangle (`bg-ticket-red`), slight `-rotate-2`.
-2. **Perforated edge**: inner `border-2 border-dashed border-paper` with offset padding - reads as a stamped ticket stub.
-3. **Wordmark**: `BOWLING` in `font-display` white, single line, no descenders.
-4. **City banner**: smaller teal rounded-rect (`bg-banner-teal`) below, `+rotate-1`, with the same dashed-white inner border. City name comes from `branch.city[locale]`.
-
-Sizes: `sm` (header / footer), `md` (default), `lg` (hero overlay if needed). Always renders as a single inline-flex unit - never split across containers.
-
-The wordmark stays the same across all 3 branches; only the city banner text changes. **Don't add per-branch tweaks to colors or geometry** - the brand is consistent; the city tells you where you are.
-
----
-
-## Sections (homepage order)
-
-The homepage is composed in `app/[locale]/(site)/page.tsx`. Order, top to bottom:
-
-1. **Hero** - branch eyebrow, headline, tagline, primary + secondary CTAs.
-2. **Prices** (`מחירים`) - table of per-game / per-lane prices + shoe rental row.
-3. **Menu** (`תפריט`) - food + drinks list, two-column layout, mono-typed prices.
-4. **Events & Birthdays** (`ימי הולדת \ אירועים`) - featured package on a `bg-brand-accent` ticket panel + secondary list.
-5. **Google Reviews** - average rating, count, 2 quoted reviews, link to the full Google profile.
-6. **Contact** (`צור קשר`) - address, phone, email, hours, WhatsApp + contact-page CTAs.
-
-Sections from the previous build that are _not_ on the homepage:
-
-- `Highlights` - moved to the in-depth pages where it earns its space.
-- `Gallery` - currently a placeholder; show only when real photography is wired in.
+Fixed bottom-end pill, 56×56, `bg-whatsapp`, `shadow-card`, always visible, never overlapping the `pb-safe` area.
 
 ---
 
 ## Motion
 
-- **Hover lift on buttons / clickable cards**: `translate-x-[1px] translate-y-[1px]` + `shadow-block-sm` (from `shadow-block`), 120–160ms ease-out.
-- **Marquee**: linear, 22s per loop, duplicated track for seamless wrap. `paused` on hover.
-- **All animations must honor `prefers-reduced-motion: reduce`** - set `animation: none` and skip transforms in the media query.
+- **Hover on buttons / clickable cards**: 150–200ms ease-out, shadow promotion + 2% scale on primary, color shift on secondary.
+- **Link arrows** use `hover:gap-3` to nudge rather than translate.
+- **All animations honor `prefers-reduced-motion: reduce`** — `globals.css` clamps `animation-duration` and `transition-duration` to `0.001ms` inside the media query.
 
 ---
 
-## RTL Support
+## RTL support
 
 Site runs LTR (English, Russian) and RTL (Hebrew, Arabic) at runtime - `dir` attribute set on `<html>` from `dirFromLocale()`.
 
@@ -194,11 +184,9 @@ Site runs LTR (English, Russian) and RTL (Hebrew, Arabic) at runtime - `dir` att
 
 - Use Tailwind logical utilities - `ps-*`, `pe-*`, `ms-*`, `me-*`, `start-*`, `end-*`, `text-start`, `text-end` - instead of `pl-*`, `pr-*`, `ml-*`, `mr-*`, `left-*`, `right-*`, `text-left`, `text-right`.
 - Use CSS logical properties - `inset-inline-start/end`, `padding-inline`, `margin-inline-start` - instead of physical equivalents.
-- For direction-conditional styles, use Tailwind's `rtl:` / `ltr:` variants (e.g. `rtl:rotate-180` to flip a chevron).
+- For direction-conditional styles, use Tailwind's `rtl:` / `ltr:` variants (e.g. `rtl:rotate-180` to flip a chevron or arrow icon).
 
-**Block shadows mirror direction**: handled in `globals.css` via `:dir(rtl) .shadow-block { box-shadow: -4px 4px 0 var(--ink); }`. Don't write per-direction shadow code in components.
-
-**Directional icons** (chevrons, back arrows): use the `rtl:rotate-180` variant for symmetric arrows. For asymmetric icons, swap the component conditionally.
+**Directional icons** (chevrons, back arrows): use `rtl:rotate-180` for symmetric arrows. For asymmetric icons, swap the component conditionally.
 
 **Sanctioned physical exceptions** (don't refactor):
 
@@ -208,25 +196,25 @@ Site runs LTR (English, Russian) and RTL (Hebrew, Arabic) at runtime - `dir` att
 
 ---
 
-## Accessibility Defaults
+## Accessibility defaults
 
-- All interactive elements get a visible `:focus-visible` ring - `outline: 3px solid color-mix(in oklch, var(--ink) 50%, transparent); outline-offset: 4px;`.
+- All interactive elements get a visible `:focus-visible` ring - `outline: 2px solid color-mix(in oklch, var(--ink) 75%, transparent); outline-offset: 3px; border-radius: 6px;` (declared in `globals.css`).
 - Decorative SVGs/shapes: `aria-hidden`.
 - Icon-only buttons: `aria-label` required.
-- Color contrast: body copy is `text-ink` on `bg-paper` (≥ 12:1). Secondary copy is `text-ink-soft` (≥ 4.5:1). Never gray-on-gray.
+- Color contrast: body copy is `text-ink` on `bg-canvas`/`bg-surface` (≥ 12:1). Secondary copy is `text-ink-soft` (≥ 4.5:1), tertiary is `text-ink-muted` (≥ 3:1, reserved for meta only). Never gray-on-gray for primary copy.
 - External links open with `target="_blank" rel="noopener"`.
-- Tap targets ≥ 44×44px on mobile - buttons default to `min-h-11`.
+- Tap targets ≥ 44×44px on mobile - CTAs default to `h-12`, icon buttons to `size-10` or larger.
 
 ---
 
 ## Mobile-first rules
 
-- Section padding: `px-4 py-12` mobile → `sm:px-6 sm:py-16` → `lg:py-24`.
-- Hero headline: `text-4xl` mobile → `sm:text-5xl` → `md:text-6xl`. Don't go to `text-7xl` - Bagel Fat One overflows on 360px.
-- Header: `h-14` mobile, `sm:h-16`. Nav collapses into a sheet below `md`. Branch + locale switchers stay visible at all sizes (icon-only on mobile).
+- Section vertical rhythm: `py-20` mobile → `sm:py-28` → `lg:py-32`. Side padding: `px-4 sm:px-6 lg:px-8` inside an `mx-auto max-w-6xl` container.
+- Hero headline: `text-[clamp(2.5rem,7vw,4.5rem)]`. Don't push beyond 4.5rem - fluid type already tops out there.
+- Sticky header: `h-16` mobile, `sm:h-18`. Navigation collapses into a `Sheet` below `md`. Branch + locale switchers stay reachable at all sizes.
 - Floating WhatsApp: bottom-end, 56×56, never overlaps primary CTAs (mind `pb-safe`).
 - Grids: single column default, `sm:grid-cols-2`, `lg:grid-cols-3`. Never start at 3-col.
-- Buttons in a hero stack vertically on mobile (`flex-col items-stretch`), wrap horizontally `sm:flex-row sm:flex-wrap`.
+- Hero CTA stack: vertical on mobile (`flex-col items-stretch`), wraps horizontal `sm:flex-row`.
 
 ---
 
@@ -240,16 +228,17 @@ Site runs LTR (English, Russian) and RTL (Hebrew, Arabic) at runtime - `dir` att
 
 ---
 
-## What we removed (and why)
+## Anti-patterns
 
-Tracked here so we don't drift back into the AI-slop look:
+Tracked here so we don't drift back into looks we've ruled out:
 
-- `text-glow`, `shadow-glow*` - the reference is letterpress, not LED.
-- `bg-gradient-*`, `blur-3xl` background blobs - modern AI-app cliché, opposite of 70s print.
-- `backdrop-blur-*` on header / chips - glassmorphism reads as 2020s SaaS.
-- Body radial-gradient backgrounds - paper, not aurora.
-- `rounded-3xl` on every surface - bubble-y. Use `rounded-2xl` for cards, `rounded-xl` for buttons.
-- Multi-stop hero buttons (gradient backgrounds, ring shadows, scale-on-hover) - replaced with the press-into-shadow pattern.
+- `text-glow`, `shadow-glow*`, colored box-shadows - the look is printed ink, not LED.
+- `bg-gradient-*`, `blur-3xl` background blobs - modern AI-app cliché.
+- `backdrop-blur-*` on chips, cards, or non-header surfaces - glassmorphism reads as generic SaaS.
+- Body radial-gradient backgrounds - solid warm paper, not aurora.
+- `rounded-3xl`+ on every surface - bubble-y. Use `rounded-2xl` for cards, `rounded-xl` for inputs, `rounded-full` for pills.
+- Scale-and-shadow stacks (`hover:scale-105 hover:shadow-2xl`) - replaced with soft shadow promotion + 2% scale max.
+- Second display face for UI headings - `font-display` is the logo wordmark's font, not the site's headline face.
 
 ---
 
@@ -257,24 +246,9 @@ Tracked here so we don't drift back into the AI-slop look:
 
 Update this file when you:
 
-- Add a color token, font, or typography size.
-- Extract a new shared component (add it to the table above).
-- Change a signature pattern (cards, dark sections, CTA style, etc.).
-- Add a new page-level archetype.
-- Change motion/animation conventions.
-- Add or rename a homepage section.
+- Add a color token, font, radius, or shadow value.
+- Change a signature pattern (card, CTA, eyebrow, shadow tier).
+- Add or retire a motion or focus convention.
+- Change the RTL / accessibility / mobile rules.
 
 Outdated rules are worse than no rules. If the code disagrees with this file, fix this file before writing more code.
-
----
-
-## Admin surface (out of scope)
-
-Everything in this document describes the **public marketing site** under `app/[locale]/(site)/…`. The **admin panel** at `app/[locale]/admin/…` is a separate visual world and intentionally does not adopt these conventions:
-
-- No retro tokens: no `paper`/`cream` backgrounds, no `ticket-red`, no `shadow-block` hard offsets, no 2px ink borders, no `font-display` / Bagel Fat One.
-- Instead, admin uses neutral SaaS tokens (`bg-surface`, `bg-canvas`, `bg-muted`, `text-ink`, `text-ink-muted`, `border-line`) plus a single focus ring, subtle 1px borders, and the sans stack.
-- Density, layout, and component set (shadcn `Sidebar`, `Card`, `Table`, `Badge`, `Breadcrumb`, `Select`, etc.) follow a clean/minimal SaaS dashboard aesthetic — think Linear/Vercel/Notion — optimized for internal tooling.
-- RTL still holds admin-side: logical utilities only (`ps-*`/`pe-*`/`ms-*`/`me-*`/`start-*`/`end-*`).
-
-When editing admin code, do **not** "fix" it to match the poster aesthetic. The split is deliberate — the two surfaces serve different audiences.

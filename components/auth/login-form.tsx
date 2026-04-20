@@ -4,11 +4,13 @@ import * as React from "react"
 import { IconAlertTriangle, IconMail } from "@tabler/icons-react"
 import { useRouter } from "@/i18n/navigation"
 import { authClient } from "@/lib/auth-client"
-import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 const fieldClass =
-  "block w-full rounded-2xl border border-line bg-surface px-4 py-3.5 text-base text-ink placeholder:text-ink-muted shadow-soft outline-none transition focus:border-ink/30 focus:ring-2 focus:ring-ink/10 aria-[invalid=true]:border-destructive aria-[invalid=true]:focus:ring-destructive/15"
+  "block w-full rounded-xl border border-line bg-surface px-4 py-3.5 text-base text-ink placeholder:text-ink-muted shadow-soft outline-none transition focus:border-ink/30 focus:ring-2 focus:ring-ink/10 aria-[invalid=true]:border-destructive aria-[invalid=true]:focus:ring-destructive/15"
+
+const ctaClass =
+  "inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-ink px-7 text-base font-medium text-surface shadow-soft transition hover:scale-[1.01] hover:shadow-card disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100 disabled:hover:shadow-soft"
 
 type Step = "email" | "otp"
 
@@ -72,15 +74,14 @@ export function LoginForm() {
               disabled={pending}
             />
           </label>
-          <Button
+          <button
             type="submit"
-            size="lg"
-            className="h-12 w-full rounded-2xl text-base"
+            className={ctaClass}
             disabled={pending || !email}
           >
             <IconMail className="size-5" aria-hidden />
             שלח/י לי קוד
-          </Button>
+          </button>
         </form>
       ) : (
         <form onSubmit={handleVerifyOtp} className="flex flex-col gap-3">
@@ -105,14 +106,13 @@ export function LoginForm() {
               disabled={pending}
             />
           </label>
-          <Button
+          <button
             type="submit"
-            size="lg"
-            className="h-12 w-full rounded-2xl text-base"
+            className={ctaClass}
             disabled={pending || otp.length !== 6}
           >
             אישור והתחברות
-          </Button>
+          </button>
           <button
             type="button"
             className="self-center text-sm text-ink-muted underline-offset-4 hover:underline"
