@@ -128,7 +128,8 @@
   "Admin": {
     "nav": {
       "brand": "ניהול באולינג",
-      "branches": "סניפים"
+      "branches": "סניפים",
+      "media": "מדיה"
     },
     "home": {
       "eyebrow": "אזור ניהול",
@@ -159,7 +160,37 @@
       "branchUnpublished": "פרסום הסניף בוטל",
       "orderSaved": "הסדר נשמר",
       "hoursSaved": "שעות הפעילות נשמרו",
+      "mediaUpdated": "הקובץ עודכן",
+      "mediaDeleted": "הקובץ נמחק",
       "genericError": "משהו השתבש"
+    },
+    "media": {
+      "title": "מדיה",
+      "upload": "העלאה",
+      "uploading": "מעלה…",
+      "file": "קובץ",
+      "fileHint": "JPEG, PNG, WebP או AVIF. עד 5MB.",
+      "cancel": "ביטול",
+      "empty": "אין עדיין קבצי מדיה.",
+      "uploadSuccess": "הקובץ הועלה",
+      "untitled": "ללא שם",
+      "altTextLabel": "טקסט חלופי ({locale})",
+      "picker": {
+        "title": "בחירת מדיה",
+        "select": "בחר תמונה",
+        "change": "החלפת תמונה",
+        "clear": "ניקוי",
+        "empty": "אין עדיין תמונות.",
+        "loading": "טוען…"
+      },
+      "errors": {
+        "tooLarge": "הקובץ גדול מדי (מעל 5MB).",
+        "badType": "סוג קובץ לא נתמך.",
+        "empty": "הקובץ ריק.",
+        "forbidden": "אין לך הרשאה לבצע פעולה זו.",
+        "uploadFailed": "ההעלאה נכשלה. נסה שוב.",
+        "loadFailed": "טעינת המדיה נכשלה."
+      }
     },
     "branches": {
       "list": {
@@ -208,8 +239,7 @@
         "shortName": "שם מקוצר",
         "address": "כתובת",
         "city": "עיר",
-        "heroImageId": "מזהה תמונת באנר",
-        "heroImageIdHint": "בחירת מדיה תתווסף בתת-פרויקט D",
+        "heroImageId": "תמונת באנר",
         "heroHeadline": "כותרת הבאנר",
         "heroTagline": "תקציר הבאנר",
         "seoTitle": "כותרת SEO",

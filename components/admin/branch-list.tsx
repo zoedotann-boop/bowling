@@ -133,26 +133,26 @@ export function BranchList({ items }: { items: BranchListItem[] }) {
   }
 
   return (
-    <div className="relative w-full overflow-auto border border-line bg-surface">
-      <table className="w-full border-collapse text-sm">
-        <thead className="bg-muted/40 text-xs font-medium tracking-wide text-ink-muted uppercase">
-          <tr className="border-b border-line">
-            <th className="w-10 px-3 py-2 text-start" aria-hidden />
-            <th className="px-3 py-2 text-start">{t("slug")}</th>
-            <th className="px-3 py-2 text-start">{t("name")}</th>
-            <th className="px-3 py-2 text-end">{t("actions")}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext
-              items={rows.map((r) => r.id)}
-              strategy={verticalListSortingStrategy}
-            >
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <SortableContext
+        items={rows.map((r) => r.id)}
+        strategy={verticalListSortingStrategy}
+      >
+        <div className="relative w-full overflow-auto border border-line bg-surface">
+          <table className="w-full border-collapse text-sm">
+            <thead className="bg-muted/40 text-xs font-medium tracking-wide text-ink-muted uppercase">
+              <tr className="border-b border-line">
+                <th className="w-10 px-3 py-2 text-start" aria-hidden />
+                <th className="px-3 py-2 text-start">{t("slug")}</th>
+                <th className="px-3 py-2 text-start">{t("name")}</th>
+                <th className="px-3 py-2 text-end">{t("actions")}</th>
+              </tr>
+            </thead>
+            <tbody>
               {rows.map((item) => (
                 <SortableRow
                   key={item.id}
@@ -160,10 +160,10 @@ export function BranchList({ items }: { items: BranchListItem[] }) {
                   gripLabel={t("dragToReorder")}
                 />
               ))}
-            </SortableContext>
-          </DndContext>
-        </tbody>
-      </table>
-    </div>
+            </tbody>
+          </table>
+        </div>
+      </SortableContext>
+    </DndContext>
   )
 }

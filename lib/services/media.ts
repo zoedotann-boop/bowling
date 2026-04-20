@@ -1,10 +1,12 @@
-import { eq } from "drizzle-orm"
+import { del } from "@vercel/blob"
+import { desc, eq } from "drizzle-orm"
 
 import { db } from "@/lib/db"
 import { mediaAsset } from "@/lib/db/schema/media"
 
 import { formatZodErrors } from "./errors"
-import { createMediaAssetSchema } from "./schemas"
+import { createMediaAssetSchema, updateMediaAltTextSchema } from "./schemas"
+import { tags } from "./tags"
 import type { WriteResult } from "./types"
 
 export type MediaAssetRead = {
@@ -15,6 +17,12 @@ export type MediaAssetRead = {
   width: number | null
   height: number | null
   sizeBytes: number | null
+  uploadedBy: string | null
+  altTextHe: string | null
+  altTextEn: string | null
+  altTextRu: string | null
+  altTextAr: string | null
+  createdAt: Date
 }
 
 function toRead(row: typeof mediaAsset.$inferSelect): MediaAssetRead {
@@ -26,16 +34,22 @@ function toRead(row: typeof mediaAsset.$inferSelect): MediaAssetRead {
     width: row.width,
     height: row.height,
     sizeBytes: row.sizeBytes,
+    uploadedBy: row.uploadedBy,
+    altTextHe: row.altTextHe,
+    altTextEn: row.altTextEn,
+    altTextRu: row.altTextRu,
+    altTextAr: row.altTextAr,
+    createdAt: row.createdAt,
   }
 }
 
-export async function getById(id: string): Promise<MediaAssetRead | null> {
-  const [row] = await db
+export async function list(limit = 200): Promise<MediaAssetRead[]> {
+  const rows = await db
     .select()
     .from(mediaAsset)
-    .where(eq(mediaAsset.id, id))
-    .limit(1)
-  return row ? toRead(row) : null
+    .orderBy(desc(mediaAsset.createdAt))
+    .limit(limit)
+  return rows.map(toRead)
 }
 
 export async function create(
@@ -56,7 +70,73 @@ export async function create(
       width: parsed.data.width ?? null,
       height: parsed.data.height ?? null,
       sizeBytes: parsed.data.sizeBytes ?? null,
+      uploadedBy: parsed.data.uploadedBy ?? null,
+      altTextHe: parsed.data.altTextHe ?? null,
+      altTextEn: parsed.data.altTextEn ?? null,
+      altTextRu: parsed.data.altTextRu ?? null,
+      altTextAr: parsed.data.altTextAr ?? null,
     })
     .returning()
-  return { ok: true, data: toRead(row!), revalidateTags: [] }
+  return {
+    ok: true,
+    data: toRead(row!),
+    revalidateTags: [tags.mediaAll()],
+  }
 }
+
+export async function updateAltText(
+  input: unknown
+): Promise<WriteResult<MediaAssetRead>> {
+  const parsed = updateMediaAltTextSchema.safeParse(input)
+  if (!parsed.success) {
+    return { ok: false, fieldErrors: formatZodErrors(parsed.error) }
+  }
+  const [row] = await db
+    .update(mediaAsset)
+    .set({
+      altTextHe: parsed.data.altTextHe ?? null,
+      altTextEn: parsed.data.altTextEn ?? null,
+      altTextRu: parsed.data.altTextRu ?? null,
+      altTextAr: parsed.data.altTextAr ?? null,
+    })
+    .where(eq(mediaAsset.id, parsed.data.id))
+    .returning()
+  if (!row) return { ok: false, fieldErrors: { id: ["media not found"] } }
+  return {
+    ok: true,
+    data: toRead(row),
+    revalidateTags: [tags.mediaAll(), tags.media(row.id)],
+  }
+}
+
+export async function remove(id: string): Promise<WriteResult<{ id: string }>> {
+  const [row] = await db
+    .select({ id: mediaAsset.id, blobUrl: mediaAsset.blobUrl })
+    .from(mediaAsset)
+    .where(eq(mediaAsset.id, id))
+    .limit(1)
+  if (!row) return { ok: false, fieldErrors: { id: ["media not found"] } }
+
+  try {
+    await del(row.blobUrl)
+  } catch (error) {
+    console.error("[media.remove] blob delete failed", {
+      id,
+      error: error instanceof Error ? error.message : String(error),
+    })
+  }
+
+  await db.delete(mediaAsset).where(eq(mediaAsset.id, id))
+  return {
+    ok: true,
+    data: { id },
+    revalidateTags: [tags.mediaAll(), tags.media(id)],
+  }
+}
+
+export {
+  ALLOWED_UPLOAD_MIME,
+  MAX_UPLOAD_BYTES,
+  validateUpload,
+  type UploadValidationError,
+} from "./media-validation"

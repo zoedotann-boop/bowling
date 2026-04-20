@@ -20,6 +20,12 @@ export function AdminNav() {
         >
           {t("branches")}
         </Link>
+        <Link
+          href="/admin/media"
+          className="text-sm text-ink-muted transition-colors hover:text-ink"
+        >
+          {t("media")}
+        </Link>
       </div>
       <SignOutButton />
     </nav>

@@ -7,6 +7,7 @@ import { Link } from "@/i18n/navigation"
 import { routing, type Locale } from "@/i18n/routing"
 import { db } from "@/lib/db"
 import { branch, branchTranslation } from "@/lib/db/schema/content"
+import { mediaAsset } from "@/lib/db/schema/media"
 import * as services from "@/lib/services"
 import {
   BranchForm,
@@ -60,6 +61,20 @@ export default async function EditBranchPage({
 
   const hoursInitial = await services.hours.listByBranch(slug)
 
+  let heroImage: BranchFormInitial["heroImage"] = null
+  if (row.heroImageId) {
+    const [asset] = await db
+      .select({
+        id: mediaAsset.id,
+        blobUrl: mediaAsset.blobUrl,
+        filename: mediaAsset.filename,
+      })
+      .from(mediaAsset)
+      .where(eq(mediaAsset.id, row.heroImageId))
+      .limit(1)
+    if (asset) heroImage = asset
+  }
+
   const translations: BranchFormInitial["translations"] =
     {} as BranchFormInitial["translations"]
   for (const locale of routing.locales) {
@@ -110,6 +125,7 @@ export default async function EditBranchPage({
     longitude: row.longitude,
     brandAccent: row.brandAccent as "cherry" | "teal",
     heroImageId: row.heroImageId,
+    heroImage,
     googlePlaceId: row.googlePlaceId,
     published: row.published,
     sortOrder: row.sortOrder,

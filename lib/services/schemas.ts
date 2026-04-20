@@ -216,4 +216,17 @@ export const createMediaAssetSchema = z.object({
   width: z.number().int().positive().nullish(),
   height: z.number().int().positive().nullish(),
   sizeBytes: z.number().int().positive().nullish(),
+  uploadedBy: z.string().nullish(),
+  altTextHe: z.string().nullish(),
+  altTextEn: z.string().nullish(),
+  altTextRu: z.string().nullish(),
+  altTextAr: z.string().nullish(),
+})
+
+export const updateMediaAltTextSchema = z.object({
+  id: nonEmpty,
+  altTextHe: z.string().nullish(),
+  altTextEn: z.string().nullish(),
+  altTextRu: z.string().nullish(),
+  altTextAr: z.string().nullish(),
 })

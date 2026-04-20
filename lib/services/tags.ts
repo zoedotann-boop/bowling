@@ -6,4 +6,6 @@ export const tags = {
   branchPackages: (slug: string) => `branch:${slug}:packages` as const,
   branchEvents: (slug: string) => `branch:${slug}:events` as const,
   branchMenu: (slug: string) => `branch:${slug}:menu` as const,
+  mediaAll: () => "media:all" as const,
+  media: (id: string) => `media:${id}` as const,
 }
