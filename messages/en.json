@@ -1,0 +1,128 @@
+{
+  "Nav": {
+    "home": "Home",
+    "prices": "Prices",
+    "events": "Events & Birthdays",
+    "contact": "Contact",
+    "menuLabel": "Open menu"
+  },
+  "Cta": {
+    "book": "Book on WhatsApp",
+    "viewPrices": "View prices",
+    "contact": "Contact us",
+    "whatsapp": "WhatsApp",
+    "callNow": "Call now",
+    "getDirections": "Open in Maps",
+    "exploreEvents": "Event packages"
+  },
+  "BranchSwitcher": {
+    "label": "Branch",
+    "title": "Choose a branch",
+    "current": "You are viewing",
+    "open": "Switch branch"
+  },
+  "LocaleSwitcher": {
+    "label": "Language",
+    "open": "Choose language"
+  },
+  "Hero": {
+    "viewingLabel": "You're viewing",
+    "scrollHint": "Scroll to explore",
+    "openNow": "Open now",
+    "closedNow": "Closed now"
+  },
+  "Highlights": {
+    "title": "Why this branch is special",
+    "subtitle": "Built for groups, families, and good nights out."
+  },
+  "PricingPreview": {
+    "title": "Bowl all night, every night",
+    "subtitle": "Transparent pricing - pay per game or per lane.",
+    "weekday": "Weekday",
+    "weekend": "Weekend",
+    "viewAll": "See full pricing",
+    "shoeRental": "Shoe rental"
+  },
+  "Pricing": {
+    "title": "Pricing",
+    "intro": "All prices are per person unless marked otherwise.",
+    "tableLabel": "Item",
+    "weekday": "Weekday",
+    "weekend": "Weekend",
+    "shoeRental": "Shoe rental",
+    "packagesTitle": "Packages",
+    "perksLabel": "Includes"
+  },
+  "Events": {
+    "title": "Events & Birthdays",
+    "intro": "Birthday parties, corporate events, and group nights - fully hosted.",
+    "inquireCta": "Plan your event"
+  },
+  "EventsTeaser": {
+    "title": "Birthdays & Group Events",
+    "subtitle": "We host the party - you take the credit.",
+    "cta": "See packages"
+  },
+  "Gallery": {
+    "title": "Inside the venue",
+    "subtitle": "A peek at the lanes, the lights, and the fun."
+  },
+  "Testimonials": {
+    "title": "Loved by locals",
+    "subtitle": "Real reviews from real visitors."
+  },
+  "Menu": {
+    "eyebrow": "Menu",
+    "title": "Eat, drink, bowl",
+    "subtitle": "Snacks, mains, and drinks served lane-side.",
+    "viewFull": "Full menu"
+  },
+  "Reviews": {
+    "eyebrow": "Reviews",
+    "title": "What guests say on Google",
+    "subtitle": "Verified reviews from real visitors.",
+    "ratingLabel": "Google rating",
+    "reviewsCount": "{count} reviews",
+    "viewAll": "Read all reviews"
+  },
+  "Contact": {
+    "title": "Contact",
+    "intro": "Send us a message - we usually reply within an hour.",
+    "address": "Address",
+    "phone": "Phone",
+    "email": "Email",
+    "hours": "Opening hours",
+    "form": {
+      "name": "Full name",
+      "phone": "Phone",
+      "email": "Email (optional)",
+      "branch": "Branch",
+      "eventType": "Event type (optional)",
+      "preferredDate": "Preferred date (optional)",
+      "guests": "Number of guests (optional)",
+      "message": "Message",
+      "submit": "Send message",
+      "submitting": "Sending…",
+      "success": "Thanks - we'll get back to you shortly!",
+      "error": "Something went wrong. Please try again or message us on WhatsApp."
+    }
+  },
+  "EventTypes": {
+    "birthday": "Birthday",
+    "corporate": "Corporate",
+    "school": "School / camp",
+    "casual": "Casual hangout",
+    "other": "Other"
+  },
+  "Footer": {
+    "branches": "Our branches",
+    "explore": "Explore",
+    "contact": "Contact",
+    "rights": "All rights reserved.",
+    "tagline": "Family-friendly bowling, kitchen and party packages - Ramat Gan and Rishon LeTsiyon."
+  },
+  "WhatsApp": {
+    "label": "Chat on WhatsApp",
+    "prefilled": "Hi! I'd like to book lanes at {branch}. Can you help?"
+  }
+}
