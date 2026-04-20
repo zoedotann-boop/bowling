@@ -39,4 +39,5 @@ next-env.d.ts
 .claude/settings.local.json
 .claude/memory/
 .claude/.cache/
+.claude/scheduled_tasks.lock
 .env
