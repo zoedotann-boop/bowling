@@ -77,7 +77,8 @@
     ],
     "ignoreExportsUsedInFile": true,
     "ignoreDependencies": [
-      "@react-email/preview-server"
+      "@react-email/preview-server",
+      "@react-email/ui"
     ]
   }
 }
