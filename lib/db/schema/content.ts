@@ -448,3 +448,50 @@ export const menuItemTranslationRelations = relations(
     }),
   })
 )
+
+// ---------- Footer link ----------
+
+export const footerLink = pgTable(
+  "footer_link",
+  {
+    id: text("id").primaryKey(),
+    locale: text("locale").notNull(),
+    groupKey: text("group_key").notNull(),
+    label: text("label").notNull(),
+    href: text("href").notNull(),
+    sortOrder: integer("sort_order").default(0).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => [
+    index("footer_link_locale_group_idx").on(
+      table.locale,
+      table.groupKey,
+      table.sortOrder
+    ),
+  ]
+)
+
+// ---------- Legal page ----------
+
+export const legalPage = pgTable("legal_page", {
+  slug: text("slug").primaryKey(),
+  titleHe: text("title_he"),
+  titleEn: text("title_en"),
+  titleRu: text("title_ru"),
+  titleAr: text("title_ar"),
+  bodyMarkdownHe: text("body_markdown_he"),
+  bodyMarkdownEn: text("body_markdown_en"),
+  bodyMarkdownRu: text("body_markdown_ru"),
+  bodyMarkdownAr: text("body_markdown_ar"),
+  published: boolean("published").default(true).notNull(),
+  sortOrder: integer("sort_order").default(0).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+})

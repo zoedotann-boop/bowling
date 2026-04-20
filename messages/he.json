@@ -129,7 +129,9 @@
     "nav": {
       "brand": "ניהול באולינג",
       "branches": "סניפים",
+      "contact": "יצירת קשר",
       "media": "מדיה",
+      "footer": "פוטר",
       "signOut": "התנתקות"
     },
     "common": {
@@ -172,7 +174,51 @@
       "itemCreated": "פריט נוצר",
       "itemSaved": "פריט נשמר",
       "itemDeleted": "פריט נמחק",
+      "contactSaved": "פרטי יצירת הקשר נשמרו",
+      "footerLinkCreated": "קישור פוטר נוצר",
+      "footerLinkSaved": "קישור פוטר נשמר",
+      "footerLinkDeleted": "קישור פוטר נמחק",
+      "legalPageCreated": "עמוד תנאים נוצר",
+      "legalPageSaved": "עמוד תנאים נשמר",
+      "legalPageDeleted": "עמוד תנאים נמחק",
       "genericError": "משהו השתבש"
+    },
+    "contact": {
+      "title": "פרטי יצירת קשר",
+      "indexTitle": "יצירת קשר",
+      "indexDescription": "טלפון, וואטסאפ, אימייל וקישור מפה לכל סניף.",
+      "editTitle": "יצירת קשר · {slug}",
+      "empty": "אין סניפים עדיין.",
+      "phone": "טלפון",
+      "whatsapp": "וואטסאפ",
+      "email": "אימייל",
+      "mapUrl": "קישור מפה"
+    },
+    "footer": {
+      "pageTitle": "פוטר",
+      "pageDescription": "ניהול קבוצות קישורים בפוטר ועמודי תנאים.",
+      "linksTitle": "קישורי פוטר",
+      "linksEmpty": "אין קישורים בפוטר עדיין.",
+      "addLink": "קישור חדש",
+      "locale": "שפה",
+      "groupKey": "קבוצה",
+      "label": "תווית",
+      "href": "כתובת",
+      "reorder": "גרור לשינוי סדר",
+      "confirmDeleteTitle": "למחוק את הקישור?",
+      "confirmDeleteDescription": "הפעולה תסיר את \"{label}\" ואינה ניתנת לביטול."
+    },
+    "legal": {
+      "title": "עמודי תנאים",
+      "addPage": "עמוד חדש",
+      "empty": "אין עמודי תנאים עדיין.",
+      "slug": "מזהה",
+      "sortOrder": "סדר הצגה",
+      "published": "מפורסם",
+      "pageTitle": "כותרת",
+      "pageTitleHint": "לדוגמה: תנאי שימוש",
+      "body": "תוכן (Markdown)",
+      "bodyHint": "תומך בכותרות, רשימות, **מודגש**, *נטוי* ו[קישורים](https://example.com)."
     },
     "packages": {
       "title": "חבילות",

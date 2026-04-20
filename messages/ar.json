@@ -129,7 +129,9 @@
     "nav": {
       "brand": "Bowling Admin",
       "branches": "Branches",
+      "contact": "Contact",
       "media": "Media",
+      "footer": "Footer",
       "signOut": "تسجيل الخروج"
     },
     "common": {
@@ -172,7 +174,51 @@
       "itemCreated": "Item created",
       "itemSaved": "Item saved",
       "itemDeleted": "Item deleted",
+      "contactSaved": "Contact details saved",
+      "footerLinkCreated": "Footer link created",
+      "footerLinkSaved": "Footer link saved",
+      "footerLinkDeleted": "Footer link deleted",
+      "legalPageCreated": "Legal page created",
+      "legalPageSaved": "Legal page saved",
+      "legalPageDeleted": "Legal page deleted",
       "genericError": "Something went wrong"
+    },
+    "contact": {
+      "title": "Contact details",
+      "indexTitle": "Contact",
+      "indexDescription": "Per-branch phone, WhatsApp, email, and map link.",
+      "editTitle": "Contact · {slug}",
+      "empty": "No branches yet.",
+      "phone": "Phone",
+      "whatsapp": "WhatsApp",
+      "email": "Email",
+      "mapUrl": "Map URL"
+    },
+    "footer": {
+      "pageTitle": "Footer",
+      "pageDescription": "Manage footer link groups and legal pages.",
+      "linksTitle": "Footer links",
+      "linksEmpty": "No footer links yet.",
+      "addLink": "New link",
+      "locale": "Locale",
+      "groupKey": "Group",
+      "label": "Label",
+      "href": "URL",
+      "reorder": "Drag to reorder",
+      "confirmDeleteTitle": "Delete footer link?",
+      "confirmDeleteDescription": "This removes \"{label}\". Cannot be undone."
+    },
+    "legal": {
+      "title": "Legal pages",
+      "addPage": "New page",
+      "empty": "No legal pages yet.",
+      "slug": "Slug",
+      "sortOrder": "Sort order",
+      "published": "Published",
+      "pageTitle": "Title",
+      "pageTitleHint": "e.g. Terms of Service",
+      "body": "Body (Markdown)",
+      "bodyHint": "Supports headings, lists, **bold**, *italic*, and [links](https://example.com)."
     },
     "packages": {
       "title": "Packages",

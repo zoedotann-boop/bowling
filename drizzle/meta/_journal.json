@@ -22,6 +22,13 @@
       "when": 1776696806152,
       "tag": "0002_red_magdalene",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1776722983490,
+      "tag": "0003_perfect_venus",
+      "breakpoints": true
     }
   ]
 }

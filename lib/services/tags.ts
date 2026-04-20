@@ -8,4 +8,7 @@ export const tags = {
   branchMenu: (slug: string) => `branch:${slug}:menu` as const,
   mediaAll: () => "media:all" as const,
   media: (id: string) => `media:${id}` as const,
+  footerAll: () => "footer:all" as const,
+  legalAll: () => "legal:all" as const,
+  legal: (slug: string) => `legal:${slug}` as const,
 }

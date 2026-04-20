@@ -230,3 +230,35 @@ export const updateMediaAltTextSchema = z.object({
   altTextRu: z.string().nullish(),
   altTextAr: z.string().nullish(),
 })
+
+// ---------- Footer link ----------
+
+const hrefSchema = z.string().min(1).max(500)
+
+export const createFooterLinkSchema = z.object({
+  locale: localeSchema,
+  groupKey: nonEmpty,
+  label: nonEmpty,
+  href: hrefSchema,
+  sortOrder: z.number().int().optional(),
+})
+
+export const updateFooterLinkSchema = createFooterLinkSchema.partial().extend({
+  id: nonEmpty,
+})
+
+// ---------- Legal page ----------
+
+export const upsertLegalPageSchema = z.object({
+  slug: slugSchema,
+  titleHe: z.string().nullish(),
+  titleEn: z.string().nullish(),
+  titleRu: z.string().nullish(),
+  titleAr: z.string().nullish(),
+  bodyMarkdownHe: z.string().nullish(),
+  bodyMarkdownEn: z.string().nullish(),
+  bodyMarkdownRu: z.string().nullish(),
+  bodyMarkdownAr: z.string().nullish(),
+  published: z.boolean().optional(),
+  sortOrder: z.number().int().optional(),
+})
