@@ -21,6 +21,8 @@ import {
 } from "@/lib/db/schema/content"
 import { mediaAsset } from "@/lib/db/schema/media"
 import * as services from "@/lib/services"
+import { BranchDangerZone } from "@/components/admin/branch-danger-zone"
+import { BranchEditTabs } from "@/components/admin/branch-edit-tabs"
 import {
   BranchForm,
   type BranchFormInitial,
@@ -414,28 +416,41 @@ export default async function EditBranchPage({
         title={t("editTitle", { name: displayName })}
         description={row.slug}
       />
-      <BranchForm mode="edit" initial={initial} />
-      <BranchHoursForm branchId={row.id} initialRows={hoursInitial} />
-      <BranchPackagesForm
-        branchId={row.id}
-        slug={row.slug}
-        initialRows={packageInitial}
+      <BranchEditTabs
+        infoHeroSeoPanel={<BranchForm mode="edit" initial={initial} />}
+        hoursPanel={
+          <BranchHoursForm branchId={row.id} initialRows={hoursInitial} />
+        }
+        pricesPanel={
+          <BranchPricesForm
+            branchId={row.id}
+            slug={row.slug}
+            initialRows={priceInitial}
+          />
+        }
+        packagesPanel={
+          <BranchPackagesForm
+            branchId={row.id}
+            slug={row.slug}
+            initialRows={packageInitial}
+          />
+        }
+        eventsPanel={
+          <BranchEventsForm
+            branchId={row.id}
+            slug={row.slug}
+            initialRows={eventInitial}
+          />
+        }
+        menuPanel={
+          <BranchMenuForm
+            branchId={row.id}
+            slug={row.slug}
+            initialCategories={menuInitial}
+          />
+        }
       />
-      <BranchPricesForm
-        branchId={row.id}
-        slug={row.slug}
-        initialRows={priceInitial}
-      />
-      <BranchEventsForm
-        branchId={row.id}
-        slug={row.slug}
-        initialRows={eventInitial}
-      />
-      <BranchMenuForm
-        branchId={row.id}
-        slug={row.slug}
-        initialCategories={menuInitial}
-      />
+      <BranchDangerZone branchId={row.id} />
     </div>
   )
 }
