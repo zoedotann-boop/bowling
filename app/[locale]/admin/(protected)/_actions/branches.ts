@@ -83,16 +83,34 @@ function baseBranchInput(formData: FormData) {
 }
 
 function translationsForBranch(formData: FormData, branchId: string) {
-  return routing.locales.map((locale) => ({
-    branchId,
-    locale,
-    ...Object.fromEntries(
-      TRANSLATABLE_FIELDS.map((field) => [
-        field,
-        readTranslation(formData, field, locale),
-      ])
-    ),
-  }))
+  const now = new Date()
+  return routing.locales.map((locale) => {
+    const base = {
+      branchId,
+      locale,
+      ...Object.fromEntries(
+        TRANSLATABLE_FIELDS.map((field) => [
+          field,
+          readTranslation(formData, field, locale),
+        ])
+      ),
+    }
+    if (locale === routing.defaultLocale) {
+      return {
+        ...base,
+        aiGenerated: false,
+        aiGeneratedAt: null,
+        reviewedAt: null,
+      }
+    }
+    const aiFlag = formData.get(`aiGenerated.${locale}`) === "1"
+    return {
+      ...base,
+      aiGenerated: aiFlag,
+      aiGeneratedAt: aiFlag ? now : null,
+      reviewedAt: aiFlag ? null : now,
+    }
+  })
 }
 
 export async function createBranchAction(

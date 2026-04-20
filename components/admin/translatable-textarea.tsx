@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils"
 
 import { AiSparkleButton } from "./ai-sparkle-button"
 import type { TranslatableValues } from "./translatable-input"
+import { useTranslatableField } from "./translation-state-context"
 
 export function TranslatableTextarea({
   name,
@@ -33,11 +34,12 @@ export function TranslatableTextarea({
   textareaClassName?: string
 }) {
   const locales = routing.locales
-  const [values, setValues] = React.useState<TranslatableValues>(() => {
-    const initial: TranslatableValues = {}
-    for (const l of locales) initial[l] = defaultValues?.[l] ?? ""
-    return initial
-  })
+  const aiInit = (needsReviewLocales?.length ?? 0) > 0
+  const { values, setValue } = useTranslatableField(
+    name,
+    defaultValues ?? {},
+    aiInit
+  )
   const [active, setActive] = React.useState<Locale>(routing.defaultLocale)
   const reviewSet = new Set(needsReviewLocales ?? [])
 
@@ -48,7 +50,7 @@ export function TranslatableTextarea({
           {label}
           {required ? <span className="text-destructive"> *</span> : null}
         </FieldLabel>
-        <AiSparkleButton label={aiLabel} />
+        <AiSparkleButton fieldName={name} label={aiLabel} />
       </div>
       <Tabs value={active} onValueChange={(v) => setActive(v as Locale)}>
         <TabsList>
@@ -70,9 +72,7 @@ export function TranslatableTextarea({
             <Textarea
               name={`${name}.${l}`}
               value={values[l] ?? ""}
-              onChange={(e) =>
-                setValues((prev) => ({ ...prev, [l]: e.target.value }))
-              }
+              onChange={(e) => setValue(l, e.target.value)}
               rows={rows}
               dir={dirFromLocale(l)}
               lang={l}

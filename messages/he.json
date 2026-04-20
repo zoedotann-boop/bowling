@@ -141,6 +141,16 @@
       "delete": "מחיקה",
       "save": "שמירה"
     },
+    "translate": {
+      "fillAll": "תרגם הכול",
+      "fillField": "תרגם מעברית",
+      "translating": "מתרגם…",
+      "rateLimit": "הגעת למכסת התרגומים. נסה שוב בעוד שעה.",
+      "tooManyFields": "יותר מדי שדות לתרגום בבת אחת.",
+      "gatewayError": "שירות התרגום אינו זמין. נסה שוב.",
+      "needSource": "מלא לפחות שדה אחד בעברית.",
+      "emptySource": "יש לכתוב תוכן בעברית קודם."
+    },
     "toasts": {
       "branchCreated": "סניף נוצר",
       "branchSaved": "סניף נשמר",
@@ -208,7 +218,6 @@
         "googlePlaceIdHint": "תת-פרויקט G יחבר את Places API",
         "create": "יצירת סניף",
         "save": "שמירת שינויים",
-        "aiComingSoon": "תרגום AI בקרוב",
         "needsReview": "דורש סקירה",
         "dangerZone": "אזור מסוכן",
         "dangerZoneDescription": "מחיקת סניף מסירה את כל התוכן המשויך. לא ניתן לבטל.",
