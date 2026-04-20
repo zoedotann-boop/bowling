@@ -265,3 +265,16 @@ Update this file when you:
 - Add or rename a homepage section.
 
 Outdated rules are worse than no rules. If the code disagrees with this file, fix this file before writing more code.
+
+---
+
+## Admin surface (out of scope)
+
+Everything in this document describes the **public marketing site** under `app/[locale]/(site)/…`. The **admin panel** at `app/[locale]/admin/…` is a separate visual world and intentionally does not adopt these conventions:
+
+- No retro tokens: no `paper`/`cream` backgrounds, no `ticket-red`, no `shadow-block` hard offsets, no 2px ink borders, no `font-display` / Bagel Fat One.
+- Instead, admin uses neutral SaaS tokens (`bg-surface`, `bg-canvas`, `bg-muted`, `text-ink`, `text-ink-muted`, `border-line`) plus a single focus ring, subtle 1px borders, and the sans stack.
+- Density, layout, and component set (shadcn `Sidebar`, `Card`, `Table`, `Badge`, `Breadcrumb`, `Select`, etc.) follow a clean/minimal SaaS dashboard aesthetic — think Linear/Vercel/Notion — optimized for internal tooling.
+- RTL still holds admin-side: logical utilities only (`ps-*`/`pe-*`/`ms-*`/`me-*`/`start-*`/`end-*`).
+
+When editing admin code, do **not** "fix" it to match the poster aesthetic. The split is deliberate — the two surfaces serve different audiences.

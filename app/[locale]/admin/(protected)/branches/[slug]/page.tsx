@@ -3,7 +3,6 @@ import { notFound } from "next/navigation"
 import { getTranslations } from "next-intl/server"
 import { asc, eq, inArray } from "drizzle-orm"
 
-import { Link } from "@/i18n/navigation"
 import { routing, type Locale } from "@/i18n/routing"
 import { db } from "@/lib/db"
 import {
@@ -45,6 +44,7 @@ import {
   type PriceRowForm,
   type PriceKind,
 } from "@/components/admin/branch-prices-form"
+import { PageHeader } from "@/components/admin/page-header"
 
 export const metadata: Metadata = {
   title: "Admin · Edit branch",
@@ -69,14 +69,6 @@ export default async function EditBranchPage({
 }) {
   const { locale, slug } = await params
   const t = await getTranslations({ locale, namespace: "Admin.branches.form" })
-  const tl = await getTranslations({
-    locale,
-    namespace: "Admin.branches.list",
-  })
-  const tTabs = await getTranslations({
-    locale,
-    namespace: "Admin.branches.tabs",
-  })
 
   const [row] = await db
     .select()
@@ -418,52 +410,32 @@ export default async function EditBranchPage({
 
   return (
     <div className="flex flex-col gap-8">
-      <header className="flex flex-col gap-2">
-        <Link
-          href="/admin/branches"
-          className="text-xs text-ink-muted hover:text-ink"
-        >
-          ← {tl("title")}
-        </Link>
-        <h1 className="text-2xl font-semibold text-ink">
-          {t("editTitle", { name: displayName })}
-        </h1>
-      </header>
+      <PageHeader
+        title={t("editTitle", { name: displayName })}
+        description={row.slug}
+      />
       <BranchForm mode="edit" initial={initial} />
-      <section className="flex flex-col gap-3 border-t border-line pt-6">
-        <h2 className="font-heading text-sm tracking-wide text-ink-muted uppercase">
-          {tTabs("hours")}
-        </h2>
-        <BranchHoursForm branchId={row.id} initialRows={hoursInitial} />
-      </section>
-      <section className="flex flex-col gap-3 border-t border-line pt-6">
-        <BranchPackagesForm
-          branchId={row.id}
-          slug={row.slug}
-          initialRows={packageInitial}
-        />
-      </section>
-      <section className="flex flex-col gap-3 border-t border-line pt-6">
-        <BranchPricesForm
-          branchId={row.id}
-          slug={row.slug}
-          initialRows={priceInitial}
-        />
-      </section>
-      <section className="flex flex-col gap-3 border-t border-line pt-6">
-        <BranchEventsForm
-          branchId={row.id}
-          slug={row.slug}
-          initialRows={eventInitial}
-        />
-      </section>
-      <section className="flex flex-col gap-3 border-t border-line pt-6">
-        <BranchMenuForm
-          branchId={row.id}
-          slug={row.slug}
-          initialCategories={menuInitial}
-        />
-      </section>
+      <BranchHoursForm branchId={row.id} initialRows={hoursInitial} />
+      <BranchPackagesForm
+        branchId={row.id}
+        slug={row.slug}
+        initialRows={packageInitial}
+      />
+      <BranchPricesForm
+        branchId={row.id}
+        slug={row.slug}
+        initialRows={priceInitial}
+      />
+      <BranchEventsForm
+        branchId={row.id}
+        slug={row.slug}
+        initialRows={eventInitial}
+      />
+      <BranchMenuForm
+        branchId={row.id}
+        slug={row.slug}
+        initialCategories={menuInitial}
+      />
     </div>
   )
 }

@@ -33,6 +33,15 @@ import {
 import type { FormState } from "@/app/[locale]/admin/(protected)/_actions/types"
 import { cn } from "@/lib/utils"
 
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+
 import { ConfirmDeleteDialog } from "./confirm-delete-dialog"
 import { TranslatableInput } from "./translatable-input"
 import { TranslatableTextarea } from "./translatable-textarea"
@@ -116,41 +125,41 @@ export function BranchPackagesForm({ branchId, slug, initialRows }: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="font-heading text-sm tracking-wide text-ink-muted uppercase">
-          {t("title")}
-        </h2>
-        <NewPackageButton branchId={branchId} slug={slug} />
-      </div>
-      {rows.length === 0 ? (
-        <div className="border border-line bg-surface p-6 text-center text-sm text-ink-muted">
-          {t("empty")}
-        </div>
-      ) : (
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext
-            items={rows.map((r) => r.id)}
-            strategy={verticalListSortingStrategy}
+    <Card>
+      <CardHeader>
+        <CardTitle>{t("title")}</CardTitle>
+        <CardAction>
+          <NewPackageButton branchId={branchId} slug={slug} />
+        </CardAction>
+      </CardHeader>
+      <CardContent>
+        {rows.length === 0 ? (
+          <p className="py-6 text-center text-sm text-ink-muted">
+            {t("empty")}
+          </p>
+        ) : (
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
           >
-            <ul className="flex flex-col gap-3">
-              {rows.map((row) => (
-                <SortableRow
-                  key={row.id}
-                  row={row}
-                  branchId={branchId}
-                  slug={slug}
-                />
-              ))}
-            </ul>
-          </SortableContext>
-        </DndContext>
-      )}
-    </div>
+            <SortableContext
+              items={rows.map((r) => r.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <ul className="flex flex-col">
+                {rows.map((row, idx) => (
+                  <React.Fragment key={row.id}>
+                    {idx > 0 ? <Separator className="my-3" /> : null}
+                    <SortableRow row={row} branchId={branchId} slug={slug} />
+                  </React.Fragment>
+                ))}
+              </ul>
+            </SortableContext>
+          </DndContext>
+        )}
+      </CardContent>
+    </Card>
   )
 }
 
@@ -177,10 +186,7 @@ function SortableRow({
     <li
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
-      className={cn(
-        "flex items-start gap-2 border border-line bg-surface p-3",
-        isDragging && "opacity-60"
-      )}
+      className={cn("flex items-start gap-2", isDragging && "opacity-60")}
     >
       <button
         type="button"
