@@ -36,7 +36,6 @@ export default function Icon() {
         borderRadius: 7,
       }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={`data:image/svg+xml;utf8,${encodeURIComponent(pinSvg)}`}
         width={28}
