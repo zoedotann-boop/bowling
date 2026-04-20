@@ -4,7 +4,12 @@ import * as React from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
-import { IconTrash, IconUpload } from "@tabler/icons-react"
+import {
+  IconLoader2,
+  IconSparkles,
+  IconTrash,
+  IconUpload,
+} from "@tabler/icons-react"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
@@ -26,7 +31,9 @@ import {
   deleteMediaAction,
   updateMediaAltTextAction,
 } from "@/app/[locale]/admin/(protected)/_actions/media"
+import { translateBranchFieldsAction } from "@/app/[locale]/admin/(protected)/_actions/translate"
 import type { FormState } from "@/app/[locale]/admin/(protected)/_actions/types"
+import { routing, type Locale } from "@/i18n/routing"
 
 const LOCALE_KEYS = [
   { key: "altTextHe", locale: "he" },
@@ -177,13 +184,26 @@ function DetailDialog({
   const t = useTranslations("Admin.media")
   const tt = useTranslations("Admin.toasts")
   const tc = useTranslations("Admin.common")
+  const tr = useTranslations("Admin.translate")
   const router = useRouter()
   const [isDeleting, startDelete] = React.useTransition()
+  const [isTranslating, startTranslate] = React.useTransition()
   const initialState: FormState = { status: "idle" }
   const [state, formAction, savePending] = React.useActionState(
     updateMediaAltTextAction,
     initialState
   )
+  const [values, setValues] = React.useState<Record<string, string>>({})
+  const [prevItemId, setPrevItemId] = React.useState<string | null>(null)
+  if (item && item.id !== prevItemId) {
+    setPrevItemId(item.id)
+    setValues({
+      altTextHe: item.altTextHe ?? "",
+      altTextEn: item.altTextEn ?? "",
+      altTextRu: item.altTextRu ?? "",
+      altTextAr: item.altTextAr ?? "",
+    })
+  }
 
   React.useEffect(() => {
     if (state.status === "success") {
@@ -214,6 +234,43 @@ function DetailDialog({
     })
   }
 
+  function handleTranslate() {
+    const source = values.altTextHe?.trim() ?? ""
+    if (source.length === 0) {
+      toast.error(tr("emptySource"))
+      return
+    }
+    const targets = routing.locales.filter((l) => l !== "he") as Locale[]
+    startTranslate(async () => {
+      const result = await translateBranchFieldsAction({
+        sourceLocale: "he",
+        targets,
+        fields: { altText: source },
+      })
+      if (result.status === "success" && result.data) {
+        setValues((prev) => {
+          const next = { ...prev }
+          for (const [loc, perField] of Object.entries(
+            result.data!.translations
+          )) {
+            const v = perField.altText
+            if (typeof v !== "string") continue
+            if (loc === "en") next.altTextEn = v
+            else if (loc === "ru") next.altTextRu = v
+            else if (loc === "ar") next.altTextAr = v
+          }
+          return next
+        })
+        return
+      }
+      const msg = result.status === "error" ? result.message : undefined
+      if (msg === "rate_limit") toast.error(tr("rateLimit"))
+      else if (msg === "too_many_fields") toast.error(tr("tooManyFields"))
+      else if (msg === "empty_source") toast.error(tr("emptySource"))
+      else toast.error(tr("gatewayError"))
+    })
+  }
+
   return (
     <Dialog open={Boolean(item)} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="max-w-xl">
@@ -233,8 +290,37 @@ function DetailDialog({
           <input type="hidden" name="id" value={item.id} />
           {LOCALE_KEYS.map(({ key, locale }) => (
             <Field key={key}>
-              <FieldLabel>{t("altTextLabel", { locale })}</FieldLabel>
-              <Textarea name={key} defaultValue={item[key] ?? ""} rows={2} />
+              <div className="flex items-center justify-between gap-2">
+                <FieldLabel>{t("altTextLabel", { locale })}</FieldLabel>
+                {locale === "he" ? (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="xs"
+                    onClick={handleTranslate}
+                    disabled={
+                      isTranslating || (values.altTextHe ?? "").trim() === ""
+                    }
+                    aria-label={tr("fillAll")}
+                    title={tr("fillAll")}
+                  >
+                    {isTranslating ? (
+                      <IconLoader2 className="size-3.5 animate-spin" />
+                    ) : (
+                      <IconSparkles className="size-3.5" />
+                    )}
+                    {tr("fillAll")}
+                  </Button>
+                ) : null}
+              </div>
+              <Textarea
+                name={key}
+                value={values[key] ?? ""}
+                onChange={(e) =>
+                  setValues((prev) => ({ ...prev, [key]: e.target.value }))
+                }
+                rows={2}
+              />
             </Field>
           ))}
           <DialogFooter>

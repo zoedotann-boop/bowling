@@ -1,4 +1,4 @@
-import { put } from "@vercel/blob"
+import { del, put } from "@vercel/blob"
 import { NextResponse } from "next/server"
 
 import { ForbiddenError, requireAdmin } from "@/lib/auth-guards"
@@ -63,6 +63,7 @@ export async function POST(request: Request) {
   })
 
   if (!created.ok) {
+    await del(uploaded.url).catch(() => {})
     return NextResponse.json(
       { error: "persistFailed", fieldErrors: created.fieldErrors },
       { status: 500 }
