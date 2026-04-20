@@ -132,12 +132,6 @@
       "media": "מדיה",
       "signOut": "התנתקות"
     },
-    "home": {
-      "eyebrow": "אזור ניהול",
-      "greeting": "שלום, {name}",
-      "branchesTitle": "סניפים",
-      "branchesSummary": "{published} מפורסמים / {total} סך הכול"
-    },
     "common": {
       "cancel": "ביטול",
       "delete": "מחיקה",

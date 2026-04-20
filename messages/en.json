@@ -132,12 +132,6 @@
       "media": "Media",
       "signOut": "Sign out"
     },
-    "home": {
-      "eyebrow": "Admin area",
-      "greeting": "Hi, {name}",
-      "branchesTitle": "Branches",
-      "branchesSummary": "{published} published / {total} total"
-    },
     "common": {
       "cancel": "Cancel",
       "delete": "Delete",
