@@ -1,5 +1,10 @@
 import { getLocale, getTranslations } from "next-intl/server"
-import { IconBrandWhatsapp, IconMail, IconMapPin, IconPhone } from "@tabler/icons-react"
+import {
+  IconBrandWhatsapp,
+  IconMail,
+  IconMapPin,
+  IconPhone,
+} from "@tabler/icons-react"
 import type { Branch } from "@/lib/branches"
 import { buildWhatsAppLink } from "@/lib/whatsapp"
 
@@ -11,7 +16,10 @@ export async function ContactInfoCard({ branch }: { branch: Branch }) {
   return (
     <div className="rounded-3xl border border-line bg-surface p-6 shadow-soft sm:p-8">
       <div className="space-y-5">
-        <Row icon={<IconMapPin className="size-5" aria-hidden />} label={t("Contact.address")}>
+        <Row
+          icon={<IconMapPin className="size-5" aria-hidden />}
+          label={t("Contact.address")}
+        >
           <a
             href={branch.mapUrl}
             target="_blank"
@@ -21,13 +29,22 @@ export async function ContactInfoCard({ branch }: { branch: Branch }) {
             {branch.address[locale]}
           </a>
         </Row>
-        <Row icon={<IconPhone className="size-5" aria-hidden />} label={t("Contact.phone")}>
+        <Row
+          icon={<IconPhone className="size-5" aria-hidden />}
+          label={t("Contact.phone")}
+        >
           <a href={`tel:${tel}`} className="text-ink hover:underline">
             {branch.phone}
           </a>
         </Row>
-        <Row icon={<IconMail className="size-5" aria-hidden />} label={t("Contact.email")}>
-          <a href={`mailto:${branch.email}`} className="text-ink hover:underline">
+        <Row
+          icon={<IconMail className="size-5" aria-hidden />}
+          label={t("Contact.email")}
+        >
+          <a
+            href={`mailto:${branch.email}`}
+            className="text-ink hover:underline"
+          >
             {branch.email}
           </a>
         </Row>
@@ -60,7 +77,7 @@ function Row({
         {icon}
       </div>
       <div className="min-w-0 flex-1">
-        <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-ink-muted">
+        <div className="text-[11px] font-medium tracking-[0.16em] text-ink-muted uppercase">
           {label}
         </div>
         <div className="mt-1 text-sm">{children}</div>

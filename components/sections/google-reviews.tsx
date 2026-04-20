@@ -1,5 +1,9 @@
 import { getLocale, getTranslations } from "next-intl/server"
-import { IconStarFilled, IconBrandGoogle, IconArrowUpRight } from "@tabler/icons-react"
+import {
+  IconStarFilled,
+  IconBrandGoogle,
+  IconArrowUpRight,
+} from "@tabler/icons-react"
 import type { Branch } from "@/lib/branches"
 import { Eyebrow } from "@/components/common/eyebrow"
 
@@ -14,10 +18,12 @@ export async function GoogleReviews({ branch }: { branch: Branch }) {
         <div className="grid gap-10 md:grid-cols-12 md:items-center">
           <div className="md:col-span-7">
             <Eyebrow>{t("eyebrow")}</Eyebrow>
-            <h2 className="mt-3 font-heading text-4xl text-ink sm:text-5xl">
+            <h2 className="font-heading mt-3 text-4xl text-ink sm:text-5xl">
               {t("title")}
             </h2>
-            <p className="mt-4 max-w-lg text-base text-ink-soft sm:text-lg">{t("subtitle")}</p>
+            <p className="mt-4 max-w-lg text-base text-ink-soft sm:text-lg">
+              {t("subtitle")}
+            </p>
           </div>
 
           <div className="md:col-span-5">
@@ -40,7 +46,7 @@ export async function GoogleReviews({ branch }: { branch: Branch }) {
           </div>
         </div>
 
-        <div className="mt-12 grid gap-5 md:grid-cols-2 sm:mt-14">
+        <div className="mt-12 grid gap-5 sm:mt-14 md:grid-cols-2">
           {google.reviews.map((r, i) => (
             <article
               key={i}
@@ -50,10 +56,12 @@ export async function GoogleReviews({ branch }: { branch: Branch }) {
                 <Stars rating={r.rating} />
                 <span className="text-xs text-ink-muted">{r.date[locale]}</span>
               </div>
-              <p className="mt-4 text-pretty text-base leading-relaxed text-ink">
+              <p className="mt-4 text-base leading-relaxed text-pretty text-ink">
                 {r.text[locale]}
               </p>
-              <p className="mt-5 text-sm font-medium text-ink-soft">- {r.author}</p>
+              <p className="mt-5 text-sm font-medium text-ink-soft">
+                - {r.author}
+              </p>
             </article>
           ))}
         </div>

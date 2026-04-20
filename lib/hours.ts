@@ -1,7 +1,13 @@
 import type { Branch, OpeningHours } from "./branches"
 
 const dayMap: Record<string, number> = {
-  Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6,
+  Sun: 0,
+  Mon: 1,
+  Tue: 2,
+  Wed: 3,
+  Thu: 4,
+  Fri: 5,
+  Sat: 6,
 }
 
 export function getTodayHours(branch: Branch): OpeningHours {
@@ -12,7 +18,7 @@ export function getTodayHours(branch: Branch): OpeningHours {
   return branch.hours[dayMap[day] ?? 0]
 }
 
-export function getNowMinutesIL(): number {
+function getNowMinutesIL(): number {
   const parts = new Intl.DateTimeFormat("en-US", {
     hour: "2-digit",
     minute: "2-digit",

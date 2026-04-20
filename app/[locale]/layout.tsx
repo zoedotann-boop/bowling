@@ -85,7 +85,7 @@ export default async function LocaleLayout({
         fontDisplay.variable,
         fontDisplayCyrillic.variable,
         fontDisplayHebrew.variable,
-        fontDisplayArabic.variable,
+        fontDisplayArabic.variable
       )}
     >
       <body className="font-sans">

@@ -17,7 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
           priority: page === "" ? 1.0 : 0.7,
           alternates: {
             languages: Object.fromEntries(
-              routing.locales.map((l) => [l, `${origin}/${l}${page}`]),
+              routing.locales.map((l) => [l, `${origin}/${l}${page}`])
             ),
           },
         })

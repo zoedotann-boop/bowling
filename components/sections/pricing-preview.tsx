@@ -27,7 +27,11 @@ export async function PricingPreview({ branch }: { branch: Branch }) {
         </div>
 
         <div className="mt-10 sm:mt-12">
-          <PricingTable branch={branch} rows={branch.prices.slice(0, 3)} showHeaderLabel={false} />
+          <PricingTable
+            branch={branch}
+            rows={branch.prices.slice(0, 3)}
+            showHeaderLabel={false}
+          />
         </div>
       </div>
     </section>

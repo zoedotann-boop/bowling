@@ -29,7 +29,7 @@ export async function generateMetadata({
     },
     alternates: {
       languages: Object.fromEntries(
-        routing.locales.map((loc) => [loc, `/${loc}`]),
+        routing.locales.map((loc) => [loc, `/${loc}`])
       ),
     },
   }
@@ -59,12 +59,19 @@ export default async function SiteLayout({
     },
     telephone: branch.phone,
     email: branch.email,
-    geo: { "@type": "GeoCoordinates", latitude: branch.geo.lat, longitude: branch.geo.lng },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: branch.geo.lat,
+      longitude: branch.geo.lng,
+    },
     image: branch.hero.image,
   }
 
   return (
-    <div data-branch-accent={branch.brandAccent} className="relative flex min-h-svh flex-col">
+    <div
+      data-branch-accent={branch.brandAccent}
+      className="relative flex min-h-svh flex-col"
+    >
       <SiteHeader branch={branch} />
       <main className="flex-1 pb-20 md:pb-0">{children}</main>
       <SiteFooter branch={branch} />

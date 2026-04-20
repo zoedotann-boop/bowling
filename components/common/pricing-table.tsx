@@ -16,7 +16,7 @@ export async function PricingTable({
 
   return (
     <div className="overflow-hidden rounded-3xl border border-line bg-surface shadow-soft">
-      <div className="grid grid-cols-3 border-b border-line bg-surface-muted px-5 py-4 text-[11px] font-medium uppercase tracking-[0.16em] text-ink-muted sm:px-7">
+      <div className="grid grid-cols-3 border-b border-line bg-surface-muted px-5 py-4 text-[11px] font-medium tracking-[0.16em] text-ink-muted uppercase sm:px-7">
         <span>{showHeaderLabel ? t("tableLabel") : ""}</span>
         <span className="text-end">{t("weekday")}</span>
         <span className="text-end">{t("weekend")}</span>

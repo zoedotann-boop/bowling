@@ -21,10 +21,10 @@ export async function EventsTeaser({ branch }: { branch: Branch }) {
       <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
         <div className="grid gap-10 md:grid-cols-2 md:items-center md:gap-12">
           <div className="text-paper">
-            <span className="inline-block text-[11px] font-medium uppercase tracking-[0.18em] text-paper/60">
+            <span className="inline-block text-[11px] font-medium tracking-[0.18em] text-paper/60 uppercase">
               {t("title")}
             </span>
-            <h2 className="mt-3 font-heading text-4xl text-paper sm:text-5xl">
+            <h2 className="font-heading mt-3 text-4xl text-paper sm:text-5xl">
               {t("subtitle")}
             </h2>
             <a
@@ -38,7 +38,9 @@ export async function EventsTeaser({ branch }: { branch: Branch }) {
             </a>
           </div>
 
-          {featured && <PackageCard branch={branch} pkg={featured} withCta={false} />}
+          {featured && (
+            <PackageCard branch={branch} pkg={featured} withCta={false} />
+          )}
         </div>
       </div>
     </section>

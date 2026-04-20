@@ -1,5 +1,10 @@
 import { getLocale, getTranslations } from "next-intl/server"
-import { IconBrandWhatsapp, IconClock, IconMapPin, IconPhone } from "@tabler/icons-react"
+import {
+  IconBrandWhatsapp,
+  IconClock,
+  IconMapPin,
+  IconPhone,
+} from "@tabler/icons-react"
 import type { Branch } from "@/lib/branches"
 import { BowlingLogo } from "@/components/brand/bowling-logo"
 import { buildWhatsAppLink } from "@/lib/whatsapp"
@@ -38,7 +43,7 @@ export async function Hero({ branch }: { branch: Branch }) {
             {branch.hero.headline[locale]}
           </h1>
 
-          <p className="mt-5 max-w-xl text-pretty text-base text-ink-soft sm:text-lg sm:leading-relaxed">
+          <p className="mt-5 max-w-xl text-base text-pretty text-ink-soft sm:text-lg sm:leading-relaxed">
             {branch.hero.tagline[locale]}
           </p>
 
@@ -107,13 +112,15 @@ function InfoTile({
     <div className="group flex h-full items-center gap-3 rounded-2xl border border-line bg-surface px-4 py-3.5 text-start transition hover:border-ink/15 hover:shadow-soft">
       <span
         className={`grid size-9 shrink-0 place-items-center rounded-xl ${
-          tone === "ok" ? "bg-whatsapp/10 text-whatsapp" : "bg-surface-muted text-ink-muted"
+          tone === "ok"
+            ? "bg-whatsapp/10 text-whatsapp"
+            : "bg-surface-muted text-ink-muted"
         }`}
       >
         {icon}
       </span>
       <div className="min-w-0 flex-1">
-        <div className="text-[11px] font-medium uppercase tracking-[0.14em] text-ink-muted">
+        <div className="text-[11px] font-medium tracking-[0.14em] text-ink-muted uppercase">
           {label}
         </div>
         <div className="truncate text-sm font-medium text-ink">{value}</div>

@@ -10,7 +10,7 @@ export default function proxy(request: NextRequest) {
   const queryOverride = request.nextUrl.searchParams.get("branch")
   const envOverride =
     process.env.NODE_ENV !== "production"
-      ? process.env.BRANCH_OVERRIDE ?? null
+      ? (process.env.BRANCH_OVERRIDE ?? null)
       : null
   const cookieBranch = request.cookies.get(BRANCH_COOKIE)?.value ?? null
   const host = request.headers.get("host")

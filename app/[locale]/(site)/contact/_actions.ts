@@ -23,7 +23,7 @@ export type ContactFormState = {
 
 export async function submitContact(
   _prev: ContactFormState,
-  formData: FormData,
+  formData: FormData
 ): Promise<ContactFormState> {
   const raw = Object.fromEntries(formData.entries())
   const parsed = ContactSchema.safeParse(raw)
@@ -62,7 +62,10 @@ export async function submitContact(
   const from = process.env.CONTACT_FROM_EMAIL ?? "no-reply@bowling.local"
 
   if (!apiKey) {
-    console.info("[contact] RESEND_API_KEY missing - logging only:", { subject, body })
+    console.info("[contact] RESEND_API_KEY missing - logging only:", {
+      subject,
+      body,
+    })
     return { status: "success" }
   }
 

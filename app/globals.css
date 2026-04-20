@@ -5,194 +5,209 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    /* One font family per script: --font-sans is mapped to the right one
+  /* One font family per script: --font-sans is mapped to the right one
        at the :lang level. Headings and body share the same family. */
-    --font-sans: var(--font-latin);
-    --font-mono: var(--font-mono);
-    --font-display: var(--font-display);
+  --font-sans: var(--font-latin);
+  --font-mono: var(--font-mono);
+  --font-display: var(--font-display);
 
-    --color-sidebar-ring: var(--sidebar-ring);
-    --color-sidebar-border: var(--sidebar-border);
-    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-    --color-sidebar-accent: var(--sidebar-accent);
-    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-    --color-sidebar-primary: var(--sidebar-primary);
-    --color-sidebar-foreground: var(--sidebar-foreground);
-    --color-sidebar: var(--sidebar);
-    --color-chart-5: var(--chart-5);
-    --color-chart-4: var(--chart-4);
-    --color-chart-3: var(--chart-3);
-    --color-chart-2: var(--chart-2);
-    --color-chart-1: var(--chart-1);
-    --color-ring: var(--ring);
-    --color-input: var(--input);
-    --color-border: var(--border);
-    --color-destructive: var(--destructive);
-    --color-accent-foreground: var(--accent-foreground);
-    --color-accent: var(--accent);
-    --color-muted-foreground: var(--muted-foreground);
-    --color-muted: var(--muted);
-    --color-secondary-foreground: var(--secondary-foreground);
-    --color-secondary: var(--secondary);
-    --color-primary-foreground: var(--primary-foreground);
-    --color-primary: var(--primary);
-    --color-popover-foreground: var(--popover-foreground);
-    --color-popover: var(--popover);
-    --color-card-foreground: var(--card-foreground);
-    --color-card: var(--card);
-    --color-foreground: var(--foreground);
-    --color-background: var(--background);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
 
-    /* Surfaces & ink */
-    --color-canvas: var(--canvas);
-    --color-surface: var(--surface);
-    --color-surface-muted: var(--surface-muted);
-    --color-surface-warm: var(--surface-warm);
-    --color-surface-cool: var(--surface-cool);
-    --color-surface-deep: var(--surface-deep);
-    --color-paper: var(--paper);
-    --color-ink: var(--ink);
-    --color-ink-soft: var(--ink-soft);
-    --color-ink-muted: var(--ink-muted);
-    --color-line: var(--line);
+  /* Surfaces & ink */
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-warm: var(--surface-warm);
+  --color-surface-cool: var(--surface-cool);
+  --color-surface-deep: var(--surface-deep);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-muted: var(--ink-muted);
+  --color-line: var(--line);
 
-    /* Brand - tied to logo */
-    --color-ticket-red: var(--ticket-red);
-    --color-banner-teal: var(--banner-teal);
-    --color-whatsapp: var(--whatsapp);
-    --color-whatsapp-hover: var(--whatsapp-hover);
-    --color-brand-accent: var(--brand-accent);
-    --color-brand-accent-soft: var(--brand-accent-soft);
+  /* Brand - tied to logo */
+  --color-ticket-red: var(--ticket-red);
+  --color-banner-teal: var(--banner-teal);
+  --color-whatsapp: var(--whatsapp);
+  --color-whatsapp-hover: var(--whatsapp-hover);
+  --color-brand-accent: var(--brand-accent);
+  --color-brand-accent-soft: var(--brand-accent-soft);
 
-    /* Shadows - soft, layered */
-    --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px -12px rgb(0 0 0 / 0.08);
-    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 14px 40px -18px rgb(0 0 0 / 0.10);
-    --shadow-hover: 0 2px 4px rgb(0 0 0 / 0.06), 0 24px 60px -24px rgb(0 0 0 / 0.16);
+  /* Shadows - soft, layered */
+  --shadow-soft:
+    0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px -12px rgb(0 0 0 / 0.08);
+  --shadow-card:
+    0 1px 2px rgb(0 0 0 / 0.04), 0 14px 40px -18px rgb(0 0 0 / 0.1);
+  --shadow-hover:
+    0 2px 4px rgb(0 0 0 / 0.06), 0 24px 60px -24px rgb(0 0 0 / 0.16);
 
-    /* Radius scale */
-    --radius-sm: calc(var(--radius) * 0.5);
-    --radius-md: calc(var(--radius) * 0.75);
-    --radius-lg: var(--radius);
-    --radius-xl: calc(var(--radius) * 1.5);
-    --radius-2xl: calc(var(--radius) * 2);
-    --radius-3xl: calc(var(--radius) * 3);
+  /* Radius scale */
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.5);
+  --radius-2xl: calc(var(--radius) * 2);
+  --radius-3xl: calc(var(--radius) * 3);
 }
 
 :root {
-    /* Modern hospitality - warm white canvas, near-black ink, restrained color */
-    --canvas: oklch(0.99 0.004 80);
-    --surface: oklch(1 0 0);
-    --surface-muted: oklch(0.97 0.004 80);
-    /* Distinct, solid section tints (no gradients) */
-    --surface-warm: oklch(0.965 0.018 75);   /* warm cream */
-    --surface-cool: oklch(0.965 0.014 200);  /* dim mint */
-    --surface-deep: oklch(0.22 0.018 250);   /* near-ink */
-    --paper: oklch(0.985 0.005 80);          /* logo paper */
-    --ink: oklch(0.2 0.015 250);
-    --ink-soft: oklch(0.46 0.012 250);
-    --ink-muted: oklch(0.62 0.01 250);
-    --line: oklch(0.92 0.006 250);
+  /* Modern hospitality - warm white canvas, near-black ink, restrained color */
+  --canvas: oklch(0.99 0.004 80);
+  --surface: oklch(1 0 0);
+  --surface-muted: oklch(0.97 0.004 80);
+  /* Distinct, solid section tints (no gradients) */
+  --surface-warm: oklch(0.965 0.018 75); /* warm cream */
+  --surface-cool: oklch(0.965 0.014 200); /* dim mint */
+  --surface-deep: oklch(0.22 0.018 250); /* near-ink */
+  --paper: oklch(0.985 0.005 80); /* logo paper */
+  --ink: oklch(0.2 0.015 250);
+  --ink-soft: oklch(0.46 0.012 250);
+  --ink-muted: oklch(0.62 0.01 250);
+  --line: oklch(0.92 0.006 250);
 
-    /* Brand - taken from the logo, used sparingly */
-    --ticket-red: oklch(0.62 0.22 25);
-    --banner-teal: oklch(0.7 0.1 200);
-    --whatsapp: oklch(0.62 0.16 155);
-    --whatsapp-hover: oklch(0.55 0.16 155);
+  /* Brand - taken from the logo, used sparingly */
+  --ticket-red: oklch(0.62 0.22 25);
+  --banner-teal: oklch(0.7 0.1 200);
+  --whatsapp: oklch(0.62 0.16 155);
+  --whatsapp-hover: oklch(0.55 0.16 155);
 
-    /* shadcn semantic mapping */
-    --background: var(--canvas);
-    --foreground: var(--ink);
-    --card: var(--surface);
-    --card-foreground: var(--ink);
-    --popover: var(--surface);
-    --popover-foreground: var(--ink);
-    --primary: var(--ink);
-    --primary-foreground: var(--surface);
-    --secondary: var(--surface-muted);
-    --secondary-foreground: var(--ink);
-    --muted: var(--surface-muted);
-    --muted-foreground: var(--ink-soft);
-    --accent: var(--surface-muted);
-    --accent-foreground: var(--ink);
-    --destructive: oklch(0.55 0.22 25);
-    --border: var(--line);
-    --input: oklch(0.88 0.006 250);
-    --ring: var(--ink);
-    --chart-1: var(--ticket-red);
-    --chart-2: var(--banner-teal);
-    --chart-3: oklch(0.7 0.14 80);
-    --chart-4: oklch(0.55 0.18 280);
-    --chart-5: oklch(0.65 0.18 145);
-    --radius: 1rem;
-    --sidebar: var(--surface);
-    --sidebar-foreground: var(--ink);
-    --sidebar-primary: var(--ticket-red);
-    --sidebar-primary-foreground: var(--surface);
-    --sidebar-accent: var(--surface-muted);
-    --sidebar-accent-foreground: var(--ink);
-    --sidebar-border: var(--line);
-    --sidebar-ring: var(--ink);
+  /* shadcn semantic mapping */
+  --background: var(--canvas);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: var(--surface);
+  --secondary: var(--surface-muted);
+  --secondary-foreground: var(--ink);
+  --muted: var(--surface-muted);
+  --muted-foreground: var(--ink-soft);
+  --accent: var(--surface-muted);
+  --accent-foreground: var(--ink);
+  --destructive: oklch(0.55 0.22 25);
+  --border: var(--line);
+  --input: oklch(0.88 0.006 250);
+  --ring: var(--ink);
+  --chart-1: var(--ticket-red);
+  --chart-2: var(--banner-teal);
+  --chart-3: oklch(0.7 0.14 80);
+  --chart-4: oklch(0.55 0.18 280);
+  --chart-5: oklch(0.65 0.18 145);
+  --radius: 1rem;
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--ticket-red);
+  --sidebar-primary-foreground: var(--surface);
+  --sidebar-accent: var(--surface-muted);
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: var(--line);
+  --sidebar-ring: var(--ink);
 
-    /* Per-branch - overridden in (site) layout */
-    --brand-accent: var(--ticket-red);
-    --brand-accent-soft: color-mix(in oklch, var(--brand-accent) 10%, var(--surface));
+  /* Per-branch - overridden in (site) layout */
+  --brand-accent: var(--ticket-red);
+  --brand-accent-soft: color-mix(
+    in oklch,
+    var(--brand-accent) 10%,
+    var(--surface)
+  );
 }
 
 .dark {
-    /* Late-evening venue: deep ink canvas, soft cream text. */
-    --canvas: oklch(0.16 0.012 250);
-    --surface: oklch(0.2 0.013 250);
-    --surface-muted: oklch(0.24 0.014 250);
-    --surface-warm: oklch(0.26 0.018 60);
-    --surface-cool: oklch(0.24 0.018 220);
-    --surface-deep: oklch(0.12 0.014 250);
-    --paper: oklch(0.96 0.008 80);
-    --ink: oklch(0.96 0.008 80);
-    --ink-soft: oklch(0.78 0.01 250);
-    --ink-muted: oklch(0.6 0.012 250);
-    --line: oklch(0.32 0.014 250);
+  /* Late-evening venue: deep ink canvas, soft cream text. */
+  --canvas: oklch(0.16 0.012 250);
+  --surface: oklch(0.2 0.013 250);
+  --surface-muted: oklch(0.24 0.014 250);
+  --surface-warm: oklch(0.26 0.018 60);
+  --surface-cool: oklch(0.24 0.018 220);
+  --surface-deep: oklch(0.12 0.014 250);
+  --paper: oklch(0.96 0.008 80);
+  --ink: oklch(0.96 0.008 80);
+  --ink-soft: oklch(0.78 0.01 250);
+  --ink-muted: oklch(0.6 0.012 250);
+  --line: oklch(0.32 0.014 250);
 
-    --ticket-red: oklch(0.7 0.22 25);
-    --banner-teal: oklch(0.78 0.1 200);
-    --whatsapp: oklch(0.7 0.16 155);
-    --whatsapp-hover: oklch(0.62 0.16 155);
+  --ticket-red: oklch(0.7 0.22 25);
+  --banner-teal: oklch(0.78 0.1 200);
+  --whatsapp: oklch(0.7 0.16 155);
+  --whatsapp-hover: oklch(0.62 0.16 155);
 
-    --background: var(--canvas);
-    --foreground: var(--ink);
-    --card: var(--surface);
-    --card-foreground: var(--ink);
-    --popover: var(--surface);
-    --popover-foreground: var(--ink);
-    --primary: var(--ink);
-    --primary-foreground: var(--canvas);
-    --secondary: var(--surface-muted);
-    --secondary-foreground: var(--ink);
-    --muted: var(--surface-muted);
-    --muted-foreground: var(--ink-soft);
-    --accent: var(--surface-muted);
-    --accent-foreground: var(--ink);
-    --destructive: oklch(0.7 0.22 25);
-    --border: var(--line);
-    --input: oklch(1 0 0 / 14%);
-    --ring: var(--ink);
-    --sidebar: var(--surface);
-    --sidebar-foreground: var(--ink);
-    --sidebar-primary: var(--ticket-red);
-    --sidebar-primary-foreground: var(--ink);
-    --sidebar-accent: var(--surface-muted);
-    --sidebar-accent-foreground: var(--ink);
-    --sidebar-border: var(--line);
-    --sidebar-ring: var(--ink);
+  --background: var(--canvas);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: var(--canvas);
+  --secondary: var(--surface-muted);
+  --secondary-foreground: var(--ink);
+  --muted: var(--surface-muted);
+  --muted-foreground: var(--ink-soft);
+  --accent: var(--surface-muted);
+  --accent-foreground: var(--ink);
+  --destructive: oklch(0.7 0.22 25);
+  --border: var(--line);
+  --input: oklch(1 0 0 / 14%);
+  --ring: var(--ink);
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--ticket-red);
+  --sidebar-primary-foreground: var(--ink);
+  --sidebar-accent: var(--surface-muted);
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: var(--line);
+  --sidebar-ring: var(--ink);
 }
 
 /* Per-branch accent */
 [data-branch-accent="cherry"] {
-    --brand-accent: var(--ticket-red);
-    --brand-accent-soft: color-mix(in oklch, var(--ticket-red) 10%, var(--surface));
+  --brand-accent: var(--ticket-red);
+  --brand-accent-soft: color-mix(
+    in oklch,
+    var(--ticket-red) 10%,
+    var(--surface)
+  );
 }
 [data-branch-accent="teal"] {
-    --brand-accent: var(--banner-teal);
-    --brand-accent-soft: color-mix(in oklch, var(--banner-teal) 10%, var(--surface));
+  --brand-accent: var(--banner-teal);
+  --brand-accent-soft: color-mix(
+    in oklch,
+    var(--banner-teal) 10%,
+    var(--surface)
+  );
 }
 
 @layer base {
@@ -206,7 +221,8 @@
     @apply font-sans;
   }
   /* One font per locale - body + headings share the same family. */
-  :lang(en), :lang(ru) {
+  :lang(en),
+  :lang(ru) {
     font-family: var(--font-latin), system-ui, sans-serif;
   }
   :lang(he) {
@@ -216,13 +232,23 @@
     font-family: var(--font-arabic), system-ui, sans-serif;
   }
   /* Headings: same family, bolder weight + slightly tighter tracking. */
-  h1, h2, h3, h4, .font-heading {
+  h1,
+  h2,
+  h3,
+  h4,
+  .font-heading {
     font-weight: 700;
     letter-spacing: -0.02em;
   }
-  :lang(he) h1, :lang(he) h2, :lang(he) h3, :lang(he) h4,
+  :lang(he) h1,
+  :lang(he) h2,
+  :lang(he) h3,
+  :lang(he) h4,
   :lang(he) .font-heading,
-  :lang(ar) h1, :lang(ar) h2, :lang(ar) h3, :lang(ar) h4,
+  :lang(ar) h1,
+  :lang(ar) h2,
+  :lang(ar) h3,
+  :lang(ar) h4,
   :lang(ar) .font-heading {
     font-weight: 700;
     letter-spacing: 0;
@@ -250,7 +276,10 @@
 
 /* Subtle dotted divider */
 @utility divider-dotted {
-  background-image: radial-gradient(color-mix(in oklch, var(--ink) 18%, transparent) 1px, transparent 1px);
+  background-image: radial-gradient(
+    color-mix(in oklch, var(--ink) 18%, transparent) 1px,
+    transparent 1px
+  );
   background-size: 10px 1px;
   background-repeat: repeat-x;
   background-position: center;
@@ -259,7 +288,9 @@
 
 /* Honor reduced motion. */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;

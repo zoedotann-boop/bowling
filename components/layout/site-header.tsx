@@ -19,14 +19,20 @@ export async function SiteHeader({ branch }: { branch: Branch }) {
   const t = await getTranslations()
   const wa = await getTranslations("WhatsApp")
   const locale = (await getLocale()) as keyof Branch["displayName"]
-  const navItems: { href: "/" | "/prices" | "/events" | "/contact"; label: string }[] = [
+  const navItems: {
+    href: "/" | "/prices" | "/events" | "/contact"
+    label: string
+  }[] = [
     { href: "/", label: t("Nav.home") },
     { href: "/prices", label: t("Nav.prices") },
     { href: "/events", label: t("Nav.events") },
     { href: "/contact", label: t("Nav.contact") },
   ]
   const city = branch.city[locale]
-  const waHref = buildWhatsAppLink(branch, wa("prefilled", { branch: branch.displayName[locale] }))
+  const waHref = buildWhatsAppLink(
+    branch,
+    wa("prefilled", { branch: branch.displayName[locale] })
+  )
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-canvas/80 backdrop-blur-md supports-[backdrop-filter]:bg-canvas/70">
@@ -35,7 +41,10 @@ export async function SiteHeader({ branch }: { branch: Branch }) {
           <BowlingLogo city={city} size="xs" />
         </Link>
 
-        <nav className="ms-8 hidden items-center gap-1 md:flex" aria-label="Primary">
+        <nav
+          className="ms-8 hidden items-center gap-1 md:flex"
+          aria-label="Primary"
+        >
           {navItems.map((item) => (
             <Button
               key={item.href}
@@ -77,7 +86,10 @@ export async function SiteHeader({ branch }: { branch: Branch }) {
             >
               <IconMenu2 className="size-5" aria-hidden />
             </SheetTrigger>
-            <SheetContent side="right" className="w-80 border-s border-line bg-canvas">
+            <SheetContent
+              side="right"
+              className="w-80 border-s border-line bg-canvas"
+            >
               <SheetHeader className="border-b border-line">
                 <SheetTitle>
                   <BowlingLogo city={city} size="sm" />

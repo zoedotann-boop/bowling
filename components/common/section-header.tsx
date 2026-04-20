@@ -19,11 +19,13 @@ export function SectionHeader({
       className={cn(
         "max-w-2xl",
         align === "center" ? "mx-auto text-center" : "text-start",
-        className,
+        className
       )}
     >
       {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
-      <h2 className="mt-3 font-heading text-4xl text-ink sm:text-5xl">{title}</h2>
+      <h2 className="font-heading mt-3 text-4xl text-ink sm:text-5xl">
+        {title}
+      </h2>
       {subtitle && (
         <p className="mt-4 text-base text-ink-soft sm:text-lg">{subtitle}</p>
       )}

@@ -45,17 +45,22 @@ export function BowlingLogo({
       role="img"
       aria-label={`Bowling ${city}`}
     >
-      <div className={cn("rotate-[-2deg] rounded-2xl bg-ticket-red", ticketPad[size])}>
+      <div
+        className={cn(
+          "rotate-[-2deg] rounded-2xl bg-ticket-red",
+          ticketPad[size]
+        )}
+      >
         <div
           className={cn(
             "rounded-xl border-2 border-dashed border-paper",
-            wordmarkPad[size],
+            wordmarkPad[size]
           )}
         >
           <span
             className={cn(
               "block font-display leading-none tracking-tight text-paper",
-              wordmarkSize[size],
+              wordmarkSize[size]
             )}
           >
             BOWLING
@@ -66,10 +71,10 @@ export function BowlingLogo({
         <div
           className={cn(
             "rounded-sm border border-dashed border-paper",
-            bannerSize[size],
+            bannerSize[size]
           )}
         >
-          <span className="block font-bold leading-tight text-paper">
+          <span className="block leading-tight font-bold text-paper">
             {city}
           </span>
         </div>

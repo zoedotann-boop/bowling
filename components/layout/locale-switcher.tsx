@@ -38,9 +38,14 @@ export function LocaleSwitcher() {
         }
       >
         <IconLanguage className="size-4 text-ink-muted" aria-hidden />
-        <span className="hidden text-sm font-medium sm:inline">{localeLabels[locale]}</span>
+        <span className="hidden text-sm font-medium sm:inline">
+          {localeLabels[locale]}
+        </span>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48 rounded-2xl border border-line bg-surface p-1.5 shadow-card">
+      <DropdownMenuContent
+        align="end"
+        className="w-48 rounded-2xl border border-line bg-surface p-1.5 shadow-card"
+      >
         {routing.locales.map((l) => (
           <DropdownMenuItem
             key={l}
@@ -48,7 +53,9 @@ export function LocaleSwitcher() {
             className="flex items-center gap-2 rounded-xl px-3 py-2.5"
           >
             <span className="flex-1 text-sm">{localeLabels[l]}</span>
-            {l === locale && <IconCheck className="size-4 text-ink" aria-hidden />}
+            {l === locale && (
+              <IconCheck className="size-4 text-ink" aria-hidden />
+            )}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

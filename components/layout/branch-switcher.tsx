@@ -1,7 +1,11 @@
 "use client"
 
 import { useTranslations, useLocale } from "next-intl"
-import { IconBuildingStore, IconCheck, IconChevronDown } from "@tabler/icons-react"
+import {
+  IconBuildingStore,
+  IconCheck,
+  IconChevronDown,
+} from "@tabler/icons-react"
 import { branches, type Branch } from "@/lib/branches"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -58,8 +62,11 @@ export function BranchSwitcher({ currentSlug }: { currentSlug: string }) {
         </span>
         <IconChevronDown className="size-3.5 text-ink-muted" aria-hidden />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-72 rounded-2xl border border-line bg-surface p-1.5 shadow-card">
-        <DropdownMenuLabel className="px-3 pt-2 pb-1 text-[11px] font-medium uppercase tracking-[0.16em] text-ink-muted">
+      <DropdownMenuContent
+        align="end"
+        className="w-72 rounded-2xl border border-line bg-surface p-1.5 shadow-card"
+      >
+        <DropdownMenuLabel className="px-3 pt-2 pb-1 text-[11px] font-medium tracking-[0.16em] text-ink-muted uppercase">
           {t("title")}
         </DropdownMenuLabel>
         {branches.map((b) => {
@@ -73,7 +80,7 @@ export function BranchSwitcher({ currentSlug }: { currentSlug: string }) {
               <span
                 className={cn(
                   "mt-1 size-2 shrink-0 rounded-full",
-                  accentDot[b.brandAccent],
+                  accentDot[b.brandAccent]
                 )}
                 aria-hidden
               />

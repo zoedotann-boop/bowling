@@ -14,12 +14,22 @@ import { cn } from "@/lib/utils"
 
 const initialState: ContactFormState = { status: "idle" }
 
-const eventTypeKeys = ["birthday", "corporate", "school", "casual", "other"] as const
+const eventTypeKeys = [
+  "birthday",
+  "corporate",
+  "school",
+  "casual",
+  "other",
+] as const
 
 const fieldClass =
   "block w-full rounded-2xl border border-line bg-surface px-4 py-3.5 text-base text-ink placeholder:text-ink-muted shadow-soft outline-none transition focus:border-ink/30 focus:ring-2 focus:ring-ink/10 aria-[invalid=true]:border-destructive aria-[invalid=true]:focus:ring-destructive/15"
 
-export function ContactForm({ defaultBranchSlug }: { defaultBranchSlug: string }) {
+export function ContactForm({
+  defaultBranchSlug,
+}: {
+  defaultBranchSlug: string
+}) {
   const t = useTranslations("Contact.form")
   const tEvent = useTranslations("EventTypes")
   const locale = useLocale() as keyof (typeof branches)[number]["displayName"]
@@ -76,7 +86,11 @@ export function ContactForm({ defaultBranchSlug }: { defaultBranchSlug: string }
               aria-invalid={!!state.fieldErrors?.phone}
             />
           </Field>
-          <Field label={t("email")} name="email" error={state.fieldErrors?.email}>
+          <Field
+            label={t("email")}
+            name="email"
+            error={state.fieldErrors?.email}
+          >
             <input
               id="email"
               name="email"
@@ -100,7 +114,10 @@ export function ContactForm({ defaultBranchSlug }: { defaultBranchSlug: string }
             id="branch"
             name="branch"
             defaultValue={defaultBranchSlug}
-            className={cn(fieldClass, "appearance-none bg-no-repeat pe-10 [background-position:right_1rem_center] [background-size:1rem] rtl:[background-position:left_1rem_center]")}
+            className={cn(
+              fieldClass,
+              "appearance-none [background-size:1rem] [background-position:right_1rem_center] bg-no-repeat pe-10 rtl:[background-position:left_1rem_center]"
+            )}
             style={{
               backgroundImage:
                 "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>\")",
@@ -119,7 +136,10 @@ export function ContactForm({ defaultBranchSlug }: { defaultBranchSlug: string }
             id="eventType"
             name="eventType"
             defaultValue=""
-            className={cn(fieldClass, "appearance-none bg-no-repeat pe-10 [background-position:right_1rem_center] [background-size:1rem] rtl:[background-position:left_1rem_center]")}
+            className={cn(
+              fieldClass,
+              "appearance-none [background-size:1rem] [background-position:right_1rem_center] bg-no-repeat pe-10 rtl:[background-position:left_1rem_center]"
+            )}
             style={{
               backgroundImage:
                 "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>\")",
@@ -177,7 +197,10 @@ export function ContactForm({ defaultBranchSlug }: { defaultBranchSlug: string }
           role="alert"
           className="flex items-start gap-2 rounded-2xl border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive"
         >
-          <IconAlertTriangle className="size-4 shrink-0 translate-y-0.5" aria-hidden />
+          <IconAlertTriangle
+            className="size-4 shrink-0 translate-y-0.5"
+            aria-hidden
+          />
           {t("error")}
         </p>
       )}
@@ -222,7 +245,7 @@ function Field({
     <div className="space-y-2">
       <label
         htmlFor={name}
-        className="block text-[11px] font-medium uppercase tracking-[0.16em] text-ink-muted"
+        className="block text-[11px] font-medium tracking-[0.16em] text-ink-muted uppercase"
       >
         {label}
         {required && <span className="ms-1 text-destructive">*</span>}

@@ -72,7 +72,12 @@ export type Branch = {
   geo: { lat: number; lng: number }
 }
 
-const days = (en: string, ru: string, he: string, ar: string): LocalizedString => ({
+const days = (
+  en: string,
+  ru: string,
+  he: string,
+  ar: string
+): LocalizedString => ({
   en,
   ru,
   he,
@@ -84,41 +89,86 @@ const sharedMenu: MenuCategory[] = [
     title: { en: "Snacks", ru: "Закуски", he: "חטיפים", ar: "وجبات خفيفة" },
     items: [
       {
-        name: { en: "Loaded fries", ru: "Картошка с топингом", he: "צ׳יפס עמוס", ar: "بطاطس محمّلة" },
+        name: {
+          en: "Loaded fries",
+          ru: "Картошка с топингом",
+          he: "צ׳יפס עמוס",
+          ar: "بطاطس محمّلة",
+        },
         price: "₪38",
         tag: { en: "Bestseller", ru: "Хит", he: "להיט", ar: "الأكثر مبيعًا" },
       },
       {
-        name: { en: "Crispy wings (8 pc)", ru: "Хрустящие крылья (8 шт)", he: "כנפיים פריכות (8 יח׳)", ar: "أجنحة مقرمشة (8 قطع)" },
+        name: {
+          en: "Crispy wings (8 pc)",
+          ru: "Хрустящие крылья (8 шт)",
+          he: "כנפיים פריכות (8 יח׳)",
+          ar: "أجنحة مقرمشة (8 قطع)",
+        },
         price: "₪48",
       },
       {
-        name: { en: "Mozzarella sticks", ru: "Сырные палочки", he: "מקלות מוצרלה", ar: "أصابع موزاريلا" },
+        name: {
+          en: "Mozzarella sticks",
+          ru: "Сырные палочки",
+          he: "מקלות מוצרלה",
+          ar: "أصابع موزاريلا",
+        },
         price: "₪34",
       },
       {
-        name: { en: "Veggie nachos", ru: "Овощные начос", he: "נאצ׳וס צמחוני", ar: "ناتشوز نباتي" },
+        name: {
+          en: "Veggie nachos",
+          ru: "Овощные начос",
+          he: "נאצ׳וס צמחוני",
+          ar: "ناتشوز نباتي",
+        },
         price: "₪36",
       },
     ],
   },
   {
-    title: { en: "Mains", ru: "Основные", he: "מנות עיקריות", ar: "أطباق رئيسية" },
+    title: {
+      en: "Mains",
+      ru: "Основные",
+      he: "מנות עיקריות",
+      ar: "أطباق رئيسية",
+    },
     items: [
       {
-        name: { en: "Cheeseburger + fries", ru: "Чизбургер + картошка", he: "צ׳יזבורגר + צ׳יפס", ar: "تشيز برجر + بطاطس" },
+        name: {
+          en: "Cheeseburger + fries",
+          ru: "Чизбургер + картошка",
+          he: "צ׳יזבורגר + צ׳יפס",
+          ar: "تشيز برجر + بطاطس",
+        },
         price: "₪62",
       },
       {
-        name: { en: "Margherita pizza", ru: "Пицца Маргарита", he: "פיצה מרגריטה", ar: "بيتزا مارغريتا" },
+        name: {
+          en: "Margherita pizza",
+          ru: "Пицца Маргарита",
+          he: "פיצה מרגריטה",
+          ar: "بيتزا مارغريتا",
+        },
         price: "₪54",
       },
       {
-        name: { en: "Spicy chicken sandwich", ru: "Острый куриный сэндвич", he: "סנדוויץ׳ עוף חריף", ar: "ساندويتش دجاج حار" },
+        name: {
+          en: "Spicy chicken sandwich",
+          ru: "Острый куриный сэндвич",
+          he: "סנדוויץ׳ עוף חריף",
+          ar: "ساندويتش دجاج حار",
+        },
         price: "₪58",
       },
       {
-        name: { en: "Caesar salad", ru: "Салат цезарь", he: "סלט קיסר", ar: "سلطة سيزر" },
+        name: {
+          en: "Caesar salad",
+          ru: "Салат цезарь",
+          he: "סלט קיסר",
+          ar: "سلطة سيزر",
+        },
         price: "₪52",
       },
     ],
@@ -127,19 +177,39 @@ const sharedMenu: MenuCategory[] = [
     title: { en: "Drinks", ru: "Напитки", he: "משקאות", ar: "مشروبات" },
     items: [
       {
-        name: { en: "Local draft beer", ru: "Местное разливное", he: "בירה מהחבית", ar: "بيرة من البرميل" },
+        name: {
+          en: "Local draft beer",
+          ru: "Местное разливное",
+          he: "בירה מהחבית",
+          ar: "بيرة من البرميل",
+        },
         price: "₪32",
       },
       {
-        name: { en: "House cocktail", ru: "Фирменный коктейль", he: "קוקטייל הבית", ar: "كوكتيل البيت" },
+        name: {
+          en: "House cocktail",
+          ru: "Фирменный коктейль",
+          he: "קוקטייל הבית",
+          ar: "كوكتيل البيت",
+        },
         price: "₪48",
       },
       {
-        name: { en: "Fresh lemonade", ru: "Лимонад", he: "לימונדה", ar: "ليموناضة" },
+        name: {
+          en: "Fresh lemonade",
+          ru: "Лимонад",
+          he: "לימונדה",
+          ar: "ليموناضة",
+        },
         price: "₪22",
       },
       {
-        name: { en: "Iced coffee", ru: "Айс-кофе", he: "קפה קר", ar: "قهوة مثلجة" },
+        name: {
+          en: "Iced coffee",
+          ru: "Айс-кофе",
+          he: "קפה קר",
+          ar: "قهوة مثلجة",
+        },
         price: "₪18",
       },
     ],
@@ -154,7 +224,12 @@ const sharedGoogle = (slug: string) => ({
     {
       author: "נועה לוי",
       rating: 5,
-      date: { en: "2 weeks ago", ru: "2 недели назад", he: "לפני שבועיים", ar: "قبل أسبوعين" },
+      date: {
+        en: "2 weeks ago",
+        ru: "2 недели назад",
+        he: "לפני שבועיים",
+        ar: "قبل أسبوعين",
+      },
       text: {
         en: "Lanes were spotless, drinks came fast, the staff actually cared. We'll be back next Friday.",
         ru: "Дорожки идеально чистые, напитки быстро, персонал внимательный. Вернёмся в пятницу.",
@@ -165,7 +240,12 @@ const sharedGoogle = (slug: string) => ({
     {
       author: "Andrey K.",
       rating: 5,
-      date: { en: "1 month ago", ru: "1 месяц назад", he: "לפני חודש", ar: "قبل شهر" },
+      date: {
+        en: "1 month ago",
+        ru: "1 месяц назад",
+        he: "לפני חודש",
+        ar: "قبل شهر",
+      },
       text: {
         en: "Booked the birthday package for my son - they handled everything from invitations to cake.",
         ru: "Заказали пакет на день рождения сына - они всё сделали, от приглашений до торта.",
@@ -177,18 +257,51 @@ const sharedGoogle = (slug: string) => ({
 })
 
 const israeliWeek: OpeningHours[] = [
-  { day: days("Sunday", "Воскресенье", "ראשון", "الأحد"), open: "14:00", close: "23:30" },
-  { day: days("Monday", "Понедельник", "שני", "الإثنين"), open: "14:00", close: "23:30" },
-  { day: days("Tuesday", "Вторник", "שלישי", "الثلاثاء"), open: "14:00", close: "23:30" },
-  { day: days("Wednesday", "Среда", "רביעי", "الأربعاء"), open: "14:00", close: "23:30" },
-  { day: days("Thursday", "Четверг", "חמישי", "الخميس"), open: "14:00", close: "01:00" },
-  { day: days("Friday", "Пятница", "שישי", "الجمعة"), open: "12:00", close: "16:00" },
-  { day: days("Saturday", "Суббота", "שבת", "السبت"), open: "19:00", close: "01:00" },
+  {
+    day: days("Sunday", "Воскресенье", "ראשון", "الأحد"),
+    open: "14:00",
+    close: "23:30",
+  },
+  {
+    day: days("Monday", "Понедельник", "שני", "الإثنين"),
+    open: "14:00",
+    close: "23:30",
+  },
+  {
+    day: days("Tuesday", "Вторник", "שלישי", "الثلاثاء"),
+    open: "14:00",
+    close: "23:30",
+  },
+  {
+    day: days("Wednesday", "Среда", "רביעי", "الأربعاء"),
+    open: "14:00",
+    close: "23:30",
+  },
+  {
+    day: days("Thursday", "Четверг", "חמישי", "الخميس"),
+    open: "14:00",
+    close: "01:00",
+  },
+  {
+    day: days("Friday", "Пятница", "שישי", "الجمعة"),
+    open: "12:00",
+    close: "16:00",
+  },
+  {
+    day: days("Saturday", "Суббота", "שבת", "السبت"),
+    open: "19:00",
+    close: "01:00",
+  },
 ]
 
 const sharedPackages = [
   {
-    title: { en: "Birthday Package", ru: "Праздник", he: "חבילת יום הולדת", ar: "حزمة عيد ميلاد" },
+    title: {
+      en: "Birthday Package",
+      ru: "Праздник",
+      he: "חבילת יום הולדת",
+      ar: "حزمة عيد ميلاد",
+    },
     price: "₪690",
     perks: {
       en: "Lane · 90 min · pizza · soft drinks · staff host",
@@ -198,7 +311,12 @@ const sharedPackages = [
     },
   },
   {
-    title: { en: "Family Pack", ru: "Семейный пакет", he: "חבילת משפחה", ar: "حزمة العائلة" },
+    title: {
+      en: "Family Pack",
+      ru: "Семейный пакет",
+      he: "חבילת משפחה",
+      ar: "حزمة العائلة",
+    },
     price: "₪320",
     perks: {
       en: "Lane · 60 min · 4 shoe rentals · pitcher of soft drinks",
@@ -211,7 +329,12 @@ const sharedPackages = [
 
 const sharedEvents: EventOffering[] = [
   {
-    title: { en: "Birthdays", ru: "Дни рождения", he: "ימי הולדת", ar: "أعياد ميلاد" },
+    title: {
+      en: "Birthdays",
+      ru: "Дни рождения",
+      he: "ימי הולדת",
+      ar: "أعياد ميلاد",
+    },
     description: {
       en: "Lanes, party room, food, cake - we handle the whole thing.",
       ru: "Дорожки, зал, еда, торт - мы делаем всё под ключ.",
@@ -220,7 +343,12 @@ const sharedEvents: EventOffering[] = [
     },
   },
   {
-    title: { en: "Corporate", ru: "Корпоративы", he: "אירועי חברה", ar: "فعاليات الشركات" },
+    title: {
+      en: "Corporate",
+      ru: "Корпоративы",
+      he: "אירועי חברה",
+      ar: "فعاليات الشركات",
+    },
     description: {
       en: "Team-building leagues, catered menus and a private bar.",
       ru: "Тимбилдинг-лиги, кейтеринг и частный бар.",
@@ -229,7 +357,12 @@ const sharedEvents: EventOffering[] = [
     },
   },
   {
-    title: { en: "Bachelorette / Stag", ru: "Девичник / мальчишник", he: "מסיבות רווקות / רווקים", ar: "حفلات عزّاب" },
+    title: {
+      en: "Bachelorette / Stag",
+      ru: "Девичник / мальчишник",
+      he: "מסיבות רווקות / רווקים",
+      ar: "حفلات عزّاب",
+    },
     description: {
       en: "Late-night lanes, cocktails and a reserved area for groups of 8+.",
       ru: "Поздние дорожки, коктейли и отдельная зона для групп от 8.",
@@ -290,17 +423,32 @@ export const branches: Branch[] = [
     },
     prices: [
       {
-        label: { en: "Adult game", ru: "Игра взрослого", he: "משחק מבוגר", ar: "لعبة بالغ" },
+        label: {
+          en: "Adult game",
+          ru: "Игра взрослого",
+          he: "משחק מבוגר",
+          ar: "لعبة بالغ",
+        },
         weekday: "₪42",
         weekend: "₪52",
       },
       {
-        label: { en: "Child game (under 12)", ru: "Детская игра (до 12)", he: "משחק ילד (עד 12)", ar: "لعبة طفل (أقل من 12)" },
+        label: {
+          en: "Child game (under 12)",
+          ru: "Детская игра (до 12)",
+          he: "משחק ילד (עד 12)",
+          ar: "لعبة طفل (أقل من 12)",
+        },
         weekday: "₪32",
         weekend: "₪42",
       },
       {
-        label: { en: "Lane per hour", ru: "Дорожка в час", he: "מסלול לשעה", ar: "مسار للساعة" },
+        label: {
+          en: "Lane per hour",
+          ru: "Дорожка в час",
+          he: "מסלול לשעה",
+          ar: "مسار للساعة",
+        },
         weekday: "₪160",
         weekend: "₪200",
       },
@@ -376,17 +524,32 @@ export const branches: Branch[] = [
     },
     prices: [
       {
-        label: { en: "Adult game", ru: "Игра взрослого", he: "משחק מבוגר", ar: "لعبة بالغ" },
+        label: {
+          en: "Adult game",
+          ru: "Игра взрослого",
+          he: "משחק מבוגר",
+          ar: "لعبة بالغ",
+        },
         weekday: "₪44",
         weekend: "₪54",
       },
       {
-        label: { en: "Child game (under 12)", ru: "Детская игра (до 12)", he: "משחק ילד (עד 12)", ar: "لعبة طفل (أقل من 12)" },
+        label: {
+          en: "Child game (under 12)",
+          ru: "Детская игра (до 12)",
+          he: "משחק ילד (עד 12)",
+          ar: "لعبة طفل (أقل من 12)",
+        },
         weekday: "₪34",
         weekend: "₪44",
       },
       {
-        label: { en: "Lane per hour", ru: "Дорожка в час", he: "מסלול לשעה", ar: "مسار للساعة" },
+        label: {
+          en: "Lane per hour",
+          ru: "Дорожка в час",
+          he: "מסלול לשעה",
+          ar: "مسار للساعة",
+        },
         weekday: "₪180",
         weekend: "₪220",
       },
@@ -422,14 +585,16 @@ for (const b of branches) {
   }
 }
 
-export const defaultBranch = branches[0]
+const defaultBranch = branches[0]
 
-export function getBranchBySlug(slug: string | null | undefined): Branch | undefined {
+export function getBranchBySlug(
+  slug: string | null | undefined
+): Branch | undefined {
   if (!slug) return undefined
   return branchBySlug.get(slug)
 }
 
-export function getBranchByHost(host: string | null | undefined): Branch | undefined {
+function getBranchByHost(host: string | null | undefined): Branch | undefined {
   if (!host) return undefined
   const cleaned = host.toLowerCase().split(":")[0]
   return branchByDomain.get(cleaned)

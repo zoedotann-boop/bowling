@@ -12,7 +12,7 @@ Single source of truth for the visual language across both branches (`Bowling Ra
 4. **No gradients - including blurred color fades.** Flat color only. No `bg-gradient-*`, no `linear-gradient`, no `radial-gradient`, no neon glows, no colored box-shadows, no glassmorphism (`backdrop-blur-*`). The single allowed exception: `mask-image` gradients, which are a pixel-reveal effect, not a visual gradient.
 5. **Editorial spacing.** Generous whitespace, asymmetric offsets, single accent bars under headlines. Sections breathe - never wall-to-wall content.
 6. **Logical CSS, always.** Hebrew + Arabic flip the layout at runtime. Use Tailwind logical utilities (`ps-*`, `pe-*`, `ms-*`, `me-*`, `start-*`, `end-*`, `text-start`, `text-end`) and CSS logical properties (`inset-inline-start/end`, `padding-inline`). No `pl-*` / `pr-*` / `left-*` / `right-*` / `text-left` / `text-right` for direction-mirrored properties. The `:dir(rtl)` selector handles shadow flips.
-7. **Mobile-first, no exceptions.** Default styles target a 360px viewport. Tap targets ≥44px. `sm:` / `md:` / `lg:` only enhance - never *fix* a broken mobile state.
+7. **Mobile-first, no exceptions.** Default styles target a 360px viewport. Tap targets ≥44px. `sm:` / `md:` / `lg:` only enhance - never _fix_ a broken mobile state.
 8. **Motion is soft, not showy.** Hover lifts (`translate-y-[1px]` + shadow drop), nothing that bounces or flashes. Honor `prefers-reduced-motion: reduce`.
 
 ---
@@ -23,38 +23,38 @@ Defined as `@theme` CSS variables in `app/globals.css` (Tailwind v4 - CSS-first 
 
 ### Surfaces & ink
 
-| Token | OKLCH | Usage |
-|---|---|---|
-| `paper` | `0.955 0.018 80` | Page background, card surfaces |
-| `cream` | `0.92 0.035 75` | Recessed surfaces, footer, table headers |
-| `ink` | `0.22 0.035 50` | Body text, all borders, all hard shadows |
-| `ink-soft` | `0.45 0.04 55` | Secondary copy, eyebrow labels |
+| Token      | OKLCH            | Usage                                    |
+| ---------- | ---------------- | ---------------------------------------- |
+| `paper`    | `0.955 0.018 80` | Page background, card surfaces           |
+| `cream`    | `0.92 0.035 75`  | Recessed surfaces, footer, table headers |
+| `ink`      | `0.22 0.035 50`  | Body text, all borders, all hard shadows |
+| `ink-soft` | `0.45 0.04 55`   | Secondary copy, eyebrow labels           |
 
 ### Brand accents (per-branch swap)
 
 `<div data-branch-accent="...">` at `(site)/layout.tsx` swaps `--brand-accent` to one of these:
 
-| Token | OKLCH | Branch |
-|---|---|---|
-| `ticket-red` | `0.62 0.22 25` | `ramat-gan` (`cherry` key) - matches the logo's red ticket field |
-| `banner-teal` | `0.7 0.1 200` | `rishon-letsiyon` (`teal` key) - matches the logo's banner |
-| `brand-cherry` | `0.5 0.2 25` | Display headline tint, link hover |
+| Token          | OKLCH          | Branch                                                           |
+| -------------- | -------------- | ---------------------------------------------------------------- |
+| `ticket-red`   | `0.62 0.22 25` | `ramat-gan` (`cherry` key) - matches the logo's red ticket field |
+| `banner-teal`  | `0.7 0.1 200`  | `rishon-letsiyon` (`teal` key) - matches the logo's banner       |
+| `brand-cherry` | `0.5 0.2 25`   | Display headline tint, link hover                                |
 
 The two accent keys (`cherry`, `teal`) deliberately pull from the logo so each branch wears one half of the ticket-stub palette.
 
 ### Logo & special-purpose
 
-| Token | OKLCH | Usage |
-|---|---|---|
-| `ticket-red` | `0.62 0.22 25` | The `BowlingLogo` red ticket field - fixed across branches |
-| `banner-teal` | `0.7 0.1 200` | The `BowlingLogo` teal city-banner - fixed across branches |
-| `whatsapp` | `0.62 0.16 155` | Floating WhatsApp CTA only - brand color carries instant meaning |
+| Token         | OKLCH           | Usage                                                            |
+| ------------- | --------------- | ---------------------------------------------------------------- |
+| `ticket-red`  | `0.62 0.22 25`  | The `BowlingLogo` red ticket field - fixed across branches       |
+| `banner-teal` | `0.7 0.1 200`   | The `BowlingLogo` teal city-banner - fixed across branches       |
+| `whatsapp`    | `0.62 0.16 155` | Floating WhatsApp CTA only - brand color carries instant meaning |
 
 External brand colors (WhatsApp, Google) are allowed for floating CTAs only and must be declared as tokens - never inline.
 
 ### Dark mode
 
-Same hues at lower lightness (`paper` → deep cocoa, `ink` → cream). Same shapes, inverted ink. Dark is *not* the default - light cream paper is.
+Same hues at lower lightness (`paper` → deep cocoa, `ink` → cream). Same shapes, inverted ink. Dark is _not_ the default - light cream paper is.
 
 ---
 
@@ -62,11 +62,11 @@ Same hues at lower lightness (`paper` → deep cocoa, `ink` → cream). Same sha
 
 Three roles, four scripts. All loaded via `next/font/google` in `app/[locale]/layout.tsx`, scoped via `:lang(...)` in `globals.css` - never branched in component code.
 
-| Role | Latin (default) | Cyrillic (`ru`) | Hebrew (`he`) | Arabic (`ar`) |
-|---|---|---|---|---|
-| Display headlines + `BOWLING` wordmark (`font-display`) | `Bagel Fat One` | `Russo One` | `Suez One` | `Lalezar` |
-| Body, labels, eyebrows (`font-sans`) | `Geist` | `Geist` (cyrillic subset) | `Heebo` | `Cairo` |
-| Numerics - prices, hours (`font-mono`) | `JetBrains Mono` | `JetBrains Mono` | `JetBrains Mono` | `JetBrains Mono` |
+| Role                                                    | Latin (default)  | Cyrillic (`ru`)           | Hebrew (`he`)    | Arabic (`ar`)    |
+| ------------------------------------------------------- | ---------------- | ------------------------- | ---------------- | ---------------- |
+| Display headlines + `BOWLING` wordmark (`font-display`) | `Bagel Fat One`  | `Russo One`               | `Suez One`       | `Lalezar`        |
+| Body, labels, eyebrows (`font-sans`)                    | `Geist`          | `Geist` (cyrillic subset) | `Heebo`          | `Cairo`          |
+| Numerics - prices, hours (`font-mono`)                  | `JetBrains Mono` | `JetBrains Mono`          | `JetBrains Mono` | `JetBrains Mono` |
 
 Each script gets a chunky retro display companion that holds the same weight as `Bagel Fat One` so headlines stay loud across all four locales. The `BOWLING` wordmark in the logo always renders in `Bagel Fat One` (Latin string, never localized); only the city banner below switches script.
 
@@ -108,11 +108,11 @@ Variants:
 
 ### Buttons
 
-| Variant | Classes |
-|---|---|
-| Primary | `rounded-xl border-2 border-ink bg-brand-accent font-bold text-paper shadow-block` |
-| Secondary | `rounded-xl border-2 border-ink bg-paper font-bold text-ink shadow-block` |
-| Ghost | text-only, no border, no shadow |
+| Variant   | Classes                                                                                                                 |
+| --------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Primary   | `rounded-xl border-2 border-ink bg-brand-accent font-bold text-paper shadow-block`                                      |
+| Secondary | `rounded-xl border-2 border-ink bg-paper font-bold text-ink shadow-block`                                               |
+| Ghost     | text-only, no border, no shadow                                                                                         |
 | Pill chip | `rounded-full border-2 border-ink bg-paper px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em]` - for tags only |
 
 Press state: `hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-block-sm`. The shadow shrinks as the button "presses into" it.
@@ -125,13 +125,13 @@ Horizontally-scrolling uppercase strip in `bg-brand-accent text-paper`, used as 
 
 ## Shared Components
 
-| Component | File | Purpose |
-|---|---|---|
-| `BowlingLogo` | `components/brand/bowling-logo.tsx` | The ticket-stub logo: red rectangle + dashed white border + chunky `BOWLING` wordmark + teal city banner. Branch-aware via `city` prop. |
-| `Eyebrow` | `components/common/eyebrow.tsx` | Small tracked-out uppercase label above a heading. |
-| `AccentBar` | `components/common/accent-bar.tsx` | 3px tall block in `bg-brand-accent`. Width via `size="sm"|"md"|"lg"`. |
-| `Marquee` | `components/common/marquee.tsx` | Scrolling uppercase band, RTL-aware. |
-| `FloatingWhatsApp` | `components/layout/floating-whatsapp.tsx` | Fixed bottom-end pill in `--whatsapp` brand green, branch-aware link. |
+| Component          | File                                      | Purpose                                                                                                                                 |
+| ------------------ | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ---- | ------ |
+| `BowlingLogo`      | `components/brand/bowling-logo.tsx`       | The ticket-stub logo: red rectangle + dashed white border + chunky `BOWLING` wordmark + teal city banner. Branch-aware via `city` prop. |
+| `Eyebrow`          | `components/common/eyebrow.tsx`           | Small tracked-out uppercase label above a heading.                                                                                      |
+| `AccentBar`        | `components/common/accent-bar.tsx`        | 3px tall block in `bg-brand-accent`. Width via `size="sm"                                                                               | "md" | "lg"`. |
+| `Marquee`          | `components/common/marquee.tsx`           | Scrolling uppercase band, RTL-aware.                                                                                                    |
+| `FloatingWhatsApp` | `components/layout/floating-whatsapp.tsx` | Fixed bottom-end pill in `--whatsapp` brand green, branch-aware link.                                                                   |
 
 ### When to extract a new component
 
@@ -171,7 +171,7 @@ The homepage is composed in `app/[locale]/(site)/page.tsx`. Order, top to bottom
 5. **Google Reviews** - average rating, count, 2 quoted reviews, link to the full Google profile.
 6. **Contact** (`צור קשר`) - address, phone, email, hours, WhatsApp + contact-page CTAs.
 
-Sections from the previous build that are *not* on the homepage:
+Sections from the previous build that are _not_ on the homepage:
 
 - `Highlights` - moved to the in-depth pages where it earns its space.
 - `Gallery` - currently a placeholder; show only when real photography is wired in.

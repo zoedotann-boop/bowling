@@ -8,7 +8,7 @@ export const routing = defineRouting({
 
 export type Locale = (typeof routing.locales)[number]
 
-export const rtlLocales: ReadonlySet<Locale> = new Set(["he", "ar"])
+const rtlLocales: ReadonlySet<Locale> = new Set(["he", "ar"])
 
 export function dirFromLocale(locale: Locale): "ltr" | "rtl" {
   return rtlLocales.has(locale) ? "rtl" : "ltr"

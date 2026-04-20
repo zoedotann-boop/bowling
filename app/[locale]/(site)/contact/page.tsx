@@ -22,8 +22,12 @@ export default async function ContactPage({
     <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
       <header className="mx-auto max-w-2xl text-center">
         <Eyebrow>{branch.displayName[l]}</Eyebrow>
-        <h1 className="mt-3 font-heading text-5xl text-ink sm:text-6xl">{t("Contact.title")}</h1>
-        <p className="mt-4 text-base text-ink-soft sm:text-lg">{t("Contact.intro")}</p>
+        <h1 className="font-heading mt-3 text-5xl text-ink sm:text-6xl">
+          {t("Contact.title")}
+        </h1>
+        <p className="mt-4 text-base text-ink-soft sm:text-lg">
+          {t("Contact.intro")}
+        </p>
       </header>
 
       <div className="mt-12 grid gap-6 sm:mt-16 lg:grid-cols-[1.2fr_1fr] lg:gap-8">
