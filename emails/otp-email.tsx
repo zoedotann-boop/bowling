@@ -38,9 +38,7 @@ export default function OtpEmail({
             <Text style={muted}>
               הקוד תקף ל-<span style={mono}>{expiresInMinutes}</span> דקות.
             </Text>
-            <Text style={muted}>
-              אם לא ביקשת קוד זה, אפשר להתעלם מההודעה.
-            </Text>
+            <Text style={muted}>אם לא ביקשת קוד זה, אפשר להתעלם מההודעה.</Text>
           </Section>
         </Container>
       </Body>
