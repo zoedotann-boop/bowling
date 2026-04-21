@@ -1,14 +1,14 @@
+import Link from "next/link"
 import { getLocale, getTranslations } from "next-intl/server"
-import {
-  IconBrandWhatsapp,
-  IconClock,
-  IconMapPin,
-  IconPhone,
-} from "@tabler/icons-react"
+import { IconBrandWhatsapp, IconClock, IconMapPin } from "@tabler/icons-react"
 import type { Branch } from "@/lib/branches"
 import { BowlingLogo } from "@/components/brand/bowling-logo"
+import { BowlingCard } from "@/components/brand/bowling-card"
+import { RetroButton } from "@/components/brand/retro-button"
+import { Ball, Burst, Pin } from "@/components/brand/glyphs"
+import { Eyebrow } from "@/components/common/eyebrow"
 import { buildWhatsAppLink } from "@/lib/whatsapp"
-import { getTodayHours, isOpenNow } from "@/lib/hours"
+import { getTodayHours } from "@/lib/hours"
 
 export async function Hero({ branch }: { branch: Branch }) {
   const t = await getTranslations()
@@ -18,61 +18,75 @@ export async function Hero({ branch }: { branch: Branch }) {
   const waHref = buildWhatsAppLink(branch, message)
   const tel = branch.phone.replace(/[^\d+]/g, "")
   const today = getTodayHours(branch)
-  const open = isOpenNow(branch)
   const city = branch.city[locale]
 
   return (
-    <section className="relative overflow-hidden bg-surface-warm">
-      <div className="mx-auto max-w-6xl px-4 pt-12 pb-16 sm:px-6 sm:pt-20 sm:pb-24 lg:px-8 lg:pt-28 lg:pb-32">
-        <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-line bg-surface px-3 py-1.5 text-xs font-medium text-ink-soft shadow-soft">
-            <span
-              className={`size-1.5 rounded-full ${open ? "bg-whatsapp" : "bg-ticket-red"}`}
-              aria-hidden
-            />
-            <span>{open ? t("Hero.openNow") : t("Hero.closedNow")}</span>
-            <span className="text-ink-muted">·</span>
-            <span className="font-mono text-ink">
-              {today.open} – {today.close}
-            </span>
-          </div>
+    <section className="relative overflow-hidden bg-cream">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -end-5 top-2 opacity-90"
+      >
+        <Burst color="var(--yellow)" size={140} />
+      </div>
+      <div aria-hidden className="pointer-events-none absolute end-8 top-6">
+        <Ball color="var(--turq)" size={56} />
+      </div>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -start-2 top-44 rotate-12"
+      >
+        <Pin color="#fff" stripe="var(--red)" size={44} />
+      </div>
 
-          <BowlingLogo city={city} size="md" className="mb-8" />
-
-          <h1 className="font-heading text-[clamp(2.5rem,7vw,4.5rem)] leading-[1.05] text-ink">
-            {branch.hero.headline[locale]}
-          </h1>
-
-          <p className="mt-5 max-w-xl text-base text-pretty text-ink-soft sm:text-lg sm:leading-relaxed">
-            {branch.hero.tagline[locale]}
-          </p>
-
-          <div className="mt-9 flex w-full max-w-md flex-col gap-3 sm:max-w-none sm:flex-row sm:justify-center">
-            <a
-              href={waHref}
-              target="_blank"
-              rel="noopener"
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-whatsapp px-7 text-base font-medium text-white shadow-soft transition hover:scale-[1.02] hover:bg-whatsapp-hover hover:shadow-card"
-            >
-              <IconBrandWhatsapp className="size-5" aria-hidden />
-              {t("Cta.book")}
-            </a>
-            <a
-              href={`tel:${tel}`}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-line bg-surface px-7 text-base font-medium text-ink shadow-soft transition hover:bg-surface-muted"
-            >
-              <IconPhone className="size-5 text-ink-muted" aria-hidden />
-              {t("Cta.callNow")}
-            </a>
-          </div>
+      <div className="relative mx-auto max-w-4xl px-4 pt-10 pb-12 sm:px-6 sm:pt-16 sm:pb-20">
+        <div className="flex justify-center pt-4 pb-8">
+          <BowlingLogo city={city} size="md" />
         </div>
 
-        <div className="mx-auto mt-14 grid max-w-4xl gap-3 sm:mt-20 sm:grid-cols-3 sm:gap-4">
+        <BowlingCard
+          surface="paper"
+          ring="red"
+          shadow="lg"
+          contentClassName="px-5 py-6 text-center"
+        >
+          <Eyebrow tone="red">{t("Hero.scrollHint")}</Eyebrow>
+          <h1 className="mt-3 font-display text-[clamp(2.25rem,7vw,3.75rem)] leading-[1.02] text-ink">
+            {branch.hero.headline[locale]}
+          </h1>
+          <p className="mt-3 text-base leading-relaxed text-ink/80">
+            {branch.hero.tagline[locale]}
+          </p>
+        </BowlingCard>
+
+        <div className="mt-5 flex flex-col gap-3">
+          <RetroButton
+            tone="red"
+            size="lg"
+            full
+            render={
+              <a href={waHref} target="_blank" rel="noopener">
+                <IconBrandWhatsapp aria-hidden />
+                {t("Cta.book")}
+              </a>
+            }
+          />
+          <RetroButton
+            tone="turq"
+            full
+            render={<Link href="#prices">{t("Cta.viewPrices")}</Link>}
+          />
+          <RetroButton
+            tone="yellow"
+            full
+            render={<a href={`tel:${tel}`}>{t("Cta.callNow")}</a>}
+          />
+        </div>
+
+        <div className="mt-8 grid gap-3 sm:grid-cols-3 sm:gap-4">
           <InfoTile
             icon={<IconClock className="size-4" aria-hidden />}
             label={t("Hero.openNow")}
             value={`${today.open} – ${today.close}`}
-            tone={open ? "ok" : "muted"}
           />
           <InfoTile
             icon={<IconMapPin className="size-4" aria-hidden />}
@@ -82,7 +96,7 @@ export async function Hero({ branch }: { branch: Branch }) {
             external
           />
           <InfoTile
-            icon={<IconPhone className="size-4" aria-hidden />}
+            icon={<IconBrandWhatsapp className="size-4" aria-hidden />}
             label={t("Contact.phone")}
             value={branch.phone}
             href={`tel:${tel}`}
@@ -99,31 +113,23 @@ function InfoTile({
   value,
   href,
   external,
-  tone,
 }: {
   icon: React.ReactNode
   label: string
   value: string
   href?: string
   external?: boolean
-  tone?: "ok" | "muted"
 }) {
   const inner = (
-    <div className="group flex h-full items-center gap-3 rounded-2xl border border-line bg-surface px-4 py-3.5 text-start transition hover:border-ink/15 hover:shadow-soft">
-      <span
-        className={`grid size-9 shrink-0 place-items-center rounded-xl ${
-          tone === "ok"
-            ? "bg-whatsapp/10 text-whatsapp"
-            : "bg-surface-muted text-ink-muted"
-        }`}
-      >
+    <div className="flex h-full items-center gap-3 border-2 border-ink bg-paper px-3 py-2.5 text-start shadow-block-sm">
+      <span className="grid size-9 shrink-0 place-items-center border-2 border-ink bg-yellow text-ink">
         {icon}
       </span>
       <div className="min-w-0 flex-1">
-        <div className="text-[11px] font-medium tracking-[0.14em] text-ink-muted uppercase">
+        <div className="font-mono text-[10px] font-bold tracking-[0.18em] text-red uppercase">
           {label}
         </div>
-        <div className="truncate text-sm font-medium text-ink">{value}</div>
+        <div className="truncate text-sm font-bold text-ink">{value}</div>
       </div>
     </div>
   )

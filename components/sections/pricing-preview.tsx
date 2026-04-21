@@ -1,37 +1,82 @@
-import { getTranslations } from "next-intl/server"
-import { IconArrowRight } from "@tabler/icons-react"
+import { getLocale, getTranslations } from "next-intl/server"
+import { IconArrowLeft } from "@tabler/icons-react"
 import type { Branch } from "@/lib/branches"
 import { Link } from "@/i18n/navigation"
-import { SectionHeader } from "@/components/common/section-header"
-import { PricingTable } from "@/components/common/pricing-table"
+import { BowlingCard } from "@/components/brand/bowling-card"
+import { Burst } from "@/components/brand/glyphs"
+import { Eyebrow } from "@/components/common/eyebrow"
 
 export async function PricingPreview({ branch }: { branch: Branch }) {
   const t = await getTranslations("PricingPreview")
+  const tPricing = await getTranslations("Pricing")
+  const locale = (await getLocale()) as keyof Branch["displayName"]
+  const rows = branch.prices.slice(0, 3)
 
   return (
-    <section className="bg-canvas">
-      <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
-        <div className="flex flex-col items-center text-center">
-          <SectionHeader
-            eyebrow={t("title")}
-            title={t("title")}
-            subtitle={t("subtitle")}
-          />
-          <Link
-            href="/prices"
-            className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-ink hover:gap-3"
-          >
-            {t("viewAll")}
-            <IconArrowRight className="size-4 rtl:rotate-180" aria-hidden />
-          </Link>
+    <section
+      id="prices"
+      className="relative scroll-mt-24 overflow-hidden bg-turq"
+    >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -start-8 -top-8 opacity-30"
+      >
+        <Burst color="#fff" size={200} />
+      </div>
+      <div className="relative mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-14">
+        <div className="mb-6">
+          <Eyebrow tone="cream">{t("title")}</Eyebrow>
+          <h2 className="mt-2 font-display text-3xl leading-[1] text-white sm:text-4xl">
+            {t("subtitle")}
+          </h2>
         </div>
 
-        <div className="mt-10 sm:mt-12">
-          <PricingTable
-            branch={branch}
-            rows={branch.prices.slice(0, 3)}
-            showHeaderLabel={false}
-          />
+        <BowlingCard
+          surface="cream"
+          ring="red"
+          shadow="lg"
+          contentClassName="px-4 py-3 sm:px-5"
+        >
+          {rows.map((row, i) => (
+            <div
+              key={i}
+              className={`flex items-baseline gap-3 py-2.5 ${
+                i < rows.length - 1
+                  ? "border-b border-dashed border-ink/30"
+                  : ""
+              }`}
+            >
+              <span className="text-base font-extrabold text-ink">
+                {row.label[locale]}
+              </span>
+              <span className="flex-1 border-b border-dotted border-ink/40" />
+              <span className="font-mono text-xs text-ink/70 tabular-nums">
+                {row.weekday}
+              </span>
+              <span className="font-display text-lg text-red">
+                {row.weekend}
+              </span>
+            </div>
+          ))}
+          <div className="flex items-baseline gap-3 border-t border-dashed border-ink/30 py-2.5">
+            <span className="text-sm font-bold text-ink">
+              {tPricing("shoeRental")}
+            </span>
+            <span className="flex-1 border-b border-dotted border-ink/40" />
+            <span className="font-display text-lg text-red">
+              {branch.shoeRental.weekend}
+            </span>
+          </div>
+        </BowlingCard>
+
+        <div className="mt-5 flex justify-center">
+          <Link
+            href="/prices"
+            className="inline-flex items-center gap-2 font-mono text-xs font-bold tracking-[0.18em] text-white uppercase transition-all hover:gap-3"
+          >
+            {t("viewAll")}
+            <IconArrowLeft className="size-4 rtl:-scale-x-100" aria-hidden />
+          </Link>
         </div>
       </div>
     </section>

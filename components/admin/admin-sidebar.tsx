@@ -74,11 +74,11 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
         <div className="flex h-10 items-center gap-2 px-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
           <div
             aria-hidden
-            className="grid size-6 shrink-0 place-items-center bg-ink text-[10px] font-semibold text-surface"
+            className="grid size-7 shrink-0 -rotate-3 place-items-center border-2 border-ink bg-red font-display text-[11px] tracking-wider text-white shadow-block-sm"
           >
             B
           </div>
-          <span className="truncate text-sm font-semibold tracking-tight text-ink group-data-[collapsible=icon]:hidden">
+          <span className="truncate font-display text-base tracking-tight text-ink group-data-[collapsible=icon]:hidden">
             {t("brand")}
           </span>
         </div>

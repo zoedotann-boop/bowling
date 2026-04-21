@@ -28,8 +28,15 @@
   "Hero": {
     "viewingLabel": "You're viewing",
     "scrollHint": "Scroll to explore",
-    "openNow": "Open now",
+    "openNow": "Open now · until 02:00",
     "closedNow": "Closed now"
+  },
+  "Ticker": {
+    "item1": "★ Cosmic Thursdays from 22:00",
+    "item2": "★ League nights every Tuesday",
+    "item3": "★ Birthdays? Packages from ₪89",
+    "item4": "★ Fri–Sat open until 02:00",
+    "item5": "★ Mondays — kids bowl free"
   },
   "Highlights": {
     "title": "Why this branch is special",

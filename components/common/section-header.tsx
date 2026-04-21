@@ -1,17 +1,26 @@
 import { cn } from "@/lib/utils"
 import { Eyebrow } from "@/components/common/eyebrow"
 
+/**
+ * SectionHeader — the standard rhythm for every section: mono eyebrow,
+ * chunky display title, optional subtitle. Accepts React nodes in `title`
+ * so consumers can highlight a closing word with `<span className="text-red">`.
+ */
 export function SectionHeader({
   eyebrow,
   title,
   subtitle,
   align = "center",
+  eyebrowTone = "red",
+  titleClassName,
   className,
 }: {
   eyebrow?: string
-  title: string
-  subtitle?: string
+  title: React.ReactNode
+  subtitle?: React.ReactNode
   align?: "center" | "start"
+  eyebrowTone?: "red" | "ink" | "cream" | "yellow"
+  titleClassName?: string
   className?: string
 }) {
   return (
@@ -22,8 +31,13 @@ export function SectionHeader({
         className
       )}
     >
-      {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
-      <h2 className="font-heading mt-3 text-4xl text-ink sm:text-5xl">
+      {eyebrow && <Eyebrow tone={eyebrowTone}>{eyebrow}</Eyebrow>}
+      <h2
+        className={cn(
+          "mt-3 font-display text-3xl leading-[0.95] text-ink sm:text-4xl md:text-5xl",
+          titleClassName
+        )}
+      >
         {title}
       </h2>
       {subtitle && (

@@ -2,6 +2,7 @@ import { setRequestLocale } from "next-intl/server"
 import type { Locale } from "@/i18n/routing"
 import { getCurrentBranch } from "@/lib/branch-context"
 import { Hero } from "@/components/sections/hero"
+import { QuickActions } from "@/components/sections/quick-actions"
 import { PricingPreview } from "@/components/sections/pricing-preview"
 import { MenuSection } from "@/components/sections/menu-section"
 import { EventsTeaser } from "@/components/sections/events-teaser"
@@ -20,6 +21,7 @@ export default async function HomePage({
   return (
     <>
       <Hero branch={branch} />
+      <QuickActions />
       <PricingPreview branch={branch} />
       <MenuSection branch={branch} />
       <EventsTeaser branch={branch} />
