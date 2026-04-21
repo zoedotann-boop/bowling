@@ -1,13 +1,13 @@
 "use client"
 
-import { useTranslations, useLocale } from "next-intl"
+import { useTransition } from "react"
+import { useTranslations } from "next-intl"
 import {
   IconBuildingStore,
   IconCheck,
   IconChevronDown,
 } from "@tabler/icons-react"
-import { branches, type Branch } from "@/lib/branches"
-import { cn } from "@/lib/utils"
+
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -16,28 +16,28 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import type { BranchOption } from "@/lib/site-branch"
+import { selectBranch } from "@/app/[locale]/(site)/_actions/branch"
 
-const accentDot: Record<Branch["brandAccent"], string> = {
-  cherry: "bg-ticket-red",
-  teal: "bg-banner-teal",
-}
-
-export function BranchSwitcher({ currentSlug }: { currentSlug: string }) {
+export function BranchSwitcher({
+  branches,
+  currentSlug,
+}: {
+  branches: BranchOption[]
+  currentSlug: string
+}) {
   const t = useTranslations("BranchSwitcher")
-  const locale = useLocale()
-  const current = branches.find((b) => b.slug === currentSlug) ?? branches[0]
-  const isProd = process.env.NODE_ENV === "production"
+  const [pending, startTransition] = useTransition()
 
-  function selectBranch(branch: Branch) {
-    if (branch.slug === current.slug) return
-    if (isProd && branch.domains[0]) {
-      const path = window.location.pathname + window.location.search
-      window.location.assign(`https://${branch.domains[0]}${path}`)
-      return
-    }
-    const url = new URL(window.location.href)
-    url.searchParams.set("branch", branch.slug)
-    window.location.assign(url.toString())
+  if (branches.length < 2) return null
+
+  const current = branches.find((b) => b.slug === currentSlug) ?? branches[0]!
+
+  function choose(slug: string) {
+    if (slug === current.slug || pending) return
+    startTransition(() => {
+      void selectBranch(slug)
+    })
   }
 
   return (
@@ -45,55 +45,40 @@ export function BranchSwitcher({ currentSlug }: { currentSlug: string }) {
       <DropdownMenuTrigger
         render={
           <Button
+            variant="outline"
             size="sm"
-            variant="ghost"
-            className="h-10 gap-2 rounded-full px-3 text-ink hover:bg-surface-muted"
+            className="h-10 gap-2 px-3"
             aria-label={t("open")}
+            disabled={pending}
           />
         }
       >
-        <IconBuildingStore className="size-4 text-ink-muted" aria-hidden />
-        <span
-          className={cn("size-2 rounded-full", accentDot[current.brandAccent])}
-          aria-hidden
-        />
-        <span className="hidden text-sm font-medium sm:inline">
-          {current.shortName[locale as keyof typeof current.shortName]}
+        <IconBuildingStore className="size-4" aria-hidden />
+        <span className="hidden text-sm font-bold sm:inline">
+          {current.shortName}
         </span>
-        <IconChevronDown className="size-3.5 text-ink-muted" aria-hidden />
+        <IconChevronDown className="size-3.5" aria-hidden />
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align="end"
-        className="w-72 rounded-2xl border border-line bg-surface p-1.5 shadow-card"
-      >
-        <DropdownMenuLabel className="px-3 pt-2 pb-1 text-[11px] font-medium tracking-[0.16em] text-ink-muted uppercase">
-          {t("title")}
-        </DropdownMenuLabel>
+      <DropdownMenuContent align="end" className="w-64">
+        <DropdownMenuLabel>{t("title")}</DropdownMenuLabel>
         {branches.map((b) => {
           const isCurrent = b.slug === current.slug
           return (
             <DropdownMenuItem
               key={b.slug}
-              onClick={() => selectBranch(b)}
-              className="flex items-start gap-3 rounded-xl px-3 py-3"
+              onClick={() => choose(b.slug)}
+              className="flex items-start gap-3 py-2.5"
             >
-              <span
-                className={cn(
-                  "mt-1 size-2 shrink-0 rounded-full",
-                  accentDot[b.brandAccent]
+              <div className="flex-1">
+                <div className="font-bold text-ink">{b.shortName}</div>
+                {b.city && (
+                  <div className="font-mono text-[10px] tracking-[0.14em] text-ink-soft uppercase">
+                    {b.city}
+                  </div>
                 )}
-                aria-hidden
-              />
-              <div className="flex min-w-0 flex-col text-start">
-                <span className="text-sm font-medium text-ink">
-                  {b.displayName[locale as keyof typeof b.displayName]}
-                </span>
-                <span className="truncate text-xs text-ink-muted">
-                  {b.address[locale as keyof typeof b.address]}
-                </span>
               </div>
               {isCurrent && (
-                <IconCheck className="ms-auto size-4 text-ink" aria-hidden />
+                <IconCheck className="size-4 text-ink" aria-hidden />
               )}
             </DropdownMenuItem>
           )

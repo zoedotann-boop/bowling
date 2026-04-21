@@ -1,7 +1,5 @@
-import type { Branch } from "./branches"
-
 export function buildWhatsAppLink(
-  branch: Pick<Branch, "whatsapp">,
+  branch: { whatsapp: string },
   message?: string
 ): string {
   const base = `https://wa.me/${branch.whatsapp}`

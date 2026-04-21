@@ -4,11 +4,10 @@ import * as React from "react"
 import { IconAlertTriangle, IconMail } from "@tabler/icons-react"
 import { useRouter } from "@/i18n/navigation"
 import { authClient } from "@/lib/auth-client"
-import { Button } from "@/components/ui/button"
+import { Eyebrow } from "@/components/common/eyebrow"
+import { RetroButton } from "@/components/brand/retro-button"
+import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
-
-const fieldClass =
-  "block w-full rounded-2xl border border-line bg-surface px-4 py-3.5 text-base text-ink placeholder:text-ink-muted shadow-soft outline-none transition focus:border-ink/30 focus:ring-2 focus:ring-ink/10 aria-[invalid=true]:border-destructive aria-[invalid=true]:focus:ring-destructive/15"
 
 type Step = "email" | "otp"
 
@@ -56,66 +55,77 @@ export function LoginForm() {
 
   return (
     <div className="flex w-full flex-col gap-6">
+      <header className="flex flex-col items-center gap-2 text-center">
+        <Eyebrow tone="red">Admin</Eyebrow>
+        <h1 className="font-display text-2xl leading-tight text-ink sm:text-3xl">
+          התחברות ניהול
+        </h1>
+        <p className="text-sm text-ink-soft">
+          לגישה לאזור הניהול בלבד. אין כאן הרשמה.
+        </p>
+      </header>
+
       {step === "email" ? (
-        <form onSubmit={handleSendOtp} className="flex flex-col gap-3">
-          <label className="flex flex-col gap-1.5 text-sm text-ink">
+        <form onSubmit={handleSendOtp} className="flex flex-col gap-4">
+          <label className="flex flex-col gap-1.5 font-mono text-[11px] font-bold tracking-[0.14em] text-ink uppercase">
             כתובת אימייל
-            <input
+            <Input
               type="email"
               name="email"
               required
               autoComplete="email"
-              className={fieldClass}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="name@example.com"
               disabled={pending}
+              className="h-12 text-base"
             />
           </label>
-          <Button
-            type="submit"
+          <RetroButton
+            tone="red"
             size="lg"
-            className="h-12 w-full rounded-2xl text-base"
+            full
             disabled={pending || !email}
-          >
-            <IconMail className="size-5" aria-hidden />
-            שלח/י לי קוד
-          </Button>
+            nativeButton
+            render={
+              <button type="submit">
+                <IconMail aria-hidden />
+                שלח/י לי קוד
+              </button>
+            }
+          />
         </form>
       ) : (
-        <form onSubmit={handleVerifyOtp} className="flex flex-col gap-3">
-          <label className="flex flex-col gap-1.5 text-sm text-ink">
+        <form onSubmit={handleVerifyOtp} className="flex flex-col gap-4">
+          <label className="flex flex-col gap-1.5 font-mono text-[11px] font-bold tracking-[0.14em] text-ink uppercase">
             קוד בן 6 ספרות
-            <input
+            <Input
               type="text"
               inputMode="numeric"
               autoComplete="one-time-code"
               pattern="\d{6}"
               maxLength={6}
               required
-              className={cn(
-                fieldClass,
-                "text-center text-2xl tracking-[0.5em]"
-              )}
               value={otp}
               onChange={(e) =>
                 setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
               }
               placeholder="------"
               disabled={pending}
+              className={cn("h-14 text-center text-2xl tracking-[0.5em]")}
             />
           </label>
-          <Button
-            type="submit"
+          <RetroButton
+            tone="red"
             size="lg"
-            className="h-12 w-full rounded-2xl text-base"
+            full
             disabled={pending || otp.length !== 6}
-          >
-            אישור והתחברות
-          </Button>
+            nativeButton
+            render={<button type="submit">אישור והתחברות</button>}
+          />
           <button
             type="button"
-            className="self-center text-sm text-ink-muted underline-offset-4 hover:underline"
+            className="self-center font-mono text-xs tracking-[0.12em] text-ink-soft uppercase underline-offset-4 hover:underline"
             onClick={() => {
               setStep("email")
               setOtp("")
@@ -130,14 +140,14 @@ export function LoginForm() {
       )}
 
       {info ? (
-        <p className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink">
+        <p className="border-2 border-ink bg-yellow px-4 py-3 text-sm font-medium text-ink shadow-block-sm">
           {info}
         </p>
       ) : null}
       {error ? (
         <p
           role="alert"
-          className="flex items-start gap-2 rounded-xl border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive"
+          className="flex items-start gap-2 border-2 border-red-2 bg-red-2/10 px-4 py-3 text-sm font-medium text-red-2 shadow-block-sm"
         >
           <IconAlertTriangle className="mt-0.5 size-4" aria-hidden />
           {error}

@@ -1,16 +1,10 @@
-import { getLocale, getTranslations } from "next-intl/server"
+import { getTranslations } from "next-intl/server"
 import { Link } from "@/i18n/navigation"
-import { type Branch } from "@/lib/branches"
+import type { SiteBranch } from "@/lib/site-branch"
 import { buildWhatsAppLink } from "@/lib/whatsapp"
 
-/**
- * SiteFooter — light cream-2 footer. Red BOWLING wordmark + turq city pill,
- * dashed ink divider, one row of contact + social (mono). No dark block.
- */
-export async function SiteFooter({ branch }: { branch: Branch }) {
+export async function SiteFooter({ branch }: { branch: SiteBranch }) {
   const t = await getTranslations()
-  const locale = (await getLocale()) as keyof Branch["displayName"]
-  const city = branch.city[locale]
   const tel = branch.phone.replace(/[^\d+]/g, "")
   const year = new Date().getFullYear()
 
@@ -20,7 +14,7 @@ export async function SiteFooter({ branch }: { branch: Branch }) {
         <div className="flex flex-wrap items-baseline justify-between gap-3">
           <Link
             href="/"
-            aria-label={`Bowling ${city}`}
+            aria-label={`Bowling ${branch.city}`}
             className="inline-flex items-baseline gap-3"
             dir="ltr"
           >
@@ -28,7 +22,7 @@ export async function SiteFooter({ branch }: { branch: Branch }) {
               BOWLING
             </span>
             <span className="rounded-md bg-turq px-2 py-0.5 text-xs font-bold tracking-wider text-white">
-              {city}
+              {branch.city}
             </span>
           </Link>
           <span className="font-mono text-[11px] tracking-[0.2em] text-ink/60">
@@ -46,7 +40,7 @@ export async function SiteFooter({ branch }: { branch: Branch }) {
             <a href={`tel:${tel}`} className="font-bold hover:text-red">
               {branch.phone}
             </a>
-            <span className="text-ink/70">{branch.address[locale]}</span>
+            <span className="text-ink/70">{branch.address}</span>
           </div>
           <div className="flex gap-4 font-mono text-[11px] tracking-widest">
             <a
@@ -67,7 +61,7 @@ export async function SiteFooter({ branch }: { branch: Branch }) {
         </div>
 
         <p className="mt-6 text-center font-mono text-[10px] tracking-[0.2em] text-ink/50">
-          © {year} · BOWLING {city.toUpperCase()}
+          © {year} · BOWLING {branch.city.toUpperCase()}
         </p>
       </div>
     </footer>

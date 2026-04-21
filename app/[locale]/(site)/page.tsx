@@ -1,6 +1,7 @@
+import { notFound } from "next/navigation"
 import { setRequestLocale } from "next-intl/server"
 import type { Locale } from "@/i18n/routing"
-import { getCurrentBranch } from "@/lib/branch-context"
+import { loadSiteBranch } from "@/lib/site-branch"
 import { Hero } from "@/components/sections/hero"
 import { QuickActions } from "@/components/sections/quick-actions"
 import { PricingPreview } from "@/components/sections/pricing-preview"
@@ -16,7 +17,8 @@ export default async function HomePage({
 }) {
   const { locale } = await params
   setRequestLocale(locale)
-  const branch = await getCurrentBranch()
+  const branch = await loadSiteBranch(locale)
+  if (!branch) notFound()
 
   return (
     <>

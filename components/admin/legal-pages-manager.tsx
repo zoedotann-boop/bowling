@@ -20,12 +20,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Field, FieldLabel } from "@/components/ui/field"
+import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsList, TabsPanel, TabsTab } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
+
+import { FieldLabelWithTooltip } from "./field-label-with-tooltip"
 
 export type LegalPageRow = {
   slug: string
@@ -37,7 +39,13 @@ export type LegalPageRow = {
 
 type Mode = "edit" | "create"
 
-export function LegalPagesManager({ initial }: { initial: LegalPageRow[] }) {
+export function LegalPagesManager({
+  initial,
+  branchId,
+}: {
+  initial: LegalPageRow[]
+  branchId: string
+}) {
   const t = useTranslations("Admin.legal")
   const [creating, setCreating] = React.useState(false)
 
@@ -58,6 +66,7 @@ export function LegalPagesManager({ initial }: { initial: LegalPageRow[] }) {
             <LegalPageFormCard
               mode="create"
               row={emptyRow()}
+              branchId={branchId}
               onDone={() => setCreating(false)}
             />
             <Separator />
@@ -71,7 +80,7 @@ export function LegalPagesManager({ initial }: { initial: LegalPageRow[] }) {
         {initial.map((row, idx) => (
           <React.Fragment key={row.slug}>
             {idx > 0 ? <Separator /> : null}
-            <LegalPageFormCard mode="edit" row={row} />
+            <LegalPageFormCard mode="edit" row={row} branchId={branchId} />
           </React.Fragment>
         ))}
       </CardContent>
@@ -92,13 +101,16 @@ function emptyRow(): LegalPageRow {
 function LegalPageFormCard({
   mode,
   row,
+  branchId,
   onDone,
 }: {
   mode: Mode
   row: LegalPageRow
+  branchId: string
   onDone?: () => void
 }) {
   const t = useTranslations("Admin.legal")
+  const tTip = useTranslations("Admin.legal.tooltips")
   const tt = useTranslations("Admin.toasts")
   const tc = useTranslations("Admin.common")
   const initialState: FormState<{ slug: string }> = { status: "idle" }
@@ -123,6 +135,7 @@ function LegalPageFormCard({
     startDelete(async () => {
       const fd = new FormData()
       fd.set("slug", row.slug)
+      fd.set("branchId", branchId)
       const result = await deleteLegalPageAction(fd)
       if (result.status === "success") toast.success(tt("legalPageDeleted"))
       else toast.error(tt("genericError"))
@@ -136,9 +149,12 @@ function LegalPageFormCard({
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
+      <input type="hidden" name="branchId" value={branchId} />
       <div className="grid gap-3 md:grid-cols-[12rem_8rem_1fr]">
         <Field>
-          <FieldLabel>{t("slug")}</FieldLabel>
+          <FieldLabelWithTooltip tooltip={tTip("slug")} required>
+            {t("slug")}
+          </FieldLabelWithTooltip>
           <Input
             name="slug"
             defaultValue={row.slug}
@@ -152,11 +168,15 @@ function LegalPageFormCard({
           ) : null}
         </Field>
         <Field>
-          <FieldLabel>{t("sortOrder")}</FieldLabel>
+          <FieldLabelWithTooltip tooltip={tTip("sortOrder")}>
+            {t("sortOrder")}
+          </FieldLabelWithTooltip>
           <Input name="sortOrder" type="number" defaultValue={row.sortOrder} />
         </Field>
         <Field>
-          <FieldLabel>{t("published")}</FieldLabel>
+          <FieldLabelWithTooltip tooltip={tTip("published")}>
+            {t("published")}
+          </FieldLabelWithTooltip>
           <div className="flex h-9 items-center">
             <Switch name="published" defaultChecked={row.published} />
           </div>
@@ -178,7 +198,9 @@ function LegalPageFormCard({
             <TabsPanel key={loc} value={loc}>
               <div className="flex flex-col gap-3">
                 <Field>
-                  <FieldLabel>{t("pageTitle")}</FieldLabel>
+                  <FieldLabelWithTooltip tooltip={tTip("pageTitle")}>
+                    {t("pageTitle")}
+                  </FieldLabelWithTooltip>
                   <Input
                     name={titleKey}
                     defaultValue={row.titles[loc] ?? ""}
@@ -188,7 +210,9 @@ function LegalPageFormCard({
                   />
                 </Field>
                 <Field>
-                  <FieldLabel>{t("body")}</FieldLabel>
+                  <FieldLabelWithTooltip tooltip={tTip("body")}>
+                    {t("body")}
+                  </FieldLabelWithTooltip>
                   <Textarea
                     name={bodyKey}
                     defaultValue={row.bodies[loc] ?? ""}

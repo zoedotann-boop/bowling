@@ -36,7 +36,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Field, FieldLabel } from "@/components/ui/field"
+import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import {
   Select,
@@ -49,6 +49,7 @@ import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
 
 import { ConfirmDeleteDialog } from "./confirm-delete-dialog"
+import { FieldLabelWithTooltip } from "./field-label-with-tooltip"
 
 export type FooterLinkRow = {
   id: string
@@ -62,9 +63,11 @@ export type FooterLinkRow = {
 export function FooterLinksManager({
   initial,
   suggestedGroupKeys,
+  branchId,
 }: {
   initial: FooterLinkRow[]
   suggestedGroupKeys: string[]
+  branchId: string
 }) {
   const t = useTranslations("Admin.footer")
   const tt = useTranslations("Admin.toasts")
@@ -103,7 +106,10 @@ export function FooterLinksManager({
       <CardHeader>
         <CardTitle>{t("linksTitle")}</CardTitle>
         <CardAction>
-          <NewLinkButton suggestedGroupKeys={suggestedGroupKeys} />
+          <NewLinkButton
+            suggestedGroupKeys={suggestedGroupKeys}
+            branchId={branchId}
+          />
         </CardAction>
       </CardHeader>
       <CardContent className="flex flex-col gap-6">
@@ -117,6 +123,7 @@ export function FooterLinksManager({
               {idx > 0 ? <Separator /> : null}
               <FooterLinkGroup
                 group={group}
+                branchId={branchId}
                 onReordered={(reordered) => {
                   const ids = new Set(reordered.map((r) => r.id))
                   setRows((current) => {
@@ -140,11 +147,13 @@ export function FooterLinksManager({
 
 function FooterLinkGroup({
   group,
+  branchId,
   onReordered,
   onReorderFailed,
   onOrderSaved,
 }: {
   group: { locale: Locale; groupKey: string; links: FooterLinkRow[] }
+  branchId: string
   onReordered: (rows: FooterLinkRow[]) => void
   onReorderFailed: () => void
   onOrderSaved: () => void
@@ -175,6 +184,7 @@ function FooterLinkGroup({
     onReordered(moved)
 
     const result = await reorderFooterLinksAction(
+      branchId,
       group.locale,
       group.groupKey,
       moved.map((r) => ({ id: r.id, sortOrder: r.sortOrder }))
@@ -203,7 +213,7 @@ function FooterLinkGroup({
         >
           <ul className="flex flex-col gap-2">
             {localRows.map((row) => (
-              <SortableLinkRow key={row.id} row={row} />
+              <SortableLinkRow key={row.id} row={row} branchId={branchId} />
             ))}
           </ul>
         </SortableContext>
@@ -212,7 +222,13 @@ function FooterLinkGroup({
   )
 }
 
-function SortableLinkRow({ row }: { row: FooterLinkRow }) {
+function SortableLinkRow({
+  row,
+  branchId,
+}: {
+  row: FooterLinkRow
+  branchId: string
+}) {
   const t = useTranslations("Admin.footer")
   const {
     attributes,
@@ -241,14 +257,21 @@ function SortableLinkRow({ row }: { row: FooterLinkRow }) {
         <IconGripVertical className="size-4" />
       </button>
       <div className="flex-1">
-        <FooterLinkForm row={row} />
+        <FooterLinkForm row={row} branchId={branchId} />
       </div>
     </li>
   )
 }
 
-function FooterLinkForm({ row }: { row: FooterLinkRow }) {
+function FooterLinkForm({
+  row,
+  branchId,
+}: {
+  row: FooterLinkRow
+  branchId: string
+}) {
   const t = useTranslations("Admin.footer")
+  const tTip = useTranslations("Admin.footer.tooltips")
   const tt = useTranslations("Admin.toasts")
   const tc = useTranslations("Admin.common")
   const initialState: FormState<{ id: string }> = { status: "idle" }
@@ -268,6 +291,7 @@ function FooterLinkForm({ row }: { row: FooterLinkRow }) {
     startDelete(async () => {
       const fd = new FormData()
       fd.set("id", row.id)
+      fd.set("branchId", branchId)
       const result = await deleteFooterLinkAction(fd)
       if (result.status === "success") toast.success(tt("footerLinkDeleted"))
       else toast.error(tt("genericError"))
@@ -277,16 +301,21 @@ function FooterLinkForm({ row }: { row: FooterLinkRow }) {
   return (
     <form action={formAction} className="flex flex-col gap-3">
       <input type="hidden" name="id" value={row.id} />
+      <input type="hidden" name="branchId" value={branchId} />
       <input type="hidden" name="locale" value={row.locale} />
       <input type="hidden" name="groupKey" value={row.groupKey} />
       <input type="hidden" name="sortOrder" value={row.sortOrder} />
       <div className="grid gap-3 md:grid-cols-[1fr_1.5fr]">
         <Field>
-          <FieldLabel>{t("label")}</FieldLabel>
+          <FieldLabelWithTooltip tooltip={tTip("label")}>
+            {t("label")}
+          </FieldLabelWithTooltip>
           <Input name="label" defaultValue={row.label} required />
         </Field>
         <Field>
-          <FieldLabel>{t("href")}</FieldLabel>
+          <FieldLabelWithTooltip tooltip={tTip("href")}>
+            {t("href")}
+          </FieldLabelWithTooltip>
           <Input name="href" defaultValue={row.href} required />
         </Field>
       </div>
@@ -320,10 +349,13 @@ function FooterLinkForm({ row }: { row: FooterLinkRow }) {
 
 function NewLinkButton({
   suggestedGroupKeys,
+  branchId,
 }: {
   suggestedGroupKeys: string[]
+  branchId: string
 }) {
   const t = useTranslations("Admin.footer")
+  const tTip = useTranslations("Admin.footer.tooltips")
   const tt = useTranslations("Admin.toasts")
   const tc = useTranslations("Admin.common")
   const [open, setOpen] = React.useState(false)
@@ -337,6 +369,7 @@ function NewLinkButton({
     e.preventDefault()
     startTransition(async () => {
       const fd = new FormData()
+      fd.set("branchId", branchId)
       fd.set("locale", locale)
       fd.set("groupKey", groupKey)
       fd.set("label", label)
@@ -367,7 +400,9 @@ function NewLinkButton({
       className="flex flex-wrap items-end gap-2 bg-surface"
     >
       <Field className="w-24">
-        <FieldLabel>{t("locale")}</FieldLabel>
+        <FieldLabelWithTooltip tooltip={tTip("locale")}>
+          {t("locale")}
+        </FieldLabelWithTooltip>
         <Select value={locale} onValueChange={(v) => setLocale(v as Locale)}>
           <SelectTrigger className="h-9 w-full">
             <SelectValue />
@@ -382,7 +417,9 @@ function NewLinkButton({
         </Select>
       </Field>
       <Field className="w-32">
-        <FieldLabel>{t("groupKey")}</FieldLabel>
+        <FieldLabelWithTooltip tooltip={tTip("groupKey")}>
+          {t("groupKey")}
+        </FieldLabelWithTooltip>
         <Input
           value={groupKey}
           onChange={(e) => setGroupKey(e.target.value)}
@@ -396,7 +433,9 @@ function NewLinkButton({
         </datalist>
       </Field>
       <Field className="min-w-40 flex-1">
-        <FieldLabel>{t("label")}</FieldLabel>
+        <FieldLabelWithTooltip tooltip={tTip("label")}>
+          {t("label")}
+        </FieldLabelWithTooltip>
         <Input
           value={label}
           onChange={(e) => setLabel(e.target.value)}
@@ -404,7 +443,9 @@ function NewLinkButton({
         />
       </Field>
       <Field className="min-w-40 flex-1">
-        <FieldLabel>{t("href")}</FieldLabel>
+        <FieldLabelWithTooltip tooltip={tTip("href")}>
+          {t("href")}
+        </FieldLabelWithTooltip>
         <Input
           value={href}
           onChange={(e) => setHref(e.target.value)}

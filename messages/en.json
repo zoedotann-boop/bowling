@@ -15,15 +15,14 @@
     "getDirections": "Open in Maps",
     "exploreEvents": "Event packages"
   },
-  "BranchSwitcher": {
-    "label": "Branch",
-    "title": "Choose a branch",
-    "current": "You are viewing",
-    "open": "Switch branch"
-  },
   "LocaleSwitcher": {
     "label": "Language",
-    "open": "Choose language"
+    "open": "Choose language",
+    "title": "Choose language"
+  },
+  "BranchSwitcher": {
+    "title": "Choose branch",
+    "open": "Choose branch"
   },
   "Hero": {
     "viewingLabel": "You're viewing",
@@ -110,10 +109,6 @@
       "error": "Something went wrong. Please try again or message us on WhatsApp."
     }
   },
-  "EventTypes": {
-    "birthday": "Birthday",
-    "other": "Other"
-  },
   "Footer": {
     "branches": "Our branches",
     "explore": "Explore",
@@ -128,11 +123,17 @@
   "Admin": {
     "nav": {
       "brand": "Bowling Admin",
-      "branches": "Branches",
-      "contact": "Contact",
-      "media": "Media",
-      "footer": "Footer",
+      "branchGroup": "Branch",
+      "pickBranch": "Pick a branch",
+      "createBranch": "Create branch",
       "signOut": "Sign out"
+    },
+    "home": {
+      "title": "Bowling admin",
+      "pickFromSidebar": "Pick a branch from the sidebar to start editing.",
+      "jumpToFirst": "Open first branch",
+      "noBranches": "No branches yet. Create your first branch to get started.",
+      "createFirst": "Create first branch"
     },
     "common": {
       "cancel": "Cancel",
@@ -148,6 +149,20 @@
       "gatewayError": "Translation service unavailable. Try again.",
       "needSource": "Fill at least one Hebrew field first.",
       "emptySource": "Write Hebrew content first."
+    },
+    "reviews": {
+      "title": "Google reviews",
+      "description": "Synced daily from the Google Places API. Missing locales are AI-translated.",
+      "placeIdLabel": "Google place ID",
+      "placeIdMissing": "Not set - add a Google place ID in the Info tab",
+      "lastSynced": "Last synced: {when}",
+      "neverSynced": "Never synced. Add a place ID, then press Refresh.",
+      "averageRating": "Average rating: {rating} from {count} reviewers",
+      "refresh": "Refresh now",
+      "refreshing": "Refreshing…",
+      "refreshSuccess": "Synced {synced} reviews ({translated} translated)",
+      "noReviews": "No reviews cached yet.",
+      "translatedBadge": "AI"
     },
     "toasts": {
       "branchCreated": "Branch created",
@@ -185,10 +200,6 @@
     },
     "contact": {
       "title": "Contact details",
-      "indexTitle": "Contact",
-      "indexDescription": "Per-branch phone, WhatsApp, email, and map link.",
-      "editTitle": "Contact · {slug}",
-      "empty": "No branches yet.",
       "phone": "Phone",
       "whatsapp": "WhatsApp",
       "email": "Email",
@@ -206,7 +217,13 @@
       "href": "URL",
       "reorder": "Drag to reorder",
       "confirmDeleteTitle": "Delete footer link?",
-      "confirmDeleteDescription": "This removes \"{label}\". Cannot be undone."
+      "confirmDeleteDescription": "This removes \"{label}\". Cannot be undone.",
+      "tooltips": {
+        "locale": "Which language this link appears in. Each link is locale-specific — create separate entries for each language you support.",
+        "groupKey": "Column heading this link sits under in the footer (e.g., legal, company, social). Links with the same group key render together.",
+        "label": "Visible text of the link as shown in the footer.",
+        "href": "Destination URL. Use a relative path like /legal/terms for internal pages or an absolute https:// URL for external links."
+      }
     },
     "legal": {
       "title": "Legal pages",
@@ -218,7 +235,14 @@
       "pageTitle": "Title",
       "pageTitleHint": "e.g. Terms of Service",
       "body": "Body (Markdown)",
-      "bodyHint": "Supports headings, lists, **bold**, *italic*, and [links](https://example.com)."
+      "bodyHint": "Supports headings, lists, **bold**, *italic*, and [links](https://example.com).",
+      "tooltips": {
+        "slug": "URL-safe identifier used in /legal/<slug>. Lowercase with hyphens (e.g., privacy-policy). Changing the slug breaks existing links.",
+        "sortOrder": "Order pages appear in footer legal link groups. Lower numbers first.",
+        "published": "When off, the page is hidden from the public site and returns 404. Useful for drafts.",
+        "pageTitle": "Page heading and <title> tag. Keep it human — shown to users and search engines.",
+        "body": "Markdown content of the page. Renders with headings, lists, bold, italic, and links."
+      }
     },
     "packages": {
       "title": "Packages",
@@ -229,7 +253,12 @@
       "perks": "Perks",
       "reorder": "Drag to reorder",
       "confirmDeleteTitle": "Delete package?",
-      "confirmDeleteDescription": "This removes the package. Cannot be undone."
+      "confirmDeleteDescription": "This removes the package. Cannot be undone.",
+      "tooltips": {
+        "amount": "Price stored in agorot (cents). ₪1 = 100. Example: ₪690 = 69000.",
+        "titleLabel": "Display name of the package (e.g., Birthday Package, Family Pack).",
+        "perks": "Comma- or pipe-separated list of what's included. Rendered on the package card."
+      }
     },
     "prices": {
       "title": "Prices",
@@ -247,7 +276,13 @@
         "shoe": "Shoe rental"
       },
       "confirmDeleteTitle": "Delete price row?",
-      "confirmDeleteDescription": "This removes the row. Cannot be undone."
+      "confirmDeleteDescription": "This removes the row. Cannot be undone.",
+      "tooltips": {
+        "kind": "Category of the price row. Used to group and sort entries on the public prices table.",
+        "weekday": "Sun–Thu price in agorot (cents). ₪1 = 100. Example: ₪42 = 4200.",
+        "weekend": "Fri–Sat price in agorot (cents). ₪1 = 100. Example: ₪52 = 5200.",
+        "label": "Optional per-locale label overriding the default kind name (e.g., Adult game, Shoe rental)."
+      }
     },
     "events": {
       "title": "Events",
@@ -258,7 +293,12 @@
       "description": "Description",
       "reorder": "Drag to reorder",
       "confirmDeleteTitle": "Delete event?",
-      "confirmDeleteDescription": "This removes the event. Cannot be undone."
+      "confirmDeleteDescription": "This removes the event. Cannot be undone.",
+      "tooltips": {
+        "image": "Photo shown on the event card on the public site. Upload via the Media library first.",
+        "titleLabel": "Short name of the event type (e.g., Birthdays, Corporate).",
+        "description": "One- or two-sentence pitch shown beneath the event title on the public site."
+      }
     },
     "menu": {
       "title": "Menu",
@@ -276,7 +316,13 @@
       "confirmDeleteCategoryTitle": "Delete category?",
       "confirmDeleteCategoryDescription": "This removes the category and all its items. Cannot be undone.",
       "confirmDeleteItemTitle": "Delete item?",
-      "confirmDeleteItemDescription": "This removes the item. Cannot be undone."
+      "confirmDeleteItemDescription": "This removes the item. Cannot be undone.",
+      "tooltips": {
+        "categoryTitle": "Section heading on the public menu (e.g., Snacks, Mains, Drinks).",
+        "amount": "Item price in agorot (cents). ₪1 = 100. Example: ₪38 = 3800.",
+        "itemName": "Dish name as shown on the public menu.",
+        "itemTag": "Optional badge shown next to the item (e.g., Bestseller, Spicy, New)."
+      }
     },
     "media": {
       "title": "Media",
@@ -308,24 +354,6 @@
       }
     },
     "branches": {
-      "list": {
-        "title": "Branches",
-        "description": "Manage your bowling branches and their publish status.",
-        "newBranch": "New branch",
-        "slug": "Slug",
-        "name": "Name",
-        "status": "Status",
-        "published": "Published",
-        "draft": "Draft",
-        "actions": "Actions",
-        "edit": "Edit",
-        "delete": "Delete",
-        "dragToReorder": "Drag to reorder",
-        "togglePublished": "Toggle published",
-        "confirmDeleteTitle": "Delete branch?",
-        "confirmDeleteDescription": "This removes the branch and all related content (hours, prices, packages, events, menu). Cannot be undone.",
-        "empty": "No branches yet. Create the first one."
-      },
       "tabs": {
         "info": "Info",
         "hours": "Hours",
@@ -336,8 +364,10 @@
         "menu": "Menu",
         "events": "Events",
         "reviews": "Reviews",
-        "soon": "Soon",
-        "comingSoon": "Coming soon"
+        "contact": "Contact",
+        "media": "Media",
+        "footer": "Footer",
+        "legal": "Legal"
       },
       "form": {
         "newTitle": "New branch",
@@ -350,9 +380,6 @@
         "mapUrl": "Map URL",
         "latitude": "Latitude",
         "longitude": "Longitude",
-        "brandAccent": "Brand accent",
-        "brandAccentCherry": "Cherry",
-        "brandAccentTeal": "Teal",
         "published": "Published",
         "displayName": "Display name",
         "shortName": "Short name",
@@ -371,7 +398,28 @@
         "dangerZone": "Danger zone",
         "dangerZoneDescription": "Deleting a branch removes all related content. This cannot be undone.",
         "confirmDeleteTitle": "Delete branch?",
-        "confirmDeleteDescription": "This removes the branch and all related content. Cannot be undone."
+        "confirmDeleteDescription": "This removes the branch and all related content. Cannot be undone.",
+        "tooltips": {
+          "slug": "URL-safe identifier used in /branches/<slug> paths. Lowercase with hyphens (e.g., ramat-gan). Cannot change after creation without breaking links.",
+          "sortOrder": "Controls the order branches appear in public lists and the branch picker. Lower numbers first.",
+          "phone": "Shown on the contact card and linked via tel: on mobile. Use international format (+972 3-123-4567).",
+          "whatsapp": "Phone number (digits only, country code first, no +) used to build wa.me links for the floating WhatsApp button. Example: 972545751100.",
+          "email": "Public contact email shown in the footer and on the contact page.",
+          "mapUrl": "Google Maps link opened when users tap the address. Find the venue on maps.google.com, click Share → Copy link.",
+          "latitude": "Decimal latitude used for the schema.org GeoCoordinates. From Google Maps, right-click the pin and copy the first number.",
+          "longitude": "Decimal longitude used for the schema.org GeoCoordinates. From Google Maps, right-click the pin and copy the second number.",
+          "published": "When off, the branch is hidden from the public site and sitemap. Admin can still edit it.",
+          "displayName": "Full branch name shown in page titles, headings, and the branch picker. Include the brand + city (e.g., Bowling Ramat Gan).",
+          "shortName": "Compact label used in the top nav and tight UI slots. Usually just the city.",
+          "address": "Street address displayed on the contact card and included in schema.org PostalAddress.",
+          "city": "City name used in schema.org PostalAddress and default SEO copy.",
+          "heroImageId": "Large banner image shown at the top of the public branch page. Upload in the Media library first, then pick it here.",
+          "heroHeadline": "Short headline overlaid on the hero image. Aim for 3–6 words.",
+          "heroTagline": "One-sentence subtitle under the headline. Describe what makes this branch special.",
+          "seoTitle": "Page <title> tag used by search engines and social shares. 50–60 characters is ideal.",
+          "seoDescription": "Meta description used by Google and social previews. 140–160 characters.",
+          "googlePlaceId": "Identifier from Google Maps Place Details. Find it at developers.google.com/maps/documentation/places/web-service/place-id (used by sub-project G to sync ratings/reviews)."
+        }
       },
       "hours": {
         "days": {

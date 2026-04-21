@@ -1,5 +1,5 @@
 import { del } from "@vercel/blob"
-import { desc, eq } from "drizzle-orm"
+import { and, desc, eq } from "drizzle-orm"
 
 import { db } from "@/lib/db"
 import { mediaAsset } from "@/lib/db/schema/media"
@@ -11,6 +11,7 @@ import type { WriteResult } from "./types"
 
 export type MediaAssetRead = {
   id: string
+  branchId: string
   blobUrl: string
   filename: string | null
   contentType: string | null
@@ -28,6 +29,7 @@ export type MediaAssetRead = {
 function toRead(row: typeof mediaAsset.$inferSelect): MediaAssetRead {
   return {
     id: row.id,
+    branchId: row.branchId,
     blobUrl: row.blobUrl,
     filename: row.filename,
     contentType: row.contentType,
@@ -43,10 +45,14 @@ function toRead(row: typeof mediaAsset.$inferSelect): MediaAssetRead {
   }
 }
 
-export async function list(limit = 200): Promise<MediaAssetRead[]> {
+export async function listByBranch(
+  branchId: string,
+  limit = 200
+): Promise<MediaAssetRead[]> {
   const rows = await db
     .select()
     .from(mediaAsset)
+    .where(eq(mediaAsset.branchId, branchId))
     .orderBy(desc(mediaAsset.createdAt))
     .limit(limit)
   return rows.map(toRead)
@@ -64,6 +70,7 @@ export async function create(
     .insert(mediaAsset)
     .values({
       id,
+      branchId: parsed.data.branchId,
       blobUrl: parsed.data.blobUrl,
       filename: parsed.data.filename ?? null,
       contentType: parsed.data.contentType ?? null,
@@ -80,7 +87,7 @@ export async function create(
   return {
     ok: true,
     data: toRead(row!),
-    revalidateTags: [tags.mediaAll()],
+    revalidateTags: [tags.mediaBranch(parsed.data.branchId)],
   }
 }
 
@@ -105,15 +112,22 @@ export async function updateAltText(
   return {
     ok: true,
     data: toRead(row),
-    revalidateTags: [tags.mediaAll(), tags.media(row.id)],
+    revalidateTags: [tags.mediaBranch(row.branchId), tags.media(row.id)],
   }
 }
 
-export async function remove(id: string): Promise<WriteResult<{ id: string }>> {
+export async function remove(
+  id: string,
+  branchId: string
+): Promise<WriteResult<{ id: string }>> {
   const [row] = await db
-    .select({ id: mediaAsset.id, blobUrl: mediaAsset.blobUrl })
+    .select({
+      id: mediaAsset.id,
+      blobUrl: mediaAsset.blobUrl,
+      branchId: mediaAsset.branchId,
+    })
     .from(mediaAsset)
-    .where(eq(mediaAsset.id, id))
+    .where(and(eq(mediaAsset.id, id), eq(mediaAsset.branchId, branchId)))
     .limit(1)
   if (!row) return { ok: false, fieldErrors: { id: ["media not found"] } }
 
@@ -130,7 +144,7 @@ export async function remove(id: string): Promise<WriteResult<{ id: string }>> {
   return {
     ok: true,
     data: { id },
-    revalidateTags: [tags.mediaAll(), tags.media(id)],
+    revalidateTags: [tags.mediaBranch(row.branchId), tags.media(id)],
   }
 }
 

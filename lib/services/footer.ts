@@ -15,6 +15,7 @@ import type { WriteResult } from "./types"
 
 export type FooterLinkRead = {
   id: string
+  branchId: string
   locale: Locale
   groupKey: string
   label: string
@@ -25,6 +26,7 @@ export type FooterLinkRead = {
 function toRead(row: typeof footerLink.$inferSelect): FooterLinkRead {
   return {
     id: row.id,
+    branchId: row.branchId,
     locale: row.locale as Locale,
     groupKey: row.groupKey,
     label: row.label,
@@ -33,10 +35,13 @@ function toRead(row: typeof footerLink.$inferSelect): FooterLinkRead {
   }
 }
 
-export async function listAll(): Promise<FooterLinkRead[]> {
+export async function listByBranch(
+  branchId: string
+): Promise<FooterLinkRead[]> {
   const rows = await db
     .select()
     .from(footerLink)
+    .where(eq(footerLink.branchId, branchId))
     .orderBy(
       asc(footerLink.locale),
       asc(footerLink.groupKey),
@@ -57,6 +62,7 @@ export async function create(
     .insert(footerLink)
     .values({
       id,
+      branchId: parsed.data.branchId,
       locale: parsed.data.locale,
       groupKey: parsed.data.groupKey,
       label: parsed.data.label,
@@ -67,7 +73,7 @@ export async function create(
   return {
     ok: true,
     data: toRead(row!),
-    revalidateTags: [tags.footerAll()],
+    revalidateTags: [tags.footerBranch(parsed.data.branchId)],
   }
 }
 
@@ -91,24 +97,28 @@ export async function update(
   return {
     ok: true,
     data: toRead(row),
-    revalidateTags: [tags.footerAll()],
+    revalidateTags: [tags.footerBranch(row.branchId)],
   }
 }
 
-export async function remove(id: string): Promise<WriteResult<{ id: string }>> {
+export async function remove(
+  id: string,
+  branchId: string
+): Promise<WriteResult<{ id: string }>> {
   const [row] = await db
     .delete(footerLink)
-    .where(eq(footerLink.id, id))
-    .returning({ id: footerLink.id })
+    .where(and(eq(footerLink.id, id), eq(footerLink.branchId, branchId)))
+    .returning({ id: footerLink.id, branchId: footerLink.branchId })
   if (!row) return { ok: false, fieldErrors: { id: ["footer link not found"] } }
   return {
     ok: true,
     data: { id: row.id },
-    revalidateTags: [tags.footerAll()],
+    revalidateTags: [tags.footerBranch(row.branchId)],
   }
 }
 
 export async function reorder(
+  branchId: string,
   locale: Locale,
   groupKey: string,
   items: unknown
@@ -125,6 +135,7 @@ export async function reorder(
         .where(
           and(
             eq(footerLink.id, item.id),
+            eq(footerLink.branchId, branchId),
             eq(footerLink.locale, locale),
             eq(footerLink.groupKey, groupKey)
           )
@@ -134,6 +145,6 @@ export async function reorder(
   return {
     ok: true,
     data: { count: parsed.data.length },
-    revalidateTags: [tags.footerAll()],
+    revalidateTags: [tags.footerBranch(branchId)],
   }
 }

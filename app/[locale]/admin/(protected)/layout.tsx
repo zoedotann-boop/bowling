@@ -30,7 +30,9 @@ export default async function AdminProtectedLayout({
   const defaultOpen =
     sidebarCookie === undefined ? true : sidebarCookie !== "false"
 
-  const slugLabels = await fetchBranchLabels(locale as Locale)
+  const branches = await fetchBranches(locale as Locale)
+  const slugLabels: Record<string, string> = {}
+  for (const b of branches) slugLabels[b.slug] = b.displayName
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
@@ -40,6 +42,7 @@ export default async function AdminProtectedLayout({
           email: session.user.email,
           image: session.user.image,
         }}
+        branches={branches}
       />
       <SidebarInset>
         <AdminTopbar slugLabels={slugLabels} />
@@ -52,23 +55,19 @@ export default async function AdminProtectedLayout({
   )
 }
 
-async function fetchBranchLabels(
+async function fetchBranches(
   locale: Locale
-): Promise<Record<string, string>> {
-  const branches = await db
-    .select({
-      slug: branch.slug,
-      fallbackName: branch.slug,
-    })
+): Promise<{ slug: string; displayName: string }[]> {
+  const rows = await db
+    .select({ id: branch.id, slug: branch.slug })
     .from(branch)
     .orderBy(asc(branch.sortOrder))
 
-  if (branches.length === 0) return {}
+  if (rows.length === 0) return []
 
   const translations = await db
     .select({
       branchId: branchTranslation.branchId,
-      locale: branchTranslation.locale,
       displayName: branchTranslation.displayName,
     })
     .from(branchTranslation)
@@ -79,14 +78,8 @@ async function fetchBranchLabels(
     if (tr.displayName) nameByBranch.set(tr.branchId, tr.displayName)
   }
 
-  const rows = await db
-    .select({ id: branch.id, slug: branch.slug })
-    .from(branch)
-
-  const out: Record<string, string> = {}
-  for (const row of rows) {
-    const name = nameByBranch.get(row.id)
-    if (name) out[row.slug] = name
-  }
-  return out
+  return rows.map((r) => ({
+    slug: r.slug,
+    displayName: nameByBranch.get(r.id) ?? r.slug,
+  }))
 }

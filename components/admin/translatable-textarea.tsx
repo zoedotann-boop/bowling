@@ -3,18 +3,20 @@
 import * as React from "react"
 
 import { routing, type Locale, dirFromLocale } from "@/i18n/routing"
-import { Field, FieldLabel } from "@/components/ui/field"
+import { Field } from "@/components/ui/field"
 import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsList, TabsTab, TabsPanel } from "@/components/ui/tabs"
 import { cn } from "@/lib/utils"
 
 import { AiSparkleButton } from "./ai-sparkle-button"
+import { FieldLabelWithTooltip } from "./field-label-with-tooltip"
 import type { TranslatableValues } from "./translatable-input"
 import { useTranslatableField } from "./translation-state-context"
 
 export function TranslatableTextarea({
   name,
   label,
+  tooltip,
   defaultValues,
   needsReviewLocales,
   required,
@@ -25,6 +27,7 @@ export function TranslatableTextarea({
 }: {
   name: string
   label: string
+  tooltip?: string
   defaultValues?: TranslatableValues
   needsReviewLocales?: Locale[]
   required?: boolean
@@ -46,10 +49,9 @@ export function TranslatableTextarea({
   return (
     <Field>
       <div className="flex items-center justify-between gap-2">
-        <FieldLabel>
+        <FieldLabelWithTooltip tooltip={tooltip} required={required}>
           {label}
-          {required ? <span className="text-destructive"> *</span> : null}
-        </FieldLabel>
+        </FieldLabelWithTooltip>
         <AiSparkleButton fieldName={name} label={aiLabel} />
       </div>
       <Tabs value={active} onValueChange={(v) => setActive(v as Locale)}>

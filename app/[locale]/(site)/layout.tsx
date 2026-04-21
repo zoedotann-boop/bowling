@@ -2,14 +2,15 @@ import type { Metadata } from "next"
 import { setRequestLocale } from "next-intl/server"
 import { hasLocale } from "next-intl"
 import { notFound } from "next/navigation"
+import { getTranslations } from "next-intl/server"
+
 import { routing, type Locale } from "@/i18n/routing"
-import { getCurrentBranch } from "@/lib/branch-context"
+import { loadSiteBranch, listPublishedBranches } from "@/lib/site-branch"
 import { SiteHeader } from "@/components/layout/site-header"
 import { SiteTopbar } from "@/components/layout/site-topbar"
 import { SiteFooter } from "@/components/layout/site-footer"
 import { FloatingWhatsApp } from "@/components/layout/floating-whatsapp"
 import { Ticker } from "@/components/common/ticker"
-import { getTranslations } from "next-intl/server"
 
 export async function generateMetadata({
   params,
@@ -17,15 +18,16 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const branch = await getCurrentBranch()
   const l = locale as Locale
+  const branch = await loadSiteBranch(l)
+  if (!branch) return {}
 
   return {
-    title: branch.seo.title[l],
-    description: branch.seo.description[l],
+    title: branch.seo.title,
+    description: branch.seo.description,
     openGraph: {
-      title: branch.seo.title[l],
-      description: branch.seo.description[l],
+      title: branch.seo.title,
+      description: branch.seo.description,
       locale: l,
       type: "website",
     },
@@ -47,8 +49,11 @@ export default async function SiteLayout({
   const { locale } = await params
   if (!hasLocale(routing.locales, locale)) notFound()
   setRequestLocale(locale)
-  const branch = await getCurrentBranch()
-  const l = locale as Locale
+  const [branch, branches] = await Promise.all([
+    loadSiteBranch(locale as Locale),
+    listPublishedBranches(locale as Locale),
+  ])
+  if (!branch) notFound()
   const tTicker = await getTranslations("Ticker")
   const tickerItems = [
     tTicker("item1"),
@@ -61,11 +66,11 @@ export default async function SiteLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BowlingAlley",
-    name: branch.displayName[l],
+    name: branch.displayName,
     address: {
       "@type": "PostalAddress",
-      streetAddress: branch.address[l],
-      addressLocality: branch.city[l],
+      streetAddress: branch.address,
+      addressLocality: branch.city,
     },
     telephone: branch.phone,
     email: branch.email,
@@ -78,12 +83,9 @@ export default async function SiteLayout({
   }
 
   return (
-    <div
-      data-branch-accent={branch.brandAccent}
-      className="relative flex min-h-svh flex-col"
-    >
+    <div className="relative flex min-h-svh flex-col">
       <SiteTopbar branch={branch} />
-      <SiteHeader branch={branch} />
+      <SiteHeader branch={branch} branches={branches} />
       <Ticker items={tickerItems} />
       <main className="flex-1">{children}</main>
       <SiteFooter branch={branch} />

@@ -19,7 +19,7 @@ function TabsList({ className, ...props }: TabsPrimitive.List.Props) {
   return (
     <TabsPrimitive.List
       data-slot="tabs-list"
-      className={cn("flex items-center gap-1 border-b border-line", className)}
+      className={cn("flex flex-wrap items-center gap-2", className)}
       {...props}
     />
   )
@@ -30,7 +30,7 @@ function TabsTab({ className, ...props }: TabsPrimitive.Tab.Props) {
     <TabsPrimitive.Tab
       data-slot="tabs-tab"
       className={cn(
-        "relative inline-flex h-8 shrink-0 items-center gap-1.5 px-3 text-xs font-medium text-ink-muted transition-colors outline-none hover:text-ink focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 data-[selected]:text-ink data-[selected]:after:absolute data-[selected]:after:inset-x-0 data-[selected]:after:-bottom-px data-[selected]:after:h-0.5 data-[selected]:after:bg-primary",
+        "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-none border-2 border-ink bg-paper px-3 text-sm font-bold text-ink shadow-block-sm transition-transform outline-none hover:bg-cream disabled:pointer-events-none disabled:opacity-50 data-[selected]:bg-red data-[selected]:text-white data-[selected]:shadow-block [&_svg]:size-4 [&_svg]:shrink-0",
         className
       )}
       {...props}

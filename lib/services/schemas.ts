@@ -33,7 +33,6 @@ export const createBranchSchema = z.object({
   mapUrl: z.string().url(),
   latitude: z.number().min(-90).max(90),
   longitude: z.number().min(-180).max(180),
-  brandAccent: z.enum(["cherry", "teal"]),
   heroImageId: z.string().nullish(),
   googlePlaceId: z.string().nullish(),
   published: z.boolean().optional(),
@@ -42,11 +41,6 @@ export const createBranchSchema = z.object({
 
 export const updateBranchSchema = createBranchSchema.partial().extend({
   id: nonEmpty,
-})
-
-export const setBranchPublishedSchema = z.object({
-  id: nonEmpty,
-  published: z.boolean(),
 })
 
 export const reorderSchema = z
@@ -210,6 +204,7 @@ export const upsertMenuItemTranslationSchema = z.object({
 // ---------- Media ----------
 
 export const createMediaAssetSchema = z.object({
+  branchId: nonEmpty,
   blobUrl: z.string().url(),
   filename: z.string().nullish(),
   contentType: z.string().nullish(),
@@ -236,6 +231,7 @@ export const updateMediaAltTextSchema = z.object({
 const hrefSchema = z.string().min(1).max(500)
 
 export const createFooterLinkSchema = z.object({
+  branchId: nonEmpty,
   locale: localeSchema,
   groupKey: nonEmpty,
   label: nonEmpty,
@@ -250,6 +246,7 @@ export const updateFooterLinkSchema = createFooterLinkSchema.partial().extend({
 // ---------- Legal page ----------
 
 export const upsertLegalPageSchema = z.object({
+  branchId: nonEmpty,
   slug: slugSchema,
   titleHe: z.string().nullish(),
   titleEn: z.string().nullish(),

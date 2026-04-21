@@ -25,7 +25,7 @@ function forbiddenState<T = never>(): FormState<T> {
 function toFormState<T>(result: WriteResult<T>): FormState<T> {
   if (result.ok) {
     for (const tag of result.revalidateTags) updateTag(tag)
-    revalidatePath("/[locale]/admin/media", "layout")
+    revalidatePath("/[locale]/admin/branches/[slug]/media", "layout")
     return { status: "success", data: result.data }
   }
   return { status: "error", fieldErrors: result.fieldErrors }
@@ -42,10 +42,17 @@ export async function deleteMediaAction(
   }
 
   const id = readString(formData, "id")
+  const branchId = readString(formData, "branchId")
   if (!id) {
     return { status: "error", fieldErrors: { id: ["missing media id"] } }
   }
-  const result = await services.media.remove(id)
+  if (!branchId) {
+    return {
+      status: "error",
+      fieldErrors: { branchId: ["missing branch id"] },
+    }
+  }
+  const result = await services.media.remove(id, branchId)
   return toFormState(result)
 }
 
@@ -77,6 +84,6 @@ export async function updateMediaAltTextAction(
     return { status: "error", fieldErrors: result.fieldErrors }
   }
   for (const tag of result.revalidateTags) updateTag(tag)
-  revalidatePath("/[locale]/admin/media", "layout")
+  revalidatePath("/[locale]/admin/branches/[slug]/media", "layout")
   return { status: "success", data: { id: result.data.id } }
 }

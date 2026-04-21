@@ -576,37 +576,3 @@ export const branches: Branch[] = [
     brandAccent: "teal",
   },
 ]
-
-const branchBySlug = new Map(branches.map((b) => [b.slug, b]))
-const branchByDomain = new Map<string, Branch>()
-for (const b of branches) {
-  for (const d of b.domains) {
-    branchByDomain.set(d.toLowerCase(), b)
-  }
-}
-
-const defaultBranch = branches[0]
-
-export function getBranchBySlug(
-  slug: string | null | undefined
-): Branch | undefined {
-  if (!slug) return undefined
-  return branchBySlug.get(slug)
-}
-
-function getBranchByHost(host: string | null | undefined): Branch | undefined {
-  if (!host) return undefined
-  const cleaned = host.toLowerCase().split(":")[0]
-  return branchByDomain.get(cleaned)
-}
-
-export function resolveBranch(input: {
-  override?: string | null
-  host?: string | null
-}): Branch {
-  return (
-    getBranchBySlug(input.override) ??
-    getBranchByHost(input.host) ??
-    defaultBranch
-  )
-}

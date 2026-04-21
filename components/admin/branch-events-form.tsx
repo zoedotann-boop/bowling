@@ -210,6 +210,7 @@ function EventRowForm({
   slug: string
 }) {
   const t = useTranslations("Admin.events")
+  const tTip = useTranslations("Admin.events.tooltips")
   const tt = useTranslations("Admin.toasts")
   const tc = useTranslations("Admin.common")
   const tTranslate = useTranslations("Admin.translate")
@@ -245,11 +246,18 @@ function EventRowForm({
         <input type="hidden" name="slug" value={slug} />
         <input type="hidden" name="sortOrder" value={row.sortOrder} />
         <div className="grid gap-3 md:grid-cols-[14rem_1fr]">
-          <MediaPicker name="imageId" label={t("image")} initial={row.image} />
+          <MediaPicker
+            name="imageId"
+            label={t("image")}
+            tooltip={tTip("image")}
+            initial={row.image}
+            branchId={branchId}
+          />
           <div className="flex flex-col gap-3">
             <TranslatableInput
               name="title"
               label={t("titleLabel")}
+              tooltip={tTip("titleLabel")}
               defaultValues={localesValues(row, "title")}
               needsReviewLocales={needsReviewLocalesFor(row, "title")}
               aiLabel={tTranslate("fillField")}
@@ -258,6 +266,7 @@ function EventRowForm({
             <TranslatableTextarea
               name="description"
               label={t("description")}
+              tooltip={tTip("description")}
               defaultValues={localesValues(row, "description")}
               needsReviewLocales={needsReviewLocalesFor(row, "description")}
               rows={3}

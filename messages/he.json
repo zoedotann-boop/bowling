@@ -15,15 +15,14 @@
     "getDirections": "פתחו במפות",
     "exploreEvents": "חבילות אירועים"
   },
-  "BranchSwitcher": {
-    "label": "סניף",
-    "title": "בחרו סניף",
-    "current": "אתם צופים בסניף",
-    "open": "החלפת סניף"
-  },
   "LocaleSwitcher": {
     "label": "שפה",
-    "open": "בחירת שפה"
+    "open": "בחירת שפה",
+    "title": "בחירת שפה"
+  },
+  "BranchSwitcher": {
+    "title": "בחירת סניף",
+    "open": "בחירת סניף"
   },
   "Hero": {
     "viewingLabel": "אתם בסניף",
@@ -110,10 +109,6 @@
       "error": "משהו השתבש. נסו שוב או שלחו לנו וואטסאפ."
     }
   },
-  "EventTypes": {
-    "birthday": "יום הולדת",
-    "other": "אחר"
-  },
   "Footer": {
     "branches": "הסניפים שלנו",
     "explore": "ניווט",
@@ -128,11 +123,17 @@
   "Admin": {
     "nav": {
       "brand": "ניהול באולינג",
-      "branches": "סניפים",
-      "contact": "יצירת קשר",
-      "media": "מדיה",
-      "footer": "פוטר",
+      "branchGroup": "סניף",
+      "pickBranch": "בחרו סניף",
+      "createBranch": "צור סניף",
       "signOut": "התנתקות"
+    },
+    "home": {
+      "title": "ניהול באולינג",
+      "pickFromSidebar": "בחרו סניף מהסרגל הצדדי כדי להתחיל לערוך.",
+      "jumpToFirst": "פתח סניף ראשון",
+      "noBranches": "אין סניפים עדיין. צרו את הסניף הראשון שלכם כדי להתחיל.",
+      "createFirst": "צור סניף ראשון"
     },
     "common": {
       "cancel": "ביטול",
@@ -148,6 +149,20 @@
       "gatewayError": "שירות התרגום אינו זמין. נסה שוב.",
       "needSource": "מלא לפחות שדה אחד בעברית.",
       "emptySource": "יש לכתוב תוכן בעברית קודם."
+    },
+    "reviews": {
+      "title": "ביקורות Google",
+      "description": "מסונכרן מדי יום מ-Google Places API. שפות חסרות מתורגמות ע\"י AI.",
+      "placeIdLabel": "מזהה מקום ב-Google",
+      "placeIdMissing": "לא הוגדר - הוסיפו מזהה מקום בלשונית פרטים",
+      "lastSynced": "סונכרן לאחרונה: {when}",
+      "neverSynced": "עוד לא סונכרן. הוסיפו מזהה מקום ולחצו על רענון.",
+      "averageRating": "דירוג ממוצע: {rating} מתוך {count} מדרגים",
+      "refresh": "רענן עכשיו",
+      "refreshing": "מרענן…",
+      "refreshSuccess": "סונכרנו {synced} ביקורות ({translated} תורגמו)",
+      "noReviews": "עוד אין ביקורות במטמון.",
+      "translatedBadge": "AI"
     },
     "toasts": {
       "branchCreated": "סניף נוצר",
@@ -185,10 +200,6 @@
     },
     "contact": {
       "title": "פרטי יצירת קשר",
-      "indexTitle": "יצירת קשר",
-      "indexDescription": "טלפון, וואטסאפ, אימייל וקישור מפה לכל סניף.",
-      "editTitle": "יצירת קשר · {slug}",
-      "empty": "אין סניפים עדיין.",
       "phone": "טלפון",
       "whatsapp": "וואטסאפ",
       "email": "אימייל",
@@ -206,7 +217,13 @@
       "href": "כתובת",
       "reorder": "גרור לשינוי סדר",
       "confirmDeleteTitle": "למחוק את הקישור?",
-      "confirmDeleteDescription": "הפעולה תסיר את \"{label}\" ואינה ניתנת לביטול."
+      "confirmDeleteDescription": "הפעולה תסיר את \"{label}\" ואינה ניתנת לביטול.",
+      "tooltips": {
+        "locale": "השפה שבה הקישור יופיע. כל קישור שייך לשפה ספציפית — צור רשומה נפרדת לכל שפה.",
+        "groupKey": "כותרת העמודה בפוטר (למשל legal, company, social). קישורים עם אותו ערך מוצגים יחד.",
+        "label": "הטקסט הגלוי של הקישור בפוטר.",
+        "href": "כתובת היעד. השתמש בנתיב יחסי כמו /legal/terms עבור עמודי פנים או בכתובת https:// מלאה עבור קישור חיצוני."
+      }
     },
     "legal": {
       "title": "עמודי תנאים",
@@ -218,7 +235,14 @@
       "pageTitle": "כותרת",
       "pageTitleHint": "לדוגמה: תנאי שימוש",
       "body": "תוכן (Markdown)",
-      "bodyHint": "תומך בכותרות, רשימות, **מודגש**, *נטוי* ו[קישורים](https://example.com)."
+      "bodyHint": "תומך בכותרות, רשימות, **מודגש**, *נטוי* ו[קישורים](https://example.com).",
+      "tooltips": {
+        "slug": "מזהה לנתיב /legal/<slug>. אותיות קטנות ומקפים. שינוי לאחר פרסום ישבור קישורים.",
+        "sortOrder": "הסדר בו העמוד מופיע בקבוצות קישורי הפוטר. מספרים נמוכים קודם.",
+        "published": "כשכבוי, העמוד מוסתר מהאתר הציבורי ומחזיר 404. שימושי לטיוטות.",
+        "pageTitle": "כותרת העמוד ותג <title>. מוצג למשתמשים ולמנועי חיפוש.",
+        "body": "תוכן העמוד ב-Markdown. מרונדר עם כותרות, רשימות, bold, italic וקישורים."
+      }
     },
     "packages": {
       "title": "חבילות",
@@ -229,7 +253,12 @@
       "perks": "פירוט",
       "reorder": "גרור כדי לשנות סדר",
       "confirmDeleteTitle": "למחוק את החבילה?",
-      "confirmDeleteDescription": "החבילה תוסר מכל הסניפים שמשתמשים בה. לא ניתן לבטל."
+      "confirmDeleteDescription": "החבילה תוסר מכל הסניפים שמשתמשים בה. לא ניתן לבטל.",
+      "tooltips": {
+        "amount": "מחיר באגורות. ₪1 = 100. למשל ₪690 = 69000.",
+        "titleLabel": "שם התצוגה של החבילה (למשל חבילת יום הולדת).",
+        "perks": "רשימת הכלול בחבילה. מופיעה בכרטיס החבילה באתר."
+      }
     },
     "prices": {
       "title": "מחירים",
@@ -247,7 +276,13 @@
         "shoe": "השכרת נעליים"
       },
       "confirmDeleteTitle": "למחוק את שורת המחיר?",
-      "confirmDeleteDescription": "לא ניתן לבטל."
+      "confirmDeleteDescription": "לא ניתן לבטל.",
+      "tooltips": {
+        "kind": "קטגוריית שורת המחיר. משמשת לקיבוץ וסידור במחירון הציבורי.",
+        "weekday": "מחיר א׳–ה׳ באגורות. ₪1 = 100. למשל ₪42 = 4200.",
+        "weekend": "מחיר ו׳–ש׳ באגורות. ₪1 = 100. למשל ₪52 = 5200.",
+        "label": "תווית פר-שפה אופציונלית שדורסת את שם ברירת המחדל."
+      }
     },
     "events": {
       "title": "אירועים",
@@ -258,7 +293,12 @@
       "description": "תיאור",
       "reorder": "גרור כדי לשנות סדר",
       "confirmDeleteTitle": "למחוק את האירוע?",
-      "confirmDeleteDescription": "לא ניתן לבטל."
+      "confirmDeleteDescription": "לא ניתן לבטל.",
+      "tooltips": {
+        "image": "תמונה שמוצגת בכרטיס האירוע באתר. יש להעלות קודם לספריית המדיה.",
+        "titleLabel": "שם קצר לסוג האירוע (למשל ימי הולדת, אירועי חברה).",
+        "description": "משפט או שניים שמופיעים מתחת לכותרת באתר."
+      }
     },
     "menu": {
       "title": "תפריט",
@@ -276,7 +316,13 @@
       "confirmDeleteCategoryTitle": "למחוק את הקטגוריה?",
       "confirmDeleteCategoryDescription": "כל הפריטים בקטגוריה יימחקו. לא ניתן לבטל.",
       "confirmDeleteItemTitle": "למחוק את הפריט?",
-      "confirmDeleteItemDescription": "לא ניתן לבטל."
+      "confirmDeleteItemDescription": "לא ניתן לבטל.",
+      "tooltips": {
+        "categoryTitle": "כותרת קטע בתפריט הציבורי (למשל חטיפים, מנות עיקריות, משקאות).",
+        "amount": "מחיר פריט באגורות. ₪1 = 100. למשל ₪38 = 3800.",
+        "itemName": "שם המנה בתפריט הציבורי.",
+        "itemTag": "תג אופציונלי ליד הפריט (למשל להיט, חריף, חדש)."
+      }
     },
     "media": {
       "title": "מדיה",
@@ -308,24 +354,6 @@
       }
     },
     "branches": {
-      "list": {
-        "title": "סניפים",
-        "description": "ניהול סניפי הבאולינג והסטטוס שלהם.",
-        "newBranch": "סניף חדש",
-        "slug": "מזהה",
-        "name": "שם",
-        "status": "סטטוס",
-        "published": "מפורסם",
-        "draft": "טיוטה",
-        "actions": "פעולות",
-        "edit": "עריכה",
-        "delete": "מחיקה",
-        "dragToReorder": "גרור כדי לשנות סדר",
-        "togglePublished": "פרסום/השהיה",
-        "confirmDeleteTitle": "למחוק את הסניף?",
-        "confirmDeleteDescription": "פעולה זו מוחקת את הסניף ואת כל התוכן המשויך (שעות, מחירים, חבילות, אירועים, תפריט). לא ניתן לבטל.",
-        "empty": "אין סניפים עדיין. צרו את הראשון."
-      },
       "tabs": {
         "info": "כללי",
         "hours": "שעות",
@@ -336,8 +364,10 @@
         "menu": "תפריט",
         "events": "אירועים",
         "reviews": "ביקורות",
-        "soon": "בקרוב",
-        "comingSoon": "בקרוב"
+        "contact": "יצירת קשר",
+        "media": "מדיה",
+        "footer": "פוטר",
+        "legal": "דפים משפטיים"
       },
       "form": {
         "newTitle": "סניף חדש",
@@ -350,9 +380,6 @@
         "mapUrl": "קישור למפה",
         "latitude": "קו רוחב",
         "longitude": "קו אורך",
-        "brandAccent": "צבע מותג",
-        "brandAccentCherry": "דובדבן",
-        "brandAccentTeal": "טורקיז",
         "published": "מפורסם",
         "displayName": "שם הסניף",
         "shortName": "שם מקוצר",
@@ -371,7 +398,28 @@
         "dangerZone": "אזור מסוכן",
         "dangerZoneDescription": "מחיקת סניף מסירה את כל התוכן המשויך. לא ניתן לבטל.",
         "confirmDeleteTitle": "למחוק את הסניף?",
-        "confirmDeleteDescription": "פעולה זו מוחקת את הסניף ואת כל התוכן המשויך. לא ניתן לבטל."
+        "confirmDeleteDescription": "פעולה זו מוחקת את הסניף ואת כל התוכן המשויך. לא ניתן לבטל.",
+        "tooltips": {
+          "slug": "מזהה קצר לשימוש בנתיב /branches/<slug>. אותיות קטנות ומקפים בלבד (למשל ramat-gan). שינוי לאחר יצירה ישבור קישורים קיימים.",
+          "sortOrder": "קובע את הסדר שבו הסניפים מופיעים באתר הציבורי ובתפריט בחירת הסניף. מספרים נמוכים מופיעים קודם.",
+          "phone": "מוצג בכרטיס יצירת הקשר ומחובר ל-tel: במובייל. השתמש בפורמט בינלאומי (למשל +972 3-123-4567).",
+          "whatsapp": "מספר טלפון (ספרות בלבד, קידומת בינלאומית, ללא +) לבניית קישורי wa.me עבור כפתור הוואטסאפ הצף. דוגמה: 972545751100.",
+          "email": "כתובת אימייל ציבורית שמוצגת בפוטר ובדף יצירת הקשר.",
+          "mapUrl": "קישור ל-Google Maps שנפתח בלחיצה על הכתובת. מצא את המקום ב-maps.google.com, לחץ Share ואז Copy link.",
+          "latitude": "קו רוחב עשרוני עבור schema.org GeoCoordinates. ב-Google Maps, לחץ לחיצה ימנית על הסיכה והעתק את המספר הראשון.",
+          "longitude": "קו אורך עשרוני עבור schema.org GeoCoordinates. ב-Google Maps, לחץ לחיצה ימנית על הסיכה והעתק את המספר השני.",
+          "published": "כאשר כבוי, הסניף מוסתר מהאתר הציבורי ומה-sitemap. האדמין עדיין יכול לערוך.",
+          "displayName": "שם מלא של הסניף שמופיע בכותרות ובתפריט הבחירה. כלול את המותג + העיר (למשל באולינג רמת גן).",
+          "shortName": "תווית קצרה לשימוש בניווט העליון ובמקומות צרים. בדרך כלל רק שם העיר.",
+          "address": "כתובת רחוב שמוצגת בכרטיס יצירת הקשר ונכללת ב-schema.org PostalAddress.",
+          "city": "שם העיר הנכלל ב-schema.org PostalAddress ובטקסט SEO ברירת מחדל.",
+          "heroImageId": "תמונת באנר גדולה בראש דף הסניף. יש להעלות קודם בספריית המדיה ואז לבחור כאן.",
+          "heroHeadline": "כותרת קצרה על תמונת הבאנר. מטרה: 3–6 מילים.",
+          "heroTagline": "משפט תקציר מתחת לכותרת. תאר מה מיוחד בסניף.",
+          "seoTitle": "תג <title> לדף, בשימוש מנועי חיפוש ורשתות. 50–60 תווים מומלץ.",
+          "seoDescription": "Meta description שמוצג ב-Google ובתצוגות מקדימות ברשתות. 140–160 תווים.",
+          "googlePlaceId": "מזהה ממקור Google Maps Place Details. ניתן למצוא ב-developers.google.com/maps/documentation/places/web-service/place-id (תת-פרויקט G ישתמש בזה לסנכרון דירוג/ביקורות)."
+        }
       },
       "hours": {
         "days": {

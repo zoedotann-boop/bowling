@@ -23,7 +23,7 @@ import { toast } from "sonner"
 
 import type { Locale } from "@/i18n/routing"
 import { Button } from "@/components/ui/button"
-import { Field, FieldLabel } from "@/components/ui/field"
+import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import {
   deletePriceRowAction,
@@ -34,6 +34,7 @@ import type { FormState } from "@/app/[locale]/admin/(protected)/_actions/types"
 import { cn } from "@/lib/utils"
 
 import { ConfirmDeleteDialog } from "./confirm-delete-dialog"
+import { FieldLabelWithTooltip } from "./field-label-with-tooltip"
 import { TranslatableInput } from "./translatable-input"
 import { TranslationStateProvider } from "./translation-state-context"
 
@@ -208,6 +209,7 @@ function PriceRowFormFields({
   slug: string
 }) {
   const t = useTranslations("Admin.prices")
+  const tTip = useTranslations("Admin.prices.tooltips")
   const tt = useTranslations("Admin.toasts")
   const tc = useTranslations("Admin.common")
   const tTranslate = useTranslations("Admin.translate")
@@ -244,7 +246,9 @@ function PriceRowFormFields({
         <input type="hidden" name="sortOrder" value={row.sortOrder} />
         <div className="grid gap-3 md:grid-cols-[8rem_8rem_8rem_1fr]">
           <Field>
-            <FieldLabel>{t("kind")}</FieldLabel>
+            <FieldLabelWithTooltip tooltip={tTip("kind")}>
+              {t("kind")}
+            </FieldLabelWithTooltip>
             <select
               name="kind"
               defaultValue={row.kind}
@@ -258,7 +262,9 @@ function PriceRowFormFields({
             </select>
           </Field>
           <Field>
-            <FieldLabel>{t("weekday")}</FieldLabel>
+            <FieldLabelWithTooltip tooltip={tTip("weekday")}>
+              {t("weekday")}
+            </FieldLabelWithTooltip>
             <Input
               name="weekdayAmountCents"
               type="number"
@@ -269,7 +275,9 @@ function PriceRowFormFields({
             />
           </Field>
           <Field>
-            <FieldLabel>{t("weekend")}</FieldLabel>
+            <FieldLabelWithTooltip tooltip={tTip("weekend")}>
+              {t("weekend")}
+            </FieldLabelWithTooltip>
             <Input
               name="weekendAmountCents"
               type="number"
@@ -282,6 +290,7 @@ function PriceRowFormFields({
           <TranslatableInput
             name="label"
             label={t("label")}
+            tooltip={tTip("label")}
             defaultValues={localesValues(row)}
             needsReviewLocales={needsReviewLocalesFor(row)}
             aiLabel={tTranslate("fillField")}

@@ -23,7 +23,7 @@ import { toast } from "sonner"
 
 import type { Locale } from "@/i18n/routing"
 import { Button } from "@/components/ui/button"
-import { Field, FieldLabel } from "@/components/ui/field"
+import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import {
   deleteMenuCategoryAction,
@@ -37,6 +37,7 @@ import type { FormState } from "@/app/[locale]/admin/(protected)/_actions/types"
 import { cn } from "@/lib/utils"
 
 import { ConfirmDeleteDialog } from "./confirm-delete-dialog"
+import { FieldLabelWithTooltip } from "./field-label-with-tooltip"
 import { TranslatableInput } from "./translatable-input"
 import { TranslationStateProvider } from "./translation-state-context"
 
@@ -233,6 +234,7 @@ function CategoryForm({
   slug: string
 }) {
   const t = useTranslations("Admin.menu")
+  const tTip = useTranslations("Admin.menu.tooltips")
   const tt = useTranslations("Admin.toasts")
   const tc = useTranslations("Admin.common")
   const tTranslate = useTranslations("Admin.translate")
@@ -270,6 +272,7 @@ function CategoryForm({
         <TranslatableInput
           name="title"
           label={t("categoryTitle")}
+          tooltip={tTip("categoryTitle")}
           defaultValues={titleValues(category)}
           needsReviewLocales={needsReviewLocales(category.needsReview, "title")}
           aiLabel={tTranslate("fillField")}
@@ -436,6 +439,7 @@ function ItemForm({
   slug: string
 }) {
   const t = useTranslations("Admin.menu")
+  const tTip = useTranslations("Admin.menu.tooltips")
   const tt = useTranslations("Admin.toasts")
   const tc = useTranslations("Admin.common")
   const tTranslate = useTranslations("Admin.translate")
@@ -472,7 +476,9 @@ function ItemForm({
         <input type="hidden" name="sortOrder" value={item.sortOrder} />
         <div className="grid gap-3 md:grid-cols-[8rem_1fr_1fr]">
           <Field>
-            <FieldLabel>{t("amount")}</FieldLabel>
+            <FieldLabelWithTooltip tooltip={tTip("amount")}>
+              {t("amount")}
+            </FieldLabelWithTooltip>
             <Input
               name="amountCents"
               type="number"
@@ -485,6 +491,7 @@ function ItemForm({
           <TranslatableInput
             name="name"
             label={t("itemName")}
+            tooltip={tTip("itemName")}
             defaultValues={itemValues(item, "name")}
             needsReviewLocales={needsReviewLocales(item.needsReview, "name")}
             aiLabel={tTranslate("fillField")}
@@ -493,6 +500,7 @@ function ItemForm({
           <TranslatableInput
             name="tag"
             label={t("itemTag")}
+            tooltip={tTip("itemTag")}
             defaultValues={itemValues(item, "tag")}
             needsReviewLocales={needsReviewLocales(item.needsReview, "tag")}
             aiLabel={tTranslate("fillField")}

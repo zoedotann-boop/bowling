@@ -1,10 +1,9 @@
 import type { MetadataRoute } from "next"
-import { branches } from "@/lib/branches"
 
 export default function robots(): MetadataRoute.Robots {
-  const sitemaps = branches.map((b) => `https://${b.domains[0]}/sitemap.xml`)
+  const origin = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? ""
   return {
     rules: [{ userAgent: "*", allow: "/" }],
-    sitemap: sitemaps,
+    sitemap: origin ? `${origin}/sitemap.xml` : "/sitemap.xml",
   }
 }

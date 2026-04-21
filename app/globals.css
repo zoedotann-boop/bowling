@@ -61,8 +61,8 @@
   --color-whatsapp-hover: var(--whatsapp-hover);
 
   /* Legacy aliases — keep older call-sites (bg-canvas, text-ink-muted,
-     bg-ticket-red, bg-brand-accent, …) rendering against the retro
-     palette until each component is explicitly migrated. */
+     bg-ticket-red, …) rendering against the retro palette until each
+     component is explicitly migrated. */
   --color-canvas: var(--cream);
   --color-surface: var(--paper);
   --color-surface-muted: var(--cream-2);
@@ -73,9 +73,6 @@
   --color-ink-muted: var(--ink-soft);
   --color-ticket-red: var(--red);
   --color-banner-teal: var(--turq);
-  --color-brand-accent: var(--red);
-  --color-brand-accent-soft: var(--cream-2);
-  --color-brand-cherry: var(--red);
 
   --shadow-soft: var(--block);
   --shadow-card: var(--block);
@@ -129,8 +126,8 @@
   --turq-2: #1f8f99;
   --cream: #f7efe2;
   --cream-2: #eadec4;
-  --ink: #2a1d1a;
-  --ink-soft: #6b5a52;
+  --ink: #1f1f1f;
+  --ink-soft: #6b6b6b;
   --yellow: #f2c94c;
   --yellow-2: #c49a2f;
   --paper: #ffffff;
@@ -185,10 +182,6 @@
   --block: -4px 4px 0 var(--ink);
   --block-lg: -6px 6px 0 var(--ink);
 }
-
-/* The `data-branch-accent` attribute is kept for analytics/selectors, but
-   the retro palette does not swap per branch. Both branches share the
-   same red + turq + yellow + cream language. */
 
 @layer base {
   * {

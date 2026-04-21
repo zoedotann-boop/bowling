@@ -1,6 +1,7 @@
 import type { MediaAssetRead } from "@/lib/services/media"
 
 export type UploadMediaInput = {
+  branchId: string
   file: File
   altTextHe?: string | null
   altTextEn?: string | null
@@ -17,6 +18,7 @@ export async function uploadMedia(
 ): Promise<UploadMediaResult> {
   const fd = new FormData()
   fd.append("file", input.file)
+  fd.append("branchId", input.branchId)
   if (input.altTextHe) fd.append("altTextHe", input.altTextHe)
   if (input.altTextEn) fd.append("altTextEn", input.altTextEn)
   if (input.altTextRu) fd.append("altTextRu", input.altTextRu)

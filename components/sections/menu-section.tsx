@@ -1,11 +1,12 @@
-import { getLocale, getTranslations } from "next-intl/server"
-import type { Branch } from "@/lib/branches"
+import { getTranslations } from "next-intl/server"
+import type { SiteBranch } from "@/lib/site-branch"
 import { BowlingCard } from "@/components/brand/bowling-card"
 import { Eyebrow } from "@/components/common/eyebrow"
 
-export async function MenuSection({ branch }: { branch: Branch }) {
+export async function MenuSection({ branch }: { branch: SiteBranch }) {
   const t = await getTranslations("Menu")
-  const locale = (await getLocale()) as keyof Branch["displayName"]
+
+  if (branch.menu.length === 0) return null
 
   return (
     <section className="bg-cream">
@@ -29,7 +30,7 @@ export async function MenuSection({ branch }: { branch: Branch }) {
             >
               <div className="mb-3 text-center">
                 <div className="font-display text-xl tracking-[0.08em] text-red uppercase">
-                  {cat.title[locale]}
+                  {cat.title}
                 </div>
               </div>
               <ul>
@@ -44,7 +45,7 @@ export async function MenuSection({ branch }: { branch: Branch }) {
                   >
                     <div className="flex items-baseline gap-2">
                       <span className="text-[15px] font-extrabold text-ink">
-                        {item.name[locale]}
+                        {item.name}
                       </span>
                       <span className="relative -top-0.5 flex-1 border-b border-dotted border-ink/40" />
                       <span className="font-display text-base text-red">
@@ -52,9 +53,7 @@ export async function MenuSection({ branch }: { branch: Branch }) {
                       </span>
                     </div>
                     {item.tag && (
-                      <div className="mt-1 text-xs text-ink/70">
-                        {item.tag[locale]}
-                      </div>
+                      <div className="mt-1 text-xs text-ink/70">{item.tag}</div>
                     )}
                   </li>
                 ))}

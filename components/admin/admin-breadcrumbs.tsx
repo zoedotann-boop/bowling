@@ -25,9 +25,8 @@ type AdminBreadcrumbsProps = {
 export function AdminBreadcrumbs({ slugLabels = {} }: AdminBreadcrumbsProps) {
   const pathname = usePathname()
   const tNav = useTranslations("Admin.nav")
-  const tList = useTranslations("Admin.branches.list")
   const tForm = useTranslations("Admin.branches.form")
-  const tMedia = useTranslations("Admin.media")
+  const tTabs = useTranslations("Admin.branches.tabs")
 
   const crumbs = React.useMemo<Crumb[]>(() => {
     const parts = pathname.split("/").filter(Boolean)
@@ -38,22 +37,40 @@ export function AdminBreadcrumbs({ slugLabels = {} }: AdminBreadcrumbsProps) {
     const trail: Crumb[] = [{ href: "/admin", label: tNav("brand") }]
     let acc = "/admin"
 
+    const sectionKeys = [
+      "info",
+      "hours",
+      "prices",
+      "packages",
+      "events",
+      "menu",
+      "reviews",
+      "contact",
+      "media",
+      "footer",
+      "legal",
+    ] as const
+    type SectionKey = (typeof sectionKeys)[number]
+    const isSectionKey = (s: string): s is SectionKey =>
+      (sectionKeys as readonly string[]).includes(s)
+
     for (let i = 0; i < rest.length; i++) {
       const segment = rest[i]!
       acc += `/${segment}`
       const isLast = i === rest.length - 1
-      let label = segment
 
-      if (segment === "branches") label = tList("title")
-      else if (segment === "media") label = tMedia("title")
-      else if (segment === "new") label = tForm("newTitle")
+      if (segment === "branches") continue
+
+      let label = segment
+      if (segment === "new") label = tForm("newTitle")
+      else if (isSectionKey(segment)) label = tTabs(segment)
       else label = slugLabels[segment] ?? segment
 
       trail.push({ href: isLast ? null : acc, label })
     }
 
     return trail
-  }, [pathname, slugLabels, tForm, tList, tMedia, tNav])
+  }, [pathname, slugLabels, tForm, tNav, tTabs])
 
   if (crumbs.length === 0) return null
 
