@@ -6,11 +6,13 @@
 
 @theme inline {
   /* One font family per script: --font-sans is mapped to the right one
-       at the :lang level. Headings and body share the same family. */
+       at the :lang level. Headings and body share the same family unless
+       they opt into .font-display (logo + section headlines). */
   --font-sans: var(--font-latin);
   --font-mono: var(--font-mono);
   --font-display: var(--font-display);
 
+  /* shadcn semantic aliases */
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -43,172 +45,150 @@
   --color-foreground: var(--foreground);
   --color-background: var(--background);
 
-  /* Surfaces & ink */
-  --color-canvas: var(--canvas);
-  --color-surface: var(--surface);
-  --color-surface-muted: var(--surface-muted);
-  --color-surface-warm: var(--surface-warm);
-  --color-surface-cool: var(--surface-cool);
-  --color-surface-deep: var(--surface-deep);
-  --color-paper: var(--paper);
+  /* Retro palette - pulled from the logo */
+  --color-red: var(--red);
+  --color-red-2: var(--red-2);
+  --color-turq: var(--turq);
+  --color-turq-2: var(--turq-2);
+  --color-cream: var(--cream);
+  --color-cream-2: var(--cream-2);
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
-  --color-ink-muted: var(--ink-muted);
-  --color-line: var(--line);
-
-  /* Brand - tied to logo */
-  --color-ticket-red: var(--ticket-red);
-  --color-banner-teal: var(--banner-teal);
+  --color-yellow: var(--yellow);
+  --color-yellow-2: var(--yellow-2);
+  --color-paper: var(--paper);
   --color-whatsapp: var(--whatsapp);
   --color-whatsapp-hover: var(--whatsapp-hover);
-  --color-brand-accent: var(--brand-accent);
-  --color-brand-accent-soft: var(--brand-accent-soft);
 
-  /* Shadows - soft, layered */
-  --shadow-soft:
-    0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px -12px rgb(0 0 0 / 0.08);
-  --shadow-card:
-    0 1px 2px rgb(0 0 0 / 0.04), 0 14px 40px -18px rgb(0 0 0 / 0.1);
-  --shadow-hover:
-    0 2px 4px rgb(0 0 0 / 0.06), 0 24px 60px -24px rgb(0 0 0 / 0.16);
+  /* Legacy aliases — keep older call-sites (bg-canvas, text-ink-muted,
+     bg-ticket-red, bg-brand-accent, …) rendering against the retro
+     palette until each component is explicitly migrated. */
+  --color-canvas: var(--cream);
+  --color-surface: var(--paper);
+  --color-surface-muted: var(--cream-2);
+  --color-surface-warm: var(--cream);
+  --color-surface-cool: var(--turq);
+  --color-surface-deep: var(--ink);
+  --color-line: var(--ink);
+  --color-ink-muted: var(--ink-soft);
+  --color-ticket-red: var(--red);
+  --color-banner-teal: var(--turq);
+  --color-brand-accent: var(--red);
+  --color-brand-accent-soft: var(--cream-2);
+  --color-brand-cherry: var(--red);
 
-  /* Radius scale */
+  --shadow-soft: var(--block);
+  --shadow-card: var(--block);
+  --shadow-hover: var(--block-lg);
+
+  /* Hard-offset block shadows. Mirrored under :dir(rtl) via var override. */
+  --shadow-block-sm: var(--block-sm);
+  --shadow-block: var(--block);
+  --shadow-block-lg: var(--block-lg);
+  --shadow-btn-red: 0 4px 0 var(--red-2);
+  --shadow-btn-turq: 0 4px 0 var(--turq-2);
+  --shadow-btn-yellow: 0 4px 0 var(--yellow-2);
+  --shadow-btn-ink: 0 4px 0 #000;
+
+  /* Radius scale - tighter than before (no bubble shapes). */
   --radius-sm: calc(var(--radius) * 0.5);
   --radius-md: calc(var(--radius) * 0.75);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) * 1.5);
   --radius-2xl: calc(var(--radius) * 2);
-  --radius-3xl: calc(var(--radius) * 3);
+
+  /* Ticker + blink keyframes (for Ticker + live dot). */
+  --animate-ticker: ticker-move 30s linear infinite;
+  --animate-blink: blink 1s steps(1) infinite;
+
+  @keyframes ticker-move {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(33.333%);
+    }
+  }
+  @keyframes blink {
+    0%,
+    50% {
+      opacity: 1;
+    }
+    51%,
+    100% {
+      opacity: 0;
+    }
+  }
 }
 
 :root {
-  /* Modern hospitality - warm white canvas, near-black ink, restrained color */
-  --canvas: oklch(0.99 0.004 80);
-  --surface: oklch(1 0 0);
-  --surface-muted: oklch(0.97 0.004 80);
-  /* Distinct, solid section tints (no gradients) */
-  --surface-warm: oklch(0.965 0.018 75); /* warm cream */
-  --surface-cool: oklch(0.965 0.014 200); /* dim mint */
-  --surface-deep: oklch(0.22 0.018 250); /* near-ink */
-  --paper: oklch(0.985 0.005 80); /* logo paper */
-  --ink: oklch(0.2 0.015 250);
-  --ink-soft: oklch(0.46 0.012 250);
-  --ink-muted: oklch(0.62 0.01 250);
-  --line: oklch(0.92 0.006 250);
+  /* Retro signboard — taken directly from the logo. */
+  --red: #e23a2e;
+  --red-2: #b02a20;
+  --turq: #31b8c4;
+  --turq-2: #1f8f99;
+  --cream: #f7efe2;
+  --cream-2: #eadec4;
+  --ink: #2a1d1a;
+  --ink-soft: #6b5a52;
+  --yellow: #f2c94c;
+  --yellow-2: #c49a2f;
+  --paper: #ffffff;
+  --whatsapp: #25d366;
+  --whatsapp-hover: #1da851;
 
-  /* Brand - taken from the logo, used sparingly */
-  --ticket-red: oklch(0.62 0.22 25);
-  --banner-teal: oklch(0.7 0.1 200);
-  --whatsapp: oklch(0.62 0.16 155);
-  --whatsapp-hover: oklch(0.55 0.16 155);
+  /* Block shadow defaults (LTR). Overridden in :dir(rtl) below. */
+  --block-sm: 2px 2px 0 var(--ink);
+  --block: 4px 4px 0 var(--ink);
+  --block-lg: 6px 6px 0 var(--ink);
 
-  /* shadcn semantic mapping */
-  --background: var(--canvas);
+  /* shadcn semantic mapping → retro tokens */
+  --background: var(--cream);
   --foreground: var(--ink);
-  --card: var(--surface);
+  --card: var(--paper);
   --card-foreground: var(--ink);
-  --popover: var(--surface);
+  --popover: var(--paper);
   --popover-foreground: var(--ink);
-  --primary: var(--ink);
-  --primary-foreground: var(--surface);
-  --secondary: var(--surface-muted);
-  --secondary-foreground: var(--ink);
-  --muted: var(--surface-muted);
+  --primary: var(--red);
+  --primary-foreground: #ffffff;
+  --secondary: var(--turq);
+  --secondary-foreground: #ffffff;
+  --muted: var(--cream-2);
   --muted-foreground: var(--ink-soft);
-  --accent: var(--surface-muted);
+  --accent: var(--yellow);
   --accent-foreground: var(--ink);
-  --destructive: oklch(0.55 0.22 25);
-  --border: var(--line);
-  --input: oklch(0.88 0.006 250);
-  --ring: var(--ink);
-  --chart-1: var(--ticket-red);
-  --chart-2: var(--banner-teal);
-  --chart-3: oklch(0.7 0.14 80);
-  --chart-4: oklch(0.55 0.18 280);
-  --chart-5: oklch(0.65 0.18 145);
-  --radius: 1rem;
-  --sidebar: var(--surface);
-  --sidebar-foreground: var(--ink);
-  --sidebar-primary: var(--ticket-red);
-  --sidebar-primary-foreground: var(--surface);
-  --sidebar-accent: var(--surface-muted);
-  --sidebar-accent-foreground: var(--ink);
-  --sidebar-border: var(--line);
-  --sidebar-ring: var(--ink);
+  --destructive: var(--red-2);
+  --border: color-mix(in srgb, var(--ink) 18%, transparent);
+  --input: var(--ink);
+  --ring: var(--red);
+  --chart-1: var(--red);
+  --chart-2: var(--turq);
+  --chart-3: var(--yellow);
+  --chart-4: var(--red-2);
+  --chart-5: var(--turq-2);
 
-  /* Per-branch - overridden in (site) layout */
-  --brand-accent: var(--ticket-red);
-  --brand-accent-soft: color-mix(
-    in oklch,
-    var(--brand-accent) 10%,
-    var(--surface)
-  );
+  --radius: 0.75rem;
+
+  --sidebar: var(--ink);
+  --sidebar-foreground: var(--cream);
+  --sidebar-primary: var(--red);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: color-mix(in srgb, var(--cream) 14%, transparent);
+  --sidebar-accent-foreground: var(--cream);
+  --sidebar-border: color-mix(in srgb, var(--cream) 20%, transparent);
+  --sidebar-ring: var(--yellow);
 }
 
-.dark {
-  /* Late-evening venue: deep ink canvas, soft cream text. */
-  --canvas: oklch(0.16 0.012 250);
-  --surface: oklch(0.2 0.013 250);
-  --surface-muted: oklch(0.24 0.014 250);
-  --surface-warm: oklch(0.26 0.018 60);
-  --surface-cool: oklch(0.24 0.018 220);
-  --surface-deep: oklch(0.12 0.014 250);
-  --paper: oklch(0.96 0.008 80);
-  --ink: oklch(0.96 0.008 80);
-  --ink-soft: oklch(0.78 0.01 250);
-  --ink-muted: oklch(0.6 0.012 250);
-  --line: oklch(0.32 0.014 250);
-
-  --ticket-red: oklch(0.7 0.22 25);
-  --banner-teal: oklch(0.78 0.1 200);
-  --whatsapp: oklch(0.7 0.16 155);
-  --whatsapp-hover: oklch(0.62 0.16 155);
-
-  --background: var(--canvas);
-  --foreground: var(--ink);
-  --card: var(--surface);
-  --card-foreground: var(--ink);
-  --popover: var(--surface);
-  --popover-foreground: var(--ink);
-  --primary: var(--ink);
-  --primary-foreground: var(--canvas);
-  --secondary: var(--surface-muted);
-  --secondary-foreground: var(--ink);
-  --muted: var(--surface-muted);
-  --muted-foreground: var(--ink-soft);
-  --accent: var(--surface-muted);
-  --accent-foreground: var(--ink);
-  --destructive: oklch(0.7 0.22 25);
-  --border: var(--line);
-  --input: oklch(1 0 0 / 14%);
-  --ring: var(--ink);
-  --sidebar: var(--surface);
-  --sidebar-foreground: var(--ink);
-  --sidebar-primary: var(--ticket-red);
-  --sidebar-primary-foreground: var(--ink);
-  --sidebar-accent: var(--surface-muted);
-  --sidebar-accent-foreground: var(--ink);
-  --sidebar-border: var(--line);
-  --sidebar-ring: var(--ink);
+/* RTL mirrors every block shadow automatically. */
+:dir(rtl) {
+  --block-sm: -2px 2px 0 var(--ink);
+  --block: -4px 4px 0 var(--ink);
+  --block-lg: -6px 6px 0 var(--ink);
 }
 
-/* Per-branch accent */
-[data-branch-accent="cherry"] {
-  --brand-accent: var(--ticket-red);
-  --brand-accent-soft: color-mix(
-    in oklch,
-    var(--ticket-red) 10%,
-    var(--surface)
-  );
-}
-[data-branch-accent="teal"] {
-  --brand-accent: var(--banner-teal);
-  --brand-accent-soft: color-mix(
-    in oklch,
-    var(--banner-teal) 10%,
-    var(--surface)
-  );
-}
+/* The `data-branch-accent` attribute is kept for analytics/selectors, but
+   the retro palette does not swap per branch. Both branches share the
+   same red + turq + yellow + cream language. */
 
 @layer base {
   * {
@@ -220,18 +200,24 @@
   html {
     @apply font-sans;
   }
-  /* One font per locale - body + headings share the same family. */
+  /* One body font per locale. All scripts use Heebo-aligned metrics. */
   :lang(en),
   :lang(ru) {
     font-family: var(--font-latin), system-ui, sans-serif;
   }
   :lang(he) {
     font-family: var(--font-hebrew), system-ui, sans-serif;
+    /* Force Tailwind font-sans / font-mono / font-display utilities to
+       resolve to the Hebrew font, so elements with explicit class names
+       don't fall back to the Latin / mono / display faces for Hebrew. */
+    --font-latin: var(--font-hebrew);
+    --font-mono: var(--font-hebrew);
+    --font-display: var(--font-hebrew);
   }
   :lang(ar) {
     font-family: var(--font-arabic), system-ui, sans-serif;
   }
-  /* Headings: same family, bolder weight + slightly tighter tracking. */
+  /* Headings: bolder weight + tight Latin tracking. RTL resets tracking. */
   h1,
   h2,
   h3,
@@ -253,40 +239,51 @@
     font-weight: 700;
     letter-spacing: 0;
   }
-  /* Logo display font - chunky per script; ONLY used inside BowlingLogo. */
+  /* Chunky signboard display font — per script. */
   .font-display {
-    font-family: var(--font-display), system-ui, sans-serif;
+    font-family: var(--font-display), Georgia, serif;
+    font-weight: 400;
   }
   :lang(ru) .font-display {
     font-family: var(--font-display-cyrillic), system-ui, sans-serif;
   }
   :lang(he) .font-display {
-    font-family: var(--font-display-hebrew), system-ui, sans-serif;
+    font-family: var(--font-hebrew), system-ui, sans-serif;
+    font-weight: 700;
   }
   :lang(ar) .font-display {
     font-family: var(--font-display-arabic), system-ui, sans-serif;
   }
-  /* Soft, modern focus ring. */
+  /* Focus ring — red, hard, offset. */
   *:focus-visible {
-    outline: 2px solid color-mix(in oklch, var(--ink) 75%, transparent);
+    outline: 3px solid color-mix(in srgb, var(--red) 75%, transparent);
     outline-offset: 3px;
-    border-radius: 6px;
+    border-radius: 4px;
   }
 }
 
-/* Subtle dotted divider */
-@utility divider-dotted {
+/* Dashed inner ring — logo echo, used inside cards + signboards. */
+@utility ring-dashed {
+  position: absolute;
+  inset: 8px;
+  border: 2px dashed currentColor;
+  border-radius: calc(var(--radius) * 0.66);
+  pointer-events: none;
+}
+
+/* Dotted leader row — the "…………" between menu item and price. */
+@utility leader-dotted {
   background-image: radial-gradient(
-    color-mix(in oklch, var(--ink) 18%, transparent) 1px,
+    color-mix(in srgb, var(--ink) 45%, transparent) 1px,
     transparent 1px
   );
-  background-size: 10px 1px;
+  background-size: 8px 1px;
   background-repeat: repeat-x;
   background-position: center;
   height: 1px;
 }
 
-/* Honor reduced motion. */
+/* Honor reduced motion — freeze ticker, blink, press lifts. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

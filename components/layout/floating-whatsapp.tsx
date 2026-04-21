@@ -15,7 +15,7 @@ export async function FloatingWhatsApp({ branch }: { branch: Branch }) {
       target="_blank"
       rel="noopener"
       aria-label={t("label")}
-      className="fixed end-6 bottom-6 z-50 hidden size-14 place-items-center rounded-full bg-whatsapp text-white shadow-card transition hover:scale-105 hover:bg-whatsapp-hover hover:shadow-hover md:grid"
+      className="fixed end-6 bottom-6 z-50 hidden size-14 place-items-center rounded-full border-2 border-ink bg-whatsapp text-white shadow-block transition hover:bg-whatsapp-hover active:translate-x-[1px] active:translate-y-[1px] md:grid"
     >
       <IconBrandWhatsapp className="size-7" aria-hidden />
       <span className="sr-only">{t("label")}</span>

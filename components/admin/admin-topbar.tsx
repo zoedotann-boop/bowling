@@ -9,7 +9,7 @@ type AdminTopbarProps = {
 
 export function AdminTopbar({ slugLabels }: AdminTopbarProps) {
   return (
-    <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-3 border-b border-line bg-background/80 px-4 backdrop-blur-md md:px-6">
+    <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-3 border-b-2 border-ink bg-cream px-4 md:px-6">
       <SidebarTrigger />
       <Separator orientation="vertical" className="h-5" />
       <AdminBreadcrumbs slugLabels={slugLabels} />

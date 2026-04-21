@@ -2,13 +2,12 @@ import { notFound } from "next/navigation"
 import { hasLocale, NextIntlClientProvider } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
 import {
-  Inter,
-  JetBrains_Mono,
-  Assistant,
+  Heebo,
+  Courier_Prime,
   Cairo,
-  Bagel_Fat_One,
+  Alfa_Slab_One,
   Russo_One,
-  Suez_One,
+  Miriam_Libre,
   Lalezar,
 } from "next/font/google"
 
@@ -17,23 +16,28 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import { dirFromLocale, routing, type Locale } from "@/i18n/routing"
 
-/* One UI font per script - used for both body and headings. */
-const fontLatin = Inter({
-  subsets: ["latin", "latin-ext", "cyrillic"],
+/* One body font per script - used for both body and headings. */
+const fontLatin = Heebo({
+  subsets: ["latin", "latin-ext"],
   variable: "--font-latin",
 })
-const fontHebrew = Assistant({
+const fontHebrew = Miriam_Libre({
   subsets: ["hebrew", "latin"],
+  weight: ["400", "700"],
   variable: "--font-hebrew",
 })
 const fontArabic = Cairo({
   subsets: ["arabic", "latin"],
   variable: "--font-arabic",
 })
-const fontMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" })
+const fontMono = Courier_Prime({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-mono",
+})
 
-/* Logo-only chunky display fonts. */
-const fontDisplay = Bagel_Fat_One({
+/* Chunky signboard display fonts — one per script. */
+const fontDisplay = Alfa_Slab_One({
   subsets: ["latin"],
   weight: "400",
   variable: "--font-display",
@@ -42,11 +46,6 @@ const fontDisplayCyrillic = Russo_One({
   subsets: ["cyrillic", "latin"],
   weight: "400",
   variable: "--font-display-cyrillic",
-})
-const fontDisplayHebrew = Suez_One({
-  subsets: ["hebrew", "latin"],
-  weight: "400",
-  variable: "--font-display-hebrew",
 })
 const fontDisplayArabic = Lalezar({
   subsets: ["arabic", "latin"],
@@ -84,7 +83,6 @@ export default async function LocaleLayout({
         fontMono.variable,
         fontDisplay.variable,
         fontDisplayCyrillic.variable,
-        fontDisplayHebrew.variable,
         fontDisplayArabic.variable
       )}
     >
