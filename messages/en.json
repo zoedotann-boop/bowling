@@ -104,21 +104,14 @@
       "phone": "Phone",
       "email": "Email (optional)",
       "branch": "Branch",
-      "eventType": "Event type (optional)",
-      "preferredDate": "Preferred date (optional)",
-      "guests": "Number of guests (optional)",
       "message": "Message",
       "submit": "Send message",
-      "submitting": "Sending…",
       "success": "Thanks - we'll get back to you shortly!",
       "error": "Something went wrong. Please try again or message us on WhatsApp."
     }
   },
   "EventTypes": {
     "birthday": "Birthday",
-    "corporate": "Corporate",
-    "school": "School / camp",
-    "casual": "Casual hangout",
     "other": "Other"
   },
   "Footer": {
