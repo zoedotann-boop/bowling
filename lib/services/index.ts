@@ -7,6 +7,7 @@ export * as media from "./media"
 export * as menu from "./menu"
 export * as packages from "./packages"
 export * as prices from "./prices"
+export * as reviews from "./reviews"
 
 export { formatAmount } from "./format"
 export { resolveLocalized, FALLBACK_LOCALE } from "./locale"

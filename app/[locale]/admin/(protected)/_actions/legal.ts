@@ -33,7 +33,7 @@ function toState<T>(result: WriteResult<T>, slug?: string): FormState<T> {
     return { status: "error", fieldErrors: result.fieldErrors }
   }
   for (const tag of result.revalidateTags) updateTag(tag)
-  revalidatePath("/[locale]/admin/footer", "layout")
+  revalidatePath("/[locale]/admin/branches/[slug]/legal", "layout")
   if (slug) revalidatePath(`/[locale]/legal/${slug}`, "page")
   revalidatePath("/[locale]", "layout")
   return { status: "success", data: result.data }
@@ -49,9 +49,17 @@ export async function saveLegalPageAction(
     if (error instanceof ForbiddenError) return forbiddenState()
     throw error
   }
+  const branchId = readString(formData, "branchId")
+  if (!branchId) {
+    return {
+      status: "error",
+      fieldErrors: { branchId: ["missing branch id"] },
+    }
+  }
   const slug = readString(formData, "slug")
   const sortOrderRaw = readNumber(formData, "sortOrder")
   const result = await services.legal.upsert({
+    branchId,
     slug,
     titleHe: readOptional(formData, "titleHe"),
     titleEn: readOptional(formData, "titleEn"),
@@ -78,10 +86,17 @@ export async function deleteLegalPageAction(
     if (error instanceof ForbiddenError) return forbiddenState()
     throw error
   }
+  const branchId = readString(formData, "branchId")
   const slug = readString(formData, "slug")
+  if (!branchId) {
+    return {
+      status: "error",
+      fieldErrors: { branchId: ["missing branch id"] },
+    }
+  }
   if (!slug) {
     return { status: "error", fieldErrors: { slug: ["missing slug"] } }
   }
-  const result = await services.legal.remove(slug)
+  const result = await services.legal.remove(branchId, slug)
   return toState(result, slug)
 }

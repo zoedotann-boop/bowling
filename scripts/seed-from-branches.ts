@@ -2,7 +2,7 @@
 import { eq, inArray } from "drizzle-orm"
 
 import { routing } from "@/i18n/routing"
-import { branches } from "@/lib/branches"
+import { branches } from "./seed-data"
 import { db } from "@/lib/db"
 import {
   branch,
@@ -56,14 +56,6 @@ async function existingSlugs(slugs: string[]): Promise<Set<string>> {
 async function seedBranch(b: (typeof branches)[number], now: Date) {
   let rowsInserted = 0
 
-  const heroAssetId = crypto.randomUUID()
-  await db.insert(mediaAsset).values({
-    id: heroAssetId,
-    blobUrl: b.hero.image,
-    filename: b.hero.image.split("/").pop() ?? null,
-  })
-  rowsInserted++
-
   const branchId = crypto.randomUUID()
   await db.insert(branch).values({
     id: branchId,
@@ -74,10 +66,23 @@ async function seedBranch(b: (typeof branches)[number], now: Date) {
     mapUrl: b.mapUrl,
     latitude: b.geo.lat,
     longitude: b.geo.lng,
-    brandAccent: b.brandAccent,
-    heroImageId: heroAssetId,
+    heroImageId: null,
   })
   rowsInserted++
+
+  const heroAssetId = crypto.randomUUID()
+  await db.insert(mediaAsset).values({
+    id: heroAssetId,
+    branchId,
+    blobUrl: b.hero.image,
+    filename: b.hero.image.split("/").pop() ?? null,
+  })
+  rowsInserted++
+
+  await db
+    .update(branch)
+    .set({ heroImageId: heroAssetId })
+    .where(eq(branch.id, branchId))
 
   for (const locale of routing.locales) {
     await db.insert(branchTranslation).values({
@@ -245,6 +250,9 @@ async function seedBranch(b: (typeof branches)[number], now: Date) {
     }
   }
 
+  const footerAndLegalRows = await seedFooterAndLegalForBranch(branchId)
+  rowsInserted += footerAndLegalRows
+
   return rowsInserted
 }
 
@@ -274,16 +282,18 @@ const LEGAL_LINK_LABELS: Record<
   },
 }
 
-async function seedFooterAndLegal(): Promise<number> {
+async function seedFooterAndLegalForBranch(branchId: string): Promise<number> {
   let inserted = 0
 
   const existingLegal = await db
     .select({ slug: legalPage.slug })
     .from(legalPage)
+    .where(eq(legalPage.branchId, branchId))
   const existingLegalSlugs = new Set(existingLegal.map((r) => r.slug))
   for (const slug of LEGAL_PAGE_SLUGS) {
     if (existingLegalSlugs.has(slug)) continue
     await db.insert(legalPage).values({
+      branchId,
       slug,
       titleHe: null,
       titleEn: null,
@@ -297,18 +307,19 @@ async function seedFooterAndLegal(): Promise<number> {
       sortOrder: LEGAL_PAGE_SLUGS.indexOf(slug),
     })
     inserted++
-    console.log(`[seed] legal_page "${slug}": inserted (unpublished)`)
   }
 
   const existingLinkCount = await db
     .select({ id: footerLink.id })
     .from(footerLink)
+    .where(eq(footerLink.branchId, branchId))
   if (existingLinkCount.length === 0) {
     for (const locale of routing.locales) {
       for (let i = 0; i < LEGAL_PAGE_SLUGS.length; i++) {
         const slug = LEGAL_PAGE_SLUGS[i]!
         await db.insert(footerLink).values({
           id: crypto.randomUUID(),
+          branchId,
           locale,
           groupKey: "legal",
           label: LEGAL_LINK_LABELS[slug][locale],
@@ -318,11 +329,6 @@ async function seedFooterAndLegal(): Promise<number> {
         inserted++
       }
     }
-    console.log(
-      `[seed] footer_link: inserted ${inserted - LEGAL_PAGE_SLUGS.length} rows`
-    )
-  } else {
-    console.log(`[seed] footer_link: skipping, already populated`)
   }
 
   return inserted
@@ -367,9 +373,6 @@ async function main() {
       `[seed]   TODO(sub-project G): google rating/count/reviews skipped`
     )
   }
-
-  const footerRows = await seedFooterAndLegal()
-  totalRows += footerRows
 
   console.log(
     `[seed] done — ${insertedBranches} branch(es) inserted, ${totalRows} rows total`

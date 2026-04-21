@@ -21,6 +21,8 @@ import { Input } from "@/components/ui/input"
 import { uploadMedia } from "@/lib/admin/upload-media"
 import type { MediaAssetRead } from "@/lib/services/media"
 
+import { FieldLabelWithTooltip } from "./field-label-with-tooltip"
+
 export type MediaPickerValue = {
   id: string
   blobUrl: string
@@ -30,11 +32,15 @@ export type MediaPickerValue = {
 export function MediaPicker({
   name,
   label,
+  tooltip,
   initial,
+  branchId,
 }: {
   name: string
   label: string
+  tooltip?: string
   initial: MediaPickerValue
+  branchId: string
 }) {
   const t = useTranslations("Admin.media")
   const [value, setValue] = React.useState<MediaPickerValue>(initial)
@@ -43,7 +49,8 @@ export function MediaPicker({
 
   const loadItems = React.useCallback(async () => {
     try {
-      const response = await fetch("/api/admin/media", { cache: "no-store" })
+      const url = `/api/admin/media?branchId=${encodeURIComponent(branchId)}`
+      const response = await fetch(url, { cache: "no-store" })
       if (!response.ok) {
         toast.error(t("errors.loadFailed"))
         setItems([])
@@ -55,11 +62,11 @@ export function MediaPicker({
       toast.error(t("errors.loadFailed"))
       setItems([])
     }
-  }, [t])
+  }, [t, branchId])
 
   return (
     <Field>
-      <FieldLabel>{label}</FieldLabel>
+      <FieldLabelWithTooltip tooltip={tooltip}>{label}</FieldLabelWithTooltip>
       <input type="hidden" name={name} value={value?.id ?? ""} />
       <div className="flex items-center gap-3">
         <div className="relative size-20 shrink-0 overflow-hidden border border-line bg-muted/40">
@@ -97,6 +104,7 @@ export function MediaPicker({
                 <DialogTitle>{t("picker.title")}</DialogTitle>
               </DialogHeader>
               <PickerBody
+                branchId={branchId}
                 items={items}
                 onUploaded={(asset) =>
                   setItems((prev) => (prev ? [asset, ...prev] : [asset]))
@@ -135,10 +143,12 @@ export function MediaPicker({
 }
 
 function PickerBody({
+  branchId,
   items,
   onSelect,
   onUploaded,
 }: {
+  branchId: string
   items: MediaAssetRead[] | null
   onSelect: (asset: MediaAssetRead) => void
   onUploaded: (asset: MediaAssetRead) => void
@@ -163,6 +173,7 @@ function PickerBody({
               <DialogTitle>{t("upload")}</DialogTitle>
             </DialogHeader>
             <InlineUploadForm
+              branchId={branchId}
               onUploaded={(asset) => {
                 setUploadOpen(false)
                 onUploaded(asset)
@@ -206,8 +217,10 @@ function PickerBody({
 }
 
 function InlineUploadForm({
+  branchId,
   onUploaded,
 }: {
+  branchId: string
   onUploaded: (asset: MediaAssetRead) => void
 }) {
   const t = useTranslations("Admin.media")
@@ -218,7 +231,7 @@ function InlineUploadForm({
     event.preventDefault()
     if (!file) return
     startTransition(async () => {
-      const result = await uploadMedia({ file })
+      const result = await uploadMedia({ branchId, file })
       if (result.ok) {
         toast.success(t("uploadSuccess"))
         onUploaded(result.asset)

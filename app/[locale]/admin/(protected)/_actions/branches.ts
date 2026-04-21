@@ -72,7 +72,6 @@ function baseBranchInput(formData: FormData) {
     mapUrl: readString(formData, "mapUrl"),
     latitude: readNumber(formData, "latitude"),
     longitude: readNumber(formData, "longitude"),
-    brandAccent: readString(formData, "brandAccent") as "cherry" | "teal",
     heroImageId: readOptionalString(formData, "heroImageId"),
     googlePlaceId: readOptionalString(formData, "googlePlaceId"),
     published: formData.get("published") === "on",
@@ -193,37 +192,6 @@ export async function updateBranchAction(
   }
 
   return { status: "success", data: updateResult.data }
-}
-
-export async function setBranchPublishedAction(
-  formData: FormData
-): Promise<FormState<{ id: string; slug: string; published: boolean }>> {
-  try {
-    await requireAdmin()
-  } catch (error) {
-    if (error instanceof ForbiddenError) return forbiddenState()
-    throw error
-  }
-
-  const result = await services.branches.setPublished({
-    id: readString(formData, "id"),
-    published: formData.get("published") === "true",
-  })
-  return toFormState(result)
-}
-
-export async function reorderBranchesAction(
-  items: { id: string; sortOrder: number }[]
-): Promise<FormState<{ count: number }>> {
-  try {
-    await requireAdmin()
-  } catch (error) {
-    if (error instanceof ForbiddenError) return forbiddenState()
-    throw error
-  }
-
-  const result = await services.branches.reorder(items)
-  return toFormState(result)
 }
 
 export async function updateBranchContactAction(

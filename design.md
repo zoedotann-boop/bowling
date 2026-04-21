@@ -40,7 +40,7 @@ arbitrary-value `[var(--red)]` escape hatch for SVG strokes.
 | `--turq-2`   | `#1F8F99` | Turq-button drop shadow                        |
 | `--cream`    | `#F7EFE2` | Page background, card surface                  |
 | `--cream-2`  | `#EADEC4` | Recessed / footer background                   |
-| `--ink`      | `#2A1D1A` | Body text, all borders, all hard shadows       |
+| `--ink`      | `#1F1F1F` | Body text, all borders, all hard shadows       |
 | `--yellow`   | `#F2C94C` | Ticker strip, mustard accents, open-now ribbon |
 | `--yellow-2` | `#C49A2F` | Yellow-button drop shadow                      |
 | `--paper`    | `#FFFFFF` | Inner card plate (menu, hero signboard)        |
@@ -166,30 +166,64 @@ uppercase. Lives in `components/common/eyebrow.tsx`.
 
 ## Admin
 
-Admin uses the **same visual language** as the public site. There is no
-separate "SaaS" palette anymore — the old carveout is gone.
+Admin uses the **same retro language** as the public site — the shadcn
+primitives in `components/ui/*` are restyled once so the retro look
+propagates to every form, dialog, and menu without per-call-site work.
 
-- Background, inputs, borders, rings, accents all read from the retro
-  tokens via shadcn's `--background`, `--input`, `--border`, `--ring`,
-  `--primary`, `--secondary`, `--accent`. Reskinning shadcn primitives was
-  done once in `app/globals.css`; individual admin components don't need
-  per-component overrides.
+Primitive rules (shared across admin, auth, and public site):
+
+| Primitive                       | Look                                                                                   |
+| ------------------------------- | -------------------------------------------------------------------------------------- |
+| `Input` / `Textarea`            | 2px ink border, `bg-paper`, `shadow-block-sm`; focus → `shadow-block`; invalid → red-2 |
+| `Select` trigger                | same as inputs; `IconSelector` chevron in ink                                          |
+| `Button` default                | red fill + `shadow-btn-red` + active translate-y (physical key press)                  |
+| `Button` secondary              | turq fill + `shadow-btn-turq`                                                          |
+| `Button` destructive            | red-2 fill + `shadow-btn-ink`                                                          |
+| `Button` outline                | cream fill + ink border + `shadow-btn-ink`                                             |
+| `Button` ghost / link           | no border, no shadow; hover → cream-2                                                  |
+| `Card`                          | 2px ink border + `shadow-block`; optional `ring` prop for dashed inner ring            |
+| `Dialog` / `Sheet`              | ink border, `shadow-block-lg`, ink/60 overlay                                          |
+| `DropdownMenu` / `Select` popup | ink border, `shadow-block`, yellow highlight row on hover                              |
+| `Tabs`                          | tab = ink-outlined chip on paper; active = red fill + `shadow-block`                   |
+| `Switch`                        | ink track, cream-2 off / red on, paper knob                                            |
+| `Tooltip`                       | ink fill, cream Courier Prime text, `shadow-block-sm`                                  |
+| `Avatar`                        | 2px ink border, ink fallback with display-font initials                                |
+| `FieldLabel`                    | Courier Prime 11px, `0.14em` tracking, uppercase                                       |
+| `Separator`                     | `ink/30` hairline                                                                      |
+| `Breadcrumb`                    | Courier Prime 11px, `0.14em` tracking, uppercase; active crumb bold ink                |
+
+Admin frame:
+
 - Sidebar header shows a small rotated red signboard mark (`BOWLING` → `B`)
-  with a white dashed inner ring and a block shadow. The sidebar itself
-  stays shadcn-driven for behavior (collapsible, keyboard), but the tokens
-  render it in cream with an ink rail.
-- Topbar is cream with a 2px ink bottom border. Breadcrumbs are rendered in
-  Courier Prime, `0.14em` tracking, uppercase; active crumb is bold ink.
-- Page headers use `font-display` titles, Courier Prime descriptions.
-- Tables live inside `BowlingCard` wrappers so data density stays high but
-  borders read as ink-on-cream.
-- Form fields inherit retro tokens (2px ink border, red focus ring via
-  `--ring: var(--red)`). No per-field overrides needed.
-- Buttons use shadcn `Button` variants remapped via CSS tokens — `default`
-  is red, `secondary` is turq, `destructive` is red-2. For CTA moments on
-  the public site, reach for `RetroButton` directly.
+  with a dashed inner ring and a block shadow. Sidebar behavior stays
+  shadcn-driven (collapsible, keyboard); group labels are mono
+  `0.18em` tracking uppercase in `ink-soft`.
+- Topbar is cream with a 2px ink bottom border; breadcrumbs use the mono
+  breadcrumb primitive above.
+- Page headers use `font-display` titles + Courier Prime eyebrow via the
+  shared `Eyebrow` component.
+- Form sections wrap in `Card` (`shadow-block`). Use the `ring` prop
+  (`red`/`turq`/`yellow`) for marketing-tone moments; omit it in dense
+  form blocks to keep visual weight down.
+- CTAs reuse the shadcn `Button`; reach for `RetroButton` only for
+  oversized public-site hero CTAs (it's the same treatment at a larger
+  size).
 - First pass is light theme only. `ThemeProvider` wiring stays intact so a
   future dark-retro pass can be added without refactoring.
+
+## Auth
+
+`app/[locale]/(auth)/layout.tsx` is a marketing-grade retro frame:
+
+- Cream `<main>` with `Burst`, `Ball`, and `Pin` glyph decorations bleeding
+  off the corners — same family as the `Hero` section.
+- `BowlingLogo` sits above a paper `BowlingCard` (red dashed inner ring,
+  `shadow-block-lg`) that wraps the form.
+- The login form uses the shared `Eyebrow` → Alfa Slab title → Courier
+  Prime description stack, then the restyled `Input` and a full-width
+  `RetroButton` for submit.
+- Info and error banners are inline retro chips — 2px border, block shadow,
+  yellow (info) or red-2 (error) surface — no soft-alert component.
 
 ## RTL
 
@@ -204,13 +238,11 @@ separate "SaaS" palette anymore — the old carveout is gone.
 
 ## What we removed
 
-- Per-branch accent swap. `data-branch-accent` still renders on the site
-  wrapper (kept for analytics selectors + DB forward-compat), but no CSS
-  reacts to it. The admin branch form's accent picker is visual-only until
-  a follow-up PR removes the column.
+- Per-branch accent swap. The `brand_accent` column + admin picker were
+  removed; both branches share the same retro palette.
 - Old "modern hospitality" surface tokens (`--surface-warm`,
   `--surface-cool`, `--surface-deep`, `--surface-muted`, `--ink-muted`,
-  `--canvas`, `--line`, `--ticket-red`, `--banner-teal`, `--brand-accent*`).
+  `--canvas`, `--line`, `--ticket-red`, `--banner-teal`).
   These are still present as **legacy aliases** in `@theme inline` pointing
   at the new palette so unmigrated components keep rendering while the
   refit continues.
@@ -221,6 +253,12 @@ separate "SaaS" palette anymore — the old carveout is gone.
 - `MobileActionBar` is no longer rendered on the homepage (the design
   dropped the sticky CTA). The file stays on disk in case we want to
   reintroduce it for a specific route.
+- Soft-surface auth shell (`rounded-3xl bg-surface shadow-soft border-line`)
+  and the `fieldClass` string in `login-form.tsx` — replaced by a
+  `BowlingCard` frame with glyph decorations and the shared retro `Input`.
+- Legacy shadcn defaults on primitives (`shadow-xs`, `rounded-2xl`,
+  hairline `border-border`, glassy dropdown backdrop-blur, soft overlays)
+  — each primitive now carries the retro treatment directly.
 
 ## Verification checklist
 

@@ -1,4 +1,4 @@
-import { asc, eq } from "drizzle-orm"
+import { and, asc, eq } from "drizzle-orm"
 import { unstable_cache } from "next/cache"
 
 import type { Locale } from "@/i18n/routing"
@@ -14,6 +14,7 @@ import type { WriteResult } from "./types"
 export type LegalPageRow = typeof legalPage.$inferSelect
 
 export type LegalPageAdmin = {
+  branchId: string
   slug: string
   titleHe: string | null
   titleEn: string | null
@@ -36,6 +37,7 @@ export type LegalPageLocalized = {
 
 function toAdmin(row: LegalPageRow): LegalPageAdmin {
   return {
+    branchId: row.branchId,
     slug: row.slug,
     titleHe: row.titleHe,
     titleEn: row.titleEn,
@@ -78,10 +80,13 @@ function pickBody(row: LegalPageRow, locale: Locale): string | null {
   return fallback && fallback.trim().length > 0 ? fallback : null
 }
 
-export async function listAdmin(): Promise<LegalPageAdmin[]> {
+export async function listByBranch(
+  branchId: string
+): Promise<LegalPageAdmin[]> {
   const rows = await db
     .select()
     .from(legalPage)
+    .where(eq(legalPage.branchId, branchId))
     .orderBy(asc(legalPage.sortOrder), asc(legalPage.slug))
   return rows.map(toAdmin)
 }
@@ -90,18 +95,15 @@ export async function getBySlug(
   slug: string,
   locale: Locale
 ): Promise<LegalPageLocalized | null> {
-  const load = unstable_cache(
-    async () => {
-      const [row] = await db
-        .select()
-        .from(legalPage)
-        .where(eq(legalPage.slug, slug))
-        .limit(1)
-      return row ?? null
-    },
-    ["legal:getBySlug", slug],
-    { tags: [tags.legal(slug), tags.legalAll()] }
-  )
+  const load = unstable_cache(async () => {
+    const [row] = await db
+      .select()
+      .from(legalPage)
+      .where(and(eq(legalPage.slug, slug), eq(legalPage.published, true)))
+      .orderBy(asc(legalPage.sortOrder))
+      .limit(1)
+    return row ?? null
+  }, ["legal:getBySlug", slug])
   const row = await load()
   if (!row || !row.published) return null
   return {
@@ -115,17 +117,18 @@ export async function getBySlug(
 export async function listPublished(): Promise<
   { slug: string; sortOrder: number }[]
 > {
-  const load = unstable_cache(
-    async () => {
-      return db
-        .select({ slug: legalPage.slug, sortOrder: legalPage.sortOrder })
-        .from(legalPage)
-        .where(eq(legalPage.published, true))
-        .orderBy(asc(legalPage.sortOrder), asc(legalPage.slug))
-    },
-    ["legal:listPublished"],
-    { tags: [tags.legalAll()] }
-  )
+  const load = unstable_cache(async () => {
+    const rows = await db
+      .select({ slug: legalPage.slug, sortOrder: legalPage.sortOrder })
+      .from(legalPage)
+      .where(eq(legalPage.published, true))
+      .orderBy(asc(legalPage.sortOrder), asc(legalPage.slug))
+    const bySlug = new Map<string, number>()
+    for (const r of rows) {
+      if (!bySlug.has(r.slug)) bySlug.set(r.slug, r.sortOrder)
+    }
+    return Array.from(bySlug, ([slug, sortOrder]) => ({ slug, sortOrder }))
+  }, ["legal:listPublished"])
   return load()
 }
 
@@ -137,6 +140,7 @@ export async function upsert(
     return { ok: false, fieldErrors: formatZodErrors(parsed.error) }
   }
   const values = {
+    branchId: parsed.data.branchId,
     slug: parsed.data.slug,
     titleHe: parsed.data.titleHe ?? null,
     titleEn: parsed.data.titleEn ?? null,
@@ -153,28 +157,32 @@ export async function upsert(
     .insert(legalPage)
     .values(values)
     .onConflictDoUpdate({
-      target: legalPage.slug,
+      target: [legalPage.branchId, legalPage.slug],
       set: values,
     })
     .returning()
   return {
     ok: true,
     data: toAdmin(row!),
-    revalidateTags: [tags.legalAll(), tags.legal(parsed.data.slug)],
+    revalidateTags: [
+      tags.legalBranch(parsed.data.branchId),
+      tags.legal(parsed.data.branchId, parsed.data.slug),
+    ],
   }
 }
 
 export async function remove(
+  branchId: string,
   slug: string
 ): Promise<WriteResult<{ slug: string }>> {
   const [row] = await db
     .delete(legalPage)
-    .where(eq(legalPage.slug, slug))
+    .where(and(eq(legalPage.branchId, branchId), eq(legalPage.slug, slug)))
     .returning({ slug: legalPage.slug })
   if (!row) return { ok: false, fieldErrors: { slug: ["not found"] } }
   return {
     ok: true,
     data: { slug: row.slug },
-    revalidateTags: [tags.legalAll(), tags.legal(slug)],
+    revalidateTags: [tags.legalBranch(branchId), tags.legal(branchId, slug)],
   }
 }

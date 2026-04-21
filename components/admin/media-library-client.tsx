@@ -44,7 +44,13 @@ const LOCALE_KEYS = [
   { key: "altTextAr", locale: "ar" },
 ] as const
 
-export function MediaLibraryClient({ items }: { items: MediaAssetRead[] }) {
+export function MediaLibraryClient({
+  items,
+  branchId,
+}: {
+  items: MediaAssetRead[]
+  branchId: string
+}) {
   const t = useTranslations("Admin.media")
   const [selected, setSelected] = React.useState<MediaAssetRead | null>(null)
 
@@ -53,7 +59,7 @@ export function MediaLibraryClient({ items }: { items: MediaAssetRead[] }) {
       <PageHeader
         title={t("title")}
         description={t("description")}
-        actions={<UploadButton />}
+        actions={<UploadButton branchId={branchId} />}
       />
       {items.length === 0 ? (
         <Card className="p-10 text-center text-sm text-ink-muted">
@@ -85,12 +91,16 @@ export function MediaLibraryClient({ items }: { items: MediaAssetRead[] }) {
           ))}
         </ul>
       )}
-      <DetailDialog item={selected} onClose={() => setSelected(null)} />
+      <DetailDialog
+        item={selected}
+        branchId={branchId}
+        onClose={() => setSelected(null)}
+      />
     </div>
   )
 }
 
-function UploadButton() {
+function UploadButton({ branchId }: { branchId: string }) {
   const t = useTranslations("Admin.media")
   const [open, setOpen] = React.useState(false)
   return (
@@ -107,13 +117,19 @@ function UploadButton() {
         <DialogHeader>
           <DialogTitle>{t("upload")}</DialogTitle>
         </DialogHeader>
-        <UploadForm onDone={() => setOpen(false)} />
+        <UploadForm branchId={branchId} onDone={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   )
 }
 
-function UploadForm({ onDone }: { onDone: () => void }) {
+function UploadForm({
+  branchId,
+  onDone,
+}: {
+  branchId: string
+  onDone: () => void
+}) {
   const t = useTranslations("Admin.media")
   const router = useRouter()
   const [file, setFile] = React.useState<File | null>(null)
@@ -129,7 +145,7 @@ function UploadForm({ onDone }: { onDone: () => void }) {
     event.preventDefault()
     if (!file) return
     startTransition(async () => {
-      const result = await uploadMedia({ file, ...alt })
+      const result = await uploadMedia({ branchId, file, ...alt })
       if (result.ok) {
         toast.success(t("uploadSuccess"))
         router.refresh()
@@ -181,9 +197,11 @@ function UploadForm({ onDone }: { onDone: () => void }) {
 
 function DetailDialog({
   item,
+  branchId,
   onClose,
 }: {
   item: MediaAssetRead | null
+  branchId: string
   onClose: () => void
 }) {
   const t = useTranslations("Admin.media")
@@ -228,6 +246,7 @@ function DetailDialog({
     startDelete(async () => {
       const fd = new FormData()
       fd.set("id", item.id)
+      fd.set("branchId", branchId)
       const result = await deleteMediaAction(fd)
       if (result.status === "success") {
         toast.success(tt("mediaDeleted"))

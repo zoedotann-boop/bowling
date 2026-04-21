@@ -1,17 +1,18 @@
-import { getLocale, getTranslations } from "next-intl/server"
+import { getTranslations } from "next-intl/server"
 import {
   IconStarFilled,
   IconBrandGoogle,
   IconArrowUpRight,
 } from "@tabler/icons-react"
-import type { Branch } from "@/lib/branches"
+import type { SiteBranch } from "@/lib/site-branch"
 import { BowlingCard } from "@/components/brand/bowling-card"
 import { Eyebrow } from "@/components/common/eyebrow"
 
-export async function GoogleReviews({ branch }: { branch: Branch }) {
+export async function GoogleReviews({ branch }: { branch: SiteBranch }) {
   const t = await getTranslations("Reviews")
-  const locale = (await getLocale()) as keyof Branch["displayName"]
   const { google } = branch
+
+  if (google.reviews.length === 0) return null
 
   return (
     <section className="bg-cream-2">
@@ -62,11 +63,11 @@ export async function GoogleReviews({ branch }: { branch: Branch }) {
               <div className="flex items-center justify-between gap-3">
                 <Stars rating={r.rating} />
                 <span className="font-mono text-[10px] tracking-[0.14em] text-ink/60 uppercase">
-                  {r.date[locale]}
+                  {r.date}
                 </span>
               </div>
               <p className="mt-3 text-[15px] leading-relaxed text-ink">
-                {r.text[locale]}
+                {r.text}
               </p>
               <p className="mt-3 font-mono text-xs font-bold tracking-[0.14em] text-red uppercase">
                 — {r.author}

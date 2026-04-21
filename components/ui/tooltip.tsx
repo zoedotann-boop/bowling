@@ -19,7 +19,7 @@ function TooltipTrigger({ ...props }: TooltipPrimitive.Trigger.Props) {
 
 function TooltipContent({
   className,
-  sideOffset = 6,
+  sideOffset = 8,
   side,
   align,
   alignOffset,
@@ -42,7 +42,7 @@ function TooltipContent({
         <TooltipPrimitive.Popup
           data-slot="tooltip-content"
           className={cn(
-            "z-50 rounded-none border border-line bg-popover px-2 py-1 text-xs text-popover-foreground shadow-md data-ending-style:opacity-0 data-starting-style:opacity-0",
+            "z-50 rounded-none border-2 border-ink bg-ink px-2.5 py-1.5 font-mono text-[11px] tracking-wide text-cream shadow-block-sm data-ending-style:opacity-0 data-starting-style:opacity-0",
             className
           )}
           {...props}

@@ -1,14 +1,14 @@
-import { getLocale, getTranslations } from "next-intl/server"
+import { getTranslations } from "next-intl/server"
 import { IconMapPin, IconPhone } from "@tabler/icons-react"
-import type { Branch } from "@/lib/branches"
+import type { SiteBranch } from "@/lib/site-branch"
 import { BowlingCard } from "@/components/brand/bowling-card"
 import { RetroButton } from "@/components/brand/retro-button"
 import { Eyebrow } from "@/components/common/eyebrow"
 
-export async function ContactBlock({ branch }: { branch: Branch }) {
+export async function ContactBlock({ branch }: { branch: SiteBranch }) {
   const t = await getTranslations()
   const tContact = await getTranslations("Contact")
-  const locale = (await getLocale()) as keyof Branch["displayName"]
+  const tHero = await getTranslations("Hero")
   const tel = branch.phone.replace(/[^\d+]/g, "")
 
   return (
@@ -20,8 +20,7 @@ export async function ContactBlock({ branch }: { branch: Branch }) {
         <div className="mb-6">
           <Eyebrow tone="ink">{tContact("title")}</Eyebrow>
           <h2 className="mt-2 font-display text-3xl leading-[0.98] text-ink sm:text-4xl">
-            {branch.address[locale]},{" "}
-            <span className="text-red">{branch.city[locale]}.</span>
+            {branch.address}, <span className="text-red">{branch.city}.</span>
           </h2>
         </div>
 
@@ -41,13 +40,13 @@ export async function ContactBlock({ branch }: { branch: Branch }) {
               }`}
             >
               <span className="text-[15px] font-extrabold text-ink">
-                {h.day[locale]}
+                {h.day}
               </span>
               <span
                 className="font-mono text-sm tracking-wide text-ink/80"
                 dir="ltr"
               >
-                {h.open} – {h.close}
+                {h.isClosed ? tHero("closedNow") : `${h.open} – ${h.close}`}
               </span>
             </div>
           ))}

@@ -15,15 +15,14 @@
     "getDirections": "Открыть в Картах",
     "exploreEvents": "Пакеты для событий"
   },
-  "BranchSwitcher": {
-    "label": "Филиал",
-    "title": "Выберите филиал",
-    "current": "Вы просматриваете",
-    "open": "Сменить филиал"
-  },
   "LocaleSwitcher": {
     "label": "Язык",
-    "open": "Выбрать язык"
+    "open": "Выбрать язык",
+    "title": "Выбрать язык"
+  },
+  "BranchSwitcher": {
+    "title": "Выбор филиала",
+    "open": "Выбор филиала"
   },
   "Hero": {
     "viewingLabel": "Вы просматриваете",
@@ -110,10 +109,6 @@
       "error": "Что-то пошло не так. Попробуйте ещё раз или напишите в WhatsApp."
     }
   },
-  "EventTypes": {
-    "birthday": "День рождения",
-    "other": "Другое"
-  },
   "Footer": {
     "branches": "Наши филиалы",
     "explore": "Разделы",
@@ -128,11 +123,17 @@
   "Admin": {
     "nav": {
       "brand": "Bowling Admin",
-      "branches": "Branches",
-      "contact": "Contact",
-      "media": "Media",
-      "footer": "Footer",
+      "branchGroup": "Филиал",
+      "pickBranch": "Выберите филиал",
+      "createBranch": "Создать филиал",
       "signOut": "Выйти"
+    },
+    "home": {
+      "title": "Bowling admin",
+      "pickFromSidebar": "Выберите филиал в боковой панели, чтобы начать редактирование.",
+      "jumpToFirst": "Открыть первый филиал",
+      "noBranches": "Филиалов пока нет. Создайте первый филиал, чтобы начать.",
+      "createFirst": "Создать первый филиал"
     },
     "common": {
       "cancel": "Cancel",
@@ -148,6 +149,20 @@
       "gatewayError": "Translation service unavailable. Try again.",
       "needSource": "Fill at least one Hebrew field first.",
       "emptySource": "Write Hebrew content first."
+    },
+    "reviews": {
+      "title": "Отзывы Google",
+      "description": "Синхронизируется ежедневно через Google Places API. Отсутствующие языки переводятся ИИ.",
+      "placeIdLabel": "Google place ID",
+      "placeIdMissing": "Не задан - добавьте ID места на вкладке «Инфо»",
+      "lastSynced": "Последняя синхронизация: {when}",
+      "neverSynced": "Ещё не синхронизировано. Добавьте ID места и нажмите «Обновить».",
+      "averageRating": "Средний рейтинг: {rating} из {count} оценок",
+      "refresh": "Обновить",
+      "refreshing": "Обновление…",
+      "refreshSuccess": "Синхронизировано {synced} отзывов (переведено {translated})",
+      "noReviews": "Кэш отзывов пуст.",
+      "translatedBadge": "AI"
     },
     "toasts": {
       "branchCreated": "Branch created",
@@ -185,10 +200,6 @@
     },
     "contact": {
       "title": "Contact details",
-      "indexTitle": "Contact",
-      "indexDescription": "Per-branch phone, WhatsApp, email, and map link.",
-      "editTitle": "Contact · {slug}",
-      "empty": "No branches yet.",
       "phone": "Phone",
       "whatsapp": "WhatsApp",
       "email": "Email",
@@ -206,7 +217,13 @@
       "href": "URL",
       "reorder": "Drag to reorder",
       "confirmDeleteTitle": "Delete footer link?",
-      "confirmDeleteDescription": "This removes \"{label}\". Cannot be undone."
+      "confirmDeleteDescription": "This removes \"{label}\". Cannot be undone.",
+      "tooltips": {
+        "locale": "Язык, на котором показывается эта ссылка. Для каждого языка — отдельная запись.",
+        "groupKey": "Заголовок столбца в футере (например, legal, company, social). Ссылки с одинаковым ключом группируются вместе.",
+        "label": "Видимый текст ссылки в футере.",
+        "href": "URL назначения. Используйте относительный путь (/legal/terms) или полный https://."
+      }
     },
     "legal": {
       "title": "Legal pages",
@@ -218,7 +235,14 @@
       "pageTitle": "Title",
       "pageTitleHint": "e.g. Terms of Service",
       "body": "Body (Markdown)",
-      "bodyHint": "Supports headings, lists, **bold**, *italic*, and [links](https://example.com)."
+      "bodyHint": "Supports headings, lists, **bold**, *italic*, and [links](https://example.com).",
+      "tooltips": {
+        "slug": "Идентификатор для /legal/<slug>. Строчные буквы с дефисами. Изменение ломает ссылки.",
+        "sortOrder": "Порядок в группах ссылок футера. Меньшие числа — выше.",
+        "published": "Если выключено — страница скрыта и возвращает 404.",
+        "pageTitle": "Заголовок страницы и тег <title>.",
+        "body": "Markdown-контент с поддержкой заголовков, списков, bold, italic, ссылок."
+      }
     },
     "packages": {
       "title": "Packages",
@@ -229,7 +253,12 @@
       "perks": "Perks",
       "reorder": "Drag to reorder",
       "confirmDeleteTitle": "Delete package?",
-      "confirmDeleteDescription": "This removes the package. Cannot be undone."
+      "confirmDeleteDescription": "This removes the package. Cannot be undone.",
+      "tooltips": {
+        "amount": "Цена в агорот (копейках). ₪1 = 100. Пример: ₪690 = 69000.",
+        "titleLabel": "Отображаемое название пакета (например, Пакет дня рождения).",
+        "perks": "Список того, что входит в пакет. Отображается на карточке."
+      }
     },
     "prices": {
       "title": "Prices",
@@ -247,7 +276,13 @@
         "shoe": "Shoe rental"
       },
       "confirmDeleteTitle": "Delete price row?",
-      "confirmDeleteDescription": "This removes the row. Cannot be undone."
+      "confirmDeleteDescription": "This removes the row. Cannot be undone.",
+      "tooltips": {
+        "kind": "Категория строки цены. Используется для группировки в публичном прайсе.",
+        "weekday": "Цена пн–чт в агорот. ₪1 = 100. Пример: ₪42 = 4200.",
+        "weekend": "Цена пт–сб в агорот. ₪1 = 100. Пример: ₪52 = 5200.",
+        "label": "Опциональный ярлык для локали, переопределяющий имя по умолчанию."
+      }
     },
     "events": {
       "title": "Events",
@@ -258,7 +293,12 @@
       "description": "Description",
       "reorder": "Drag to reorder",
       "confirmDeleteTitle": "Delete event?",
-      "confirmDeleteDescription": "This removes the event. Cannot be undone."
+      "confirmDeleteDescription": "This removes the event. Cannot be undone.",
+      "tooltips": {
+        "image": "Фото на карточке события. Сначала загрузите в медиа-библиотеку.",
+        "titleLabel": "Короткое название типа события (например, Дни рождения, Корпоратив).",
+        "description": "Одно-два предложения под названием события."
+      }
     },
     "menu": {
       "title": "Menu",
@@ -276,7 +316,13 @@
       "confirmDeleteCategoryTitle": "Delete category?",
       "confirmDeleteCategoryDescription": "This removes the category and all its items. Cannot be undone.",
       "confirmDeleteItemTitle": "Delete item?",
-      "confirmDeleteItemDescription": "This removes the item. Cannot be undone."
+      "confirmDeleteItemDescription": "This removes the item. Cannot be undone.",
+      "tooltips": {
+        "categoryTitle": "Заголовок раздела в публичном меню (например, Закуски).",
+        "amount": "Цена позиции в агорот. ₪1 = 100. Пример: ₪38 = 3800.",
+        "itemName": "Название блюда в публичном меню.",
+        "itemTag": "Опциональный бейдж рядом с позицией (Хит, Острый, Новинка)."
+      }
     },
     "media": {
       "title": "Media",
@@ -308,24 +354,6 @@
       }
     },
     "branches": {
-      "list": {
-        "title": "Branches",
-        "description": "Manage your bowling branches and their publish status.",
-        "newBranch": "New branch",
-        "slug": "Slug",
-        "name": "Name",
-        "status": "Status",
-        "published": "Published",
-        "draft": "Draft",
-        "actions": "Actions",
-        "edit": "Edit",
-        "delete": "Delete",
-        "dragToReorder": "Drag to reorder",
-        "togglePublished": "Toggle published",
-        "confirmDeleteTitle": "Delete branch?",
-        "confirmDeleteDescription": "This removes the branch and all related content (hours, prices, packages, events, menu). Cannot be undone.",
-        "empty": "No branches yet. Create the first one."
-      },
       "tabs": {
         "info": "Info",
         "hours": "Hours",
@@ -336,8 +364,10 @@
         "menu": "Menu",
         "events": "Events",
         "reviews": "Reviews",
-        "soon": "Soon",
-        "comingSoon": "Coming soon"
+        "contact": "Contact",
+        "media": "Медиа",
+        "footer": "Подвал",
+        "legal": "Юридические"
       },
       "form": {
         "newTitle": "New branch",
@@ -350,9 +380,6 @@
         "mapUrl": "Map URL",
         "latitude": "Latitude",
         "longitude": "Longitude",
-        "brandAccent": "Brand accent",
-        "brandAccentCherry": "Cherry",
-        "brandAccentTeal": "Teal",
         "published": "Published",
         "displayName": "Display name",
         "shortName": "Short name",
@@ -371,7 +398,28 @@
         "dangerZone": "Danger zone",
         "dangerZoneDescription": "Deleting a branch removes all related content. This cannot be undone.",
         "confirmDeleteTitle": "Delete branch?",
-        "confirmDeleteDescription": "This removes the branch and all related content. Cannot be undone."
+        "confirmDeleteDescription": "This removes the branch and all related content. Cannot be undone.",
+        "tooltips": {
+          "slug": "Идентификатор для URL /branches/<slug>. Строчные буквы и дефисы (например, ramat-gan). Изменение после создания ломает существующие ссылки.",
+          "sortOrder": "Определяет порядок филиалов на сайте и в переключателе. Меньшие числа — выше.",
+          "phone": "Показывается в карточке контактов и подключается к tel: на мобильном. Используйте международный формат (+972 3-123-4567).",
+          "whatsapp": "Только цифры, код страны без +. Используется в ссылках wa.me для плавающей кнопки WhatsApp. Пример: 972545751100.",
+          "email": "Публичный email в футере и на странице контактов.",
+          "mapUrl": "Ссылка на Google Maps при нажатии на адрес. На maps.google.com: Share → Copy link.",
+          "latitude": "Десятичная широта для schema.org GeoCoordinates. В Google Maps щёлкните ПКМ по метке и скопируйте первое число.",
+          "longitude": "Десятичная долгота для schema.org GeoCoordinates. В Google Maps щёлкните ПКМ по метке и скопируйте второе число.",
+          "published": "Когда выключено, филиал скрыт от публичного сайта и sitemap. Админ всё ещё может редактировать.",
+          "displayName": "Полное имя филиала в заголовках и переключателе. Бренд + город (например, Боулинг Рамат-Ган).",
+          "shortName": "Короткая метка для верхней навигации. Обычно только название города.",
+          "address": "Уличный адрес в карточке контактов и schema.org PostalAddress.",
+          "city": "Название города для schema.org PostalAddress и SEO-текстов по умолчанию.",
+          "heroImageId": "Большой баннер в шапке страницы филиала. Сначала загрузите в медиа-библиотеку, затем выберите.",
+          "heroHeadline": "Короткий заголовок на баннере. 3–6 слов.",
+          "heroTagline": "Подзаголовок под заголовком. Опишите особенность филиала.",
+          "seoTitle": "Тег <title> для поисковиков и соц-сетей. Оптимально 50–60 символов.",
+          "seoDescription": "Meta description для Google и превью соц-сетей. 140–160 символов.",
+          "googlePlaceId": "Идентификатор из Google Maps Place Details. См. developers.google.com/maps/documentation/places/web-service/place-id (подпроект G использует для синхронизации рейтинга/отзывов)."
+        }
       },
       "hours": {
         "days": {

@@ -29,7 +29,7 @@ function applyTags<T>(result: WriteResult<T>): FormState<T> {
     return { status: "error", fieldErrors: result.fieldErrors }
   }
   for (const tag of result.revalidateTags) updateTag(tag)
-  revalidatePath("/[locale]/admin/footer", "layout")
+  revalidatePath("/[locale]/admin/branches/[slug]/footer", "layout")
   revalidatePath("/[locale]", "layout")
   return { status: "success", data: result.data }
 }
@@ -50,6 +50,13 @@ export async function saveFooterLinkAction(
   }
 
   const id = readString(formData, "id")
+  const branchId = readString(formData, "branchId")
+  if (!branchId) {
+    return {
+      status: "error",
+      fieldErrors: { branchId: ["missing branch id"] },
+    }
+  }
   const localeRaw = readString(formData, "locale")
   if (!isLocale(localeRaw)) {
     return { status: "error", fieldErrors: { locale: ["invalid locale"] } }
@@ -64,6 +71,7 @@ export async function saveFooterLinkAction(
   if (id) {
     const result = await services.footer.update({
       id,
+      branchId,
       locale,
       groupKey,
       label,
@@ -76,6 +84,7 @@ export async function saveFooterLinkAction(
   }
 
   const result = await services.footer.create({
+    branchId,
     locale,
     groupKey,
     label,
@@ -97,14 +106,22 @@ export async function deleteFooterLinkAction(
     throw error
   }
   const id = readString(formData, "id")
+  const branchId = readString(formData, "branchId")
   if (!id) {
     return { status: "error", fieldErrors: { id: ["missing link id"] } }
   }
-  const result = await services.footer.remove(id)
+  if (!branchId) {
+    return {
+      status: "error",
+      fieldErrors: { branchId: ["missing branch id"] },
+    }
+  }
+  const result = await services.footer.remove(id, branchId)
   return applyTags(result)
 }
 
 export async function reorderFooterLinksAction(
+  branchId: string,
   locale: Locale,
   groupKey: string,
   items: { id: string; sortOrder: number }[]
@@ -115,6 +132,11 @@ export async function reorderFooterLinksAction(
     if (error instanceof ForbiddenError) return forbiddenState()
     throw error
   }
-  const result = await services.footer.reorder(locale, groupKey, items)
+  const result = await services.footer.reorder(
+    branchId,
+    locale,
+    groupKey,
+    items
+  )
   return applyTags(result)
 }

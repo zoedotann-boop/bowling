@@ -23,7 +23,7 @@ import { toast } from "sonner"
 
 import type { Locale } from "@/i18n/routing"
 import { Button } from "@/components/ui/button"
-import { Field, FieldLabel } from "@/components/ui/field"
+import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import {
   deletePackageAction,
@@ -43,6 +43,7 @@ import {
 import { Separator } from "@/components/ui/separator"
 
 import { ConfirmDeleteDialog } from "./confirm-delete-dialog"
+import { FieldLabelWithTooltip } from "./field-label-with-tooltip"
 import { TranslatableInput } from "./translatable-input"
 import { TranslatableTextarea } from "./translatable-textarea"
 import { TranslationStateProvider } from "./translation-state-context"
@@ -214,6 +215,7 @@ function PackageRowForm({
   slug: string
 }) {
   const t = useTranslations("Admin.packages")
+  const tTip = useTranslations("Admin.packages.tooltips")
   const tt = useTranslations("Admin.toasts")
   const tc = useTranslations("Admin.common")
   const tTranslate = useTranslations("Admin.translate")
@@ -252,7 +254,9 @@ function PackageRowForm({
         <input type="hidden" name="sortOrder" value={row.sortOrder} />
         <div className="grid gap-3 md:grid-cols-[10rem_1fr]">
           <Field>
-            <FieldLabel>{t("amount")}</FieldLabel>
+            <FieldLabelWithTooltip tooltip={tTip("amount")}>
+              {t("amount")}
+            </FieldLabelWithTooltip>
             <Input
               name="amountCents"
               type="number"
@@ -266,6 +270,7 @@ function PackageRowForm({
             <TranslatableInput
               name="title"
               label={t("titleLabel")}
+              tooltip={tTip("titleLabel")}
               defaultValues={localesValues(row, "title")}
               needsReviewLocales={needsReviewLocalesFor(row, "title")}
               aiLabel={tTranslate("fillField")}
@@ -274,6 +279,7 @@ function PackageRowForm({
             <TranslatableTextarea
               name="perks"
               label={t("perks")}
+              tooltip={tTip("perks")}
               defaultValues={localesValues(row, "perks")}
               needsReviewLocales={needsReviewLocalesFor(row, "perks")}
               rows={2}

@@ -1,7 +1,7 @@
 import Link from "next/link"
-import { getLocale, getTranslations } from "next-intl/server"
+import { getTranslations } from "next-intl/server"
 import { IconBrandWhatsapp, IconClock, IconMapPin } from "@tabler/icons-react"
-import type { Branch } from "@/lib/branches"
+import type { SiteBranch } from "@/lib/site-branch"
 import { BowlingLogo } from "@/components/brand/bowling-logo"
 import { BowlingCard } from "@/components/brand/bowling-card"
 import { RetroButton } from "@/components/brand/retro-button"
@@ -10,15 +10,13 @@ import { Eyebrow } from "@/components/common/eyebrow"
 import { buildWhatsAppLink } from "@/lib/whatsapp"
 import { getTodayHours } from "@/lib/hours"
 
-export async function Hero({ branch }: { branch: Branch }) {
+export async function Hero({ branch }: { branch: SiteBranch }) {
   const t = await getTranslations()
   const wa = await getTranslations("WhatsApp")
-  const locale = (await getLocale()) as keyof Branch["displayName"]
-  const message = wa("prefilled", { branch: branch.displayName[locale] })
+  const message = wa("prefilled", { branch: branch.displayName })
   const waHref = buildWhatsAppLink(branch, message)
   const tel = branch.phone.replace(/[^\d+]/g, "")
   const today = getTodayHours(branch)
-  const city = branch.city[locale]
 
   return (
     <section className="relative overflow-hidden bg-cream">
@@ -40,7 +38,7 @@ export async function Hero({ branch }: { branch: Branch }) {
 
       <div className="relative mx-auto max-w-4xl px-4 pt-10 pb-12 sm:px-6 sm:pt-16 sm:pb-20">
         <div className="flex justify-center pt-4 pb-8">
-          <BowlingLogo city={city} size="md" />
+          <BowlingLogo city={branch.city} size="md" />
         </div>
 
         <BowlingCard
@@ -51,10 +49,10 @@ export async function Hero({ branch }: { branch: Branch }) {
         >
           <Eyebrow tone="red">{t("Hero.scrollHint")}</Eyebrow>
           <h1 className="mt-3 font-display text-[clamp(2.25rem,7vw,3.75rem)] leading-[1.02] text-ink">
-            {branch.hero.headline[locale]}
+            {branch.hero.headline}
           </h1>
           <p className="mt-3 text-base leading-relaxed text-ink/80">
-            {branch.hero.tagline[locale]}
+            {branch.hero.tagline}
           </p>
         </BowlingCard>
 
@@ -86,12 +84,16 @@ export async function Hero({ branch }: { branch: Branch }) {
           <InfoTile
             icon={<IconClock className="size-4" aria-hidden />}
             label={t("Hero.openNow")}
-            value={`${today.open} – ${today.close}`}
+            value={
+              today.isClosed
+                ? t("Hero.closedNow")
+                : `${today.open} – ${today.close}`
+            }
           />
           <InfoTile
             icon={<IconMapPin className="size-4" aria-hidden />}
             label={t("Contact.address")}
-            value={branch.address[locale]}
+            value={branch.address}
             href={branch.mapUrl}
             external
           />

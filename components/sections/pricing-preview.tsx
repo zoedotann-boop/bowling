@@ -1,15 +1,13 @@
-import { getLocale, getTranslations } from "next-intl/server"
+import { getTranslations } from "next-intl/server"
 import { IconArrowLeft } from "@tabler/icons-react"
-import type { Branch } from "@/lib/branches"
+import type { SiteBranch } from "@/lib/site-branch"
 import { Link } from "@/i18n/navigation"
 import { BowlingCard } from "@/components/brand/bowling-card"
 import { Burst } from "@/components/brand/glyphs"
 import { Eyebrow } from "@/components/common/eyebrow"
 
-export async function PricingPreview({ branch }: { branch: Branch }) {
+export async function PricingPreview({ branch }: { branch: SiteBranch }) {
   const t = await getTranslations("PricingPreview")
-  const tPricing = await getTranslations("Pricing")
-  const locale = (await getLocale()) as keyof Branch["displayName"]
   const rows = branch.prices.slice(0, 3)
 
   return (
@@ -47,7 +45,7 @@ export async function PricingPreview({ branch }: { branch: Branch }) {
               }`}
             >
               <span className="text-base font-extrabold text-ink">
-                {row.label[locale]}
+                {row.label}
               </span>
               <span className="flex-1 border-b border-dotted border-ink/40" />
               <span className="font-mono text-xs text-ink/70 tabular-nums">
@@ -58,15 +56,6 @@ export async function PricingPreview({ branch }: { branch: Branch }) {
               </span>
             </div>
           ))}
-          <div className="flex items-baseline gap-3 border-t border-dashed border-ink/30 py-2.5">
-            <span className="text-sm font-bold text-ink">
-              {tPricing("shoeRental")}
-            </span>
-            <span className="flex-1 border-b border-dotted border-ink/40" />
-            <span className="font-display text-lg text-red">
-              {branch.shoeRental.weekend}
-            </span>
-          </div>
         </BowlingCard>
 
         <div className="mt-5 flex justify-center">

@@ -1,12 +1,8 @@
 import { getTranslations } from "next-intl/server"
 import { IconPhone } from "@tabler/icons-react"
-import type { Branch } from "@/lib/branches"
+import type { SiteBranch } from "@/lib/site-branch"
 
-/**
- * SiteTopbar — thin ink ribbon above the header. Yellow "open now" label
- * on the start edge, mono phone number on the end edge. Pure chrome.
- */
-export async function SiteTopbar({ branch }: { branch: Branch }) {
+export async function SiteTopbar({ branch }: { branch: SiteBranch }) {
   const t = await getTranslations("Hero")
   const tel = branch.phone.replace(/[^\d+]/g, "")
   return (

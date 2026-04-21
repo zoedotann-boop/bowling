@@ -31,7 +31,7 @@ export function BranchDangerZone({ branchId }: { branchId: string }) {
       const result = await deleteBranchAction(fd)
       if (result.status === "success") {
         toast.success(tt("branchDeleted"))
-        router.push("/admin/branches")
+        router.push("/admin")
         router.refresh()
       } else {
         toast.error(tt("genericError"))

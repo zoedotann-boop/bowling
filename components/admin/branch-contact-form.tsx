@@ -9,8 +9,10 @@ import { updateBranchContactAction } from "@/app/[locale]/admin/(protected)/_act
 import type { FormState } from "@/app/[locale]/admin/(protected)/_actions/types"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Field, FieldLabel } from "@/components/ui/field"
+import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+
+import { FieldLabelWithTooltip } from "./field-label-with-tooltip"
 
 export type BranchContactInitial = {
   id: string
@@ -27,6 +29,7 @@ export function BranchContactForm({
   initial: BranchContactInitial
 }) {
   const t = useTranslations("Admin.contact")
+  const tTip = useTranslations("Admin.branches.form.tooltips")
   const tt = useTranslations("Admin.toasts")
   const tc = useTranslations("Admin.common")
   const initialState: FormState<{ id: string; slug: string }> = {
@@ -64,7 +67,9 @@ export function BranchContactForm({
           ) : null}
           <div className="grid gap-4 md:grid-cols-2">
             <Field>
-              <FieldLabel>{t("phone")}</FieldLabel>
+              <FieldLabelWithTooltip tooltip={tTip("phone")} required>
+                {t("phone")}
+              </FieldLabelWithTooltip>
               <Input
                 name="phone"
                 defaultValue={initial.phone}
@@ -76,7 +81,9 @@ export function BranchContactForm({
               ) : null}
             </Field>
             <Field>
-              <FieldLabel>{t("whatsapp")}</FieldLabel>
+              <FieldLabelWithTooltip tooltip={tTip("whatsapp")} required>
+                {t("whatsapp")}
+              </FieldLabelWithTooltip>
               <Input
                 name="whatsapp"
                 defaultValue={initial.whatsapp}
@@ -88,7 +95,9 @@ export function BranchContactForm({
               ) : null}
             </Field>
             <Field>
-              <FieldLabel>{t("email")}</FieldLabel>
+              <FieldLabelWithTooltip tooltip={tTip("email")} required>
+                {t("email")}
+              </FieldLabelWithTooltip>
               <Input
                 name="email"
                 type="email"
@@ -101,7 +110,9 @@ export function BranchContactForm({
               ) : null}
             </Field>
             <Field>
-              <FieldLabel>{t("mapUrl")}</FieldLabel>
+              <FieldLabelWithTooltip tooltip={tTip("mapUrl")} required>
+                {t("mapUrl")}
+              </FieldLabelWithTooltip>
               <Input
                 name="mapUrl"
                 type="url"

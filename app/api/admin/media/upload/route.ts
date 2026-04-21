@@ -25,6 +25,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "invalidMultipart" }, { status: 400 })
   }
 
+  const branchId = readTrimmed(formData, "branchId")
+  if (!branchId) {
+    return NextResponse.json({ error: "missingBranchId" }, { status: 400 })
+  }
+
   const file = formData.get("file")
   if (!(file instanceof File)) {
     return NextResponse.json({ error: "missingFile" }, { status: 400 })
@@ -51,6 +56,7 @@ export async function POST(request: Request) {
   })
 
   const created = await services.media.create({
+    branchId,
     blobUrl: uploaded.url,
     filename: file.name,
     contentType: file.type,

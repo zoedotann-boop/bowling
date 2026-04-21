@@ -15,15 +15,14 @@
     "getDirections": "افتح في الخرائط",
     "exploreEvents": "حزم الفعاليات"
   },
-  "BranchSwitcher": {
-    "label": "الفرع",
-    "title": "اختر فرعًا",
-    "current": "أنت تشاهد",
-    "open": "تبديل الفرع"
-  },
   "LocaleSwitcher": {
     "label": "اللغة",
-    "open": "اختيار اللغة"
+    "open": "اختيار اللغة",
+    "title": "اختيار اللغة"
+  },
+  "BranchSwitcher": {
+    "title": "اختيار الفرع",
+    "open": "اختيار الفرع"
   },
   "Hero": {
     "viewingLabel": "أنت في فرع",
@@ -110,10 +109,6 @@
       "error": "حدث خطأ. أعد المحاولة أو راسلنا على واتساب."
     }
   },
-  "EventTypes": {
-    "birthday": "عيد ميلاد",
-    "other": "أخرى"
-  },
   "Footer": {
     "branches": "فروعنا",
     "explore": "استكشف",
@@ -128,11 +123,17 @@
   "Admin": {
     "nav": {
       "brand": "Bowling Admin",
-      "branches": "Branches",
-      "contact": "Contact",
-      "media": "Media",
-      "footer": "Footer",
+      "branchGroup": "الفرع",
+      "pickBranch": "اختر فرعًا",
+      "createBranch": "إنشاء فرع",
       "signOut": "تسجيل الخروج"
+    },
+    "home": {
+      "title": "إدارة البولينغ",
+      "pickFromSidebar": "اختر فرعًا من الشريط الجانبي لبدء التعديل.",
+      "jumpToFirst": "افتح الفرع الأول",
+      "noBranches": "لا توجد فروع بعد. أنشئ أول فرع لك للبدء.",
+      "createFirst": "إنشاء الفرع الأول"
     },
     "common": {
       "cancel": "Cancel",
@@ -148,6 +149,20 @@
       "gatewayError": "Translation service unavailable. Try again.",
       "needSource": "Fill at least one Hebrew field first.",
       "emptySource": "Write Hebrew content first."
+    },
+    "reviews": {
+      "title": "مراجعات Google",
+      "description": "تتم المزامنة يومياً عبر واجهة Google Places. تُترجم اللغات الناقصة بواسطة الذكاء الاصطناعي.",
+      "placeIdLabel": "معرّف مكان Google",
+      "placeIdMissing": "غير محدد - أضف معرّف مكان في تبويب المعلومات",
+      "lastSynced": "آخر مزامنة: {when}",
+      "neverSynced": "لم تتم المزامنة بعد. أضف المعرّف ثم اضغط على تحديث.",
+      "averageRating": "متوسط التقييم: {rating} من {count} مقيّماً",
+      "refresh": "تحديث الآن",
+      "refreshing": "جارٍ التحديث…",
+      "refreshSuccess": "تمت مزامنة {synced} مراجعة (تُرجمت {translated})",
+      "noReviews": "لا توجد مراجعات محفوظة بعد.",
+      "translatedBadge": "AI"
     },
     "toasts": {
       "branchCreated": "Branch created",
@@ -185,10 +200,6 @@
     },
     "contact": {
       "title": "Contact details",
-      "indexTitle": "Contact",
-      "indexDescription": "Per-branch phone, WhatsApp, email, and map link.",
-      "editTitle": "Contact · {slug}",
-      "empty": "No branches yet.",
       "phone": "Phone",
       "whatsapp": "WhatsApp",
       "email": "Email",
@@ -206,7 +217,13 @@
       "href": "URL",
       "reorder": "Drag to reorder",
       "confirmDeleteTitle": "Delete footer link?",
-      "confirmDeleteDescription": "This removes \"{label}\". Cannot be undone."
+      "confirmDeleteDescription": "This removes \"{label}\". Cannot be undone.",
+      "tooltips": {
+        "locale": "اللغة التي يظهر بها هذا الرابط. كل رابط خاص بلغة واحدة — أنشئ إدخالات منفصلة لكل لغة مدعومة.",
+        "groupKey": "عنوان العمود في التذييل الذي يظهر تحته هذا الرابط (مثل قانوني، الشركة، وسائل التواصل). الروابط التي تشترك في نفس المفتاح تُعرض معًا.",
+        "label": "النص المرئي للرابط كما يظهر في التذييل.",
+        "href": "عنوان URL الوجهة. استخدم مسارًا نسبيًا مثل /legal/terms للصفحات الداخلية أو عنوانًا مطلقًا https:// للروابط الخارجية."
+      }
     },
     "legal": {
       "title": "Legal pages",
@@ -218,7 +235,14 @@
       "pageTitle": "Title",
       "pageTitleHint": "e.g. Terms of Service",
       "body": "Body (Markdown)",
-      "bodyHint": "Supports headings, lists, **bold**, *italic*, and [links](https://example.com)."
+      "bodyHint": "Supports headings, lists, **bold**, *italic*, and [links](https://example.com).",
+      "tooltips": {
+        "slug": "معرّف URL يُستخدم في /legal/<slug>. أحرف صغيرة وشرطات (مثل privacy-policy). تغييره يكسر الروابط القائمة.",
+        "sortOrder": "ترتيب الصفحات في مجموعات الروابط القانونية بالتذييل. الأرقام الأصغر أولاً.",
+        "published": "عند إيقافه، تُخفى الصفحة من الموقع العام وتعيد 404. مفيد للمسودات.",
+        "pageTitle": "عنوان الصفحة ووسم <title>. اجعله بشريًا — يظهر للمستخدمين ومحركات البحث.",
+        "body": "محتوى Markdown للصفحة. يدعم العناوين والقوائم والخط العريض والمائل والروابط."
+      }
     },
     "packages": {
       "title": "Packages",
@@ -229,7 +253,12 @@
       "perks": "Perks",
       "reorder": "Drag to reorder",
       "confirmDeleteTitle": "Delete package?",
-      "confirmDeleteDescription": "This removes the package. Cannot be undone."
+      "confirmDeleteDescription": "This removes the package. Cannot be undone.",
+      "tooltips": {
+        "amount": "السعر بالأغورة (سنتات). ₪1 = 100. مثال: ₪690 = 69000.",
+        "titleLabel": "اسم العرض للباقة (مثل باقة عيد الميلاد، باقة العائلة).",
+        "perks": "قائمة بما تتضمنه الباقة مفصولة بفواصل أو شُرَط. تُعرض في بطاقة الباقة."
+      }
     },
     "prices": {
       "title": "Prices",
@@ -247,7 +276,13 @@
         "shoe": "Shoe rental"
       },
       "confirmDeleteTitle": "Delete price row?",
-      "confirmDeleteDescription": "This removes the row. Cannot be undone."
+      "confirmDeleteDescription": "This removes the row. Cannot be undone.",
+      "tooltips": {
+        "kind": "فئة صف السعر. تستخدم لتجميع وترتيب المدخلات في جدول الأسعار العام.",
+        "weekday": "سعر الأحد–الخميس بالأغورة (سنتات). ₪1 = 100. مثال: ₪42 = 4200.",
+        "weekend": "سعر الجمعة–السبت بالأغورة (سنتات). ₪1 = 100. مثال: ₪52 = 5200.",
+        "label": "تسمية اختيارية حسب اللغة تحل محل الاسم الافتراضي للفئة (مثل لعبة للبالغين، إيجار حذاء)."
+      }
     },
     "events": {
       "title": "Events",
@@ -258,7 +293,12 @@
       "description": "Description",
       "reorder": "Drag to reorder",
       "confirmDeleteTitle": "Delete event?",
-      "confirmDeleteDescription": "This removes the event. Cannot be undone."
+      "confirmDeleteDescription": "This removes the event. Cannot be undone.",
+      "tooltips": {
+        "image": "الصورة المعروضة على بطاقة الفعالية في الموقع العام. ارفعها في مكتبة الوسائط أولاً.",
+        "titleLabel": "اسم قصير لنوع الفعالية (مثل أعياد الميلاد، الشركات).",
+        "description": "جملة أو جملتان تظهر تحت عنوان الفعالية على الموقع العام."
+      }
     },
     "menu": {
       "title": "Menu",
@@ -276,7 +316,13 @@
       "confirmDeleteCategoryTitle": "Delete category?",
       "confirmDeleteCategoryDescription": "This removes the category and all its items. Cannot be undone.",
       "confirmDeleteItemTitle": "Delete item?",
-      "confirmDeleteItemDescription": "This removes the item. Cannot be undone."
+      "confirmDeleteItemDescription": "This removes the item. Cannot be undone.",
+      "tooltips": {
+        "categoryTitle": "عنوان القسم في القائمة العامة (مثل الوجبات الخفيفة، الأطباق الرئيسية، المشروبات).",
+        "amount": "سعر الصنف بالأغورة (سنتات). ₪1 = 100. مثال: ₪38 = 3800.",
+        "itemName": "اسم الطبق كما يظهر في القائمة العامة.",
+        "itemTag": "شارة اختيارية بجانب الصنف (مثل الأكثر مبيعًا، حار، جديد)."
+      }
     },
     "media": {
       "title": "Media",
@@ -308,24 +354,6 @@
       }
     },
     "branches": {
-      "list": {
-        "title": "Branches",
-        "description": "Manage your bowling branches and their publish status.",
-        "newBranch": "New branch",
-        "slug": "Slug",
-        "name": "Name",
-        "status": "Status",
-        "published": "Published",
-        "draft": "Draft",
-        "actions": "Actions",
-        "edit": "Edit",
-        "delete": "Delete",
-        "dragToReorder": "Drag to reorder",
-        "togglePublished": "Toggle published",
-        "confirmDeleteTitle": "Delete branch?",
-        "confirmDeleteDescription": "This removes the branch and all related content (hours, prices, packages, events, menu). Cannot be undone.",
-        "empty": "No branches yet. Create the first one."
-      },
       "tabs": {
         "info": "Info",
         "hours": "Hours",
@@ -336,8 +364,10 @@
         "menu": "Menu",
         "events": "Events",
         "reviews": "Reviews",
-        "soon": "Soon",
-        "comingSoon": "Coming soon"
+        "contact": "Contact",
+        "media": "الوسائط",
+        "footer": "التذييل",
+        "legal": "القانوني"
       },
       "form": {
         "newTitle": "New branch",
@@ -350,9 +380,6 @@
         "mapUrl": "Map URL",
         "latitude": "Latitude",
         "longitude": "Longitude",
-        "brandAccent": "Brand accent",
-        "brandAccentCherry": "Cherry",
-        "brandAccentTeal": "Teal",
         "published": "Published",
         "displayName": "Display name",
         "shortName": "Short name",
@@ -371,7 +398,28 @@
         "dangerZone": "Danger zone",
         "dangerZoneDescription": "Deleting a branch removes all related content. This cannot be undone.",
         "confirmDeleteTitle": "Delete branch?",
-        "confirmDeleteDescription": "This removes the branch and all related content. Cannot be undone."
+        "confirmDeleteDescription": "This removes the branch and all related content. Cannot be undone.",
+        "tooltips": {
+          "slug": "معرّف URL يُستخدم في المسار /branches/<slug>. أحرف صغيرة وشرطات فقط (مثل ramat-gan). تغييره بعد الإنشاء يكسر الروابط.",
+          "sortOrder": "يحدد ترتيب الفروع في الموقع العام ومحدد الفرع. الأرقام الأصغر تظهر أولاً.",
+          "phone": "يظهر في بطاقة الاتصال ومرتبط بـ tel: على الجوّال. استخدم الصيغة الدولية (+972 3-123-4567).",
+          "whatsapp": "رقم بالأرقام فقط مع رمز الدولة بدون +. يُستخدم في روابط wa.me لزر واتساب العائم. مثال: 972545751100.",
+          "email": "بريد إلكتروني عام يظهر في التذييل وفي صفحة الاتصال.",
+          "mapUrl": "رابط Google Maps يُفتح عند النقر على العنوان. من maps.google.com: Share ← Copy link.",
+          "latitude": "خط العرض العشري لـ schema.org GeoCoordinates. في Google Maps، انقر بزر الفأرة الأيمن على الدبوس وانسخ الرقم الأول.",
+          "longitude": "خط الطول العشري لـ schema.org GeoCoordinates. في Google Maps، انقر بزر الفأرة الأيمن على الدبوس وانسخ الرقم الثاني.",
+          "published": "عند إيقافه، يُخفى الفرع من الموقع العام و sitemap. يمكن للمشرف متابعة التحرير.",
+          "displayName": "الاسم الكامل للفرع، يظهر في العناوين والمحدد. العلامة التجارية + المدينة (مثل بولينج رمات غان).",
+          "shortName": "تسمية مختصرة للقائمة العلوية. عادةً اسم المدينة فقط.",
+          "address": "عنوان الشارع يظهر في بطاقة الاتصال ويُضمّن في schema.org PostalAddress.",
+          "city": "اسم المدينة لـ schema.org PostalAddress ونسخة SEO الافتراضية.",
+          "heroImageId": "صورة بانر كبيرة أعلى صفحة الفرع. ارفعها أولاً في مكتبة الوسائط ثم اخترها هنا.",
+          "heroHeadline": "عنوان قصير فوق صورة البانر. 3–6 كلمات.",
+          "heroTagline": "عنوان فرعي تحت العنوان. يصف ما يميز الفرع.",
+          "seoTitle": "وسم <title> للصفحة، يستخدمه محركات البحث والمشاركات. يُفضّل 50–60 حرفًا.",
+          "seoDescription": "Meta description لـ Google ومعاينات الشبكات. 140–160 حرفًا.",
+          "googlePlaceId": "معرّف من Google Maps Place Details. راجع developers.google.com/maps/documentation/places/web-service/place-id (يستخدمه المشروع الفرعي G لمزامنة التقييمات/المراجعات)."
+        }
       },
       "hours": {
         "days": {

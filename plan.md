@@ -2,100 +2,65 @@
 
 Source of truth for the full roadmap: `.context/attachments/pasted_text_2026-04-20_13-02-39.txt` (§§1–19). This file is gitignored; re-attach if missing.
 
-Current state: **3 of 9 sub-projects complete.** Both open PRs stack on their predecessor.
+Current state: **7 of 9 sub-projects complete** (A, B, C, D, E, F, G done; H, I remaining). Plus a retro signboard single-page redesign (#14).
 
 ---
 
-## Completed
+## Completed (all merged to `main`)
 
-### A — Content data model + services layer ✅ **merged to main**
-
-- Commit `1626c26` on `main`.
-- `lib/db/schema/content.ts` (branch + translation, hours, prices, packages, events, menu, review_cache, media_asset).
-- `lib/services/*` (branches, hours, menu, prices, packages, events, media, format, schemas, types, locale-resolver).
-- `scripts/seed-from-branches.ts` idempotent, reads `lib/branches.ts`.
-
-### B — Branch CRUD admin 🟡 **PR open, not yet merged**
-
-- Branch: `alon710/admin-branch-crud`. PR: **#6**.
-- `/he/admin/branches` list with drag-reorder + publish toggle.
-- `/he/admin/branches/new` and `/he/admin/branches/[slug]` (tabs: Info, Hero, SEO, Hours live; Prices/Packages/Menu/Events/Reviews disabled "Soon").
-- `TranslatableInput` / `TranslatableTextarea` with per-locale tabs + "needs review" badge.
-- Server actions wrapped by `requireAdmin()`, `revalidateTag` + `revalidatePath` on write.
-
-### C — AI translation primitive 🟡 **PR open, stacked on B**
-
-- Branch: `alon710/ai-translation`. PR: **#7** (base = `alon710/admin-branch-crud`).
-- `lib/ai/{gateway,translate,rate-limit}.ts` — Haiku 4.5 via AI SDK v6 `generateText` + `Output.object`, OIDC-first auth, 30/hr per-user sliding window (in-memory).
-- `_actions/translate.ts` — `translateBranchFieldsAction`, parallel per-locale fan-out, structured `console.info` logs.
-- `translation-state-context.tsx` — `useSyncExternalStore` store, emits hidden `aiGenerated.{locale}` inputs.
-- Per-field `AiSparkleButton` + record-level `FillTranslationsButton`. Save-flow stamps `aiGenerated`/`aiGeneratedAt`/`reviewedAt`.
-- `Admin.translate.*` i18n keys in all 4 locales; `aiComingSoon` removed.
-- Vitest: 8 tests (prompt shape, empty-field strip, 8-field cap, 30/hr rate limit).
-
-**C — deferred (intentionally, per plan):**
-
-- `translation_glossary` table (C.2): `/* TODO(C.2) */` marker in the system prompt builder.
-- `ai_translation_log` table: moved to sub-project I (observability).
-- Upstash/KV-backed rate limit: moved to sub-project I. Current in-memory bucket resets on cold start.
-- Manual dev verification was **not run** (requires `vercel env pull` → OIDC token, or a local `AI_GATEWAY_API_KEY`). CI is green.
+| Sub-project | PR  | Commit    | Notes                                                                            |
+| ----------- | --- | --------- | -------------------------------------------------------------------------------- |
+| A           | —   | `1626c26` | Content schema + services layer + seed script                                    |
+| B           | #6  | `0832ba5` | Branch CRUD admin, translatable inputs, drag-reorder                             |
+| C           | #7  | —         | AI translation primitive (Haiku 4.5 + Gateway, 30/hr rate limit)                 |
+| D           | #8  | `b771d3e` | Media library (Vercel Blob) + `<MediaPicker />`                                  |
+| E.1         | #9  | `54282d0` | Packages admin tab                                                               |
+| (redesign)  | #10 | `52d9644` | Admin dashboard redesign with persistent sidebar shell                           |
+| E           | #11 | `dec71ce` | Prices / Events / Menu admin tabs                                                |
+| F           | #13 | `44b6b13` | Contact, footer, legal pages admin                                               |
+| (redesign)  | #14 | `5686df5` | Retro signboard + single-page public site                                        |
+| G           | —   | pending   | Google reviews sync (this branch: `alon710/sub-project-d-media`, not yet merged) |
 
 ---
 
-## Immediate next steps (pick up in next session)
+## Sub-project G — Google reviews sync (this branch)
 
-1. **Rebase / merge chain.**
-   - PR #6 needs review / merge into `main`.
-   - Once #6 lands, rebase `alon710/ai-translation` onto `main` and re-target PR #7's base to `main`. Expected: clean rebase (no new files on main touch the C files).
-2. **Manual verification of C with real Gateway credentials.** Checklist in PR #7 body. Confirm: per-field sparkle populates en/ru/ar, save writes `ai_generated=true` + `reviewed_at=NULL`, manual edit flips to `ai_generated=false` + `reviewed_at` stamped, Fill button does 3 parallel requests, rate limit triggers after 30 calls/hr, empty-source toast fires.
-3. **Pick the next sub-project** — recommendation: **E** (validates C's primitive on 4 new forms). If E feels too big, **D** (media) is standalone and smaller.
+**Branch:** `alon710/sub-project-d-media` (branch name is a leftover from earlier — rename before PR or just let the branch-rename happen at PR time).
+
+**What shipped:**
+
+- `review_cache` (jsonb payload + place-level aggregates) and `review` (per-review row with per-locale text columns + `ai_translated` flag + `google_review_id` unique per branch) — migration `drizzle/0004_wealthy_cassandra_nova.sql`.
+- `lib/integrations/google-places.ts` — `getPlace` + `searchPlaces` against **Google Places API (New)** via `X-Goog-Api-Key` + `X-Goog-FieldMask`. Typed errors: `MissingGooglePlacesKeyError`, `GooglePlacesApiError`.
+- `lib/services/reviews.ts` — `listForBranch`, `getCacheStatus`, `syncBranch`, `listBranchesWithPlaceId`. `syncBranch` picks source text from `originalText` (preferred) or `text`, detects source locale, fans out to `translateFields` for the other 3 locales via `Promise.allSettled`, upserts by `(branch_id, google_review_id)`. Short-circuits when remote text is unchanged.
+- Cron: `app/api/cron/sync-reviews/route.ts` guarded by `Bearer $CRON_SECRET` (unauthenticated in non-prod for local testing). Vercel cron entry in `vercel.json` at `0 3 * * *`.
+- UI: `components/admin/branch-reviews-form.tsx` with cache-age badge, "Refresh now" button, review list with star rating + AI-translated badge. "Reviews" tab promoted from `DISABLED_TABS` to `LIVE_TABS` in `components/admin/branch-edit-tabs.tsx`.
+- Server action: `_actions/reviews.ts` — `syncReviewsAction` wrapped by `requireAdmin`, emits `branch:${slug}` + `branch:${slug}:reviews` tag invalidation.
+- i18n: `Admin.reviews.*` keys across all 4 locales (he/en/ru/ar).
+- Tests: 4 vitest cases covering FieldMask shape, 403 error mapping, and missing-key guard.
+
+**Env:**
+
+- `GOOGLE_PLACES_API_KEY` (required for actual sync calls; absence surfaces as a field error rather than a crash).
+- `CRON_SECRET` (required in prod for the cron route; permissive in dev).
+
+**Deferred (intentional):**
+
+- No manual dev verification yet — requires a real Google Places API key + a DB with at least one branch that has `google_place_id` set. The `branch.google_place_id` column exists from sub-project A; set it via the Info tab of an existing branch.
+- `review_cache.payload` stores the raw Google response for easy future repaving without re-calling the API.
+- No "select place from search" UX yet — admin pastes the place ID directly. Sub-project H or a later polish pass can surface `searchPlaces` in a picker dialog.
 
 ---
 
 ## Remaining sub-projects
 
-### D — Media library (Vercel Blob)
-
-- **Depends on:** A (done).
-- Schema: `media_asset` row (id, filename, content*type, size, width/height, blob_url, uploaded_by, alt_text*{he,en,ru,ar}). Alt-text on the row (not a separate translation table — short, rarely changes).
-- Routes: `/admin/media` grid + `POST /api/admin/media/upload` (multipart, `requireAdmin`, MIME + <5 MB validation).
-- Reusable `<MediaPicker />` dialog for hero/event/menu-item forms.
-- `next.config.mjs` — add Vercel Blob hostname to `remotePatterns`.
-- One-off script to migrate current hardcoded Unsplash URLs → `media_asset` rows.
-- Env: `BLOB_READ_WRITE_TOKEN`.
-
-### E — Menu / Prices / Events / Packages admin
-
-- **Depends on:** A, C, D.
-- Enables the currently-disabled tabs on the branch edit shell.
-- Reuses `TranslationStateProvider` from C across 4 new forms. Good first validation that the primitive generalizes.
-- Pattern: generic `<OrderedList />` with drag-reorder, per-row translatable fields, per-row Fill-translations.
-- Server actions: `add/update/delete/reorder` × 4 entities. All existing `lib/services/{menu,prices,events,packages}.ts` are already built (sub-project A) and currently `knip`-ignored — remove them from `package.json` knip ignore as they get consumed.
-- Menu is two-level (categories → items). Prices has `kind = "hourly" | "shoe"`. Events have an image (from D's picker). Packages: title + price + perks paragraph.
-
-### F — Contact & footer admin
-
-- **Depends on:** A, C.
-- Contact fields already live on the `branch` row (phone/whatsapp/email/mapUrl — no translation).
-- New: `footer_link` table (`locale, group_key, label, href, sort_order`) and `legal_page` (`slug, body_markdown_<locale>`).
-- Routes: `/admin/contact/[branch]`, `/admin/footer`. Tiny markdown renderer on the public side for legal pages.
-
-### G — Google reviews sync
-
-- **Depends on:** A. Parallelizable with D–F.
-- API: **Google Places API (New)** — `places:searchText` + `places.getPlace` with `reviews` field mask (API-key only, not OAuth).
-- Schema: `review_cache` (jsonb payload) + `review` (author, rating, text\_{original,en,ru,he,ar}, ai_translated flag).
-- Flow: admin sets `branch.google_place_id`, Vercel cron daily at 03:00 UTC pulls, if review `original_locale` ≠ ours then translate via sub-project C, store all 4 variants.
-- `/admin/reviews/[branch]` shows cache age + "Refresh now" button.
-- Env: `GOOGLE_PLACES_API_KEY`.
-
 ### H — Frontend cutover (replace `lib/branches.ts`)
 
-- **Depends on:** A, B, E, F, G.
+- **Depends on:** A, B, E, F, G (all now done).
 - Grep every `@/lib/branches` import, replace with services-layer calls.
 - Replace `BRANCH_OVERRIDE` env var + static `domains: string[]` in `proxy.ts` with a `branch_domain` table (`branch_id, host`).
-- `lib/branch-context.ts` → DB lookup cached via `unstable_cache` (or `'use cache'` if we enable Cache Components).
+- `lib/branch-context.ts` → DB lookup cached via `unstable_cache` (or `'use cache'` if Cache Components get enabled).
 - Ship behind `CONTENT_SOURCE=db|static` feature flag for one deploy cycle, then delete the static path.
+- Also: surface cached reviews on the public single-page site (read `services.reviews.listForBranch`).
 - Post-cutover lighthouse / LCP check (must match pre-cutover ± 200 ms).
 
 ### I — Observability & guardrails
@@ -106,28 +71,41 @@ Current state: **3 of 9 sub-projects complete.** Both open PRs stack on their pr
 - Soft-delete: add `deleted_at nullable` to every content table, admin-visible trash can (30-day retention).
 - `@sentry/nextjs` wired to `SENTRY_DSN`.
 - Vercel Web Analytics (zero-config).
-- Upgrade C's in-memory rate limit → Upstash/KV and add `ai_translation_log` table. Alert at AI-translation failure > 5%/1h.
+- Upgrade C's in-memory rate limit → Upstash/KV (via Vercel Marketplace) and add `ai_translation_log` table. Alert at AI-translation failure > 5%/1h.
+- Alert when the daily `/api/cron/sync-reviews` run fails or when >20% of branches error.
 
 ---
 
-## Environment variables to add as sub-projects land
+## Environment variables
+
+Currently in `.env.example`:
 
 ```
-AI_TRANSLATION_MODEL=anthropic/claude-haiku-4.5   # optional override (C — not added to .env.example per roadmap §15)
-BLOB_READ_WRITE_TOKEN=                            # D
-GOOGLE_PLACES_API_KEY=                            # G
-SENTRY_DSN=                                       # I
+RESEND_API_KEY=
+CONTACT_FROM_EMAIL=no-reply@rgbowling.com
+DATABASE_URL=
+BETTER_AUTH_SECRET=
+BETTER_AUTH_URL=http://localhost:3000
+BLOB_READ_WRITE_TOKEN=            # D
+GOOGLE_PLACES_API_KEY=            # G
+CRON_SECRET=                      # G
+```
+
+Still to add when sub-projects land:
+
+```
+AI_TRANSLATION_MODEL=anthropic/claude-haiku-4.5   # optional override for C
+SENTRY_DSN=                                        # I
+UPSTASH_REDIS_REST_URL=/TOKEN                      # I (rate limit + KV)
+CONTENT_SOURCE=db                                  # H (feature flag)
 ```
 
 ---
 
-## Current branch / PR / commit summary
+## Next session — pick one
 
-| Sub-project | Branch                      | PR                                                     | Status                       |
-| ----------- | --------------------------- | ------------------------------------------------------ | ---------------------------- |
-| A           | (merged)                    | —                                                      | landed on `main` (`1626c26`) |
-| B           | `alon710/admin-branch-crud` | [#6](https://github.com/zoedotann-boop/bowling/pull/6) | open, mergeable              |
-| C           | `alon710/ai-translation`    | [#7](https://github.com/zoedotann-boop/bowling/pull/7) | open, stacked on B           |
-| D–I         | —                           | —                                                      | not started                  |
+1. **Open PR for G** from this branch (once branch is renamed to something like `alon710/reviews-sync`). CI is green.
+2. **Start sub-project H** — the frontend cutover. Largest remaining piece. Gated by a feature flag so it's reversible.
+3. **Start sub-project I** — observability. Independent of H; can ship first if we want prod safety nets in place before the big frontend swap.
 
-Definition-of-done for the whole roadmap lives in §18 of the attachment. CI gate: `bun run ci`.
+CI gate: `bun run ci` (lint, format:check, test, knip, i18n-check).

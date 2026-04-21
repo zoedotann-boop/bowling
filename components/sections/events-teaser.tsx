@@ -1,23 +1,23 @@
-import { getLocale, getTranslations } from "next-intl/server"
+import { getTranslations } from "next-intl/server"
 import { IconBrandWhatsapp } from "@tabler/icons-react"
-import type { Branch } from "@/lib/branches"
+import type { SiteBranch } from "@/lib/site-branch"
 import { buildWhatsAppLink } from "@/lib/whatsapp"
 import { BowlingCard } from "@/components/brand/bowling-card"
 import { RetroButton } from "@/components/brand/retro-button"
 import { Eyebrow } from "@/components/common/eyebrow"
 
-export async function EventsTeaser({ branch }: { branch: Branch }) {
+export async function EventsTeaser({ branch }: { branch: SiteBranch }) {
   const t = await getTranslations("EventsTeaser")
   const wa = await getTranslations("WhatsApp")
   const cta = await getTranslations("Cta")
-  const locale = (await getLocale()) as keyof Branch["displayName"]
   const featured = branch.packages[0]
   const rest = branch.packages.slice(1)
-  const branchName = branch.displayName[locale]
   const message = featured
-    ? `${wa("prefilled", { branch: branchName })} (${featured.title[locale]} – ${featured.price})`
-    : wa("prefilled", { branch: branchName })
+    ? `${wa("prefilled", { branch: branch.displayName })} (${featured.title} – ${featured.price})`
+    : wa("prefilled", { branch: branch.displayName })
   const waHref = buildWhatsAppLink(branch, message)
+
+  if (!featured && rest.length === 0) return null
 
   return (
     <section id="events" className="scroll-mt-24 bg-ink">
@@ -40,13 +40,13 @@ export async function EventsTeaser({ branch }: { branch: Branch }) {
               ★ {cta("exploreEvents")} ★
             </div>
             <h3 className="mt-3 font-display text-3xl leading-[1] text-white">
-              {featured.title[locale]}
+              {featured.title}
             </h3>
             <div className="mt-2 font-display text-2xl text-yellow">
               {featured.price}
             </div>
             <p className="mt-3 text-sm leading-relaxed text-white/90">
-              {featured.perks[locale]}
+              {featured.perks}
             </p>
             <div className="mt-5 flex justify-center">
               <RetroButton
@@ -74,15 +74,13 @@ export async function EventsTeaser({ branch }: { branch: Branch }) {
                 contentClassName="px-4 py-5"
               >
                 <div className="flex items-baseline justify-between gap-3">
-                  <h4 className="font-display text-xl text-ink">
-                    {pkg.title[locale]}
-                  </h4>
+                  <h4 className="font-display text-xl text-ink">{pkg.title}</h4>
                   <span className="font-display text-xl text-red">
                     {pkg.price}
                   </span>
                 </div>
                 <p className="mt-2 text-sm leading-relaxed text-ink/80">
-                  {pkg.perks[locale]}
+                  {pkg.perks}
                 </p>
               </BowlingCard>
             ))}

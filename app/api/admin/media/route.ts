@@ -5,7 +5,7 @@ import * as services from "@/lib/services"
 
 export const runtime = "nodejs"
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     await requireAdmin()
   } catch (error) {
@@ -15,6 +15,12 @@ export async function GET() {
     throw error
   }
 
-  const items = await services.media.list()
+  const { searchParams } = new URL(request.url)
+  const branchId = searchParams.get("branchId")?.trim()
+  if (!branchId) {
+    return NextResponse.json({ error: "missingBranchId" }, { status: 400 })
+  }
+
+  const items = await services.media.listByBranch(branchId)
   return NextResponse.json({ items })
 }

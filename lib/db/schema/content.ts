@@ -1,9 +1,11 @@
 import { relations, sql } from "drizzle-orm"
 import {
+  type AnyPgColumn,
   boolean,
   check,
   index,
   integer,
+  jsonb,
   pgTable,
   primaryKey,
   real,
@@ -27,10 +29,10 @@ export const branch = pgTable(
     mapUrl: text("map_url").notNull(),
     latitude: real("latitude").notNull(),
     longitude: real("longitude").notNull(),
-    brandAccent: text("brand_accent").notNull(),
-    heroImageId: text("hero_image_id").references(() => mediaAsset.id, {
-      onDelete: "set null",
-    }),
+    heroImageId: text("hero_image_id").references(
+      (): AnyPgColumn => mediaAsset.id,
+      { onDelete: "set null" }
+    ),
     googlePlaceId: text("google_place_id"),
     published: boolean("published").default(true).notNull(),
     sortOrder: integer("sort_order").default(0).notNull(),
@@ -41,10 +43,6 @@ export const branch = pgTable(
       .notNull(),
   },
   (table) => [
-    check(
-      "branch_brand_accent_check",
-      sql`${table.brandAccent} IN ('cherry','teal')`
-    ),
     index("branch_published_idx").on(table.published, table.sortOrder),
   ]
 )
@@ -201,7 +199,7 @@ export const eventOffering = pgTable(
     branchId: text("branch_id")
       .notNull()
       .references(() => branch.id, { onDelete: "cascade" }),
-    imageId: text("image_id").references(() => mediaAsset.id, {
+    imageId: text("image_id").references((): AnyPgColumn => mediaAsset.id, {
       onDelete: "set null",
     }),
     sortOrder: integer("sort_order").default(0).notNull(),
@@ -455,6 +453,9 @@ export const footerLink = pgTable(
   "footer_link",
   {
     id: text("id").primaryKey(),
+    branchId: text("branch_id")
+      .notNull()
+      .references(() => branch.id, { onDelete: "cascade" }),
     locale: text("locale").notNull(),
     groupKey: text("group_key").notNull(),
     label: text("label").notNull(),
@@ -467,7 +468,8 @@ export const footerLink = pgTable(
       .notNull(),
   },
   (table) => [
-    index("footer_link_locale_group_idx").on(
+    index("footer_link_branch_locale_group_idx").on(
+      table.branchId,
       table.locale,
       table.groupKey,
       table.sortOrder
@@ -475,23 +477,101 @@ export const footerLink = pgTable(
   ]
 )
 
-// ---------- Legal page ----------
+// ---------- Google reviews ----------
 
-export const legalPage = pgTable("legal_page", {
-  slug: text("slug").primaryKey(),
-  titleHe: text("title_he"),
-  titleEn: text("title_en"),
-  titleRu: text("title_ru"),
-  titleAr: text("title_ar"),
-  bodyMarkdownHe: text("body_markdown_he"),
-  bodyMarkdownEn: text("body_markdown_en"),
-  bodyMarkdownRu: text("body_markdown_ru"),
-  bodyMarkdownAr: text("body_markdown_ar"),
-  published: boolean("published").default(true).notNull(),
-  sortOrder: integer("sort_order").default(0).notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+export const reviewCache = pgTable("review_cache", {
+  branchId: text("branch_id")
+    .primaryKey()
+    .references(() => branch.id, { onDelete: "cascade" }),
+  placeName: text("place_name"),
+  totalRatingCount: integer("total_rating_count"),
+  averageRating: real("average_rating"),
+  payload: jsonb("payload"),
+  fetchedAt: timestamp("fetched_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
 })
+
+export const review = pgTable(
+  "review",
+  {
+    id: text("id").primaryKey(),
+    branchId: text("branch_id")
+      .notNull()
+      .references(() => branch.id, { onDelete: "cascade" }),
+    googleReviewId: text("google_review_id").notNull(),
+    authorName: text("author_name").notNull(),
+    authorAvatarUrl: text("author_avatar_url"),
+    rating: integer("rating").notNull(),
+    publishedAt: timestamp("published_at").notNull(),
+    originalLocale: text("original_locale"),
+    textOriginal: text("text_original"),
+    textHe: text("text_he"),
+    textEn: text("text_en"),
+    textRu: text("text_ru"),
+    textAr: text("text_ar"),
+    aiTranslated: boolean("ai_translated").default(false).notNull(),
+    aiTranslatedAt: timestamp("ai_translated_at"),
+    syncedAt: timestamp("synced_at").defaultNow().notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => [
+    uniqueIndex("review_branch_google_idx").on(
+      table.branchId,
+      table.googleReviewId
+    ),
+    index("review_branch_published_idx").on(table.branchId, table.publishedAt),
+    check("review_rating_check", sql`${table.rating} BETWEEN 1 AND 5`),
+  ]
+)
+
+export const reviewCacheRelations = relations(reviewCache, ({ one }) => ({
+  branch: one(branch, {
+    fields: [reviewCache.branchId],
+    references: [branch.id],
+  }),
+}))
+
+export const reviewRelations = relations(review, ({ one }) => ({
+  branch: one(branch, {
+    fields: [review.branchId],
+    references: [branch.id],
+  }),
+}))
+
+// ---------- Legal page ----------
+
+export const legalPage = pgTable(
+  "legal_page",
+  {
+    branchId: text("branch_id")
+      .notNull()
+      .references(() => branch.id, { onDelete: "cascade" }),
+    slug: text("slug").notNull(),
+    titleHe: text("title_he"),
+    titleEn: text("title_en"),
+    titleRu: text("title_ru"),
+    titleAr: text("title_ar"),
+    bodyMarkdownHe: text("body_markdown_he"),
+    bodyMarkdownEn: text("body_markdown_en"),
+    bodyMarkdownRu: text("body_markdown_ru"),
+    bodyMarkdownAr: text("body_markdown_ar"),
+    published: boolean("published").default(true).notNull(),
+    sortOrder: integer("sort_order").default(0).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.branchId, table.slug] }),
+    index("legal_page_branch_sort_idx").on(table.branchId, table.sortOrder),
+  ]
+)

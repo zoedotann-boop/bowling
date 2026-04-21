@@ -1,12 +1,11 @@
-import { getLocale, getTranslations } from "next-intl/server"
+import { getTranslations } from "next-intl/server"
 import { IconBrandWhatsapp } from "@tabler/icons-react"
-import type { Branch } from "@/lib/branches"
+import type { SiteBranch } from "@/lib/site-branch"
 import { buildWhatsAppLink } from "@/lib/whatsapp"
 
-export async function FloatingWhatsApp({ branch }: { branch: Branch }) {
+export async function FloatingWhatsApp({ branch }: { branch: SiteBranch }) {
   const t = await getTranslations("WhatsApp")
-  const locale = (await getLocale()) as keyof Branch["displayName"]
-  const message = t("prefilled", { branch: branch.displayName[locale] })
+  const message = t("prefilled", { branch: branch.displayName })
   const href = buildWhatsAppLink(branch, message)
 
   return (
