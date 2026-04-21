@@ -7,7 +7,7 @@ import {
   Cairo,
   Alfa_Slab_One,
   Russo_One,
-  Cascadia_Code,
+  Miriam_Libre,
   Lalezar,
 } from "next/font/google"
 
@@ -21,8 +21,9 @@ const fontLatin = Heebo({
   subsets: ["latin", "latin-ext"],
   variable: "--font-latin",
 })
-const fontHebrew = Cascadia_Code({
+const fontHebrew = Miriam_Libre({
   subsets: ["hebrew", "latin"],
+  weight: ["400", "700"],
   variable: "--font-hebrew",
 })
 const fontArabic = Cairo({
@@ -45,11 +46,6 @@ const fontDisplayCyrillic = Russo_One({
   subsets: ["cyrillic", "latin"],
   weight: "400",
   variable: "--font-display-cyrillic",
-})
-const fontDisplayHebrew = Cascadia_Code({
-  subsets: ["hebrew", "latin"],
-  variable: "--font-display-hebrew",
-  weight: ["700"],
 })
 const fontDisplayArabic = Lalezar({
   subsets: ["arabic", "latin"],
@@ -87,7 +83,6 @@ export default async function LocaleLayout({
         fontMono.variable,
         fontDisplay.variable,
         fontDisplayCyrillic.variable,
-        fontDisplayHebrew.variable,
         fontDisplayArabic.variable
       )}
     >

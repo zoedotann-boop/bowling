@@ -207,11 +207,12 @@
   }
   :lang(he) {
     font-family: var(--font-hebrew), system-ui, sans-serif;
-    /* Force Tailwind font-sans / font-mono utilities to resolve to the
-       Hebrew font as well, so elements with explicit font-sans / font-mono
-       classes don't fall back to Heebo / Courier Prime for Hebrew text. */
+    /* Force Tailwind font-sans / font-mono / font-display utilities to
+       resolve to the Hebrew font, so elements with explicit class names
+       don't fall back to the Latin / mono / display faces for Hebrew. */
     --font-latin: var(--font-hebrew);
     --font-mono: var(--font-hebrew);
+    --font-display: var(--font-hebrew);
   }
   :lang(ar) {
     font-family: var(--font-arabic), system-ui, sans-serif;
@@ -247,8 +248,7 @@
     font-family: var(--font-display-cyrillic), system-ui, sans-serif;
   }
   :lang(he) .font-display {
-    font-family:
-      var(--font-display-hebrew), var(--font-hebrew), system-ui, sans-serif;
+    font-family: var(--font-hebrew), system-ui, sans-serif;
     font-weight: 700;
   }
   :lang(ar) .font-display {
