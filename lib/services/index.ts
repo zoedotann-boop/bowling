@@ -1,4 +1,5 @@
 export * as branches from "./branches"
+export * as domains from "./domains"
 export * as events from "./events"
 export * as footer from "./footer"
 export * as hours from "./hours"

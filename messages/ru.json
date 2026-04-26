@@ -196,6 +196,8 @@
       "legalPageCreated": "Legal page created",
       "legalPageSaved": "Legal page saved",
       "legalPageDeleted": "Legal page deleted",
+      "domainCreated": "Домен добавлен",
+      "domainDeleted": "Домен удалён",
       "genericError": "Something went wrong"
     },
     "contact": {
@@ -204,6 +206,20 @@
       "whatsapp": "WhatsApp",
       "email": "Email",
       "mapUrl": "Map URL"
+    },
+    "domains": {
+      "pageTitle": "Домены",
+      "pageDescription": "Сопоставление имён хостов с этим филиалом. Посетители, попавшие через сопоставленный хост, по умолчанию видят этот филиал.",
+      "title": "Домены",
+      "description": "Хосты, которые направляют на этот филиал (без учёта регистра, без порта). Один хост — один филиал.",
+      "add": "Новый домен",
+      "host": "Хост",
+      "empty": "Для этого филиала пока нет сопоставленных доменов.",
+      "confirmDeleteTitle": "Удалить домен?",
+      "confirmDeleteDescription": "{host} будет отвязан от этого филиала. Отменить нельзя.",
+      "tooltips": {
+        "host": "Публичное имя хоста, например rgbowling.com (без протокола, без порта). Каждый хост сопоставляется только с одним филиалом."
+      }
     },
     "footer": {
       "pageTitle": "Footer",
@@ -366,6 +382,7 @@
         "reviews": "Reviews",
         "contact": "Contact",
         "media": "Медиа",
+        "domains": "Домены",
         "footer": "Подвал",
         "legal": "Юридические"
       },

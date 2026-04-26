@@ -19,6 +19,7 @@ import {
   IconSelector,
   IconStar,
   IconToolsKitchen2,
+  IconWorld,
 } from "@tabler/icons-react"
 
 import { Link, usePathname, useRouter } from "@/i18n/navigation"
@@ -70,6 +71,7 @@ type BranchNavKey =
   | "reviews"
   | "contact"
   | "media"
+  | "domains"
   | "footer"
   | "legal"
 
@@ -88,6 +90,7 @@ const BRANCH_NAV_ITEMS: BranchNavItem[] = [
   { key: "reviews", icon: IconStar },
   { key: "contact", icon: IconPhone },
   { key: "media", icon: IconPhoto },
+  { key: "domains", icon: IconWorld },
   { key: "footer", icon: IconLayoutBottombar },
   { key: "legal", icon: IconFileText },
 ]

@@ -65,6 +65,31 @@ export const upsertBranchTranslationSchema = z.object({
   reviewedAt: z.date().nullish(),
 })
 
+// ---------- Branch domain ----------
+
+const hostRegex =
+  /^(?=.{1,253}$)([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)(\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*$/
+
+const hostSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(253)
+  .transform((v) => v.toLowerCase())
+  .refine((v) => hostRegex.test(v), {
+    message: "host must be a valid domain (letters, digits, dots, hyphens)",
+  })
+
+export const createBranchDomainSchema = z.object({
+  branchId: nonEmpty,
+  host: hostSchema,
+})
+
+export const removeBranchDomainSchema = z.object({
+  id: nonEmpty,
+  branchId: nonEmpty,
+})
+
 // ---------- Opening hours ----------
 
 export const openingHoursRowSchema = z

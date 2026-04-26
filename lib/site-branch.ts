@@ -1,6 +1,6 @@
 import { asc, eq } from "drizzle-orm"
 import { unstable_cache } from "next/cache"
-import { cookies } from "next/headers"
+import { cookies, headers } from "next/headers"
 
 import type { Locale } from "@/i18n/routing"
 import { db } from "@/lib/db"
@@ -149,7 +149,25 @@ export async function listPublishedBranches(
   return load()
 }
 
+function normalizeHost(raw: string | null | undefined): string | null {
+  if (!raw) return null
+  const trimmed = raw.trim().toLowerCase()
+  if (!trimmed) return null
+  const withoutPort = trimmed.split(":")[0] ?? trimmed
+  return withoutPort || null
+}
+
+async function getSlugFromHost(): Promise<string | null> {
+  const hdrs = await headers()
+  const host = normalizeHost(hdrs.get("x-forwarded-host") ?? hdrs.get("host"))
+  if (!host) return null
+  return services.domains.findSlugByHost(host)
+}
+
 export async function getSelectedSlug(): Promise<string | null> {
+  const fromHost = await getSlugFromHost()
+  if (fromHost) return fromHost
+
   const jar = await cookies()
   const picked = jar.get(BRANCH_COOKIE)?.value
   if (picked) {
