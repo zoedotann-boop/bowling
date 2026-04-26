@@ -33,10 +33,10 @@ import {
 import type { FormState } from "@/app/[locale]/admin/(protected)/_actions/types"
 import { cn } from "@/lib/utils"
 
-import { ConfirmDeleteDialog } from "./confirm-delete-dialog"
-import { FieldLabelWithTooltip } from "./field-label-with-tooltip"
-import { TranslatableInput } from "./translatable-input"
-import { TranslationStateProvider } from "./translation-state-context"
+import { ConfirmDeleteDialog } from "../shared/confirm-delete-dialog"
+import { FieldLabelWithTooltip } from "../shared/field-label-with-tooltip"
+import { TranslatableField } from "../translation/translatable-field"
+import { TranslationStateProvider } from "../translation/translation-state-context"
 
 const PRICE_KINDS = ["hourly", "adult", "child", "shoe"] as const
 export type PriceKind = (typeof PRICE_KINDS)[number]
@@ -287,7 +287,7 @@ function PriceRowFormFields({
               required
             />
           </Field>
-          <TranslatableInput
+          <TranslatableField
             name="label"
             label={t("label")}
             tooltip={tTip("label")}

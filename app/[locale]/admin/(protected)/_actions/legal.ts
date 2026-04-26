@@ -2,101 +2,64 @@
 
 import { revalidatePath, updateTag } from "next/cache"
 
-import { ForbiddenError, requireAdmin } from "@/lib/auth-guards"
+import {
+  errorState,
+  readNumberOr,
+  readOptionalString,
+  readString,
+  successState,
+  withAdmin,
+} from "@/lib/admin/forms"
 import * as services from "@/lib/services"
 import type { WriteResult } from "@/lib/services"
 
 import type { FormState } from "./types"
 
-function readString(formData: FormData, key: string): string {
-  const v = formData.get(key)
-  return typeof v === "string" ? v.trim() : ""
-}
-
-function readOptional(formData: FormData, key: string): string | null {
-  const v = readString(formData, key)
-  return v.length > 0 ? v : null
-}
-
-function readNumber(formData: FormData, key: string): number {
-  const v = formData.get(key)
-  const n = typeof v === "string" ? Number(v) : NaN
-  return Number.isFinite(n) ? n : NaN
-}
-
-function forbiddenState<T = never>(): FormState<T> {
-  return { status: "error", fieldErrors: { _: ["forbidden"] } }
-}
-
-function toState<T>(result: WriteResult<T>, slug?: string): FormState<T> {
-  if (!result.ok) {
-    return { status: "error", fieldErrors: result.fieldErrors }
-  }
+function commitLegal<T>(result: WriteResult<T>, slug?: string): FormState<T> {
+  if (!result.ok) return errorState(result.fieldErrors)
   for (const tag of result.revalidateTags) updateTag(tag)
   revalidatePath("/[locale]/admin/branches/[slug]/legal", "layout")
   if (slug) revalidatePath(`/[locale]/legal/${slug}`, "page")
   revalidatePath("/[locale]", "layout")
-  return { status: "success", data: result.data }
+  return successState(result.data)
 }
 
 export async function saveLegalPageAction(
   _prev: FormState,
   formData: FormData
 ): Promise<FormState<{ slug: string }>> {
-  try {
-    await requireAdmin()
-  } catch (error) {
-    if (error instanceof ForbiddenError) return forbiddenState()
-    throw error
-  }
-  const branchId = readString(formData, "branchId")
-  if (!branchId) {
-    return {
-      status: "error",
-      fieldErrors: { branchId: ["missing branch id"] },
-    }
-  }
-  const slug = readString(formData, "slug")
-  const sortOrderRaw = readNumber(formData, "sortOrder")
-  const result = await services.legal.upsert({
-    branchId,
-    slug,
-    titleHe: readOptional(formData, "titleHe"),
-    titleEn: readOptional(formData, "titleEn"),
-    titleRu: readOptional(formData, "titleRu"),
-    titleAr: readOptional(formData, "titleAr"),
-    bodyMarkdownHe: readOptional(formData, "bodyMarkdownHe"),
-    bodyMarkdownEn: readOptional(formData, "bodyMarkdownEn"),
-    bodyMarkdownRu: readOptional(formData, "bodyMarkdownRu"),
-    bodyMarkdownAr: readOptional(formData, "bodyMarkdownAr"),
-    published: formData.get("published") === "on",
-    sortOrder: Number.isFinite(sortOrderRaw) ? sortOrderRaw : 0,
+  return withAdmin(async () => {
+    const branchId = readString(formData, "branchId")
+    if (!branchId) return errorState({ branchId: ["missing branch id"] })
+    const slug = readString(formData, "slug")
+    const result = await services.legal.upsert({
+      branchId,
+      slug,
+      titleHe: readOptionalString(formData, "titleHe"),
+      titleEn: readOptionalString(formData, "titleEn"),
+      titleRu: readOptionalString(formData, "titleRu"),
+      titleAr: readOptionalString(formData, "titleAr"),
+      bodyMarkdownHe: readOptionalString(formData, "bodyMarkdownHe"),
+      bodyMarkdownEn: readOptionalString(formData, "bodyMarkdownEn"),
+      bodyMarkdownRu: readOptionalString(formData, "bodyMarkdownRu"),
+      bodyMarkdownAr: readOptionalString(formData, "bodyMarkdownAr"),
+      published: formData.get("published") === "on",
+      sortOrder: readNumberOr(formData, "sortOrder", 0),
+    })
+    const state = commitLegal(result, slug)
+    return state.status === "error" ? state : successState({ slug })
   })
-  const state = toState(result, slug)
-  if (state.status === "error") return state
-  return { status: "success", data: { slug } }
 }
 
 export async function deleteLegalPageAction(
   formData: FormData
 ): Promise<FormState<{ slug: string }>> {
-  try {
-    await requireAdmin()
-  } catch (error) {
-    if (error instanceof ForbiddenError) return forbiddenState()
-    throw error
-  }
-  const branchId = readString(formData, "branchId")
-  const slug = readString(formData, "slug")
-  if (!branchId) {
-    return {
-      status: "error",
-      fieldErrors: { branchId: ["missing branch id"] },
-    }
-  }
-  if (!slug) {
-    return { status: "error", fieldErrors: { slug: ["missing slug"] } }
-  }
-  const result = await services.legal.remove(branchId, slug)
-  return toState(result, slug)
+  return withAdmin(async () => {
+    const branchId = readString(formData, "branchId")
+    const slug = readString(formData, "slug")
+    if (!branchId) return errorState({ branchId: ["missing branch id"] })
+    if (!slug) return errorState({ slug: ["missing slug"] })
+    const result = await services.legal.remove(branchId, slug)
+    return commitLegal(result, slug)
+  })
 }

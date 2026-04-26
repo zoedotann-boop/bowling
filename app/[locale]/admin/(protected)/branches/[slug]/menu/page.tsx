@@ -14,7 +14,7 @@ import {
   BranchMenuForm,
   type MenuCategoryFormRow,
   type MenuItemFormRow,
-} from "@/components/admin/branch-menu-form"
+} from "@/components/admin/branch/branch-menu-form"
 
 import { loadBranchBySlug } from "../_lib/load"
 

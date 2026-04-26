@@ -2,7 +2,7 @@ import { notFound } from "next/navigation"
 import { getTranslations } from "next-intl/server"
 
 import type { Locale } from "@/i18n/routing"
-import { PageHeader } from "@/components/admin/page-header"
+import { PageHeader } from "@/components/admin/shared/page-header"
 
 import { loadBranchBySlug } from "./_lib/load"
 

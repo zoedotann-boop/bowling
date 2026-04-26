@@ -21,8 +21,8 @@ import {
 import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 
-import { ConfirmDeleteDialog } from "./confirm-delete-dialog"
-import { FieldLabelWithTooltip } from "./field-label-with-tooltip"
+import { ConfirmDeleteDialog } from "../shared/confirm-delete-dialog"
+import { FieldLabelWithTooltip } from "../shared/field-label-with-tooltip"
 
 export type BranchDomainRow = {
   id: string

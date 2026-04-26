@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input"
 import { uploadMedia } from "@/lib/admin/upload-media"
 import type { MediaAssetRead } from "@/lib/services/media"
 
-import { FieldLabelWithTooltip } from "./field-label-with-tooltip"
+import { FieldLabelWithTooltip } from "../shared/field-label-with-tooltip"
 
 export type MediaPickerValue = {
   id: string

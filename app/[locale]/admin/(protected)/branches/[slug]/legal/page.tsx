@@ -4,7 +4,7 @@ import { getTranslations } from "next-intl/server"
 
 import { routing, type Locale } from "@/i18n/routing"
 import * as services from "@/lib/services"
-import { PageHeader } from "@/components/admin/page-header"
+import { PageHeader } from "@/components/admin/shared/page-header"
 import {
   LegalPagesManager,
   type LegalPageRow,

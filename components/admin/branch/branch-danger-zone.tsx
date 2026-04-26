@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-import { ConfirmDeleteDialog } from "./confirm-delete-dialog"
+import { ConfirmDeleteDialog } from "../shared/confirm-delete-dialog"
 
 export function BranchDangerZone({ branchId }: { branchId: string }) {
   const t = useTranslations("Admin.branches.form")

@@ -9,7 +9,7 @@ import {
   BranchPricesForm,
   type PriceKind,
   type PriceRowForm,
-} from "@/components/admin/branch-prices-form"
+} from "@/components/admin/branch/branch-prices-form"
 
 import { loadBranchBySlug } from "../_lib/load"
 

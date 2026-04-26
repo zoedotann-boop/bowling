@@ -27,7 +27,7 @@ import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsList, TabsPanel, TabsTab } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 
-import { FieldLabelWithTooltip } from "./field-label-with-tooltip"
+import { FieldLabelWithTooltip } from "./shared/field-label-with-tooltip"
 
 export type LegalPageRow = {
   slug: string

@@ -10,8 +10,8 @@ import {
   type GoogleReview,
 } from "@/lib/integrations/google-places"
 
+import type { WriteResult } from "./_internal"
 import { tags } from "./tags"
-import type { WriteResult } from "./types"
 
 export type ReviewRead = {
   id: string

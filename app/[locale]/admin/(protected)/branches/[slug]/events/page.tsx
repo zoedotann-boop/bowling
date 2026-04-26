@@ -12,7 +12,7 @@ import { mediaAsset } from "@/lib/db/schema/media"
 import {
   BranchEventsForm,
   type EventFormRow,
-} from "@/components/admin/branch-events-form"
+} from "@/components/admin/branch/branch-events-form"
 
 import { loadBranchBySlug } from "../_lib/load"
 

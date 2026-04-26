@@ -4,10 +4,9 @@ import { and, desc, eq } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { mediaAsset } from "@/lib/db/schema/media"
 
-import { formatZodErrors } from "./errors"
+import { formatZodErrors, type WriteResult } from "./_internal"
 import { createMediaAssetSchema, updateMediaAltTextSchema } from "./schemas"
 import { tags } from "./tags"
-import type { WriteResult } from "./types"
 
 export type MediaAssetRead = {
   id: string

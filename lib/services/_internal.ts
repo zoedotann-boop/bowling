@@ -1,6 +1,42 @@
+import { z } from "zod"
+
 import { routing, type Locale } from "@/i18n/routing"
 
-const FALLBACK_LOCALE: Locale = routing.defaultLocale
+export type ReadResult<T> = { data: T; needsReview: string[] }
+
+export type FieldErrors = Record<string, string[]>
+
+export type WriteResult<T> =
+  | { ok: true; data: T; revalidateTags: string[] }
+  | { ok: false; fieldErrors: FieldErrors }
+
+export function formatZodErrors(err: z.ZodError): FieldErrors {
+  const out: FieldErrors = {}
+  for (const issue of err.issues) {
+    const key = issue.path.length ? issue.path.join(".") : "_"
+    if (!out[key]) out[key] = []
+    out[key].push(issue.message)
+  }
+  return out
+}
+
+const CURRENCY = "ILS"
+const formatters = new Map<Locale, Intl.NumberFormat>()
+
+export function formatAmount(cents: number, locale: Locale): string {
+  let fmt = formatters.get(locale)
+  if (!fmt) {
+    fmt = new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency: CURRENCY,
+      maximumFractionDigits: 0,
+    })
+    formatters.set(locale, fmt)
+  }
+  return fmt.format(cents / 100)
+}
+
+export const FALLBACK_LOCALE: Locale = routing.defaultLocale
 
 type TranslationRow = {
   locale: string
@@ -12,16 +48,12 @@ function isUsableString(v: unknown): v is string {
   return typeof v === "string" && v.trim() !== ""
 }
 
-function pathJoin(prefix: string | undefined, field: string): string {
-  return prefix ? `${prefix}.${field}` : field
-}
-
 export function resolveLocalized<T extends Record<string, string | null>>(
   rows: readonly TranslationRow[],
   locale: Locale,
   fields: readonly (keyof T & string)[],
   pathPrefix?: string
-): { data: T; needsReview: string[] } {
+): ReadResult<T> {
   const target = rows.find((r) => r.locale === locale) as
     | (TranslationRow & Partial<Record<keyof T, unknown>>)
     | undefined
@@ -51,11 +83,9 @@ export function resolveLocalized<T extends Record<string, string | null>>(
 
     ;(data as Record<string, string | null>)[field] = value
     if (fieldNeedsReview) {
-      needsReview.push(pathJoin(pathPrefix, field))
+      needsReview.push(pathPrefix ? `${pathPrefix}.${field}` : field)
     }
   }
 
   return { data, needsReview }
 }
-
-export { FALLBACK_LOCALE }

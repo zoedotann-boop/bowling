@@ -31,11 +31,10 @@ import {
 import type { FormState } from "@/app/[locale]/admin/(protected)/_actions/types"
 import { cn } from "@/lib/utils"
 
-import { ConfirmDeleteDialog } from "./confirm-delete-dialog"
-import { MediaPicker, type MediaPickerValue } from "./media-picker"
-import { TranslatableInput } from "./translatable-input"
-import { TranslatableTextarea } from "./translatable-textarea"
-import { TranslationStateProvider } from "./translation-state-context"
+import { ConfirmDeleteDialog } from "../shared/confirm-delete-dialog"
+import { MediaPicker, type MediaPickerValue } from "../media/media-picker"
+import { TranslatableField } from "../translation/translatable-field"
+import { TranslationStateProvider } from "../translation/translation-state-context"
 
 export type EventFormRow = {
   id: string
@@ -254,7 +253,7 @@ function EventRowForm({
             branchId={branchId}
           />
           <div className="flex flex-col gap-3">
-            <TranslatableInput
+            <TranslatableField
               name="title"
               label={t("titleLabel")}
               tooltip={tTip("titleLabel")}
@@ -263,7 +262,8 @@ function EventRowForm({
               aiLabel={tTranslate("fillField")}
               reviewLabel={tTranslate("fillField")}
             />
-            <TranslatableTextarea
+            <TranslatableField
+              as="textarea"
               name="description"
               label={t("description")}
               tooltip={tTip("description")}

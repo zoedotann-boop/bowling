@@ -5,7 +5,7 @@ import type { Locale } from "@/i18n/routing"
 import {
   BranchContactForm,
   type BranchContactInitial,
-} from "@/components/admin/branch-contact-form"
+} from "@/components/admin/branch/branch-contact-form"
 
 import { loadBranchBySlug } from "../_lib/load"
 

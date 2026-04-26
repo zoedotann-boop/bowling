@@ -3,7 +3,7 @@ import { notFound } from "next/navigation"
 
 import type { Locale } from "@/i18n/routing"
 import * as services from "@/lib/services"
-import { MediaLibraryClient } from "@/components/admin/media-library-client"
+import { MediaLibraryClient } from "@/components/admin/media/media-library-client"
 
 import { loadBranchBySlug } from "../_lib/load"
 

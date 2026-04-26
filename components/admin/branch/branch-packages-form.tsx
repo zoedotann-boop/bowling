@@ -42,11 +42,10 @@ import {
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 
-import { ConfirmDeleteDialog } from "./confirm-delete-dialog"
-import { FieldLabelWithTooltip } from "./field-label-with-tooltip"
-import { TranslatableInput } from "./translatable-input"
-import { TranslatableTextarea } from "./translatable-textarea"
-import { TranslationStateProvider } from "./translation-state-context"
+import { ConfirmDeleteDialog } from "../shared/confirm-delete-dialog"
+import { FieldLabelWithTooltip } from "../shared/field-label-with-tooltip"
+import { TranslatableField } from "../translation/translatable-field"
+import { TranslationStateProvider } from "../translation/translation-state-context"
 
 export type PackageFormRow = {
   id: string
@@ -267,7 +266,7 @@ function PackageRowForm({
             />
           </Field>
           <div className="flex flex-col gap-3">
-            <TranslatableInput
+            <TranslatableField
               name="title"
               label={t("titleLabel")}
               tooltip={tTip("titleLabel")}
@@ -276,7 +275,8 @@ function PackageRowForm({
               aiLabel={tTranslate("fillField")}
               reviewLabel={tTranslate("fillField")}
             />
-            <TranslatableTextarea
+            <TranslatableField
+              as="textarea"
               name="perks"
               label={t("perks")}
               tooltip={tTip("perks")}

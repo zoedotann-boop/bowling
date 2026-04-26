@@ -2,10 +2,19 @@
 
 import { revalidatePath, updateTag } from "next/cache"
 
-import { routing, type Locale } from "@/i18n/routing"
-import { ForbiddenError, requireAdmin } from "@/lib/auth-guards"
+import { routing } from "@/i18n/routing"
+import {
+  applyWrite,
+  errorState,
+  readNumber,
+  readNumberOr,
+  readOptionalString,
+  readString,
+  readTranslation,
+  successState,
+  withAdmin,
+} from "@/lib/admin/forms"
 import * as services from "@/lib/services"
-import type { WriteResult } from "@/lib/services"
 
 import type { FormState } from "./types"
 
@@ -20,49 +29,6 @@ const TRANSLATABLE_FIELDS = [
   "seoDescription",
 ] as const
 
-type TranslatableField = (typeof TRANSLATABLE_FIELDS)[number]
-
-function readTranslation(
-  formData: FormData,
-  field: TranslatableField,
-  locale: Locale
-): string | null {
-  const raw = formData.get(`${field}.${locale}`)
-  if (typeof raw !== "string") return null
-  const trimmed = raw.trim()
-  return trimmed.length > 0 ? trimmed : null
-}
-
-function readString(formData: FormData, key: string): string {
-  const v = formData.get(key)
-  return typeof v === "string" ? v.trim() : ""
-}
-
-function readOptionalString(formData: FormData, key: string): string | null {
-  const v = readString(formData, key)
-  return v.length > 0 ? v : null
-}
-
-function readNumber(formData: FormData, key: string): number {
-  const v = formData.get(key)
-  const n = typeof v === "string" ? Number(v) : NaN
-  return Number.isFinite(n) ? n : NaN
-}
-
-function toFormState<T>(result: WriteResult<T>): FormState<T> {
-  if (result.ok) {
-    for (const tag of result.revalidateTags) updateTag(tag)
-    revalidatePath("/[locale]/admin/branches", "layout")
-    const state: FormState<T> = { status: "success", data: result.data }
-    return state
-  }
-  return { status: "error", fieldErrors: result.fieldErrors }
-}
-
-function forbiddenState<T = never>(): FormState<T> {
-  return { status: "error", fieldErrors: { _: ["forbidden"] } }
-}
-
 function baseBranchInput(formData: FormData) {
   return {
     slug: readString(formData, "slug"),
@@ -75,9 +41,7 @@ function baseBranchInput(formData: FormData) {
     heroImageId: readOptionalString(formData, "heroImageId"),
     googlePlaceId: readOptionalString(formData, "googlePlaceId"),
     published: formData.get("published") === "on",
-    sortOrder: Number.isFinite(readNumber(formData, "sortOrder"))
-      ? readNumber(formData, "sortOrder")
-      : 0,
+    sortOrder: readNumberOr(formData, "sortOrder", 0),
   }
 }
 
@@ -112,160 +76,109 @@ function translationsForBranch(formData: FormData, branchId: string) {
   })
 }
 
+async function syncBranchTranslations(formData: FormData, branchId: string) {
+  const errors: Record<string, string[]> = {}
+  for (const payload of translationsForBranch(formData, branchId)) {
+    const result = await services.branches.upsertTranslation(payload)
+    if (!result.ok) {
+      for (const [k, v] of Object.entries(result.fieldErrors)) {
+        errors[`${k}.${payload.locale}`] = v
+      }
+    }
+  }
+  return errors
+}
+
+async function saveBranch(
+  id: string | null,
+  formData: FormData
+): Promise<FormState<{ id: string; slug: string }>> {
+  const writeResult = id
+    ? await services.branches.update({ id, ...baseBranchInput(formData) })
+    : await services.branches.create(baseBranchInput(formData))
+
+  if (!writeResult.ok) return errorState(writeResult.fieldErrors)
+
+  const branchId = writeResult.data.id
+  const translationErrors = await syncBranchTranslations(formData, branchId)
+
+  for (const tag of writeResult.revalidateTags) updateTag(tag)
+  revalidatePath("/[locale]/admin/branches", "layout")
+
+  if (Object.keys(translationErrors).length > 0) {
+    return errorState(translationErrors)
+  }
+  return successState(writeResult.data)
+}
+
 export async function createBranchAction(
   _prev: FormState,
   formData: FormData
 ): Promise<FormState<{ id: string; slug: string }>> {
-  try {
-    await requireAdmin()
-  } catch (error) {
-    if (error instanceof ForbiddenError) return forbiddenState()
-    throw error
-  }
-
-  const createResult = await services.branches.create(baseBranchInput(formData))
-  if (!createResult.ok) {
-    return { status: "error", fieldErrors: createResult.fieldErrors }
-  }
-
-  const translations = translationsForBranch(formData, createResult.data.id)
-  const translationErrors: Record<string, string[]> = {}
-  for (const payload of translations) {
-    const tr = await services.branches.upsertTranslation(payload)
-    if (!tr.ok) {
-      for (const [k, v] of Object.entries(tr.fieldErrors)) {
-        translationErrors[`${k}.${payload.locale}`] = v
-      }
-    }
-  }
-
-  for (const tag of createResult.revalidateTags) updateTag(tag)
-  revalidatePath("/[locale]/admin/branches", "layout")
-
-  if (Object.keys(translationErrors).length > 0) {
-    return { status: "error", fieldErrors: translationErrors }
-  }
-
-  return { status: "success", data: createResult.data }
+  return withAdmin(() => saveBranch(null, formData))
 }
 
 export async function updateBranchAction(
   _prev: FormState,
   formData: FormData
 ): Promise<FormState<{ id: string; slug: string }>> {
-  try {
-    await requireAdmin()
-  } catch (error) {
-    if (error instanceof ForbiddenError) return forbiddenState()
-    throw error
-  }
-
-  const id = readString(formData, "id")
-  if (!id) {
-    return { status: "error", fieldErrors: { id: ["missing branch id"] } }
-  }
-
-  const updateResult = await services.branches.update({
-    id,
-    ...baseBranchInput(formData),
+  return withAdmin(async () => {
+    const id = readString(formData, "id")
+    if (!id) return errorState({ id: ["missing branch id"] })
+    return saveBranch(id, formData)
   })
-  if (!updateResult.ok) {
-    return { status: "error", fieldErrors: updateResult.fieldErrors }
-  }
-
-  const translations = translationsForBranch(formData, id)
-  const translationErrors: Record<string, string[]> = {}
-  for (const payload of translations) {
-    const tr = await services.branches.upsertTranslation(payload)
-    if (!tr.ok) {
-      for (const [k, v] of Object.entries(tr.fieldErrors)) {
-        translationErrors[`${k}.${payload.locale}`] = v
-      }
-    }
-  }
-
-  for (const tag of updateResult.revalidateTags) updateTag(tag)
-  revalidatePath("/[locale]/admin/branches", "layout")
-
-  if (Object.keys(translationErrors).length > 0) {
-    return { status: "error", fieldErrors: translationErrors }
-  }
-
-  return { status: "success", data: updateResult.data }
 }
 
 export async function updateBranchContactAction(
   _prev: FormState,
   formData: FormData
 ): Promise<FormState<{ id: string; slug: string }>> {
-  try {
-    await requireAdmin()
-  } catch (error) {
-    if (error instanceof ForbiddenError) return forbiddenState()
-    throw error
-  }
-
-  const id = readString(formData, "id")
-  if (!id) {
-    return { status: "error", fieldErrors: { id: ["missing branch id"] } }
-  }
-
-  const result = await services.branches.update({
-    id,
-    phone: readString(formData, "phone"),
-    whatsapp: readString(formData, "whatsapp"),
-    email: readString(formData, "email"),
-    mapUrl: readString(formData, "mapUrl"),
+  return withAdmin(async () => {
+    const id = readString(formData, "id")
+    if (!id) return errorState({ id: ["missing branch id"] })
+    const result = await services.branches.update({
+      id,
+      phone: readString(formData, "phone"),
+      whatsapp: readString(formData, "whatsapp"),
+      email: readString(formData, "email"),
+      mapUrl: readString(formData, "mapUrl"),
+    })
+    return applyWrite(result, "/[locale]/admin/branches")
   })
-  return toFormState(result)
 }
 
 export async function deleteBranchAction(
   formData: FormData
 ): Promise<FormState<{ id: string }>> {
-  try {
-    await requireAdmin()
-  } catch (error) {
-    if (error instanceof ForbiddenError) return forbiddenState()
-    throw error
-  }
-
-  const id = readString(formData, "id")
-  if (!id) {
-    return { status: "error", fieldErrors: { id: ["missing branch id"] } }
-  }
-  const result = await services.branches.remove(id)
-  return toFormState(result)
+  return withAdmin(async () => {
+    const id = readString(formData, "id")
+    if (!id) return errorState({ id: ["missing branch id"] })
+    const result = await services.branches.remove(id)
+    return applyWrite(result, "/[locale]/admin/branches")
+  })
 }
 
 export async function bulkUpsertHoursAction(
   _prev: FormState,
   formData: FormData
 ): Promise<FormState<{ count: number }>> {
-  try {
-    await requireAdmin()
-  } catch (error) {
-    if (error instanceof ForbiddenError) return forbiddenState()
-    throw error
-  }
+  return withAdmin(async () => {
+    const branchId = readString(formData, "branchId")
+    if (!branchId) return errorState({ branchId: ["missing branch id"] })
 
-  const branchId = readString(formData, "branchId")
-  if (!branchId) {
-    return { status: "error", fieldErrors: { branchId: ["missing branch id"] } }
-  }
+    const rows = [0, 1, 2, 3, 4, 5, 6].map((dayOfWeek) => {
+      const isClosed = formData.get(`isClosed.${dayOfWeek}`) === "on"
+      const openTime = readString(formData, `openTime.${dayOfWeek}`)
+      const closeTime = readString(formData, `closeTime.${dayOfWeek}`)
+      return {
+        dayOfWeek,
+        isClosed,
+        openTime: isClosed ? null : openTime || null,
+        closeTime: isClosed ? null : closeTime || null,
+      }
+    })
 
-  const rows = [0, 1, 2, 3, 4, 5, 6].map((dayOfWeek) => {
-    const isClosed = formData.get(`isClosed.${dayOfWeek}`) === "on"
-    const openTime = readString(formData, `openTime.${dayOfWeek}`)
-    const closeTime = readString(formData, `closeTime.${dayOfWeek}`)
-    return {
-      dayOfWeek,
-      isClosed,
-      openTime: isClosed ? null : openTime || null,
-      closeTime: isClosed ? null : closeTime || null,
-    }
+    const result = await services.hours.bulkUpsert(branchId, rows)
+    return applyWrite(result, "/[locale]/admin/branches")
   })
-
-  const result = await services.hours.bulkUpsert(branchId, rows)
-  return toFormState(result)
 }

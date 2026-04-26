@@ -4,14 +4,13 @@ import type { Locale } from "@/i18n/routing"
 import { db } from "@/lib/db"
 import { footerLink } from "@/lib/db/schema/content"
 
-import { formatZodErrors } from "./errors"
+import { formatZodErrors, type WriteResult } from "./_internal"
 import {
   createFooterLinkSchema,
   reorderSchema,
   updateFooterLinkSchema,
 } from "./schemas"
 import { tags } from "./tags"
-import type { WriteResult } from "./types"
 
 export type FooterLinkRead = {
   id: string

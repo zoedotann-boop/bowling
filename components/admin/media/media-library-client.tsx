@@ -26,7 +26,7 @@ import {
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { PageHeader } from "@/components/admin/page-header"
+import { PageHeader } from "@/components/admin/shared/page-header"
 import { uploadMedia } from "@/lib/admin/upload-media"
 import type { MediaAssetRead } from "@/lib/services/media"
 import {

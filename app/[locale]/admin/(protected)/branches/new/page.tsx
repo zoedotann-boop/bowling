@@ -1,8 +1,8 @@
 import type { Metadata } from "next"
 import { getTranslations } from "next-intl/server"
 
-import { BranchForm } from "@/components/admin/branch-form"
-import { PageHeader } from "@/components/admin/page-header"
+import { BranchForm } from "@/components/admin/branch/branch-form"
+import { PageHeader } from "@/components/admin/shared/page-header"
 
 export const metadata: Metadata = {
   title: "Admin · New branch",

@@ -9,8 +9,12 @@ import {
   offeringPackageTranslation,
 } from "@/lib/db/schema/content"
 
-import { formatZodErrors } from "./errors"
-import { resolveLocalized } from "./locale"
+import {
+  formatZodErrors,
+  resolveLocalized,
+  type ReadResult,
+  type WriteResult,
+} from "./_internal"
 import {
   createOfferingPackageSchema,
   reorderSchema,
@@ -18,7 +22,6 @@ import {
   upsertOfferingPackageTranslationSchema,
 } from "./schemas"
 import { tags } from "./tags"
-import type { ReadResult, WriteResult } from "./types"
 
 export type PackageRead = {
   id: string

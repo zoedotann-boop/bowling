@@ -5,8 +5,12 @@ import type { Locale } from "@/i18n/routing"
 import { db } from "@/lib/db"
 import { branch, priceRow, priceRowTranslation } from "@/lib/db/schema/content"
 
-import { formatZodErrors } from "./errors"
-import { resolveLocalized } from "./locale"
+import {
+  formatZodErrors,
+  resolveLocalized,
+  type ReadResult,
+  type WriteResult,
+} from "./_internal"
 import {
   createPriceRowSchema,
   reorderSchema,
@@ -14,7 +18,6 @@ import {
   upsertPriceRowTranslationSchema,
 } from "./schemas"
 import { tags } from "./tags"
-import type { ReadResult, WriteResult } from "./types"
 
 export type PriceKind = "hourly" | "adult" | "child" | "shoe"
 
@@ -101,21 +104,6 @@ export async function listByBranch(
     data: results.map((r) => r.data),
     needsReview: results.flatMap((r) => r.needsReview),
   }
-}
-
-export async function getShoeRental(
-  slug: string,
-  locale: Locale
-): Promise<ReadResult<PriceRowRead> | null> {
-  const load = unstable_cache(
-    () => loadByBranch(slug),
-    ["prices:listByBranch", slug],
-    { tags: [tags.branchPrices(slug), tags.branch(slug)] }
-  )
-  const { rows, translations } = await load()
-  const shoe = rows.find((r) => r.kind === "shoe")
-  if (!shoe) return null
-  return localizeRow(shoe, translations, locale, "")
 }
 
 async function slugForPriceRow(id: string): Promise<string | null> {
