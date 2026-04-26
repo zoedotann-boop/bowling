@@ -253,10 +253,10 @@
       "body": "Body (Markdown)",
       "bodyHint": "Supports headings, lists, **bold**, *italic*, and [links](https://example.com).",
       "tooltips": {
-        "slug": "URL-safe identifier used in /legal/<slug>. Lowercase with hyphens (e.g., privacy-policy). Changing the slug breaks existing links.",
+        "slug": "URL-safe identifier used in /legal/'<slug>'. Lowercase with hyphens (e.g., privacy-policy). Changing the slug breaks existing links.",
         "sortOrder": "Order pages appear in footer legal link groups. Lower numbers first.",
         "published": "When off, the page is hidden from the public site and returns 404. Useful for drafts.",
-        "pageTitle": "Page heading and <title> tag. Keep it human — shown to users and search engines.",
+        "pageTitle": "Page heading and '<title>' tag. Keep it human — shown to users and search engines.",
         "body": "Markdown content of the page. Renders with headings, lists, bold, italic, and links."
       }
     },
@@ -417,7 +417,7 @@
         "confirmDeleteTitle": "Delete branch?",
         "confirmDeleteDescription": "This removes the branch and all related content. Cannot be undone.",
         "tooltips": {
-          "slug": "URL-safe identifier used in /branches/<slug> paths. Lowercase with hyphens (e.g., ramat-gan). Cannot change after creation without breaking links.",
+          "slug": "URL-safe identifier used in /branches/'<slug>' paths. Lowercase with hyphens (e.g., ramat-gan). Cannot change after creation without breaking links.",
           "sortOrder": "Controls the order branches appear in public lists and the branch picker. Lower numbers first.",
           "phone": "Shown on the contact card and linked via tel: on mobile. Use international format (+972 3-123-4567).",
           "whatsapp": "Phone number (digits only, country code first, no +) used to build wa.me links for the floating WhatsApp button. Example: 972545751100.",
@@ -433,7 +433,7 @@
           "heroImageId": "Large banner image shown at the top of the public branch page. Upload in the Media library first, then pick it here.",
           "heroHeadline": "Short headline overlaid on the hero image. Aim for 3–6 words.",
           "heroTagline": "One-sentence subtitle under the headline. Describe what makes this branch special.",
-          "seoTitle": "Page <title> tag used by search engines and social shares. 50–60 characters is ideal.",
+          "seoTitle": "Page '<title>' tag used by search engines and social shares. 50–60 characters is ideal.",
           "seoDescription": "Meta description used by Google and social previews. 140–160 characters.",
           "googlePlaceId": "Identifier from Google Maps Place Details. Find it at developers.google.com/maps/documentation/places/web-service/place-id (used by sub-project G to sync ratings/reviews)."
         }

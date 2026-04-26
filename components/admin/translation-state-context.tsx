@@ -144,7 +144,11 @@ export function TranslationStateProvider({
 
 function HiddenAiFlags() {
   const ctx = useTranslationState()
-  const snapshot = React.useSyncExternalStore(ctx.subscribe, ctx.getSnapshot)
+  const snapshot = React.useSyncExternalStore(
+    ctx.subscribe,
+    ctx.getSnapshot,
+    ctx.getSnapshot
+  )
 
   const aiLocale = React.useMemo<Partial<Record<Locale, boolean>>>(() => {
     const out: Partial<Record<Locale, boolean>> = {}

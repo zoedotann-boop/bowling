@@ -18,6 +18,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
+  if (!hasLocale(routing.locales, locale)) return {}
   const l = locale as Locale
   const branch = await loadSiteBranch(l)
   if (!branch) return {}
