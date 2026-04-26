@@ -11,7 +11,7 @@ import {
 import {
   BranchPackagesForm,
   type PackageFormRow,
-} from "@/components/admin/branch-packages-form"
+} from "@/components/admin/branch/branch-packages-form"
 
 import { loadBranchBySlug } from "../_lib/load"
 

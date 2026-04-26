@@ -128,13 +128,6 @@
       "createBranch": "Create branch",
       "signOut": "Sign out"
     },
-    "home": {
-      "title": "Bowling admin",
-      "pickFromSidebar": "Pick a branch from the sidebar to start editing.",
-      "jumpToFirst": "Open first branch",
-      "noBranches": "No branches yet. Create your first branch to get started.",
-      "createFirst": "Create first branch"
-    },
     "common": {
       "cancel": "Cancel",
       "delete": "Delete",

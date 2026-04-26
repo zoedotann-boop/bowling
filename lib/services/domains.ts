@@ -4,10 +4,9 @@ import { unstable_cache } from "next/cache"
 import { db } from "@/lib/db"
 import { branch, branchDomain } from "@/lib/db/schema/content"
 
-import { formatZodErrors } from "./errors"
+import { formatZodErrors, type WriteResult } from "./_internal"
 import { createBranchDomainSchema, removeBranchDomainSchema } from "./schemas"
 import { tags } from "./tags"
-import type { WriteResult } from "./types"
 
 export type BranchDomainRead = {
   id: string

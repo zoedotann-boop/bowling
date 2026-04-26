@@ -128,13 +128,6 @@
       "createBranch": "إنشاء فرع",
       "signOut": "تسجيل الخروج"
     },
-    "home": {
-      "title": "إدارة البولينغ",
-      "pickFromSidebar": "اختر فرعًا من الشريط الجانبي لبدء التعديل.",
-      "jumpToFirst": "افتح الفرع الأول",
-      "noBranches": "لا توجد فروع بعد. أنشئ أول فرع لك للبدء.",
-      "createFirst": "إنشاء الفرع الأول"
-    },
     "common": {
       "cancel": "Cancel",
       "delete": "Delete",

@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 
-import { FieldLabelWithTooltip } from "./field-label-with-tooltip"
+import { FieldLabelWithTooltip } from "../shared/field-label-with-tooltip"
 
 export type BranchContactInitial = {
   id: string

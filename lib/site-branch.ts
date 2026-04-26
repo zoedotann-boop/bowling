@@ -6,7 +6,7 @@ import type { Locale } from "@/i18n/routing"
 import { db } from "@/lib/db"
 import { branch, branchTranslation } from "@/lib/db/schema/content"
 import * as services from "@/lib/services"
-import { FALLBACK_LOCALE, resolveLocalized } from "@/lib/services/locale"
+import { FALLBACK_LOCALE, resolveLocalized } from "@/lib/services"
 
 export const BRANCH_COOKIE = "site-branch"
 

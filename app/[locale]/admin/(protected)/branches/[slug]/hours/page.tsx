@@ -3,7 +3,7 @@ import { notFound } from "next/navigation"
 
 import type { Locale } from "@/i18n/routing"
 import * as services from "@/lib/services"
-import { BranchHoursForm } from "@/components/admin/branch-hours-form"
+import { BranchHoursForm } from "@/components/admin/branch/branch-hours-form"
 
 import { loadBranchBySlug } from "../_lib/load"
 

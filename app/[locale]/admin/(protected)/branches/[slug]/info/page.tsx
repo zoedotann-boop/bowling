@@ -5,11 +5,11 @@ import { eq } from "drizzle-orm"
 import { routing, type Locale } from "@/i18n/routing"
 import { db } from "@/lib/db"
 import { mediaAsset } from "@/lib/db/schema/media"
-import { BranchDangerZone } from "@/components/admin/branch-danger-zone"
+import { BranchDangerZone } from "@/components/admin/branch/branch-danger-zone"
 import {
   BranchForm,
   type BranchFormInitial,
-} from "@/components/admin/branch-form"
+} from "@/components/admin/branch/branch-form"
 
 import { loadBranchBySlug } from "../_lib/load"
 

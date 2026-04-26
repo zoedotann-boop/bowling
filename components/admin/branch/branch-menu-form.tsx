@@ -36,10 +36,10 @@ import {
 import type { FormState } from "@/app/[locale]/admin/(protected)/_actions/types"
 import { cn } from "@/lib/utils"
 
-import { ConfirmDeleteDialog } from "./confirm-delete-dialog"
-import { FieldLabelWithTooltip } from "./field-label-with-tooltip"
-import { TranslatableInput } from "./translatable-input"
-import { TranslationStateProvider } from "./translation-state-context"
+import { ConfirmDeleteDialog } from "../shared/confirm-delete-dialog"
+import { FieldLabelWithTooltip } from "../shared/field-label-with-tooltip"
+import { TranslatableField } from "../translation/translatable-field"
+import { TranslationStateProvider } from "../translation/translation-state-context"
 
 export type MenuItemFormRow = {
   id: string
@@ -269,7 +269,7 @@ function CategoryForm({
         <input type="hidden" name="branchId" value={branchId} />
         <input type="hidden" name="slug" value={slug} />
         <input type="hidden" name="sortOrder" value={category.sortOrder} />
-        <TranslatableInput
+        <TranslatableField
           name="title"
           label={t("categoryTitle")}
           tooltip={tTip("categoryTitle")}
@@ -488,7 +488,7 @@ function ItemForm({
               required
             />
           </Field>
-          <TranslatableInput
+          <TranslatableField
             name="name"
             label={t("itemName")}
             tooltip={tTip("itemName")}
@@ -497,7 +497,7 @@ function ItemForm({
             aiLabel={tTranslate("fillField")}
             reviewLabel={tTranslate("fillField")}
           />
-          <TranslatableInput
+          <TranslatableField
             name="tag"
             label={t("itemTag")}
             tooltip={tTip("itemTag")}

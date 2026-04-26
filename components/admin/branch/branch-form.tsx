@@ -19,12 +19,11 @@ import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsList, TabsTab, TabsPanel } from "@/components/ui/tabs"
 
-import { FieldLabelWithTooltip } from "./field-label-with-tooltip"
-import { FillTranslationsButton } from "./fill-translations-button"
-import { MediaPicker } from "./media-picker"
-import { TranslatableInput } from "./translatable-input"
-import { TranslatableTextarea } from "./translatable-textarea"
-import { TranslationStateProvider } from "./translation-state-context"
+import { FieldLabelWithTooltip } from "../shared/field-label-with-tooltip"
+import { FillTranslationsButton } from "../translation/fill-translations-button"
+import { MediaPicker } from "../media/media-picker"
+import { TranslatableField } from "../translation/translatable-field"
+import { TranslationStateProvider } from "../translation/translation-state-context"
 
 export type BranchFormInitial = {
   id: string
@@ -255,7 +254,7 @@ export function BranchForm(props: Props) {
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
-          <TranslatableInput
+          <TranslatableField
             name="displayName"
             label={t("displayName")}
             tooltip={tTip("displayName")}
@@ -265,7 +264,7 @@ export function BranchForm(props: Props) {
             aiLabel={aiLabel}
             reviewLabel={reviewLabel}
           />
-          <TranslatableInput
+          <TranslatableField
             name="shortName"
             label={t("shortName")}
             tooltip={tTip("shortName")}
@@ -274,7 +273,7 @@ export function BranchForm(props: Props) {
             aiLabel={aiLabel}
             reviewLabel={reviewLabel}
           />
-          <TranslatableInput
+          <TranslatableField
             name="address"
             label={t("address")}
             tooltip={tTip("address")}
@@ -283,7 +282,7 @@ export function BranchForm(props: Props) {
             aiLabel={aiLabel}
             reviewLabel={reviewLabel}
           />
-          <TranslatableInput
+          <TranslatableField
             name="city"
             label={t("city")}
             tooltip={tTip("city")}
@@ -311,7 +310,7 @@ export function BranchForm(props: Props) {
           initial={initial?.heroImage ?? null}
           branchId={initial?.id ?? ""}
         />
-        <TranslatableInput
+        <TranslatableField
           name="heroHeadline"
           label={t("heroHeadline")}
           tooltip={tTip("heroHeadline")}
@@ -320,7 +319,8 @@ export function BranchForm(props: Props) {
           aiLabel={aiLabel}
           reviewLabel={reviewLabel}
         />
-        <TranslatableTextarea
+        <TranslatableField
+          as="textarea"
           name="heroTagline"
           label={t("heroTagline")}
           tooltip={tTip("heroTagline")}
@@ -341,7 +341,7 @@ export function BranchForm(props: Props) {
         <CardTitle>{tTabs("seo")}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <TranslatableInput
+        <TranslatableField
           name="seoTitle"
           label={t("seoTitle")}
           tooltip={tTip("seoTitle")}
@@ -350,7 +350,8 @@ export function BranchForm(props: Props) {
           aiLabel={aiLabel}
           reviewLabel={reviewLabel}
         />
-        <TranslatableTextarea
+        <TranslatableField
+          as="textarea"
           name="seoDescription"
           label={t("seoDescription")}
           tooltip={tTip("seoDescription")}

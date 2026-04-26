@@ -3,7 +3,7 @@ import { notFound } from "next/navigation"
 
 import type { Locale } from "@/i18n/routing"
 import * as services from "@/lib/services"
-import { BranchReviewsForm } from "@/components/admin/branch-reviews-form"
+import { BranchReviewsForm } from "@/components/admin/branch/branch-reviews-form"
 
 import { loadBranchBySlug } from "../_lib/load"
 

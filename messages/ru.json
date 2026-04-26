@@ -128,13 +128,6 @@
       "createBranch": "Создать филиал",
       "signOut": "Выйти"
     },
-    "home": {
-      "title": "Bowling admin",
-      "pickFromSidebar": "Выберите филиал в боковой панели, чтобы начать редактирование.",
-      "jumpToFirst": "Открыть первый филиал",
-      "noBranches": "Филиалов пока нет. Создайте первый филиал, чтобы начать.",
-      "createFirst": "Создать первый филиал"
-    },
     "common": {
       "cancel": "Cancel",
       "delete": "Delete",

@@ -3,7 +3,7 @@
 import { z } from "zod"
 
 import { routing, type Locale } from "@/i18n/routing"
-import { ForbiddenError, requireAdmin } from "@/lib/auth-guards"
+import { withAdmin } from "@/lib/admin/forms"
 import {
   MAX_FIELDS_PER_CALL,
   TooManyFieldsError,
@@ -28,87 +28,79 @@ export type TranslatedPayload = Record<Locale, Record<string, string>>
 export async function translateBranchFieldsAction(
   input: TranslateFieldsInput
 ): Promise<FormState<{ translations: TranslatedPayload }>> {
-  let session
-  try {
-    session = await requireAdmin()
-  } catch (error) {
-    if (error instanceof ForbiddenError) {
-      return { status: "error", fieldErrors: { _: ["forbidden"] } }
+  return withAdmin(async (session) => {
+    const parsed = inputSchema.safeParse(input)
+    if (!parsed.success) {
+      return { status: "error", message: "invalid_input" }
     }
-    throw error
-  }
+    const { sourceLocale, targets, fields, domainHint } = parsed.data
 
-  const parsed = inputSchema.safeParse(input)
-  if (!parsed.success) {
-    return { status: "error", message: "invalid_input" }
-  }
-  const { sourceLocale, targets, fields, domainHint } = parsed.data
-
-  const nonEmpty: Record<string, string> = {}
-  for (const [k, v] of Object.entries(fields)) {
-    const trimmed = typeof v === "string" ? v.trim() : ""
-    if (trimmed.length > 0) nonEmpty[k] = trimmed
-  }
-  if (Object.keys(nonEmpty).length === 0) {
-    return { status: "error", message: "empty_source" }
-  }
-  if (Object.keys(nonEmpty).length > MAX_FIELDS_PER_CALL) {
-    return { status: "error", message: "too_many_fields" }
-  }
-
-  const uniqueTargets = Array.from(
-    new Set(targets.filter((t) => t !== sourceLocale))
-  )
-  if (uniqueTargets.length === 0) {
-    return { status: "error", message: "invalid_input" }
-  }
-
-  try {
-    consume(session.user.id)
-  } catch (error) {
-    if (error instanceof RateLimitError) {
-      return { status: "error", message: "rate_limit" }
+    const nonEmpty: Record<string, string> = {}
+    for (const [k, v] of Object.entries(fields)) {
+      const trimmed = typeof v === "string" ? v.trim() : ""
+      if (trimmed.length > 0) nonEmpty[k] = trimmed
     }
-    throw error
-  }
-
-  const started = Date.now()
-  try {
-    const results = await Promise.all(
-      uniqueTargets.map(async (target) => {
-        const out = await translateFields({
-          targetLocale: target,
-          fields: nonEmpty,
-          domainHint,
-        })
-        return [target, out] as const
-      })
-    )
-    const translations = Object.fromEntries(results) as TranslatedPayload
-
-    console.info(
-      JSON.stringify({
-        event: "ai_translate",
-        userId: session.user.id,
-        targets: uniqueTargets,
-        fieldCount: Object.keys(nonEmpty).length,
-        ms: Date.now() - started,
-      })
-    )
-
-    return { status: "success", data: { translations } }
-  } catch (error) {
-    if (error instanceof TooManyFieldsError) {
+    if (Object.keys(nonEmpty).length === 0) {
+      return { status: "error", message: "empty_source" }
+    }
+    if (Object.keys(nonEmpty).length > MAX_FIELDS_PER_CALL) {
       return { status: "error", message: "too_many_fields" }
     }
-    console.info(
-      JSON.stringify({
-        event: "ai_translate_error",
-        userId: session.user.id,
-        targets: uniqueTargets,
-        error: error instanceof Error ? error.message : String(error),
-      })
+
+    const uniqueTargets = Array.from(
+      new Set(targets.filter((t) => t !== sourceLocale))
     )
-    return { status: "error", message: "gateway_error" }
-  }
+    if (uniqueTargets.length === 0) {
+      return { status: "error", message: "invalid_input" }
+    }
+
+    try {
+      consume(session.user.id)
+    } catch (error) {
+      if (error instanceof RateLimitError) {
+        return { status: "error", message: "rate_limit" }
+      }
+      throw error
+    }
+
+    const started = Date.now()
+    try {
+      const results = await Promise.all(
+        uniqueTargets.map(async (target) => {
+          const out = await translateFields({
+            targetLocale: target,
+            fields: nonEmpty,
+            domainHint,
+          })
+          return [target, out] as const
+        })
+      )
+      const translations = Object.fromEntries(results) as TranslatedPayload
+
+      console.info(
+        JSON.stringify({
+          event: "ai_translate",
+          userId: session.user.id,
+          targets: uniqueTargets,
+          fieldCount: Object.keys(nonEmpty).length,
+          ms: Date.now() - started,
+        })
+      )
+
+      return { status: "success", data: { translations } }
+    } catch (error) {
+      if (error instanceof TooManyFieldsError) {
+        return { status: "error", message: "too_many_fields" }
+      }
+      console.info(
+        JSON.stringify({
+          event: "ai_translate_error",
+          userId: session.user.id,
+          targets: uniqueTargets,
+          error: error instanceof Error ? error.message : String(error),
+        })
+      )
+      return { status: "error", message: "gateway_error" }
+    }
+  })
 }

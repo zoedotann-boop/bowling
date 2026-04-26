@@ -2,44 +2,24 @@
 
 import { revalidatePath, updateTag } from "next/cache"
 
-import { routing, type Locale } from "@/i18n/routing"
-import { ForbiddenError, requireAdmin } from "@/lib/auth-guards"
+import { routing } from "@/i18n/routing"
+import {
+  errorState,
+  readNumber,
+  readNumberOr,
+  readString,
+  readTranslation,
+  successState,
+  withAdmin,
+} from "@/lib/admin/forms"
 import * as services from "@/lib/services"
 
 import type { FormState } from "./types"
 
-function readString(formData: FormData, key: string): string {
-  const v = formData.get(key)
-  return typeof v === "string" ? v.trim() : ""
-}
-
-function readNumber(formData: FormData, key: string): number {
-  const v = formData.get(key)
-  const n = typeof v === "string" ? Number(v) : NaN
-  return Number.isFinite(n) ? n : NaN
-}
-
-function readTranslation(
-  formData: FormData,
-  field: string,
-  locale: Locale
-): string | null {
-  const raw = formData.get(`${field}.${locale}`)
-  if (typeof raw !== "string") return null
-  const trimmed = raw.trim()
-  return trimmed.length > 0 ? trimmed : null
-}
-
-function forbiddenState<T = never>(): FormState<T> {
-  return { status: "error", fieldErrors: { _: ["forbidden"] } }
-}
-
-function applyTags(tags: string[], slug: string) {
+function commitToBranch(tags: readonly string[], slug: string) {
   for (const tag of tags) updateTag(tag)
   revalidatePath(`/[locale]/admin/branches/${slug}`, "layout")
 }
-
-// ---------- Categories ----------
 
 async function syncCategoryTranslations(
   menuCategoryId: string,
@@ -52,21 +32,20 @@ async function syncCategoryTranslations(
     const aiFlag =
       locale !== routing.defaultLocale &&
       formData.get(`aiGenerated.${locale}`) === "1"
-    const payload = {
+    const result = await services.menu.upsertCategoryTranslation({
       menuCategoryId,
       locale,
       title: readTranslation(formData, "title", locale),
       aiGenerated: aiFlag,
       aiGeneratedAt: aiFlag ? now : null,
       reviewedAt: locale === routing.defaultLocale ? null : aiFlag ? null : now,
-    }
-    const result = await services.menu.upsertCategoryTranslation(payload)
+    })
     if (!result.ok) {
       for (const [k, v] of Object.entries(result.fieldErrors)) {
         errors[`${k}.${locale}`] = v
       }
     } else {
-      applyTags(result.revalidateTags, slug)
+      commitToBranch(result.revalidateTags, slug)
     }
   }
   return Object.keys(errors).length > 0 ? errors : null
@@ -76,81 +55,52 @@ export async function saveMenuCategoryAction(
   _prev: FormState,
   formData: FormData
 ): Promise<FormState<{ id: string }>> {
-  try {
-    await requireAdmin()
-  } catch (error) {
-    if (error instanceof ForbiddenError) return forbiddenState()
-    throw error
-  }
-
-  const branchId = readString(formData, "branchId")
-  const slug = readString(formData, "slug")
-  if (!branchId || !slug) {
-    return {
-      status: "error",
-      fieldErrors: { branchId: ["missing branch context"] },
+  return withAdmin(async () => {
+    const branchId = readString(formData, "branchId")
+    const slug = readString(formData, "slug")
+    if (!branchId || !slug) {
+      return errorState({ branchId: ["missing branch context"] })
     }
-  }
 
-  const sortOrder = readNumber(formData, "sortOrder")
-  const id = readString(formData, "id")
+    const sortOrderRaw = readNumber(formData, "sortOrder")
+    const id = readString(formData, "id")
 
-  let categoryId: string
-  if (id) {
-    const updateResult = await services.menu.updateCategory({
-      id,
-      sortOrder: Number.isFinite(sortOrder) ? sortOrder : undefined,
-    })
-    if (!updateResult.ok) {
-      return { status: "error", fieldErrors: updateResult.fieldErrors }
-    }
-    applyTags(updateResult.revalidateTags, slug)
-    categoryId = id
-  } else {
-    const createResult = await services.menu.createCategory({
-      branchId,
-      sortOrder: Number.isFinite(sortOrder) ? sortOrder : 0,
-    })
-    if (!createResult.ok) {
-      return { status: "error", fieldErrors: createResult.fieldErrors }
-    }
-    applyTags(createResult.revalidateTags, slug)
-    categoryId = createResult.data.id
-  }
+    const writeResult = id
+      ? await services.menu.updateCategory({
+          id,
+          sortOrder: Number.isFinite(sortOrderRaw) ? sortOrderRaw : undefined,
+        })
+      : await services.menu.createCategory({
+          branchId,
+          sortOrder: readNumberOr(formData, "sortOrder", 0),
+        })
 
-  const translationErrors = await syncCategoryTranslations(
-    categoryId,
-    formData,
-    slug
-  )
-  if (translationErrors) {
-    return { status: "error", fieldErrors: translationErrors }
-  }
+    if (!writeResult.ok) return errorState(writeResult.fieldErrors)
+    commitToBranch(writeResult.revalidateTags, slug)
+    const categoryId = id || writeResult.data.id
 
-  return { status: "success", data: { id: categoryId } }
+    const translationErrors = await syncCategoryTranslations(
+      categoryId,
+      formData,
+      slug
+    )
+    if (translationErrors) return errorState(translationErrors)
+    return successState({ id: categoryId })
+  })
 }
 
 export async function deleteMenuCategoryAction(
   formData: FormData
 ): Promise<FormState<{ id: string }>> {
-  try {
-    await requireAdmin()
-  } catch (error) {
-    if (error instanceof ForbiddenError) return forbiddenState()
-    throw error
-  }
-
-  const id = readString(formData, "id")
-  const slug = readString(formData, "slug")
-  if (!id) {
-    return { status: "error", fieldErrors: { id: ["missing category id"] } }
-  }
-  const result = await services.menu.removeCategory(id)
-  if (!result.ok) {
-    return { status: "error", fieldErrors: result.fieldErrors }
-  }
-  applyTags(result.revalidateTags, slug)
-  return { status: "success", data: result.data }
+  return withAdmin(async () => {
+    const id = readString(formData, "id")
+    const slug = readString(formData, "slug")
+    if (!id) return errorState({ id: ["missing category id"] })
+    const result = await services.menu.removeCategory(id)
+    if (!result.ok) return errorState(result.fieldErrors)
+    commitToBranch(result.revalidateTags, slug)
+    return successState(result.data)
+  })
 }
 
 export async function reorderMenuCategoriesAction(
@@ -158,22 +108,13 @@ export async function reorderMenuCategoriesAction(
   slug: string,
   items: { id: string; sortOrder: number }[]
 ): Promise<FormState<{ count: number }>> {
-  try {
-    await requireAdmin()
-  } catch (error) {
-    if (error instanceof ForbiddenError) return forbiddenState()
-    throw error
-  }
-
-  const result = await services.menu.reorderCategories(branchId, items)
-  if (!result.ok) {
-    return { status: "error", fieldErrors: result.fieldErrors }
-  }
-  applyTags(result.revalidateTags, slug)
-  return { status: "success", data: result.data }
+  return withAdmin(async () => {
+    const result = await services.menu.reorderCategories(branchId, items)
+    if (!result.ok) return errorState(result.fieldErrors)
+    commitToBranch(result.revalidateTags, slug)
+    return successState(result.data)
+  })
 }
-
-// ---------- Items ----------
 
 async function syncItemTranslations(
   menuItemId: string,
@@ -186,7 +127,7 @@ async function syncItemTranslations(
     const aiFlag =
       locale !== routing.defaultLocale &&
       formData.get(`aiGenerated.${locale}`) === "1"
-    const payload = {
+    const result = await services.menu.upsertItemTranslation({
       menuItemId,
       locale,
       name: readTranslation(formData, "name", locale),
@@ -194,14 +135,13 @@ async function syncItemTranslations(
       aiGenerated: aiFlag,
       aiGeneratedAt: aiFlag ? now : null,
       reviewedAt: locale === routing.defaultLocale ? null : aiFlag ? null : now,
-    }
-    const result = await services.menu.upsertItemTranslation(payload)
+    })
     if (!result.ok) {
       for (const [k, v] of Object.entries(result.fieldErrors)) {
         errors[`${k}.${locale}`] = v
       }
     } else {
-      applyTags(result.revalidateTags, slug)
+      commitToBranch(result.revalidateTags, slug)
     }
   }
   return Object.keys(errors).length > 0 ? errors : null
@@ -211,80 +151,51 @@ export async function saveMenuItemAction(
   _prev: FormState,
   formData: FormData
 ): Promise<FormState<{ id: string }>> {
-  try {
-    await requireAdmin()
-  } catch (error) {
-    if (error instanceof ForbiddenError) return forbiddenState()
-    throw error
-  }
-
-  const categoryId = readString(formData, "categoryId")
-  const slug = readString(formData, "slug")
-  if (!categoryId || !slug) {
-    return {
-      status: "error",
-      fieldErrors: { categoryId: ["missing category context"] },
+  return withAdmin(async () => {
+    const categoryId = readString(formData, "categoryId")
+    const slug = readString(formData, "slug")
+    if (!categoryId || !slug) {
+      return errorState({ categoryId: ["missing category context"] })
     }
-  }
 
-  const amountCents = readNumber(formData, "amountCents")
-  const sortOrder = readNumber(formData, "sortOrder")
-  const id = readString(formData, "id")
+    const amountCents = readNumber(formData, "amountCents")
+    const sortOrderRaw = readNumber(formData, "sortOrder")
+    const id = readString(formData, "id")
 
-  let itemId: string
-  if (id) {
-    const updateResult = await services.menu.updateItem({
-      id,
-      amountCents,
-      sortOrder: Number.isFinite(sortOrder) ? sortOrder : undefined,
-    })
-    if (!updateResult.ok) {
-      return { status: "error", fieldErrors: updateResult.fieldErrors }
-    }
-    applyTags(updateResult.revalidateTags, slug)
-    itemId = id
-  } else {
-    const createResult = await services.menu.createItem({
-      categoryId,
-      amountCents,
-      sortOrder: Number.isFinite(sortOrder) ? sortOrder : 0,
-    })
-    if (!createResult.ok) {
-      return { status: "error", fieldErrors: createResult.fieldErrors }
-    }
-    applyTags(createResult.revalidateTags, slug)
-    itemId = createResult.data.id
-  }
+    const writeResult = id
+      ? await services.menu.updateItem({
+          id,
+          amountCents,
+          sortOrder: Number.isFinite(sortOrderRaw) ? sortOrderRaw : undefined,
+        })
+      : await services.menu.createItem({
+          categoryId,
+          amountCents,
+          sortOrder: readNumberOr(formData, "sortOrder", 0),
+        })
 
-  const translationErrors = await syncItemTranslations(itemId, formData, slug)
-  if (translationErrors) {
-    return { status: "error", fieldErrors: translationErrors }
-  }
+    if (!writeResult.ok) return errorState(writeResult.fieldErrors)
+    commitToBranch(writeResult.revalidateTags, slug)
+    const itemId = id || writeResult.data.id
 
-  return { status: "success", data: { id: itemId } }
+    const translationErrors = await syncItemTranslations(itemId, formData, slug)
+    if (translationErrors) return errorState(translationErrors)
+    return successState({ id: itemId })
+  })
 }
 
 export async function deleteMenuItemAction(
   formData: FormData
 ): Promise<FormState<{ id: string }>> {
-  try {
-    await requireAdmin()
-  } catch (error) {
-    if (error instanceof ForbiddenError) return forbiddenState()
-    throw error
-  }
-
-  const id = readString(formData, "id")
-  const slug = readString(formData, "slug")
-  if (!id) {
-    return { status: "error", fieldErrors: { id: ["missing item id"] } }
-  }
-  const result = await services.menu.removeItem(id)
-  if (!result.ok) {
-    return { status: "error", fieldErrors: result.fieldErrors }
-  }
-  applyTags(result.revalidateTags, slug)
-  return { status: "success", data: result.data }
+  return withAdmin(async () => {
+    const id = readString(formData, "id")
+    const slug = readString(formData, "slug")
+    if (!id) return errorState({ id: ["missing item id"] })
+    const result = await services.menu.removeItem(id)
+    if (!result.ok) return errorState(result.fieldErrors)
+    commitToBranch(result.revalidateTags, slug)
+    return successState(result.data)
+  })
 }
 
 export async function reorderMenuItemsAction(
@@ -292,17 +203,10 @@ export async function reorderMenuItemsAction(
   slug: string,
   items: { id: string; sortOrder: number }[]
 ): Promise<FormState<{ count: number }>> {
-  try {
-    await requireAdmin()
-  } catch (error) {
-    if (error instanceof ForbiddenError) return forbiddenState()
-    throw error
-  }
-
-  const result = await services.menu.reorderItems(categoryId, items)
-  if (!result.ok) {
-    return { status: "error", fieldErrors: result.fieldErrors }
-  }
-  applyTags(result.revalidateTags, slug)
-  return { status: "success", data: result.data }
+  return withAdmin(async () => {
+    const result = await services.menu.reorderItems(categoryId, items)
+    if (!result.ok) return errorState(result.fieldErrors)
+    commitToBranch(result.revalidateTags, slug)
+    return successState(result.data)
+  })
 }

@@ -48,8 +48,8 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
 
-import { ConfirmDeleteDialog } from "./confirm-delete-dialog"
-import { FieldLabelWithTooltip } from "./field-label-with-tooltip"
+import { ConfirmDeleteDialog } from "./shared/confirm-delete-dialog"
+import { FieldLabelWithTooltip } from "./shared/field-label-with-tooltip"
 
 export type FooterLinkRow = {
   id: string

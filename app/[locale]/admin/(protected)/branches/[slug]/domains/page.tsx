@@ -4,11 +4,11 @@ import { getTranslations } from "next-intl/server"
 
 import type { Locale } from "@/i18n/routing"
 import * as services from "@/lib/services"
-import { PageHeader } from "@/components/admin/page-header"
+import { PageHeader } from "@/components/admin/shared/page-header"
 import {
   BranchDomainsForm,
   type BranchDomainRow,
-} from "@/components/admin/branch-domains-form"
+} from "@/components/admin/branch/branch-domains-form"
 
 import { loadBranchBySlug } from "../_lib/load"
 
