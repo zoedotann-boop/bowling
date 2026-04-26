@@ -196,6 +196,8 @@
       "legalPageCreated": "Legal page created",
       "legalPageSaved": "Legal page saved",
       "legalPageDeleted": "Legal page deleted",
+      "domainCreated": "تمت إضافة النطاق",
+      "domainDeleted": "تمت إزالة النطاق",
       "genericError": "Something went wrong"
     },
     "contact": {
@@ -204,6 +206,20 @@
       "whatsapp": "WhatsApp",
       "email": "Email",
       "mapUrl": "Map URL"
+    },
+    "domains": {
+      "pageTitle": "النطاقات",
+      "pageDescription": "اربط أسماء المضيفين بهذا الفرع. يرى الزوار القادمون من مضيف مرتبط هذا الفرع افتراضيًا.",
+      "title": "النطاقات",
+      "description": "المضيفات التي توجَّه إلى هذا الفرع (بدون تمييز حالة الأحرف، يُحذف المنفذ). كل مضيف لفرع واحد.",
+      "add": "نطاق جديد",
+      "host": "المضيف",
+      "empty": "لا توجد نطاقات مرتبطة بهذا الفرع بعد.",
+      "confirmDeleteTitle": "إزالة النطاق؟",
+      "confirmDeleteDescription": "سيتم فصل {host} عن هذا الفرع. لا يمكن التراجع.",
+      "tooltips": {
+        "host": "اسم مضيف عام مثل rgbowling.com (بدون بروتوكول، بدون منفذ). كل مضيف يرتبط بفرع واحد فقط."
+      }
     },
     "footer": {
       "pageTitle": "Footer",
@@ -366,6 +382,7 @@
         "reviews": "Reviews",
         "contact": "Contact",
         "media": "الوسائط",
+        "domains": "النطاقات",
         "footer": "التذييل",
         "legal": "القانوني"
       },

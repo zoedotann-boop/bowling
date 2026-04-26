@@ -72,6 +72,28 @@ export const branchTranslation = pgTable(
   ]
 )
 
+// ---------- Branch domain ----------
+
+export const branchDomain = pgTable(
+  "branch_domain",
+  {
+    id: text("id").primaryKey(),
+    branchId: text("branch_id")
+      .notNull()
+      .references(() => branch.id, { onDelete: "cascade" }),
+    host: text("host").notNull().unique(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [index("branch_domain_branch_idx").on(table.branchId)]
+)
+
+export const branchDomainRelations = relations(branchDomain, ({ one }) => ({
+  branch: one(branch, {
+    fields: [branchDomain.branchId],
+    references: [branch.id],
+  }),
+}))
+
 // ---------- Opening hours ----------
 
 export const openingHours = pgTable(
@@ -319,6 +341,7 @@ export const branchRelations = relations(branch, ({ one, many }) => ({
     references: [mediaAsset.id],
   }),
   translations: many(branchTranslation),
+  domains: many(branchDomain),
   hours: many(openingHours),
   priceRows: many(priceRow),
   packages: many(offeringPackage),

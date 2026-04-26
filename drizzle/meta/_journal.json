@@ -57,6 +57,13 @@
       "when": 1776765712401,
       "tag": "0007_boring_chimera",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1777185775685,
+      "tag": "0008_plain_roxanne_simpson",
+      "breakpoints": true
     }
   ]
 }

@@ -196,6 +196,8 @@
       "legalPageCreated": "Legal page created",
       "legalPageSaved": "Legal page saved",
       "legalPageDeleted": "Legal page deleted",
+      "domainCreated": "Domain added",
+      "domainDeleted": "Domain removed",
       "genericError": "Something went wrong"
     },
     "contact": {
@@ -204,6 +206,20 @@
       "whatsapp": "WhatsApp",
       "email": "Email",
       "mapUrl": "Map URL"
+    },
+    "domains": {
+      "pageTitle": "Domains",
+      "pageDescription": "Map hostnames to this branch. Visitors arriving on a mapped host see this branch by default.",
+      "title": "Domains",
+      "description": "Hosts route to this branch (case-insensitive, port stripped). One host per branch.",
+      "add": "New domain",
+      "host": "Host",
+      "empty": "No domains mapped to this branch yet.",
+      "confirmDeleteTitle": "Remove domain?",
+      "confirmDeleteDescription": "This unlinks {host} from this branch. Cannot be undone.",
+      "tooltips": {
+        "host": "Public hostname like rgbowling.com (no protocol, no port). Each host can map to only one branch."
+      }
     },
     "footer": {
       "pageTitle": "Footer",
@@ -366,6 +382,7 @@
         "reviews": "Reviews",
         "contact": "Contact",
         "media": "Media",
+        "domains": "Domains",
         "footer": "Footer",
         "legal": "Legal"
       },
