@@ -243,11 +243,12 @@ export async function loadSiteBranch(
     },
   }
 
+  const labels = dayLabels[locale] ?? dayLabels[FALLBACK_LOCALE]
   const hoursByDay = new Map(hoursRows.map((h) => [h.dayOfWeek, h]))
   const hours: SiteHours[] = dayKeys.map((key, idx) => {
     const row = hoursByDay.get(idx)
     return {
-      day: dayLabels[locale][key],
+      day: labels[key],
       open: row?.openTime ?? "",
       close: row?.closeTime ?? "",
       isClosed: row?.isClosed ?? !row,
