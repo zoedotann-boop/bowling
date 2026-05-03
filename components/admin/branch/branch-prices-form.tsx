@@ -191,6 +191,8 @@ function SortableRow({
   } = useSortable({ id: row.id })
 
   const summaryLabel = pickLabel(row)
+  const weekdayDisplay = (row.weekdayAmountCents / 100).toFixed(2)
+  const weekendDisplay = (row.weekendAmountCents / 100).toFixed(2)
 
   return (
     <li
@@ -220,7 +222,7 @@ function SortableRow({
             </span>
             <span className="flex shrink-0 items-center gap-2 font-mono text-xs text-ink-muted">
               <span>
-                {row.weekdayAmountCents} / {row.weekendAmountCents}
+                {weekdayDisplay} / {weekendDisplay}
               </span>
               <IconChevronDown className="size-4 transition-transform group-data-[panel-open]:rotate-180" />
             </span>

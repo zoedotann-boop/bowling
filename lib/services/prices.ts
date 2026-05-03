@@ -36,7 +36,7 @@ async function loadByBranch(slug: string) {
     .from(priceRow)
     .innerJoin(branch, eq(branch.id, priceRow.branchId))
     .where(eq(branch.slug, slug))
-    .orderBy(asc(priceRow.sortOrder))
+    .orderBy(asc(priceRow.sortOrder), asc(priceRow.id))
 
   if (rows.length === 0) {
     return {

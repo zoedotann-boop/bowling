@@ -41,12 +41,12 @@ export default async function BranchOfferingsPage({
       .select()
       .from(priceRow)
       .where(eq(priceRow.branchId, row.id))
-      .orderBy(asc(priceRow.sortOrder)),
+      .orderBy(asc(priceRow.sortOrder), asc(priceRow.id)),
     db
       .select()
       .from(offeringPackage)
       .where(eq(offeringPackage.branchId, row.id))
-      .orderBy(asc(offeringPackage.sortOrder)),
+      .orderBy(asc(offeringPackage.sortOrder), asc(offeringPackage.id)),
   ])
 
   const priceTranslationRows = priceRows.length
