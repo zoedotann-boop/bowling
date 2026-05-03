@@ -3,7 +3,12 @@
 import * as React from "react"
 import { useActionState, useEffect } from "react"
 import { useTranslations } from "next-intl"
-import { IconGripVertical, IconPlus, IconTrash } from "@tabler/icons-react"
+import {
+  IconChevronDown,
+  IconGripVertical,
+  IconPlus,
+  IconTrash,
+} from "@tabler/icons-react"
 import {
   DndContext,
   PointerSensor,
@@ -21,8 +26,13 @@ import {
 import { CSS } from "@dnd-kit/utilities"
 import { toast } from "sonner"
 
-import type { Locale } from "@/i18n/routing"
+import { routing, type Locale } from "@/i18n/routing"
 import { Button } from "@/components/ui/button"
+import {
+  Collapsible,
+  CollapsiblePanel,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import {
@@ -91,6 +101,18 @@ function itemValues<K extends "name" | "tag">(
     if (typeof value === "string") out[locale] = value
   }
   return out
+}
+
+function pickDisplayTitle(
+  translations: Record<Locale, { title?: string | null }>
+): string | null {
+  const def = translations[routing.defaultLocale]?.title
+  if (def) return def
+  for (const locale of routing.locales) {
+    const v = translations[locale]?.title
+    if (v) return v
+  }
+  return null
 }
 
 function needsReviewLocales(needsReview: string[], prefix: string): Locale[] {
@@ -198,28 +220,47 @@ function SortableCategory({
     isDragging,
   } = useSortable({ id: category.id })
 
+  const summaryTitle = pickDisplayTitle(category.translations)
+
   return (
     <li
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
       className={cn(
-        "flex items-start gap-2 border border-line bg-surface p-3",
+        "border border-line bg-surface",
         isDragging && "opacity-60"
       )}
     >
-      <button
-        type="button"
-        className="mt-1 flex size-6 shrink-0 cursor-grab items-center justify-center text-ink-muted hover:text-ink focus-visible:outline-none"
-        aria-label={t("reorderCategory")}
-        {...attributes}
-        {...listeners}
-      >
-        <IconGripVertical className="size-4" />
-      </button>
-      <div className="flex flex-1 flex-col gap-4">
-        <CategoryForm category={category} branchId={branchId} slug={slug} />
-        <ItemsList category={category} slug={slug} />
-      </div>
+      <Collapsible defaultOpen>
+        <div className="flex items-center gap-2 p-3">
+          <button
+            type="button"
+            className="flex size-6 shrink-0 cursor-grab items-center justify-center text-ink-muted hover:text-ink focus-visible:outline-none"
+            aria-label={t("reorderCategory")}
+            {...attributes}
+            {...listeners}
+          >
+            <IconGripVertical className="size-4" />
+          </button>
+          <CollapsibleTrigger className="flex flex-1 items-center justify-between gap-2 text-start text-sm font-medium text-ink hover:text-ink/80 focus-visible:outline-none">
+            <span className="truncate">
+              {summaryTitle || (
+                <span className="text-ink-muted italic">{t("untitled")}</span>
+              )}
+            </span>
+            <span className="flex shrink-0 items-center gap-2 text-xs text-ink-muted">
+              <span>{t("itemsCount", { count: category.items.length })}</span>
+              <IconChevronDown className="size-4 transition-transform group-data-[panel-open]:rotate-180" />
+            </span>
+          </CollapsibleTrigger>
+        </div>
+        <CollapsiblePanel>
+          <div className="flex flex-col gap-4 border-t border-line p-3">
+            <CategoryForm category={category} branchId={branchId} slug={slug} />
+            <ItemsList category={category} slug={slug} />
+          </div>
+        </CollapsiblePanel>
+      </Collapsible>
     </li>
   )
 }

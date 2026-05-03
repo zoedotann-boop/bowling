@@ -16,16 +16,6 @@ import * as services from "@/lib/services"
 
 import type { FormState } from "./types"
 
-const PRICE_KINDS = ["hourly", "adult", "child", "shoe"] as const
-type PriceKind = (typeof PRICE_KINDS)[number]
-
-function readKind(formData: FormData): PriceKind | null {
-  const raw = readString(formData, "kind")
-  return (PRICE_KINDS as readonly string[]).includes(raw)
-    ? (raw as PriceKind)
-    : null
-}
-
 function commitToBranch(tags: readonly string[], slug: string) {
   for (const tag of tags) updateTag(tag)
   revalidatePath(`/[locale]/admin/branches/${slug}`, "layout")
@@ -71,9 +61,6 @@ export async function savePriceRowAction(
     if (!branchId || !slug) {
       return errorState({ branchId: ["missing branch context"] })
     }
-    const kind = readKind(formData)
-    if (!kind) return errorState({ kind: ["invalid price kind"] })
-
     const weekdayAmountCents = readNumber(formData, "weekdayAmountCents")
     const weekendAmountCents = readNumber(formData, "weekendAmountCents")
     const sortOrderRaw = readNumber(formData, "sortOrder")
@@ -82,14 +69,12 @@ export async function savePriceRowAction(
     const writeResult = id
       ? await services.prices.update({
           id,
-          kind,
           weekdayAmountCents,
           weekendAmountCents,
           sortOrder: Number.isFinite(sortOrderRaw) ? sortOrderRaw : undefined,
         })
       : await services.prices.create({
           branchId,
-          kind,
           weekdayAmountCents,
           weekendAmountCents,
           sortOrder: readNumberOr(formData, "sortOrder", 0),

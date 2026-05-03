@@ -6,8 +6,8 @@ import { BowlingCard } from "@/components/brand/bowling-card"
 import { RetroButton } from "@/components/brand/retro-button"
 import { Eyebrow } from "@/components/common/eyebrow"
 
-export async function EventsTeaser({ branch }: { branch: SiteBranch }) {
-  const t = await getTranslations("EventsTeaser")
+export async function PackagesTeaser({ branch }: { branch: SiteBranch }) {
+  const t = await getTranslations("PackagesTeaser")
   const wa = await getTranslations("WhatsApp")
   const cta = await getTranslations("Cta")
   const featured = branch.packages[0]
@@ -20,7 +20,7 @@ export async function EventsTeaser({ branch }: { branch: SiteBranch }) {
   if (!featured && rest.length === 0) return null
 
   return (
-    <section id="events" className="scroll-mt-24 bg-ink">
+    <section id="packages" className="scroll-mt-24 bg-ink">
       <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
         <div className="mb-8">
           <Eyebrow tone="yellow">{t("title")}</Eyebrow>

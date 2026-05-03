@@ -29,12 +29,6 @@ export type SitePackage = {
   perks: string
 }
 
-export type SiteEvent = {
-  title: string
-  description: string
-  image: string | null
-}
-
 export type SiteMenuItem = {
   name: string
   price: string
@@ -51,6 +45,11 @@ export type SiteReview = {
   rating: number
   date: string
   text: string
+}
+
+export type SiteLegalLink = {
+  slug: string
+  title: string
 }
 
 export type SiteBranch = {
@@ -73,7 +72,6 @@ export type SiteBranch = {
   }
   prices: SitePriceRow[]
   packages: SitePackage[]
-  events: SiteEvent[]
   menu: SiteMenuCategory[]
   google: {
     rating: number
@@ -81,6 +79,7 @@ export type SiteBranch = {
     profileUrl: string
     reviews: SiteReview[]
   }
+  legalLinks: SiteLegalLink[]
   seo: { title: string; description: string }
 }
 
@@ -192,15 +191,15 @@ export async function loadSiteBranch(
   if (!loaded) return null
   const b = loaded.data
 
-  const [hoursRows, prices, packages, events, menu, reviews, reviewCache] =
+  const [hoursRows, prices, packages, menu, reviews, reviewCache, legalLinks] =
     await Promise.all([
       services.hours.listByBranch(targetSlug),
       services.prices.listByBranch(targetSlug, locale),
       services.packages.listByBranch(targetSlug, locale),
-      services.events.listByBranch(targetSlug, locale),
       services.menu.listByBranch(targetSlug, locale),
       services.reviews.listForBranch(b.id, locale),
       services.reviews.getCacheStatus(b.id),
+      services.legal.listPublishedByBranch(b.id, locale),
     ])
 
   const dayKeys = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"] as const
@@ -269,12 +268,6 @@ export async function loadSiteBranch(
     perks: p.perks ?? "",
   }))
 
-  const siteEvents: SiteEvent[] = events.data.map((e) => ({
-    title: e.title ?? "",
-    description: e.description ?? "",
-    image: e.image?.blobUrl ?? null,
-  }))
-
   const siteMenu: SiteMenuCategory[] = menu.data.map((cat) => ({
     title: cat.title ?? "",
     items: cat.items.map((item) => ({
@@ -321,7 +314,6 @@ export async function loadSiteBranch(
     },
     prices: sitePrices,
     packages: sitePackages,
-    events: siteEvents,
     menu: siteMenu,
     google: {
       rating: reviewCache?.averageRating ?? 0,
@@ -329,6 +321,7 @@ export async function loadSiteBranch(
       profileUrl,
       reviews: siteReviews,
     },
+    legalLinks,
     seo: {
       title: b.seoTitle ?? b.displayName ?? b.slug,
       description: b.seoDescription ?? b.heroTagline ?? "",

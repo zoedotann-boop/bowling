@@ -7,7 +7,7 @@ import { Hero } from "@/components/sections/hero"
 import { QuickActions } from "@/components/sections/quick-actions"
 import { PricingPreview } from "@/components/sections/pricing-preview"
 import { MenuSection } from "@/components/sections/menu-section"
-import { EventsTeaser } from "@/components/sections/events-teaser"
+import { PackagesTeaser } from "@/components/sections/packages-teaser"
 import { GoogleReviews } from "@/components/sections/google-reviews"
 import { ContactBlock } from "@/components/sections/contact-block"
 
@@ -28,7 +28,7 @@ export default async function HomePage({
       <QuickActions />
       <PricingPreview branch={branch} />
       <MenuSection branch={branch} />
-      <EventsTeaser branch={branch} />
+      <PackagesTeaser branch={branch} />
       <GoogleReviews branch={branch} />
       <ContactBlock branch={branch} />
     </>

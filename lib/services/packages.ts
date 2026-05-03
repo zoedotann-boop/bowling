@@ -45,7 +45,7 @@ export async function listByBranch(
         .from(offeringPackage)
         .innerJoin(branch, eq(branch.id, offeringPackage.branchId))
         .where(eq(branch.slug, slug))
-        .orderBy(asc(offeringPackage.sortOrder))
+        .orderBy(asc(offeringPackage.sortOrder), asc(offeringPackage.id))
 
       if (rows.length === 0) {
         return {

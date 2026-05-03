@@ -129,24 +129,6 @@ export async function updateBranchAction(
   })
 }
 
-export async function updateBranchContactAction(
-  _prev: FormState,
-  formData: FormData
-): Promise<FormState<{ id: string; slug: string }>> {
-  return withAdmin(async () => {
-    const id = readString(formData, "id")
-    if (!id) return errorState({ id: ["missing branch id"] })
-    const result = await services.branches.update({
-      id,
-      phone: readString(formData, "phone"),
-      whatsapp: readString(formData, "whatsapp"),
-      email: readString(formData, "email"),
-      mapUrl: readString(formData, "mapUrl"),
-    })
-    return applyWrite(result, "/[locale]/admin/branches")
-  })
-}
-
 export async function deleteBranchAction(
   formData: FormData
 ): Promise<FormState<{ id: string }>> {

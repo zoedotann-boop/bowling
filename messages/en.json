@@ -64,7 +64,7 @@
     "intro": "Birthday parties, corporate events, and group nights - fully hosted.",
     "inquireCta": "Plan your event"
   },
-  "EventsTeaser": {
+  "PackagesTeaser": {
     "title": "Birthdays & Group Events",
     "subtitle": "We host the party - you take the credit.",
     "cta": "See packages"
@@ -147,7 +147,9 @@
       "title": "Google reviews",
       "description": "Synced daily from the Google Places API. Missing locales are AI-translated.",
       "placeIdLabel": "Google place ID",
-      "placeIdMissing": "Not set - add a Google place ID in the Info tab",
+      "connectHelp": "Find your Place ID at <link>Google's Place ID finder</link>.",
+      "save": "Save",
+      "saving": "Saving…",
       "lastSynced": "Last synced: {when}",
       "neverSynced": "Never synced. Add a place ID, then press Refresh.",
       "averageRating": "Average rating: {rating} from {count} reviewers",
@@ -173,19 +175,12 @@
       "priceCreated": "Price row created",
       "priceSaved": "Price row saved",
       "priceDeleted": "Price row deleted",
-      "eventCreated": "Event created",
-      "eventSaved": "Event saved",
-      "eventDeleted": "Event deleted",
       "categoryCreated": "Category created",
       "categorySaved": "Category saved",
       "categoryDeleted": "Category deleted",
       "itemCreated": "Item created",
       "itemSaved": "Item saved",
       "itemDeleted": "Item deleted",
-      "contactSaved": "Contact details saved",
-      "footerLinkCreated": "Footer link created",
-      "footerLinkSaved": "Footer link saved",
-      "footerLinkDeleted": "Footer link deleted",
       "legalPageCreated": "Legal page created",
       "legalPageSaved": "Legal page saved",
       "legalPageDeleted": "Legal page deleted",
@@ -193,18 +188,11 @@
       "domainDeleted": "Domain removed",
       "genericError": "Something went wrong"
     },
-    "contact": {
-      "title": "Contact details",
-      "phone": "Phone",
-      "whatsapp": "WhatsApp",
-      "email": "Email",
-      "mapUrl": "Map URL"
-    },
     "domains": {
       "pageTitle": "Domains",
-      "pageDescription": "Map hostnames to this branch. Visitors arriving on a mapped host see this branch by default.",
+      "pageDescription": "Connect custom domains to this branch. Visitors who reach any of these hosts see this branch's site automatically. Add the domain here, then point its DNS record at Vercel — the branch loads at that URL.",
       "title": "Domains",
-      "description": "Hosts route to this branch (case-insensitive, port stripped). One host per branch.",
+      "description": "Each host maps to exactly one branch (case-insensitive, port stripped).",
       "add": "New domain",
       "host": "Host",
       "empty": "No domains mapped to this branch yet.",
@@ -214,30 +202,12 @@
         "host": "Public hostname like rgbowling.com (no protocol, no port). Each host can map to only one branch."
       }
     },
-    "footer": {
-      "pageTitle": "Footer",
-      "pageDescription": "Manage footer link groups and legal pages.",
-      "linksTitle": "Footer links",
-      "linksEmpty": "No footer links yet.",
-      "addLink": "New link",
-      "locale": "Locale",
-      "groupKey": "Group",
-      "label": "Label",
-      "href": "URL",
-      "reorder": "Drag to reorder",
-      "confirmDeleteTitle": "Delete footer link?",
-      "confirmDeleteDescription": "This removes \"{label}\". Cannot be undone.",
-      "tooltips": {
-        "locale": "Which language this link appears in. Each link is locale-specific — create separate entries for each language you support.",
-        "groupKey": "Column heading this link sits under in the footer (e.g., legal, company, social). Links with the same group key render together.",
-        "label": "Visible text of the link as shown in the footer.",
-        "href": "Destination URL. Use a relative path like /legal/terms for internal pages or an absolute https:// URL for external links."
-      }
-    },
     "legal": {
       "title": "Legal pages",
       "addPage": "New page",
       "empty": "No legal pages yet.",
+      "untitled": "Untitled page",
+      "draftBadge": "Draft",
       "slug": "Slug",
       "sortOrder": "Sort order",
       "published": "Published",
@@ -257,6 +227,7 @@
       "title": "Packages",
       "add": "New package",
       "empty": "No packages yet.",
+      "untitled": "Untitled package",
       "amount": "Price (cents)",
       "titleLabel": "Package name",
       "perks": "Perks",
@@ -273,40 +244,17 @@
       "title": "Prices",
       "add": "New price row",
       "empty": "No price rows yet.",
-      "kind": "Kind",
+      "untitled": "Untitled price",
       "weekday": "Weekday (cents)",
       "weekend": "Weekend (cents)",
       "label": "Label",
       "reorder": "Drag to reorder",
-      "kinds": {
-        "hourly": "Hourly lane",
-        "adult": "Adult",
-        "child": "Child",
-        "shoe": "Shoe rental"
-      },
       "confirmDeleteTitle": "Delete price row?",
       "confirmDeleteDescription": "This removes the row. Cannot be undone.",
       "tooltips": {
-        "kind": "Category of the price row. Used to group and sort entries on the public prices table.",
         "weekday": "Sun–Thu price in agorot (cents). ₪1 = 100. Example: ₪42 = 4200.",
         "weekend": "Fri–Sat price in agorot (cents). ₪1 = 100. Example: ₪52 = 5200.",
-        "label": "Optional per-locale label overriding the default kind name (e.g., Adult game, Shoe rental)."
-      }
-    },
-    "events": {
-      "title": "Events",
-      "add": "New event",
-      "empty": "No events yet.",
-      "image": "Image",
-      "titleLabel": "Event title",
-      "description": "Description",
-      "reorder": "Drag to reorder",
-      "confirmDeleteTitle": "Delete event?",
-      "confirmDeleteDescription": "This removes the event. Cannot be undone.",
-      "tooltips": {
-        "image": "Photo shown on the event card on the public site. Upload via the Media library first.",
-        "titleLabel": "Short name of the event type (e.g., Birthdays, Corporate).",
-        "description": "One- or two-sentence pitch shown beneath the event title on the public site."
+        "label": "Per-locale display label (e.g., Adult game, Shoe rental)."
       }
     },
     "menu": {
@@ -314,6 +262,8 @@
       "addCategory": "New category",
       "addItem": "New item",
       "empty": "No menu categories yet.",
+      "untitled": "Untitled category",
+      "itemsCount": "{count, plural, =0 {no items} one {# item} other {# items}}",
       "categoryTitle": "Category title",
       "itemsTitle": "Items",
       "itemsEmpty": "No items in this category yet.",
@@ -368,15 +318,11 @@
         "hours": "Hours",
         "hero": "Hero",
         "seo": "SEO",
-        "prices": "Prices",
-        "packages": "Packages",
+        "offerings": "Offerings",
         "menu": "Menu",
-        "events": "Events",
         "reviews": "Reviews",
-        "contact": "Contact",
         "media": "Media",
         "domains": "Domains",
-        "footer": "Footer",
         "legal": "Legal"
       },
       "form": {

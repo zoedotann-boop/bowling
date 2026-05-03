@@ -6,12 +6,12 @@ import { Eyebrow } from "@/components/common/eyebrow"
 type Row = {
   k: string
   href: string
-  titleKey: "Cta.book" | "Nav.prices" | "Nav.events" | "EventsTeaser.title"
+  titleKey: "Cta.book" | "Nav.prices" | "Nav.events" | "PackagesTeaser.title"
   subKey:
     | "Hero.scrollHint"
     | "PricingPreview.subtitle"
     | "Events.intro"
-    | "EventsTeaser.subtitle"
+    | "PackagesTeaser.subtitle"
   tone: "red" | "turq" | "yellow" | "red-2"
 }
 
@@ -40,8 +40,8 @@ const rows: Row[] = [
   {
     k: "04",
     href: "/events",
-    titleKey: "EventsTeaser.title",
-    subKey: "EventsTeaser.subtitle",
+    titleKey: "PackagesTeaser.title",
+    subKey: "PackagesTeaser.subtitle",
     tone: "red-2",
   },
 ]

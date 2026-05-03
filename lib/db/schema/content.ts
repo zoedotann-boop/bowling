@@ -134,7 +134,6 @@ export const priceRow = pgTable(
     branchId: text("branch_id")
       .notNull()
       .references(() => branch.id, { onDelete: "cascade" }),
-    kind: text("kind").notNull(),
     weekdayAmountCents: integer("weekday_amount_cents").notNull(),
     weekendAmountCents: integer("weekend_amount_cents").notNull(),
     sortOrder: integer("sort_order").default(0).notNull(),
@@ -144,13 +143,7 @@ export const priceRow = pgTable(
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
   },
-  (table) => [
-    check(
-      "price_row_kind_check",
-      sql`${table.kind} IN ('hourly','adult','child','shoe')`
-    ),
-    index("price_row_branch_idx").on(table.branchId, table.sortOrder),
-  ]
+  (table) => [index("price_row_branch_idx").on(table.branchId, table.sortOrder)]
 )
 
 export const priceRowTranslation = pgTable(
@@ -209,49 +202,6 @@ export const offeringPackageTranslation = pgTable(
   (table) => [
     primaryKey({ columns: [table.packageId, table.locale] }),
     index("offering_package_translation_locale_idx").on(table.locale),
-  ]
-)
-
-// ---------- Event offering ----------
-
-export const eventOffering = pgTable(
-  "event_offering",
-  {
-    id: text("id").primaryKey(),
-    branchId: text("branch_id")
-      .notNull()
-      .references(() => branch.id, { onDelete: "cascade" }),
-    imageId: text("image_id").references((): AnyPgColumn => mediaAsset.id, {
-      onDelete: "set null",
-    }),
-    sortOrder: integer("sort_order").default(0).notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
-      .defaultNow()
-      .$onUpdate(() => /* @__PURE__ */ new Date())
-      .notNull(),
-  },
-  (table) => [
-    index("event_offering_branch_idx").on(table.branchId, table.sortOrder),
-  ]
-)
-
-export const eventOfferingTranslation = pgTable(
-  "event_offering_translation",
-  {
-    eventOfferingId: text("event_offering_id")
-      .notNull()
-      .references(() => eventOffering.id, { onDelete: "cascade" }),
-    locale: text("locale").notNull(),
-    title: text("title"),
-    description: text("description"),
-    aiGenerated: boolean("ai_generated").default(false).notNull(),
-    aiGeneratedAt: timestamp("ai_generated_at"),
-    reviewedAt: timestamp("reviewed_at"),
-  },
-  (table) => [
-    primaryKey({ columns: [table.eventOfferingId, table.locale] }),
-    index("event_offering_translation_locale_idx").on(table.locale),
   ]
 )
 
@@ -345,7 +295,6 @@ export const branchRelations = relations(branch, ({ one, many }) => ({
   hours: many(openingHours),
   priceRows: many(priceRow),
   packages: many(offeringPackage),
-  events: many(eventOffering),
   menuCategories: many(menuCategory),
 }))
 
@@ -405,31 +354,6 @@ export const offeringPackageTranslationRelations = relations(
   })
 )
 
-export const eventOfferingRelations = relations(
-  eventOffering,
-  ({ one, many }) => ({
-    branch: one(branch, {
-      fields: [eventOffering.branchId],
-      references: [branch.id],
-    }),
-    image: one(mediaAsset, {
-      fields: [eventOffering.imageId],
-      references: [mediaAsset.id],
-    }),
-    translations: many(eventOfferingTranslation),
-  })
-)
-
-export const eventOfferingTranslationRelations = relations(
-  eventOfferingTranslation,
-  ({ one }) => ({
-    event: one(eventOffering, {
-      fields: [eventOfferingTranslation.eventOfferingId],
-      references: [eventOffering.id],
-    }),
-  })
-)
-
 export const menuCategoryRelations = relations(
   menuCategory,
   ({ one, many }) => ({
@@ -468,36 +392,6 @@ export const menuItemTranslationRelations = relations(
       references: [menuItem.id],
     }),
   })
-)
-
-// ---------- Footer link ----------
-
-export const footerLink = pgTable(
-  "footer_link",
-  {
-    id: text("id").primaryKey(),
-    branchId: text("branch_id")
-      .notNull()
-      .references(() => branch.id, { onDelete: "cascade" }),
-    locale: text("locale").notNull(),
-    groupKey: text("group_key").notNull(),
-    label: text("label").notNull(),
-    href: text("href").notNull(),
-    sortOrder: integer("sort_order").default(0).notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
-      .defaultNow()
-      .$onUpdate(() => /* @__PURE__ */ new Date())
-      .notNull(),
-  },
-  (table) => [
-    index("footer_link_branch_locale_group_idx").on(
-      table.branchId,
-      table.locale,
-      table.groupKey,
-      table.sortOrder
-    ),
-  ]
 )
 
 // ---------- Google reviews ----------

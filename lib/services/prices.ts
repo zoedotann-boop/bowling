@@ -1,4 +1,4 @@
-import { and, asc, eq, inArray, ne } from "drizzle-orm"
+import { and, asc, eq, inArray } from "drizzle-orm"
 import { unstable_cache } from "next/cache"
 
 import type { Locale } from "@/i18n/routing"
@@ -19,11 +19,8 @@ import {
 } from "./schemas"
 import { tags } from "./tags"
 
-export type PriceKind = "hourly" | "adult" | "child" | "shoe"
-
 export type PriceRowRead = {
   id: string
-  kind: PriceKind
   weekdayAmountCents: number
   weekendAmountCents: number
   sortOrder: number
@@ -39,7 +36,7 @@ async function loadByBranch(slug: string) {
     .from(priceRow)
     .innerJoin(branch, eq(branch.id, priceRow.branchId))
     .where(eq(branch.slug, slug))
-    .orderBy(asc(priceRow.sortOrder), asc(priceRow.kind))
+    .orderBy(asc(priceRow.sortOrder), asc(priceRow.id))
 
   if (rows.length === 0) {
     return {
@@ -76,7 +73,6 @@ function localizeRow(
   return {
     data: {
       id: row.id,
-      kind: row.kind as PriceKind,
       weekdayAmountCents: row.weekdayAmountCents,
       weekendAmountCents: row.weekendAmountCents,
       sortOrder: row.sortOrder,
@@ -96,8 +92,7 @@ export async function listByBranch(
     { tags: [tags.branchPrices(slug), tags.branch(slug)] }
   )
   const { rows, translations } = await load()
-  const nonShoe = rows.filter((r) => r.kind !== "shoe")
-  const results = nonShoe.map((row, idx) =>
+  const results = rows.map((row, idx) =>
     localizeRow(row, translations, locale, String(idx))
   )
   return {
@@ -136,24 +131,6 @@ export async function create(
   if (!parsed.success) {
     return { ok: false, fieldErrors: formatZodErrors(parsed.error) }
   }
-  if (parsed.data.kind === "shoe") {
-    const [existing] = await db
-      .select({ id: priceRow.id })
-      .from(priceRow)
-      .where(
-        and(
-          eq(priceRow.branchId, parsed.data.branchId),
-          eq(priceRow.kind, "shoe")
-        )
-      )
-      .limit(1)
-    if (existing) {
-      return {
-        ok: false,
-        fieldErrors: { kind: ["shoe rental already exists for this branch"] },
-      }
-    }
-  }
   const slug = await slugForBranchId(parsed.data.branchId)
   if (!slug)
     return { ok: false, fieldErrors: { branchId: ["branch not found"] } }
@@ -162,7 +139,6 @@ export async function create(
   await db.insert(priceRow).values({
     id,
     branchId: parsed.data.branchId,
-    kind: parsed.data.kind,
     weekdayAmountCents: parsed.data.weekdayAmountCents,
     weekendAmountCents: parsed.data.weekendAmountCents,
     sortOrder: parsed.data.sortOrder ?? 0,
@@ -183,33 +159,6 @@ export async function update(
   }
   const slug = await slugForPriceRow(id)
   if (!slug) return { ok: false, fieldErrors: { id: ["price row not found"] } }
-
-  if (rest.kind === "shoe") {
-    const [existing] = await db
-      .select({ id: priceRow.id, branchId: priceRow.branchId })
-      .from(priceRow)
-      .where(eq(priceRow.id, id))
-      .limit(1)
-    if (existing) {
-      const [conflict] = await db
-        .select({ id: priceRow.id })
-        .from(priceRow)
-        .where(
-          and(
-            eq(priceRow.branchId, existing.branchId),
-            eq(priceRow.kind, "shoe"),
-            ne(priceRow.id, id)
-          )
-        )
-        .limit(1)
-      if (conflict) {
-        return {
-          ok: false,
-          fieldErrors: { kind: ["shoe rental already exists for this branch"] },
-        }
-      }
-    }
-  }
 
   await db.update(priceRow).set(rest).where(eq(priceRow.id, id))
   return { ok: true, data: { id }, revalidateTags: priceTags(slug) }

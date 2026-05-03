@@ -3,16 +3,12 @@
 import * as React from "react"
 import { useTranslations } from "next-intl"
 import {
-  IconCalendarEvent,
   IconCheck,
   IconChevronUp,
   IconClock,
   IconFileText,
   IconInfoCircle,
-  IconLayoutBottombar,
   IconLogout,
-  IconPackage,
-  IconPhone,
   IconPhoto,
   IconPlus,
   IconReceipt,
@@ -64,15 +60,11 @@ type AdminSidebarProps = {
 type BranchNavKey =
   | "info"
   | "hours"
-  | "prices"
-  | "packages"
-  | "events"
+  | "offerings"
   | "menu"
   | "reviews"
-  | "contact"
   | "media"
   | "domains"
-  | "footer"
   | "legal"
 
 type BranchNavItem = {
@@ -83,15 +75,11 @@ type BranchNavItem = {
 const BRANCH_NAV_ITEMS: BranchNavItem[] = [
   { key: "info", icon: IconInfoCircle },
   { key: "hours", icon: IconClock },
-  { key: "prices", icon: IconReceipt },
-  { key: "packages", icon: IconPackage },
-  { key: "events", icon: IconCalendarEvent },
+  { key: "offerings", icon: IconReceipt },
   { key: "menu", icon: IconToolsKitchen2 },
   { key: "reviews", icon: IconStar },
-  { key: "contact", icon: IconPhone },
   { key: "media", icon: IconPhoto },
   { key: "domains", icon: IconWorld },
-  { key: "footer", icon: IconLayoutBottombar },
   { key: "legal", icon: IconFileText },
 ]
 
