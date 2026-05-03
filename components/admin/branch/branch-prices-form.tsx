@@ -3,7 +3,12 @@
 import * as React from "react"
 import { useActionState, useEffect } from "react"
 import { useTranslations } from "next-intl"
-import { IconGripVertical, IconPlus, IconTrash } from "@tabler/icons-react"
+import {
+  IconChevronDown,
+  IconGripVertical,
+  IconPlus,
+  IconTrash,
+} from "@tabler/icons-react"
 import {
   DndContext,
   PointerSensor,
@@ -21,8 +26,13 @@ import {
 import { CSS } from "@dnd-kit/utilities"
 import { toast } from "sonner"
 
-import type { Locale } from "@/i18n/routing"
+import { routing, type Locale } from "@/i18n/routing"
 import { Button } from "@/components/ui/button"
+import {
+  Collapsible,
+  CollapsiblePanel,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import {
@@ -38,12 +48,8 @@ import { FieldLabelWithTooltip } from "../shared/field-label-with-tooltip"
 import { TranslatableField } from "../translation/translatable-field"
 import { TranslationStateProvider } from "../translation/translation-state-context"
 
-const PRICE_KINDS = ["hourly", "adult", "child", "shoe"] as const
-export type PriceKind = (typeof PRICE_KINDS)[number]
-
 export type PriceRowForm = {
   id: string
-  kind: PriceKind
   weekdayAmountCents: number
   weekendAmountCents: number
   sortOrder: number
@@ -56,6 +62,16 @@ type Props = {
   branchId: string
   slug: string
   initialRows: PriceRowForm[]
+}
+
+function pickLabel(row: PriceRowForm): string | null {
+  const def = row.translations[routing.defaultLocale]?.label
+  if (def) return def
+  for (const locale of routing.locales) {
+    const v = row.translations[locale]?.label
+    if (v) return v
+  }
+  return null
 }
 
 function localesValues(row: PriceRowForm): Partial<Record<Locale, string>> {
@@ -174,27 +190,48 @@ function SortableRow({
     isDragging,
   } = useSortable({ id: row.id })
 
+  const summaryLabel = pickLabel(row)
+
   return (
     <li
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
       className={cn(
-        "flex items-start gap-2 border border-line bg-surface p-3",
+        "border border-line bg-surface",
         isDragging && "opacity-60"
       )}
     >
-      <button
-        type="button"
-        className="mt-1 flex size-6 shrink-0 cursor-grab items-center justify-center text-ink-muted hover:text-ink focus-visible:outline-none"
-        aria-label={t("reorder")}
-        {...attributes}
-        {...listeners}
-      >
-        <IconGripVertical className="size-4" />
-      </button>
-      <div className="flex-1">
-        <PriceRowFormFields row={row} branchId={branchId} slug={slug} />
-      </div>
+      <Collapsible defaultOpen>
+        <div className="flex items-center gap-2 p-3">
+          <button
+            type="button"
+            className="flex size-6 shrink-0 cursor-grab items-center justify-center text-ink-muted hover:text-ink focus-visible:outline-none"
+            aria-label={t("reorder")}
+            {...attributes}
+            {...listeners}
+          >
+            <IconGripVertical className="size-4" />
+          </button>
+          <CollapsibleTrigger className="flex flex-1 items-center justify-between gap-2 text-start text-sm font-medium text-ink hover:text-ink/80 focus-visible:outline-none">
+            <span className="truncate">
+              {summaryLabel || (
+                <span className="text-ink-muted italic">{t("untitled")}</span>
+              )}
+            </span>
+            <span className="flex shrink-0 items-center gap-2 font-mono text-xs text-ink-muted">
+              <span>
+                {row.weekdayAmountCents} / {row.weekendAmountCents}
+              </span>
+              <IconChevronDown className="size-4 transition-transform group-data-[panel-open]:rotate-180" />
+            </span>
+          </CollapsibleTrigger>
+        </div>
+        <CollapsiblePanel>
+          <div className="border-t border-line p-3">
+            <PriceRowFormFields row={row} branchId={branchId} slug={slug} />
+          </div>
+        </CollapsiblePanel>
+      </Collapsible>
     </li>
   )
 }
@@ -244,23 +281,7 @@ function PriceRowFormFields({
         <input type="hidden" name="branchId" value={branchId} />
         <input type="hidden" name="slug" value={slug} />
         <input type="hidden" name="sortOrder" value={row.sortOrder} />
-        <div className="grid gap-3 md:grid-cols-[8rem_8rem_8rem_1fr]">
-          <Field>
-            <FieldLabelWithTooltip tooltip={tTip("kind")}>
-              {t("kind")}
-            </FieldLabelWithTooltip>
-            <select
-              name="kind"
-              defaultValue={row.kind}
-              className="flex h-8 w-full rounded-none border border-border bg-background px-2.5 py-1 text-sm text-foreground shadow-xs outline-none focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring/50"
-            >
-              {PRICE_KINDS.map((k) => (
-                <option key={k} value={k}>
-                  {t(`kinds.${k}`)}
-                </option>
-              ))}
-            </select>
-          </Field>
+        <div className="grid gap-3 md:grid-cols-[8rem_8rem_1fr]">
           <Field>
             <FieldLabelWithTooltip tooltip={tTip("weekday")}>
               {t("weekday")}
@@ -342,7 +363,6 @@ function NewPriceRowButton({
       const fd = new FormData()
       fd.set("branchId", branchId)
       fd.set("slug", slug)
-      fd.set("kind", "hourly")
       fd.set("weekdayAmountCents", "0")
       fd.set("weekendAmountCents", "0")
       const result = await savePriceRowAction({ status: "idle" }, fd)

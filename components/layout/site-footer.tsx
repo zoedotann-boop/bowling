@@ -60,6 +60,20 @@ export async function SiteFooter({ branch }: { branch: SiteBranch }) {
           </div>
         </div>
 
+        {branch.legalLinks.length > 0 ? (
+          <nav className="mt-5 flex flex-wrap justify-center gap-x-4 gap-y-2 text-xs">
+            {branch.legalLinks.map((link) => (
+              <Link
+                key={link.slug}
+                href={`/legal/${link.slug}`}
+                className="text-ink/70 hover:text-red"
+              >
+                {link.title}
+              </Link>
+            ))}
+          </nav>
+        ) : null}
+
         <p className="mt-6 text-center font-mono text-[10px] tracking-[0.2em] text-ink/50">
           © {year} · BOWLING {branch.city.toUpperCase()}
         </p>

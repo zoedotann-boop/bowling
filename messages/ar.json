@@ -64,7 +64,7 @@
     "intro": "أعياد ميلاد، فعاليات شركات، ولقاءات جماعية - بإدارة كاملة.",
     "inquireCta": "خطّط لفعاليتك"
   },
-  "EventsTeaser": {
+  "PackagesTeaser": {
     "title": "أعياد الميلاد والمجموعات",
     "subtitle": "نحن نُقيم الحفلة - وأنت تستمتع.",
     "cta": "شاهد الحزم"
@@ -147,7 +147,9 @@
       "title": "مراجعات Google",
       "description": "تتم المزامنة يومياً عبر واجهة Google Places. تُترجم اللغات الناقصة بواسطة الذكاء الاصطناعي.",
       "placeIdLabel": "معرّف مكان Google",
-      "placeIdMissing": "غير محدد - أضف معرّف مكان في تبويب المعلومات",
+      "connectHelp": "ابحث عن Place ID عبر <link>أداة البحث من Google</link>.",
+      "save": "حفظ",
+      "saving": "جارٍ الحفظ…",
       "lastSynced": "آخر مزامنة: {when}",
       "neverSynced": "لم تتم المزامنة بعد. أضف المعرّف ثم اضغط على تحديث.",
       "averageRating": "متوسط التقييم: {rating} من {count} مقيّماً",
@@ -173,19 +175,12 @@
       "priceCreated": "Price row created",
       "priceSaved": "Price row saved",
       "priceDeleted": "Price row deleted",
-      "eventCreated": "Event created",
-      "eventSaved": "Event saved",
-      "eventDeleted": "Event deleted",
       "categoryCreated": "Category created",
       "categorySaved": "Category saved",
       "categoryDeleted": "Category deleted",
       "itemCreated": "Item created",
       "itemSaved": "Item saved",
       "itemDeleted": "Item deleted",
-      "contactSaved": "Contact details saved",
-      "footerLinkCreated": "Footer link created",
-      "footerLinkSaved": "Footer link saved",
-      "footerLinkDeleted": "Footer link deleted",
       "legalPageCreated": "Legal page created",
       "legalPageSaved": "Legal page saved",
       "legalPageDeleted": "Legal page deleted",
@@ -193,18 +188,11 @@
       "domainDeleted": "تمت إزالة النطاق",
       "genericError": "Something went wrong"
     },
-    "contact": {
-      "title": "Contact details",
-      "phone": "Phone",
-      "whatsapp": "WhatsApp",
-      "email": "Email",
-      "mapUrl": "Map URL"
-    },
     "domains": {
       "pageTitle": "النطاقات",
-      "pageDescription": "اربط أسماء المضيفين بهذا الفرع. يرى الزوار القادمون من مضيف مرتبط هذا الفرع افتراضيًا.",
+      "pageDescription": "اربط نطاقات مخصصة بهذا الفرع. الزوار الذين يصلون إلى أي من هذه المضيفات سيرون موقع هذا الفرع تلقائيًا. أضف النطاق هنا، ثم وجِّه سجل DNS الخاص به إلى Vercel — وسيُحمَّل الفرع على ذلك العنوان.",
       "title": "النطاقات",
-      "description": "المضيفات التي توجَّه إلى هذا الفرع (بدون تمييز حالة الأحرف، يُحذف المنفذ). كل مضيف لفرع واحد.",
+      "description": "كل مضيف يرتبط بفرع واحد فقط (بدون تمييز حالة الأحرف، يُحذف المنفذ).",
       "add": "نطاق جديد",
       "host": "المضيف",
       "empty": "لا توجد نطاقات مرتبطة بهذا الفرع بعد.",
@@ -214,30 +202,12 @@
         "host": "اسم مضيف عام مثل rgbowling.com (بدون بروتوكول، بدون منفذ). كل مضيف يرتبط بفرع واحد فقط."
       }
     },
-    "footer": {
-      "pageTitle": "Footer",
-      "pageDescription": "Manage footer link groups and legal pages.",
-      "linksTitle": "Footer links",
-      "linksEmpty": "No footer links yet.",
-      "addLink": "New link",
-      "locale": "Locale",
-      "groupKey": "Group",
-      "label": "Label",
-      "href": "URL",
-      "reorder": "Drag to reorder",
-      "confirmDeleteTitle": "Delete footer link?",
-      "confirmDeleteDescription": "This removes \"{label}\". Cannot be undone.",
-      "tooltips": {
-        "locale": "اللغة التي يظهر بها هذا الرابط. كل رابط خاص بلغة واحدة — أنشئ إدخالات منفصلة لكل لغة مدعومة.",
-        "groupKey": "عنوان العمود في التذييل الذي يظهر تحته هذا الرابط (مثل قانوني، الشركة، وسائل التواصل). الروابط التي تشترك في نفس المفتاح تُعرض معًا.",
-        "label": "النص المرئي للرابط كما يظهر في التذييل.",
-        "href": "عنوان URL الوجهة. استخدم مسارًا نسبيًا مثل /legal/terms للصفحات الداخلية أو عنوانًا مطلقًا https:// للروابط الخارجية."
-      }
-    },
     "legal": {
       "title": "Legal pages",
       "addPage": "New page",
       "empty": "No legal pages yet.",
+      "untitled": "Untitled page",
+      "draftBadge": "Draft",
       "slug": "Slug",
       "sortOrder": "Sort order",
       "published": "Published",
@@ -257,6 +227,7 @@
       "title": "Packages",
       "add": "New package",
       "empty": "No packages yet.",
+      "untitled": "Untitled package",
       "amount": "Price (cents)",
       "titleLabel": "Package name",
       "perks": "Perks",
@@ -273,40 +244,17 @@
       "title": "Prices",
       "add": "New price row",
       "empty": "No price rows yet.",
-      "kind": "Kind",
+      "untitled": "Untitled price",
       "weekday": "Weekday (cents)",
       "weekend": "Weekend (cents)",
       "label": "Label",
       "reorder": "Drag to reorder",
-      "kinds": {
-        "hourly": "Hourly lane",
-        "adult": "Adult",
-        "child": "Child",
-        "shoe": "Shoe rental"
-      },
       "confirmDeleteTitle": "Delete price row?",
       "confirmDeleteDescription": "This removes the row. Cannot be undone.",
       "tooltips": {
-        "kind": "فئة صف السعر. تستخدم لتجميع وترتيب المدخلات في جدول الأسعار العام.",
         "weekday": "سعر الأحد–الخميس بالأغورة (سنتات). ₪1 = 100. مثال: ₪42 = 4200.",
         "weekend": "سعر الجمعة–السبت بالأغورة (سنتات). ₪1 = 100. مثال: ₪52 = 5200.",
-        "label": "تسمية اختيارية حسب اللغة تحل محل الاسم الافتراضي للفئة (مثل لعبة للبالغين، إيجار حذاء)."
-      }
-    },
-    "events": {
-      "title": "Events",
-      "add": "New event",
-      "empty": "No events yet.",
-      "image": "Image",
-      "titleLabel": "Event title",
-      "description": "Description",
-      "reorder": "Drag to reorder",
-      "confirmDeleteTitle": "Delete event?",
-      "confirmDeleteDescription": "This removes the event. Cannot be undone.",
-      "tooltips": {
-        "image": "الصورة المعروضة على بطاقة الفعالية في الموقع العام. ارفعها في مكتبة الوسائط أولاً.",
-        "titleLabel": "اسم قصير لنوع الفعالية (مثل أعياد الميلاد، الشركات).",
-        "description": "جملة أو جملتان تظهر تحت عنوان الفعالية على الموقع العام."
+        "label": "تسمية حسب اللغة (مثل لعبة للبالغين، إيجار حذاء)."
       }
     },
     "menu": {
@@ -314,6 +262,8 @@
       "addCategory": "New category",
       "addItem": "New item",
       "empty": "No menu categories yet.",
+      "untitled": "Untitled category",
+      "itemsCount": "{count, plural, =0 {no items} one {# item} other {# items}}",
       "categoryTitle": "Category title",
       "itemsTitle": "Items",
       "itemsEmpty": "No items in this category yet.",
@@ -368,15 +318,11 @@
         "hours": "Hours",
         "hero": "Hero",
         "seo": "SEO",
-        "prices": "Prices",
-        "packages": "Packages",
+        "offerings": "Offerings",
         "menu": "Menu",
-        "events": "Events",
         "reviews": "Reviews",
-        "contact": "Contact",
         "media": "الوسائط",
         "domains": "النطاقات",
-        "footer": "التذييل",
         "legal": "القانوني"
       },
       "form": {

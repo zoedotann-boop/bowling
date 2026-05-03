@@ -64,6 +64,27 @@
       "when": 1777185775685,
       "tag": "0008_plain_roxanne_simpson",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1777792347101,
+      "tag": "0009_drop_price_row_kind",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1777793076937,
+      "tag": "0010_drop_event_offering",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1777793330914,
+      "tag": "0011_drop_footer_link",
+      "breakpoints": true
     }
   ]
 }

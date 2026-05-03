@@ -113,6 +113,39 @@ export async function getBySlug(
   }
 }
 
+export type LegalFooterLink = {
+  slug: string
+  title: string
+}
+
+export async function listPublishedByBranch(
+  branchId: string,
+  locale: Locale
+): Promise<LegalFooterLink[]> {
+  const load = unstable_cache(
+    async () => {
+      const rows = await db
+        .select()
+        .from(legalPage)
+        .where(
+          and(eq(legalPage.branchId, branchId), eq(legalPage.published, true))
+        )
+        .orderBy(asc(legalPage.sortOrder), asc(legalPage.slug))
+      return rows
+    },
+    ["legal:listPublishedByBranch", branchId],
+    { tags: [tags.legalBranch(branchId)] }
+  )
+  const rows = await load()
+  const links: LegalFooterLink[] = []
+  for (const row of rows) {
+    const title = pickTitle(row, locale)
+    if (!title) continue
+    links.push({ slug: row.slug, title })
+  }
+  return links
+}
+
 export async function listPublished(): Promise<
   { slug: string; sortOrder: number }[]
 > {

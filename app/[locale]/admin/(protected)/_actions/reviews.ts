@@ -2,7 +2,14 @@
 
 import { revalidatePath, updateTag } from "next/cache"
 
-import { errorState, successState, withAdmin } from "@/lib/admin/forms"
+import {
+  applyWrite,
+  errorState,
+  readOptionalString,
+  readString,
+  successState,
+  withAdmin,
+} from "@/lib/admin/forms"
 import * as services from "@/lib/services"
 import type { SyncReviewsResult } from "@/lib/services/reviews"
 
@@ -25,5 +32,20 @@ export async function syncReviewsAction(
     for (const tag of result.revalidateTags) updateTag(tag)
     revalidatePath(`/[locale]/admin/branches/${slug}`, "layout")
     return successState(result.data)
+  })
+}
+
+export async function updateGooglePlaceIdAction(
+  _prev: FormState,
+  formData: FormData
+): Promise<FormState<{ id: string; slug: string }>> {
+  return withAdmin(async () => {
+    const id = readString(formData, "id")
+    if (!id) return errorState({ id: ["missing branch id"] })
+    const result = await services.branches.update({
+      id,
+      googlePlaceId: readOptionalString(formData, "googlePlaceId"),
+    })
+    return applyWrite(result, "/[locale]/admin/branches")
   })
 }

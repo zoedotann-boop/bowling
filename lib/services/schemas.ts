@@ -117,11 +117,8 @@ export const bulkHoursSchema = z
 
 // ---------- Price row ----------
 
-export const priceKindSchema = z.enum(["hourly", "adult", "child", "shoe"])
-
 export const createPriceRowSchema = z.object({
   branchId: nonEmpty,
-  kind: priceKindSchema,
   weekdayAmountCents: z.number().int().nonnegative(),
   weekendAmountCents: z.number().int().nonnegative(),
   sortOrder: z.number().int().optional(),
@@ -157,28 +154,6 @@ export const upsertOfferingPackageTranslationSchema = z.object({
   locale: localeSchema,
   title: z.string().nullish(),
   perks: z.string().nullish(),
-  aiGenerated: z.boolean().optional(),
-  aiGeneratedAt: z.date().nullish(),
-  reviewedAt: z.date().nullish(),
-})
-
-// ---------- Event offering ----------
-
-export const createEventOfferingSchema = z.object({
-  branchId: nonEmpty,
-  imageId: z.string().nullish(),
-  sortOrder: z.number().int().optional(),
-})
-
-export const updateEventOfferingSchema = createEventOfferingSchema
-  .partial()
-  .extend({ id: nonEmpty })
-
-export const upsertEventOfferingTranslationSchema = z.object({
-  eventOfferingId: nonEmpty,
-  locale: localeSchema,
-  title: z.string().nullish(),
-  description: z.string().nullish(),
   aiGenerated: z.boolean().optional(),
   aiGeneratedAt: z.date().nullish(),
   reviewedAt: z.date().nullish(),
@@ -249,23 +224,6 @@ export const updateMediaAltTextSchema = z.object({
   altTextEn: z.string().nullish(),
   altTextRu: z.string().nullish(),
   altTextAr: z.string().nullish(),
-})
-
-// ---------- Footer link ----------
-
-const hrefSchema = z.string().min(1).max(500)
-
-export const createFooterLinkSchema = z.object({
-  branchId: nonEmpty,
-  locale: localeSchema,
-  groupKey: nonEmpty,
-  label: nonEmpty,
-  href: hrefSchema,
-  sortOrder: z.number().int().optional(),
-})
-
-export const updateFooterLinkSchema = createFooterLinkSchema.partial().extend({
-  id: nonEmpty,
 })
 
 // ---------- Legal page ----------

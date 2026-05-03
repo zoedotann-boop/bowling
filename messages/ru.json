@@ -64,7 +64,7 @@
     "intro": "Дни рождения, корпоративы и групповые вечера - всё под ключ.",
     "inquireCta": "Запланировать событие"
   },
-  "EventsTeaser": {
+  "PackagesTeaser": {
     "title": "Дни рождения и группы",
     "subtitle": "Мы устраиваем вечеринку - вам только наслаждаться.",
     "cta": "Смотреть пакеты"
@@ -147,7 +147,9 @@
       "title": "Отзывы Google",
       "description": "Синхронизируется ежедневно через Google Places API. Отсутствующие языки переводятся ИИ.",
       "placeIdLabel": "Google place ID",
-      "placeIdMissing": "Не задан - добавьте ID места на вкладке «Инфо»",
+      "connectHelp": "Найдите Place ID на <link>странице Google Place ID Finder</link>.",
+      "save": "Сохранить",
+      "saving": "Сохранение…",
       "lastSynced": "Последняя синхронизация: {when}",
       "neverSynced": "Ещё не синхронизировано. Добавьте ID места и нажмите «Обновить».",
       "averageRating": "Средний рейтинг: {rating} из {count} оценок",
@@ -173,19 +175,12 @@
       "priceCreated": "Price row created",
       "priceSaved": "Price row saved",
       "priceDeleted": "Price row deleted",
-      "eventCreated": "Event created",
-      "eventSaved": "Event saved",
-      "eventDeleted": "Event deleted",
       "categoryCreated": "Category created",
       "categorySaved": "Category saved",
       "categoryDeleted": "Category deleted",
       "itemCreated": "Item created",
       "itemSaved": "Item saved",
       "itemDeleted": "Item deleted",
-      "contactSaved": "Contact details saved",
-      "footerLinkCreated": "Footer link created",
-      "footerLinkSaved": "Footer link saved",
-      "footerLinkDeleted": "Footer link deleted",
       "legalPageCreated": "Legal page created",
       "legalPageSaved": "Legal page saved",
       "legalPageDeleted": "Legal page deleted",
@@ -193,18 +188,11 @@
       "domainDeleted": "Домен удалён",
       "genericError": "Something went wrong"
     },
-    "contact": {
-      "title": "Contact details",
-      "phone": "Phone",
-      "whatsapp": "WhatsApp",
-      "email": "Email",
-      "mapUrl": "Map URL"
-    },
     "domains": {
       "pageTitle": "Домены",
-      "pageDescription": "Сопоставление имён хостов с этим филиалом. Посетители, попавшие через сопоставленный хост, по умолчанию видят этот филиал.",
+      "pageDescription": "Подключите собственные домены к этому филиалу. Посетители, попадающие на любой из этих хостов, автоматически увидят сайт этого филиала. Добавьте домен здесь, затем направьте его DNS-запись на Vercel — и филиал загрузится по этому адресу.",
       "title": "Домены",
-      "description": "Хосты, которые направляют на этот филиал (без учёта регистра, без порта). Один хост — один филиал.",
+      "description": "Каждый хост сопоставляется ровно с одним филиалом (без учёта регистра, без порта).",
       "add": "Новый домен",
       "host": "Хост",
       "empty": "Для этого филиала пока нет сопоставленных доменов.",
@@ -214,30 +202,12 @@
         "host": "Публичное имя хоста, например rgbowling.com (без протокола, без порта). Каждый хост сопоставляется только с одним филиалом."
       }
     },
-    "footer": {
-      "pageTitle": "Footer",
-      "pageDescription": "Manage footer link groups and legal pages.",
-      "linksTitle": "Footer links",
-      "linksEmpty": "No footer links yet.",
-      "addLink": "New link",
-      "locale": "Locale",
-      "groupKey": "Group",
-      "label": "Label",
-      "href": "URL",
-      "reorder": "Drag to reorder",
-      "confirmDeleteTitle": "Delete footer link?",
-      "confirmDeleteDescription": "This removes \"{label}\". Cannot be undone.",
-      "tooltips": {
-        "locale": "Язык, на котором показывается эта ссылка. Для каждого языка — отдельная запись.",
-        "groupKey": "Заголовок столбца в футере (например, legal, company, social). Ссылки с одинаковым ключом группируются вместе.",
-        "label": "Видимый текст ссылки в футере.",
-        "href": "URL назначения. Используйте относительный путь (/legal/terms) или полный https://."
-      }
-    },
     "legal": {
       "title": "Legal pages",
       "addPage": "New page",
       "empty": "No legal pages yet.",
+      "untitled": "Untitled page",
+      "draftBadge": "Draft",
       "slug": "Slug",
       "sortOrder": "Sort order",
       "published": "Published",
@@ -257,6 +227,7 @@
       "title": "Packages",
       "add": "New package",
       "empty": "No packages yet.",
+      "untitled": "Untitled package",
       "amount": "Price (cents)",
       "titleLabel": "Package name",
       "perks": "Perks",
@@ -273,40 +244,17 @@
       "title": "Prices",
       "add": "New price row",
       "empty": "No price rows yet.",
-      "kind": "Kind",
+      "untitled": "Untitled price",
       "weekday": "Weekday (cents)",
       "weekend": "Weekend (cents)",
       "label": "Label",
       "reorder": "Drag to reorder",
-      "kinds": {
-        "hourly": "Hourly lane",
-        "adult": "Adult",
-        "child": "Child",
-        "shoe": "Shoe rental"
-      },
       "confirmDeleteTitle": "Delete price row?",
       "confirmDeleteDescription": "This removes the row. Cannot be undone.",
       "tooltips": {
-        "kind": "Категория строки цены. Используется для группировки в публичном прайсе.",
         "weekday": "Цена пн–чт в агорот. ₪1 = 100. Пример: ₪42 = 4200.",
         "weekend": "Цена пт–сб в агорот. ₪1 = 100. Пример: ₪52 = 5200.",
-        "label": "Опциональный ярлык для локали, переопределяющий имя по умолчанию."
-      }
-    },
-    "events": {
-      "title": "Events",
-      "add": "New event",
-      "empty": "No events yet.",
-      "image": "Image",
-      "titleLabel": "Event title",
-      "description": "Description",
-      "reorder": "Drag to reorder",
-      "confirmDeleteTitle": "Delete event?",
-      "confirmDeleteDescription": "This removes the event. Cannot be undone.",
-      "tooltips": {
-        "image": "Фото на карточке события. Сначала загрузите в медиа-библиотеку.",
-        "titleLabel": "Короткое название типа события (например, Дни рождения, Корпоратив).",
-        "description": "Одно-два предложения под названием события."
+        "label": "Локализованная подпись (например, Взрослый, Аренда обуви)."
       }
     },
     "menu": {
@@ -314,6 +262,8 @@
       "addCategory": "New category",
       "addItem": "New item",
       "empty": "No menu categories yet.",
+      "untitled": "Untitled category",
+      "itemsCount": "{count, plural, =0 {no items} one {# item} other {# items}}",
       "categoryTitle": "Category title",
       "itemsTitle": "Items",
       "itemsEmpty": "No items in this category yet.",
@@ -368,15 +318,11 @@
         "hours": "Hours",
         "hero": "Hero",
         "seo": "SEO",
-        "prices": "Prices",
-        "packages": "Packages",
+        "offerings": "Offerings",
         "menu": "Menu",
-        "events": "Events",
         "reviews": "Reviews",
-        "contact": "Contact",
         "media": "Медиа",
         "domains": "Домены",
-        "footer": "Подвал",
         "legal": "Юридические"
       },
       "form": {

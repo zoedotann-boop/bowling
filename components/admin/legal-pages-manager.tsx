@@ -3,7 +3,7 @@
 import * as React from "react"
 import { useActionState, useEffect } from "react"
 import { useTranslations } from "next-intl"
-import { IconPlus, IconTrash } from "@tabler/icons-react"
+import { IconChevronDown, IconPlus, IconTrash } from "@tabler/icons-react"
 import { toast } from "sonner"
 
 import { routing, type Locale } from "@/i18n/routing"
@@ -20,6 +20,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import {
+  Collapsible,
+  CollapsiblePanel,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
@@ -80,11 +85,59 @@ export function LegalPagesManager({
         {initial.map((row, idx) => (
           <React.Fragment key={row.slug}>
             {idx > 0 ? <Separator /> : null}
-            <LegalPageFormCard mode="edit" row={row} branchId={branchId} />
+            <LegalPageCollapsible row={row} branchId={branchId} />
           </React.Fragment>
         ))}
       </CardContent>
     </Card>
+  )
+}
+
+function pickTitle(row: LegalPageRow): string | null {
+  const def = row.titles[routing.defaultLocale]
+  if (def) return def
+  for (const loc of routing.locales) {
+    const v = row.titles[loc]
+    if (v) return v
+  }
+  return null
+}
+
+function LegalPageCollapsible({
+  row,
+  branchId,
+}: {
+  row: LegalPageRow
+  branchId: string
+}) {
+  const t = useTranslations("Admin.legal")
+  const summary = pickTitle(row)
+  return (
+    <Collapsible defaultOpen>
+      <CollapsibleTrigger className="flex w-full items-center justify-between gap-2 text-start text-sm font-medium text-ink hover:text-ink/80 focus-visible:outline-none">
+        <span className="flex min-w-0 flex-col">
+          <span className="font-mono text-xs text-ink-muted">{row.slug}</span>
+          <span className="truncate">
+            {summary || (
+              <span className="text-ink-muted italic">{t("untitled")}</span>
+            )}
+          </span>
+        </span>
+        <span className="flex shrink-0 items-center gap-2 text-xs text-ink-muted">
+          {row.published ? null : (
+            <span className="rounded-none bg-muted px-1 py-0.5 text-[10px] tracking-wide uppercase">
+              {t("draftBadge")}
+            </span>
+          )}
+          <IconChevronDown className="size-4 transition-transform group-data-[panel-open]:rotate-180" />
+        </span>
+      </CollapsibleTrigger>
+      <CollapsiblePanel>
+        <div className="pt-3">
+          <LegalPageFormCard mode="edit" row={row} branchId={branchId} />
+        </div>
+      </CollapsiblePanel>
+    </Collapsible>
   )
 }
 

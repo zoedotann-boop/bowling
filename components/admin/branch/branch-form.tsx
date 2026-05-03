@@ -3,6 +3,7 @@
 import * as React from "react"
 import { useActionState, useEffect } from "react"
 import { useTranslations } from "next-intl"
+import { IconChevronDown } from "@tabler/icons-react"
 import { toast } from "sonner"
 
 import { useRouter } from "@/i18n/navigation"
@@ -14,10 +15,14 @@ import {
 import type { FormState } from "@/app/[locale]/admin/(protected)/_actions/types"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Collapsible,
+  CollapsiblePanel,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
-import { Tabs, TabsList, TabsTab, TabsPanel } from "@/components/ui/tabs"
 
 import { FieldLabelWithTooltip } from "../shared/field-label-with-tooltip"
 import { FillTranslationsButton } from "../translation/fill-translations-button"
@@ -65,7 +70,31 @@ type Props = {
   initial?: BranchFormInitial
 }
 
-const INFO_HERO_SEO_TABS = ["info", "hero", "seo"] as const
+function SectionCard({
+  title,
+  children,
+}: {
+  title: string
+  children: React.ReactNode
+}) {
+  return (
+    <Card>
+      <Collapsible defaultOpen>
+        <CardHeader>
+          <CardTitle>
+            <CollapsibleTrigger className="flex w-full items-center justify-between gap-2 text-start hover:text-ink/80 focus-visible:outline-none">
+              <span>{title}</span>
+              <IconChevronDown className="size-5 shrink-0 transition-transform group-data-[panel-open]:rotate-180" />
+            </CollapsibleTrigger>
+          </CardTitle>
+        </CardHeader>
+        <CollapsiblePanel>
+          <CardContent className="flex flex-col gap-6">{children}</CardContent>
+        </CollapsiblePanel>
+      </Collapsible>
+    </Card>
+  )
+}
 
 function localesValues<
   K extends keyof BranchFormInitial["translations"][Locale],
@@ -148,232 +177,217 @@ export function BranchForm(props: Props) {
   )
 
   const infoCard = (
-    <Card>
-      <CardHeader>
-        <CardTitle>{tTabs("info")}</CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-6">
-        <div className="grid gap-4 md:grid-cols-2">
-          <Field>
-            <FieldLabelWithTooltip tooltip={tTip("slug")} required>
-              {t("slug")}
-            </FieldLabelWithTooltip>
-            <Input
-              name="slug"
-              defaultValue={initial?.slug ?? ""}
-              required
-              placeholder="ramat-gan"
-            />
-          </Field>
-          <Field>
-            <FieldLabelWithTooltip tooltip={tTip("sortOrder")}>
-              {t("sortOrder")}
-            </FieldLabelWithTooltip>
-            <Input
-              name="sortOrder"
-              type="number"
-              defaultValue={initial?.sortOrder ?? 0}
-            />
-          </Field>
-          <Field>
-            <FieldLabelWithTooltip tooltip={tTip("phone")} required>
-              {t("phone")}
-            </FieldLabelWithTooltip>
-            <Input name="phone" defaultValue={initial?.phone ?? ""} required />
-          </Field>
-          <Field>
-            <FieldLabelWithTooltip tooltip={tTip("whatsapp")} required>
-              {t("whatsapp")}
-            </FieldLabelWithTooltip>
-            <Input
-              name="whatsapp"
-              defaultValue={initial?.whatsapp ?? ""}
-              required
-            />
-          </Field>
-          <Field>
-            <FieldLabelWithTooltip tooltip={tTip("email")} required>
-              {t("email")}
-            </FieldLabelWithTooltip>
-            <Input
-              name="email"
-              type="email"
-              defaultValue={initial?.email ?? ""}
-              required
-            />
-          </Field>
-          <Field>
-            <FieldLabelWithTooltip tooltip={tTip("mapUrl")} required>
-              {t("mapUrl")}
-            </FieldLabelWithTooltip>
-            <Input
-              name="mapUrl"
-              type="url"
-              defaultValue={initial?.mapUrl ?? ""}
-              required
-            />
-          </Field>
-          <Field>
-            <FieldLabelWithTooltip tooltip={tTip("latitude")} required>
-              {t("latitude")}
-            </FieldLabelWithTooltip>
-            <Input
-              name="latitude"
-              type="number"
-              step="any"
-              defaultValue={initial?.latitude ?? ""}
-              required
-            />
-          </Field>
-          <Field>
-            <FieldLabelWithTooltip tooltip={tTip("longitude")} required>
-              {t("longitude")}
-            </FieldLabelWithTooltip>
-            <Input
-              name="longitude"
-              type="number"
-              step="any"
-              defaultValue={initial?.longitude ?? ""}
-              required
-            />
-          </Field>
-          <Field className="md:col-span-2">
-            <div className="flex items-center gap-2">
-              <label className="flex items-center gap-2 text-xs font-medium text-ink">
-                <Switch
-                  name="published"
-                  defaultChecked={initial?.published ?? true}
-                />
-                {t("published")}
-              </label>
-              <FieldLabelWithTooltip tooltip={tTip("published")}>
-                <span className="sr-only">{t("published")}</span>
-              </FieldLabelWithTooltip>
-            </div>
-          </Field>
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-2">
-          <TranslatableField
-            name="displayName"
-            label={t("displayName")}
-            tooltip={tTip("displayName")}
-            defaultValues={localesValues(initial, "displayName")}
-            needsReviewLocales={needsReviewLocalesFor(initial, "displayName")}
+    <SectionCard title={tTabs("info")}>
+      <div className="grid gap-4 md:grid-cols-2">
+        <Field>
+          <FieldLabelWithTooltip tooltip={tTip("slug")} required>
+            {t("slug")}
+          </FieldLabelWithTooltip>
+          <Input
+            name="slug"
+            defaultValue={initial?.slug ?? ""}
             required
-            aiLabel={aiLabel}
-            reviewLabel={reviewLabel}
+            placeholder="ramat-gan"
           />
-          <TranslatableField
-            name="shortName"
-            label={t("shortName")}
-            tooltip={tTip("shortName")}
-            defaultValues={localesValues(initial, "shortName")}
-            needsReviewLocales={needsReviewLocalesFor(initial, "shortName")}
-            aiLabel={aiLabel}
-            reviewLabel={reviewLabel}
+        </Field>
+        <Field>
+          <FieldLabelWithTooltip tooltip={tTip("sortOrder")}>
+            {t("sortOrder")}
+          </FieldLabelWithTooltip>
+          <Input
+            name="sortOrder"
+            type="number"
+            defaultValue={initial?.sortOrder ?? 0}
           />
-          <TranslatableField
-            name="address"
-            label={t("address")}
-            tooltip={tTip("address")}
-            defaultValues={localesValues(initial, "address")}
-            needsReviewLocales={needsReviewLocalesFor(initial, "address")}
-            aiLabel={aiLabel}
-            reviewLabel={reviewLabel}
+        </Field>
+        <Field>
+          <FieldLabelWithTooltip tooltip={tTip("phone")} required>
+            {t("phone")}
+          </FieldLabelWithTooltip>
+          <Input name="phone" defaultValue={initial?.phone ?? ""} required />
+        </Field>
+        <Field>
+          <FieldLabelWithTooltip tooltip={tTip("whatsapp")} required>
+            {t("whatsapp")}
+          </FieldLabelWithTooltip>
+          <Input
+            name="whatsapp"
+            defaultValue={initial?.whatsapp ?? ""}
+            required
           />
-          <TranslatableField
-            name="city"
-            label={t("city")}
-            tooltip={tTip("city")}
-            defaultValues={localesValues(initial, "city")}
-            needsReviewLocales={needsReviewLocalesFor(initial, "city")}
-            aiLabel={aiLabel}
-            reviewLabel={reviewLabel}
+        </Field>
+        <Field>
+          <FieldLabelWithTooltip tooltip={tTip("email")} required>
+            {t("email")}
+          </FieldLabelWithTooltip>
+          <Input
+            name="email"
+            type="email"
+            defaultValue={initial?.email ?? ""}
+            required
           />
-        </div>
-        {submitRow}
-      </CardContent>
-    </Card>
+        </Field>
+        <Field>
+          <FieldLabelWithTooltip tooltip={tTip("mapUrl")} required>
+            {t("mapUrl")}
+          </FieldLabelWithTooltip>
+          <Input
+            name="mapUrl"
+            type="url"
+            defaultValue={initial?.mapUrl ?? ""}
+            required
+          />
+        </Field>
+        <Field>
+          <FieldLabelWithTooltip tooltip={tTip("latitude")} required>
+            {t("latitude")}
+          </FieldLabelWithTooltip>
+          <Input
+            name="latitude"
+            type="number"
+            step="any"
+            defaultValue={initial?.latitude ?? ""}
+            required
+          />
+        </Field>
+        <Field>
+          <FieldLabelWithTooltip tooltip={tTip("longitude")} required>
+            {t("longitude")}
+          </FieldLabelWithTooltip>
+          <Input
+            name="longitude"
+            type="number"
+            step="any"
+            defaultValue={initial?.longitude ?? ""}
+            required
+          />
+        </Field>
+        <Field className="md:col-span-2">
+          <div className="flex items-center gap-2">
+            <label className="flex items-center gap-2 text-xs font-medium text-ink">
+              <Switch
+                name="published"
+                defaultChecked={initial?.published ?? true}
+              />
+              {t("published")}
+            </label>
+            <FieldLabelWithTooltip tooltip={tTip("published")}>
+              <span className="sr-only">{t("published")}</span>
+            </FieldLabelWithTooltip>
+          </div>
+        </Field>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <TranslatableField
+          name="displayName"
+          label={t("displayName")}
+          tooltip={tTip("displayName")}
+          defaultValues={localesValues(initial, "displayName")}
+          needsReviewLocales={needsReviewLocalesFor(initial, "displayName")}
+          required
+          aiLabel={aiLabel}
+          reviewLabel={reviewLabel}
+        />
+        <TranslatableField
+          name="shortName"
+          label={t("shortName")}
+          tooltip={tTip("shortName")}
+          defaultValues={localesValues(initial, "shortName")}
+          needsReviewLocales={needsReviewLocalesFor(initial, "shortName")}
+          aiLabel={aiLabel}
+          reviewLabel={reviewLabel}
+        />
+        <TranslatableField
+          name="address"
+          label={t("address")}
+          tooltip={tTip("address")}
+          defaultValues={localesValues(initial, "address")}
+          needsReviewLocales={needsReviewLocalesFor(initial, "address")}
+          aiLabel={aiLabel}
+          reviewLabel={reviewLabel}
+        />
+        <TranslatableField
+          name="city"
+          label={t("city")}
+          tooltip={tTip("city")}
+          defaultValues={localesValues(initial, "city")}
+          needsReviewLocales={needsReviewLocalesFor(initial, "city")}
+          aiLabel={aiLabel}
+          reviewLabel={reviewLabel}
+        />
+      </div>
+      {submitRow}
+    </SectionCard>
   )
 
   const heroCard = (
-    <Card>
-      <CardHeader>
-        <CardTitle>{tTabs("hero")}</CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <MediaPicker
-          name="heroImageId"
-          label={t("heroImageId")}
-          tooltip={tTip("heroImageId")}
-          initial={initial?.heroImage ?? null}
-          branchId={initial?.id ?? ""}
-        />
-        <TranslatableField
-          name="heroHeadline"
-          label={t("heroHeadline")}
-          tooltip={tTip("heroHeadline")}
-          defaultValues={localesValues(initial, "heroHeadline")}
-          needsReviewLocales={needsReviewLocalesFor(initial, "heroHeadline")}
-          aiLabel={aiLabel}
-          reviewLabel={reviewLabel}
-        />
-        <TranslatableField
-          as="textarea"
-          name="heroTagline"
-          label={t("heroTagline")}
-          tooltip={tTip("heroTagline")}
-          defaultValues={localesValues(initial, "heroTagline")}
-          needsReviewLocales={needsReviewLocalesFor(initial, "heroTagline")}
-          aiLabel={aiLabel}
-          reviewLabel={reviewLabel}
-          rows={2}
-        />
-        {submitRow}
-      </CardContent>
-    </Card>
+    <SectionCard title={tTabs("hero")}>
+      <MediaPicker
+        name="heroImageId"
+        label={t("heroImageId")}
+        tooltip={tTip("heroImageId")}
+        initial={initial?.heroImage ?? null}
+        branchId={initial?.id ?? ""}
+      />
+      <TranslatableField
+        name="heroHeadline"
+        label={t("heroHeadline")}
+        tooltip={tTip("heroHeadline")}
+        defaultValues={localesValues(initial, "heroHeadline")}
+        needsReviewLocales={needsReviewLocalesFor(initial, "heroHeadline")}
+        aiLabel={aiLabel}
+        reviewLabel={reviewLabel}
+      />
+      <TranslatableField
+        as="textarea"
+        name="heroTagline"
+        label={t("heroTagline")}
+        tooltip={tTip("heroTagline")}
+        defaultValues={localesValues(initial, "heroTagline")}
+        needsReviewLocales={needsReviewLocalesFor(initial, "heroTagline")}
+        aiLabel={aiLabel}
+        reviewLabel={reviewLabel}
+        rows={2}
+      />
+      {submitRow}
+    </SectionCard>
   )
 
   const seoCard = (
-    <Card>
-      <CardHeader>
-        <CardTitle>{tTabs("seo")}</CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <TranslatableField
-          name="seoTitle"
-          label={t("seoTitle")}
-          tooltip={tTip("seoTitle")}
-          defaultValues={localesValues(initial, "seoTitle")}
-          needsReviewLocales={needsReviewLocalesFor(initial, "seoTitle")}
-          aiLabel={aiLabel}
-          reviewLabel={reviewLabel}
+    <SectionCard title={tTabs("seo")}>
+      <TranslatableField
+        name="seoTitle"
+        label={t("seoTitle")}
+        tooltip={tTip("seoTitle")}
+        defaultValues={localesValues(initial, "seoTitle")}
+        needsReviewLocales={needsReviewLocalesFor(initial, "seoTitle")}
+        aiLabel={aiLabel}
+        reviewLabel={reviewLabel}
+      />
+      <TranslatableField
+        as="textarea"
+        name="seoDescription"
+        label={t("seoDescription")}
+        tooltip={tTip("seoDescription")}
+        defaultValues={localesValues(initial, "seoDescription")}
+        needsReviewLocales={needsReviewLocalesFor(initial, "seoDescription")}
+        aiLabel={aiLabel}
+        reviewLabel={reviewLabel}
+        rows={3}
+      />
+      <Field>
+        <FieldLabelWithTooltip tooltip={tTip("googlePlaceId")}>
+          {t("googlePlaceId")}
+        </FieldLabelWithTooltip>
+        <Input
+          name="googlePlaceId"
+          defaultValue={initial?.googlePlaceId ?? ""}
+          placeholder={t("googlePlaceIdHint")}
         />
-        <TranslatableField
-          as="textarea"
-          name="seoDescription"
-          label={t("seoDescription")}
-          tooltip={tTip("seoDescription")}
-          defaultValues={localesValues(initial, "seoDescription")}
-          needsReviewLocales={needsReviewLocalesFor(initial, "seoDescription")}
-          aiLabel={aiLabel}
-          reviewLabel={reviewLabel}
-          rows={3}
-        />
-        <Field>
-          <FieldLabelWithTooltip tooltip={tTip("googlePlaceId")}>
-            {t("googlePlaceId")}
-          </FieldLabelWithTooltip>
-          <Input
-            name="googlePlaceId"
-            defaultValue={initial?.googlePlaceId ?? ""}
-            placeholder={t("googlePlaceIdHint")}
-          />
-        </Field>
-        {submitRow}
-      </CardContent>
-    </Card>
+      </Field>
+      {submitRow}
+    </SectionCard>
   )
 
   return (
@@ -391,26 +405,11 @@ export function BranchForm(props: Props) {
           </div>
         ) : null}
 
-        {mode === "create" ? (
-          <Tabs defaultValue="info">
-            <TabsList className="flex-wrap">
-              {INFO_HERO_SEO_TABS.map((tab) => (
-                <TabsTab key={tab} value={tab}>
-                  {tTabs(tab)}
-                </TabsTab>
-              ))}
-            </TabsList>
-            <TabsPanel value="info">{infoCard}</TabsPanel>
-            <TabsPanel value="hero">{heroCard}</TabsPanel>
-            <TabsPanel value="seo">{seoCard}</TabsPanel>
-          </Tabs>
-        ) : (
-          <div className="flex flex-col gap-6">
-            {infoCard}
-            {heroCard}
-            {seoCard}
-          </div>
-        )}
+        <div className="flex flex-col gap-6">
+          {infoCard}
+          {heroCard}
+          {seoCard}
+        </div>
       </form>
     </TranslationStateProvider>
   )

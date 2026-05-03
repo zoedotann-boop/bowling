@@ -155,7 +155,7 @@ uppercase. Lives in `components/common/eyebrow.tsx`.
    dotted row leaders, red prices in display font
 7. `MenuSection` — cream band, paper `BowlingCard`s with dashed turq ring,
    dotted leaders between name and price
-8. `EventsTeaser` — ink band, red featured `BowlingCard` with dashed yellow
+8. `PackagesTeaser` — ink band, red featured `BowlingCard` with dashed yellow
    ring, remaining packages in cream `BowlingCard`s
 9. `GoogleReviews` — cream-2 band, rating card + per-review `BowlingCard`s,
    mono author credit
