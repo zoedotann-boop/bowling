@@ -4,7 +4,22 @@
     "prices": "Prices",
     "events": "Events & Birthdays",
     "contact": "Contact",
-    "menuLabel": "Open menu"
+    "menuLabel": "Open menu",
+    "menu": "Food & Bar",
+    "birthdays": "Birthdays",
+    "vouchers": "Gift vouchers",
+    "exploreLabel": "Explore"
+  },
+  "Status": {
+    "openUntil": "Open now · until {time}",
+    "opensAt": "Closed · opens {time}",
+    "closed": "Closed now"
+  },
+  "Social": {
+    "title": "Find us on social",
+    "instagram": "Instagram",
+    "facebook": "Facebook",
+    "tiktok": "TikTok"
   },
   "Cta": {
     "book": "Book on WhatsApp",
@@ -30,13 +45,6 @@
     "openNow": "Open now · until 02:00",
     "closedNow": "Closed now"
   },
-  "Ticker": {
-    "item1": "★ Cosmic Thursdays from 22:00",
-    "item2": "★ League nights every Tuesday",
-    "item3": "★ Birthdays? Packages from ₪89",
-    "item4": "★ Fri–Sat open until 02:00",
-    "item5": "★ Mondays — kids bowl free"
-  },
   "Highlights": {
     "title": "Why this branch is special",
     "subtitle": "Built for groups, families, and good nights out."
@@ -59,19 +67,234 @@
     "packagesTitle": "Packages",
     "perksLabel": "Includes"
   },
-  "Events": {
-    "title": "Events & Birthdays",
-    "intro": "Birthday parties, corporate events, and group nights - fully hosted.",
-    "inquireCta": "Plan your event"
-  },
   "PackagesTeaser": {
     "title": "Birthdays & Group Events",
     "subtitle": "We host the party - you take the credit.",
     "cta": "See packages"
   },
+  "ServiceCards": {
+    "eyebrow": "Our services",
+    "title": "What are you here for?",
+    "menuTitle": "Food & Bar",
+    "menuDesc": "Meals, snacks and drinks",
+    "vouchersTitle": "Gift vouchers",
+    "vouchersDesc": "A gift everyone loves",
+    "birthdaysTitle": "Birthdays & events",
+    "birthdaysDesc": "Curated packages, full production"
+  },
+  "BirthdaysTeaser": {
+    "eyebrow": "Birthdays",
+    "title": "Want to celebrate with us?",
+    "subtitle": "An unforgettable party with ready-made packages, our team and a cake ceremony.",
+    "cta": "See all packages"
+  },
+  "PageBack": {
+    "label": "Back to home"
+  },
+  "MenuPage": {
+    "eyebrow": "Menu",
+    "title": "Our menu",
+    "subtitle": "Fresh from our kitchen, delivered to the lane.",
+    "empty": "Menu coming soon.",
+    "footnote": "* Menu changes seasonally and by stock availability."
+  },
+  "Vouchers": {
+    "eyebrow": "BuyMe vouchers",
+    "title": "Gift vouchers",
+    "subtitle": "A gift everyone loves. Sent digitally, valid one year, redeemable at any branch.",
+    "amountTitle": "Pick an amount",
+    "customAmount": "Other amount",
+    "recipientTitle": "Who's it for?",
+    "fields": {
+      "fromName": "Sender name",
+      "fromNamePh": "Jane Doe",
+      "toName": "Recipient name",
+      "toNamePh": "John Doe",
+      "toEmail": "Recipient email",
+      "toPhone": "Recipient phone",
+      "message": "Personal message",
+      "messagePh": "Happy birthday!"
+    },
+    "totalLabel": "Amount",
+    "agree": "I agree to the voucher terms",
+    "cta": "Pay & send the voucher",
+    "comingSoon": "Payment activates soon — questions? message us on WhatsApp."
+  },
+  "Birthdays": {
+    "eyebrow": "Birthdays & events",
+    "title": "Birthdays at Bowling",
+    "subtitle": "Bowling for every kid, a host, a birthday table at the restaurant, and the cake ceremony — we handle it all. Total runtime ~1.5–2 hours.",
+    "badges": {
+      "badge1": "Ages 8+",
+      "badge2": "20-kid minimum",
+      "badge3": "~2 hours of fun"
+    },
+    "howItWorks": {
+      "eyebrow": "How it works",
+      "title": "Four simple steps",
+      "duration": "Total runtime ~1.5–2 hours",
+      "freebies": "Throughout the event, free water and raspberry pitchers for the kids — no charge.",
+      "steps": {
+        "welcome": {
+          "label": "Welcome",
+          "sub": "Arrive 15 min early"
+        },
+        "game": {
+          "label": "Bowling game",
+          "sub": "50–60 minutes"
+        },
+        "table": {
+          "label": "Birthday table",
+          "sub": "Pizza + soda"
+        },
+        "cake": {
+          "label": "Cake ceremony",
+          "sub": "With family"
+        }
+      }
+    },
+    "packages": {
+      "eyebrow": "Per-kid pricing",
+      "title": "Birthday packages",
+      "subtitle": "20-kid minimum. Add per kid above the minimum.",
+      "included": "What's included",
+      "weekday": {
+        "tag": "Sun–Thu",
+        "label": "Weekday",
+        "upTo": "Up to 20 kids"
+      },
+      "weekend": {
+        "tag": "Weekend & holidays",
+        "label": "Fri–Sat / holidays",
+        "upTo": "Up to 20 kids"
+      }
+    },
+    "upgrades": {
+      "eyebrow": "Add-ons",
+      "title": "Upgrades & extras",
+      "items": {
+        "play": {
+          "label": "Arcade pass",
+          "sub": "15 / 30 minutes",
+          "price": "₪ 17 / 25"
+        },
+        "balloons": {
+          "label": "20 helium balloons",
+          "sub": "Pre-paid",
+          "price": "₪ 100"
+        },
+        "pin": {
+          "label": "Bowling pin keepsake",
+          "sub": "Surprise memento",
+          "price": "₪ 120"
+        },
+        "drinks": {
+          "label": "Slush bottles",
+          "sub": "min. 15 bottles",
+          "price": "₪ 15 / ea"
+        },
+        "bottles": {
+          "label": "Large drink bottles",
+          "sub": "min. 6 bottles",
+          "price": "₪ 15 / ea"
+        },
+        "coffee": {
+          "label": "10 coffee vouchers",
+          "sub": "More on request",
+          "price": "₪ 100"
+        }
+      }
+    },
+    "dosDonts": {
+      "eyebrow": "Allowed & not",
+      "title": "What can you bring?",
+      "allowed": "Allowed",
+      "forbidden": "Not allowed",
+      "allowedItems": {
+        "cake": "Birthday cake",
+        "candy": "Gummies & toffees",
+        "marshmallow": "Marshmallow",
+        "fruits": "Cut fruit & veg"
+      },
+      "forbiddenItems": {
+        "outsideFood": "Outside food / snacks",
+        "outsideDrinks": "Outside drinks",
+        "fireworks": "Fireworks & open flame",
+        "decor": "Decor outside permitted areas"
+      }
+    },
+    "policy": {
+      "eyebrow": "Policy",
+      "title": "Booking policy",
+      "subtitle": "Worth a read before reserving the date",
+      "footnote": "Minimum age 8. Final confirmation is set with the office and the bowling schedule.",
+      "rules": {
+        "deposit": {
+          "label": "Booking deposit",
+          "body": "₪ 200 deposit to lock the event — credited toward the final bill."
+        },
+        "form": {
+          "label": "Commitment form",
+          "body": "After paying the deposit, sign the commitment form linked on the site."
+        },
+        "cancel": {
+          "label": "Reschedule & cancel",
+          "body": "You can reschedule or cancel up to 7 days before. Less than that, the deposit is non-refundable."
+        },
+        "winter": {
+          "label": "December–February",
+          "body": "Saturday birthdays cannot be booked in December, January, or February."
+        },
+        "shared": {
+          "label": "Open to the public",
+          "body": "The venue is not closed off — other groups may be there at the same time."
+        },
+        "arrival": {
+          "label": "Arrival & lanes",
+          "body": "Arrive 15 min early. Lane allocation is finalized 10 min before."
+        },
+        "payment": {
+          "label": "Payment",
+          "body": "Cash or credit on-site only, no installments. For one bill at the end, leave a card on file."
+        }
+      }
+    },
+    "lead": {
+      "eyebrow": "Inquiry form",
+      "title": "Ready to lock a date?",
+      "subtitle": "We'll get back within 24 hours to confirm the date and the commitment form.",
+      "note": "Booking deposit: ₪ 200 (credited toward the total)",
+      "agree": "I have read and agreed to the commitment form and booking policy",
+      "cta": "Send inquiry & pay deposit",
+      "disclaimer": "Submitting this form is not a confirmation of the event; final confirmation is set with the office.",
+      "fields": {
+        "name": {
+          "label": "Full name",
+          "placeholder": "Jane Doe"
+        },
+        "phone": {
+          "label": "Phone",
+          "placeholder": "050-0000000"
+        },
+        "date": {
+          "label": "Preferred date",
+          "placeholder": "Pick a date"
+        },
+        "kids": {
+          "label": "Approx. number of kids",
+          "placeholder": "min. 20"
+        },
+        "age": {
+          "label": "Birthday kid age",
+          "placeholder": "Ages 8+"
+        }
+      }
+    }
+  },
   "Gallery": {
     "title": "Inside the venue",
-    "subtitle": "A peek at the lanes, the lights, and the fun."
+    "subtitle": "A peek at the lanes, the lights, and the fun.",
+    "placeholder": "Photo"
   },
   "Testimonials": {
     "title": "Loved by locals",
@@ -187,6 +410,29 @@
       "domainCreated": "Domain added",
       "domainDeleted": "Domain removed",
       "genericError": "Something went wrong"
+    },
+    "general": {
+      "title": "General settings",
+      "description": "Business details, opening hours, popups, SEO, domains and legal pages.",
+      "sections": {
+        "business": "Business details",
+        "hours": "Opening hours",
+        "popups": "Popups",
+        "danger": "Danger zone"
+      }
+    },
+    "pricelists": {
+      "title": "Pricelists",
+      "description": "Manage food & bar, game pricing, and birthday packages.",
+      "tabs": {
+        "food": "Food & drink",
+        "games": "Game pricing",
+        "birthdays": "Birthday packages"
+      }
+    },
+    "popups": {
+      "placeholderTitle": "Popup management",
+      "placeholderBody": "Popup and announcement management is coming soon. Contact us to set one up."
     },
     "domains": {
       "pageTitle": "Domains",
@@ -314,16 +560,10 @@
     },
     "branches": {
       "tabs": {
-        "info": "Info",
-        "hours": "Hours",
-        "hero": "Hero",
-        "seo": "SEO",
-        "offerings": "Offerings",
-        "menu": "Menu",
+        "general": "General settings",
+        "pricelists": "Pricelists",
         "reviews": "Reviews",
-        "media": "Media",
-        "domains": "Domains",
-        "legal": "Legal"
+        "media": "Media"
       },
       "form": {
         "newTitle": "New branch",

@@ -31,8 +31,6 @@ export default async function AdminProtectedLayout({
     sidebarCookie === undefined ? true : sidebarCookie !== "false"
 
   const branches = await fetchBranches(locale as Locale)
-  const slugLabels: Record<string, string> = {}
-  for (const b of branches) slugLabels[b.slug] = b.displayName
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
@@ -45,7 +43,7 @@ export default async function AdminProtectedLayout({
         branches={branches}
       />
       <SidebarInset>
-        <AdminTopbar slugLabels={slugLabels} />
+        <AdminTopbar branches={branches} />
         <div className="flex flex-1 flex-col gap-6 p-4 md:p-6 lg:p-8">
           {children}
         </div>

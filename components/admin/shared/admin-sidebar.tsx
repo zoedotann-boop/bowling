@@ -3,19 +3,12 @@
 import * as React from "react"
 import { useTranslations } from "next-intl"
 import {
-  IconCheck,
   IconChevronUp,
-  IconClock,
-  IconFileText,
-  IconInfoCircle,
   IconLogout,
   IconPhoto,
-  IconPlus,
   IconReceipt,
-  IconSelector,
+  IconSettings,
   IconStar,
-  IconToolsKitchen2,
-  IconWorld,
 } from "@tabler/icons-react"
 
 import { Link, usePathname, useRouter } from "@/i18n/navigation"
@@ -57,15 +50,7 @@ type AdminSidebarProps = {
   branches: BranchOption[]
 }
 
-type BranchNavKey =
-  | "info"
-  | "hours"
-  | "offerings"
-  | "menu"
-  | "reviews"
-  | "media"
-  | "domains"
-  | "legal"
+type BranchNavKey = "general" | "pricelists" | "reviews" | "media"
 
 type BranchNavItem = {
   key: BranchNavKey
@@ -73,14 +58,10 @@ type BranchNavItem = {
 }
 
 const BRANCH_NAV_ITEMS: BranchNavItem[] = [
-  { key: "info", icon: IconInfoCircle },
-  { key: "hours", icon: IconClock },
-  { key: "offerings", icon: IconReceipt },
-  { key: "menu", icon: IconToolsKitchen2 },
+  { key: "general", icon: IconSettings },
+  { key: "pricelists", icon: IconReceipt },
   { key: "reviews", icon: IconStar },
   { key: "media", icon: IconPhoto },
-  { key: "domains", icon: IconWorld },
-  { key: "legal", icon: IconFileText },
 ]
 
 function extractBranchSlug(pathname: string): string | null {
@@ -98,7 +79,6 @@ export function AdminSidebar({ user, branches }: AdminSidebarProps) {
 
   const currentSlug = extractBranchSlug(pathname)
   const activeSlug = currentSlug ?? branches[0]?.slug ?? null
-  const activeBranch = branches.find((b) => b.slug === activeSlug) ?? null
 
   return (
     <Sidebar collapsible="icon">
@@ -116,27 +96,8 @@ export function AdminSidebar({ user, branches }: AdminSidebarProps) {
         </div>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <BranchPicker
-                  branches={branches}
-                  activeBranch={activeBranch}
-                  currentSlug={currentSlug}
-                  pathname={pathname}
-                  pickerLabel={t("pickBranch")}
-                  createLabel={t("createBranch")}
-                />
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
         {activeSlug ? (
           <SidebarGroup>
-            <div className="px-2 pt-1 pb-1 text-[10px] font-semibold tracking-wider text-ink-muted uppercase group-data-[collapsible=icon]:hidden">
-              {t("branchGroup")}
-            </div>
             <SidebarGroupContent>
               <SidebarMenu>
                 {BRANCH_NAV_ITEMS.map((item) => {
@@ -169,97 +130,6 @@ export function AdminSidebar({ user, branches }: AdminSidebarProps) {
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
-}
-
-function BranchPicker({
-  branches,
-  activeBranch,
-  currentSlug,
-  pathname,
-  pickerLabel,
-  createLabel,
-}: {
-  branches: BranchOption[]
-  activeBranch: BranchOption | null
-  currentSlug: string | null
-  pathname: string
-  pickerLabel: string
-  createLabel: string
-}) {
-  const router = useRouter()
-
-  function handleSelect(slug: string) {
-    if (currentSlug) {
-      const nextPath = pathname.replace(
-        /\/admin\/branches\/[^/]+/,
-        `/admin/branches/${slug}`
-      )
-      router.push(nextPath)
-    } else {
-      router.push(`/admin/branches/${slug}/info`)
-    }
-  }
-
-  function handleCreate() {
-    router.push("/admin/branches/new")
-  }
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger
-        render={
-          <SidebarMenuButton
-            size="lg"
-            tooltip={activeBranch?.displayName ?? pickerLabel}
-            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-          >
-            <div className="grid size-7 shrink-0 place-items-center border-2 border-ink bg-sidebar font-display text-[11px] text-ink">
-              {activeBranch
-                ? activeBranch.displayName.charAt(0).toUpperCase()
-                : "?"}
-            </div>
-            <div className="flex min-w-0 flex-1 flex-col text-start leading-tight">
-              <span className="truncate text-xs font-medium text-ink">
-                {activeBranch?.displayName ?? pickerLabel}
-              </span>
-              {activeBranch ? (
-                <span className="truncate font-mono text-[11px] text-ink-muted">
-                  {activeBranch.slug}
-                </span>
-              ) : null}
-            </div>
-            <IconSelector className="ms-auto size-4 shrink-0 text-ink-muted" />
-          </SidebarMenuButton>
-        }
-      />
-      <DropdownMenuContent align="start" className="min-w-(--anchor-width)">
-        <DropdownMenuLabel>{pickerLabel}</DropdownMenuLabel>
-        {branches.map((b) => {
-          const isActive = b.slug === activeBranch?.slug
-          return (
-            <DropdownMenuItem key={b.slug} onClick={() => handleSelect(b.slug)}>
-              <div className="flex min-w-0 flex-1 flex-col">
-                <span className="truncate text-xs font-medium text-ink">
-                  {b.displayName}
-                </span>
-                <span className="truncate font-mono text-[11px] text-ink-muted">
-                  {b.slug}
-                </span>
-              </div>
-              {isActive ? <IconCheck className="size-4 shrink-0" /> : null}
-            </DropdownMenuItem>
-          )
-        })}
-        {branches.length > 0 ? (
-          <div className="my-1 h-px bg-line" role="separator" />
-        ) : null}
-        <DropdownMenuItem onClick={handleCreate}>
-          <IconPlus className="size-4 shrink-0" />
-          <span className="text-xs font-medium text-ink">{createLabel}</span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
   )
 }
 
