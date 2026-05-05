@@ -30,7 +30,7 @@ export async function Hero({ branch }: { branch: SiteBranch }) {
           {branch.hero.tagline}
         </p>
 
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+        <div className="mt-6 grid gap-3 sm:grid-cols-2">
           <RetroButton
             tone="ink"
             size="lg"
