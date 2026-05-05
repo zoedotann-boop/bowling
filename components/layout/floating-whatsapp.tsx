@@ -18,9 +18,9 @@ export async function FloatingWhatsApp({ branch }: { branch: SiteBranch }) {
       : tStatus("closed")
 
   return (
-    <div className="pointer-events-none fixed inset-x-4 bottom-4 z-50 flex items-center justify-between gap-3 sm:inset-x-auto sm:end-6 sm:gap-2">
+    <div className="pointer-events-none fixed inset-x-4 bottom-4 z-50 flex items-center justify-between gap-3 sm:inset-x-6 sm:bottom-6">
       <div
-        className="pointer-events-auto inline-flex items-center gap-2 rounded-full border-2 border-ink bg-paper px-3 py-2 text-xs font-bold text-ink shadow-block-sm sm:order-2"
+        className="pointer-events-auto inline-flex items-center gap-2 rounded-full border-2 border-ink bg-paper px-3 py-2 text-xs font-bold text-ink shadow-block-sm"
         role="status"
       >
         <span className="relative inline-grid place-items-center">
@@ -42,7 +42,7 @@ export async function FloatingWhatsApp({ branch }: { branch: SiteBranch }) {
         target="_blank"
         rel="noopener"
         aria-label={t("label")}
-        className="pointer-events-auto grid size-12 place-items-center rounded-full border-2 border-ink bg-whatsapp text-white shadow-block transition hover:bg-whatsapp-hover active:translate-x-[1px] active:translate-y-[1px] sm:order-1 sm:size-14"
+        className="pointer-events-auto grid size-12 place-items-center rounded-full border-2 border-ink bg-whatsapp text-white shadow-block transition hover:bg-whatsapp-hover active:translate-x-[1px] active:translate-y-[1px] sm:size-14"
       >
         <IconBrandWhatsapp className="size-6 sm:size-7" aria-hidden />
         <span className="sr-only">{t("label")}</span>
