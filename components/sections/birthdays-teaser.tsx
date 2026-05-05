@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server"
-import { IconArrowLeft } from "@tabler/icons-react"
+import { IconArrowRight } from "@tabler/icons-react"
 import { Link } from "@/i18n/navigation"
 import { BowlingCard } from "@/components/brand/bowling-card"
 import { RetroButton } from "@/components/brand/retro-button"
@@ -31,7 +31,7 @@ export async function BirthdaysTeaser() {
               render={
                 <Link href="/birthdays">
                   {t("cta")}
-                  <IconArrowLeft className="rtl:-scale-x-100" aria-hidden />
+                  <IconArrowRight className="rtl:-scale-x-100" aria-hidden />
                 </Link>
               }
             />

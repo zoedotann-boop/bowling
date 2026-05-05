@@ -5,7 +5,7 @@ import { useTransition } from "react"
 import { useLocale, useTranslations } from "next-intl"
 import {
   IconCheck,
-  IconChevronLeft,
+  IconChevronRight,
   IconLanguage,
   IconMapPin,
   IconMenu2,
@@ -13,7 +13,7 @@ import {
 } from "@tabler/icons-react"
 
 import { Link, usePathname, useRouter } from "@/i18n/navigation"
-import { routing, type Locale } from "@/i18n/routing"
+import { dirFromLocale, routing, type Locale } from "@/i18n/routing"
 import { selectBranch } from "@/app/[locale]/(site)/_actions/branch"
 import type { BranchOption } from "@/lib/site-branch"
 import {
@@ -61,6 +61,8 @@ export function SiteMenu({
 }) {
   const [open, setOpen] = React.useState(false)
   const t = useTranslations()
+  const locale = useLocale() as Locale
+  const drawerSide = dirFromLocale(locale) === "rtl" ? "right" : "left"
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -72,10 +74,7 @@ export function SiteMenu({
       >
         <IconMenu2 className="size-5" aria-hidden />
       </button>
-      <SheetContent
-        side="right"
-        className="overflow-y-auto rtl:data-[side=right]:right-auto rtl:data-[side=right]:left-0 rtl:data-[side=right]:border-s-0 rtl:data-[side=right]:border-e-2"
-      >
+      <SheetContent side={drawerSide} className="overflow-y-auto">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-3">
             <BowlingLogo city={city} size="xs" />
@@ -180,7 +179,7 @@ function NavSection({ onAfter }: { onAfter: () => void }) {
               className="flex items-center justify-between rounded-lg px-3 py-3 text-base font-bold text-ink transition hover:bg-cream"
             >
               <span>{t(link.labelKey)}</span>
-              <IconChevronLeft
+              <IconChevronRight
                 className="size-4 text-ink/60 rtl:-scale-x-100"
                 aria-hidden
               />

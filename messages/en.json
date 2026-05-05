@@ -321,6 +321,7 @@
     "phone": "Phone",
     "email": "Email",
     "hours": "Opening hours",
+    "replyFast": "Quick reply",
     "form": {
       "name": "Full name",
       "phone": "Phone",

@@ -18,7 +18,7 @@ import type { FormState } from "./types"
 function commitLegal<T>(result: WriteResult<T>, slug?: string): FormState<T> {
   if (!result.ok) return errorState(result.fieldErrors)
   for (const tag of result.revalidateTags) updateTag(tag)
-  revalidatePath("/[locale]/admin/branches/[slug]/legal", "layout")
+  revalidatePath("/[locale]/admin/branches/[slug]/general", "layout")
   if (slug) revalidatePath(`/[locale]/legal/${slug}`, "page")
   revalidatePath("/[locale]", "layout")
   return successState(result.data)

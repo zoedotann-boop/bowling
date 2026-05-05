@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server"
-import { IconChevronLeft } from "@tabler/icons-react"
+import { IconChevronRight } from "@tabler/icons-react"
 import { Link } from "@/i18n/navigation"
 import { Eyebrow } from "@/components/common/eyebrow"
 
@@ -79,7 +79,7 @@ export async function ServiceCards() {
                   {t(c.descKey)}
                 </div>
               </div>
-              <IconChevronLeft
+              <IconChevronRight
                 className="size-4 shrink-0 text-ink rtl:-scale-x-100"
                 aria-hidden
               />

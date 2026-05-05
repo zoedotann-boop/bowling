@@ -15,7 +15,7 @@ export async function createBranchDomainAction(
     const result = await services.domains.create({ branchId, host })
     return applyWrite(
       result,
-      "/[locale]/admin/branches/[slug]/domains",
+      "/[locale]/admin/branches/[slug]/general",
       "/[locale]"
     )
   })
@@ -30,7 +30,7 @@ export async function deleteBranchDomainAction(
     const result = await services.domains.remove({ id, branchId })
     return applyWrite(
       result,
-      "/[locale]/admin/branches/[slug]/domains",
+      "/[locale]/admin/branches/[slug]/general",
       "/[locale]"
     )
   })

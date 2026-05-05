@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server"
 import { IconBrandWhatsapp } from "@tabler/icons-react"
 import type { SiteBranch } from "@/lib/site-branch"
 import { buildWhatsAppLink } from "@/lib/whatsapp"
-import { getTodayHours } from "@/lib/hours"
+import { getTodayHours, isOpenNow } from "@/lib/hours"
 
 export async function FloatingWhatsApp({ branch }: { branch: SiteBranch }) {
   const t = await getTranslations("WhatsApp")
@@ -10,10 +10,12 @@ export async function FloatingWhatsApp({ branch }: { branch: SiteBranch }) {
   const message = t("prefilled", { branch: branch.displayName })
   const href = buildWhatsAppLink(branch, message)
   const today = getTodayHours(branch)
-  const open = !today.isClosed
+  const open = isOpenNow(today)
   const statusLabel = open
     ? tStatus("openUntil", { time: today.close })
-    : tStatus("closed")
+    : !today.isClosed && today.open
+      ? tStatus("opensAt", { time: today.open })
+      : tStatus("closed")
 
   return (
     <div className="pointer-events-none fixed inset-x-4 bottom-4 z-50 flex items-center justify-between gap-3 sm:inset-x-auto sm:end-6 sm:gap-2">

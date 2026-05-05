@@ -151,7 +151,7 @@ export function BranchForm(props: Props) {
     if (state.status === "success") {
       toast.success(mode === "create" ? tt("branchCreated") : tt("branchSaved"))
       if (mode === "create" && state.data?.slug) {
-        router.push(`/admin/branches/${state.data.slug}/info`)
+        router.push(`/admin/branches/${state.data.slug}/general`)
         router.refresh()
       }
     }
