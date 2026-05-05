@@ -5,7 +5,6 @@ import {
   IconArrowUpRight,
 } from "@tabler/icons-react"
 import type { SiteBranch } from "@/lib/site-branch"
-import { BowlingCard } from "@/components/brand/bowling-card"
 import { Eyebrow } from "@/components/common/eyebrow"
 
 export async function GoogleReviews({ branch }: { branch: SiteBranch }) {
@@ -15,50 +14,35 @@ export async function GoogleReviews({ branch }: { branch: SiteBranch }) {
   if (google.reviews.length === 0) return null
 
   return (
-    <section className="bg-cream-2">
-      <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
-        <div className="grid gap-6 md:grid-cols-12 md:items-center">
-          <div className="md:col-span-7">
-            <Eyebrow tone="red">{t("eyebrow")}</Eyebrow>
-            <h2 className="mt-2 font-display text-3xl leading-[1] text-ink sm:text-4xl">
-              {t("title")}
-            </h2>
-            <p className="mt-3 text-base text-ink/70">{t("subtitle")}</p>
-          </div>
+    <section className="bg-cream">
+      <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-14">
+        <Eyebrow tone="red">{t("eyebrow")}</Eyebrow>
+        <h2 className="mt-2 font-display text-2xl leading-[1.05] text-ink sm:text-3xl">
+          {t("title")}
+        </h2>
 
-          <div className="md:col-span-5">
-            <BowlingCard
-              surface="paper"
-              ring="yellow"
-              shadow="md"
-              contentClassName="flex items-center gap-4 px-4 py-4"
-            >
-              <div className="grid size-12 place-items-center border-2 border-ink bg-yellow">
-                <IconBrandGoogle className="size-6 text-ink" aria-hidden />
-              </div>
-              <div className="flex-1">
-                <div className="flex items-baseline gap-2">
-                  <span className="font-display text-3xl text-ink">
-                    {google.rating.toFixed(1)}
-                  </span>
-                  <Stars rating={google.rating} />
-                </div>
-                <div className="mt-0.5 font-mono text-[11px] tracking-[0.16em] text-ink/60 uppercase">
-                  {t("reviewsCount", { count: google.count })}
-                </div>
-              </div>
-            </BowlingCard>
+        <div className="mt-5 flex items-center gap-3 border-2 border-ink bg-paper px-4 py-3 shadow-block-sm">
+          <div className="grid size-10 place-items-center border-2 border-ink bg-yellow">
+            <IconBrandGoogle className="size-5 text-ink" aria-hidden />
+          </div>
+          <div className="flex-1">
+            <div className="flex items-baseline gap-2">
+              <span className="font-display text-2xl text-ink">
+                {google.rating.toFixed(1)}
+              </span>
+              <Stars rating={google.rating} />
+            </div>
+            <div className="mt-0.5 font-mono text-[10px] tracking-[0.16em] text-ink/60 uppercase">
+              {t("reviewsCount", { count: google.count })}
+            </div>
           </div>
         </div>
 
-        <div className="mt-8 grid gap-4 md:grid-cols-2">
-          {google.reviews.map((r, i) => (
-            <BowlingCard
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          {google.reviews.slice(0, 4).map((r, i) => (
+            <article
               key={i}
-              surface="paper"
-              ring="red"
-              shadow="md"
-              contentClassName="px-4 py-4"
+              className="border-2 border-ink bg-paper px-4 py-4 shadow-block-sm"
             >
               <div className="flex items-center justify-between gap-3">
                 <Stars rating={r.rating} />
@@ -66,17 +50,17 @@ export async function GoogleReviews({ branch }: { branch: SiteBranch }) {
                   {r.date}
                 </span>
               </div>
-              <p className="mt-3 text-[15px] leading-relaxed text-ink">
+              <p className="mt-3 text-sm leading-relaxed text-ink/85">
                 {r.text}
               </p>
-              <p className="mt-3 font-mono text-xs font-bold tracking-[0.14em] text-red uppercase">
+              <p className="mt-3 font-mono text-[11px] font-bold tracking-[0.14em] text-red uppercase">
                 — {r.author}
               </p>
-            </BowlingCard>
+            </article>
           ))}
         </div>
 
-        <div className="mt-8 flex justify-center">
+        <div className="mt-6 flex justify-center">
           <a
             href={google.profileUrl}
             target="_blank"
@@ -101,7 +85,7 @@ function Stars({ rating }: { rating: number }) {
         <IconStarFilled
           key={i}
           aria-hidden
-          className={`inline size-4 ${i < full ? "" : "text-ink/20"}`}
+          className={`inline size-3.5 ${i < full ? "" : "text-ink/20"}`}
         />
       ))}
     </span>

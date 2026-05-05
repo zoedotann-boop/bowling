@@ -6,5 +6,5 @@ export default async function BranchEditIndexPage({
   params: Promise<{ locale: string; slug: string }>
 }) {
   const { locale, slug } = await params
-  redirect({ href: `/admin/branches/${slug}/info`, locale })
+  redirect({ href: `/admin/branches/${slug}/general`, locale })
 }

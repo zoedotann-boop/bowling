@@ -1,9 +1,14 @@
 import { getTranslations } from "next-intl/server"
-import { IconMapPin, IconPhone } from "@tabler/icons-react"
+import {
+  IconBrandWhatsapp,
+  IconMail,
+  IconMapPin,
+  IconPhone,
+} from "@tabler/icons-react"
 import type { SiteBranch } from "@/lib/site-branch"
-import { BowlingCard } from "@/components/brand/bowling-card"
 import { RetroButton } from "@/components/brand/retro-button"
 import { Eyebrow } from "@/components/common/eyebrow"
+import { buildWhatsAppLink } from "@/lib/whatsapp"
 
 export async function ContactBlock({ branch }: { branch: SiteBranch }) {
   const t = await getTranslations()
@@ -11,48 +16,97 @@ export async function ContactBlock({ branch }: { branch: SiteBranch }) {
   const tHero = await getTranslations("Hero")
   const tel = branch.phone.replace(/[^\d+]/g, "")
 
-  return (
-    <section
-      id="contact"
-      className="relative scroll-mt-24 border-t-[3px] border-ink bg-yellow"
-    >
-      <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
-        <div className="mb-6">
-          <Eyebrow tone="ink">{tContact("title")}</Eyebrow>
-          <h2 className="mt-2 font-display text-3xl leading-[0.98] text-ink sm:text-4xl">
-            {branch.address}, <span className="text-red">{branch.city}.</span>
-          </h2>
-        </div>
+  const quickContacts = [
+    {
+      key: "whatsapp",
+      Icon: IconBrandWhatsapp,
+      label: t("Cta.whatsapp"),
+      sub: t("Contact.replyFast"),
+      href: buildWhatsAppLink(branch),
+      external: true,
+    },
+    {
+      key: "phone",
+      Icon: IconPhone,
+      label: tContact("phone"),
+      sub: branch.phone,
+      href: `tel:${tel}`,
+      external: false,
+    },
+    {
+      key: "email",
+      Icon: IconMail,
+      label: tContact("email"),
+      sub: branch.email,
+      href: `mailto:${branch.email}`,
+      external: false,
+    },
+    {
+      key: "map",
+      Icon: IconMapPin,
+      label: t("Cta.getDirections"),
+      sub: branch.city,
+      href: branch.mapUrl,
+      external: true,
+    },
+  ] as const
 
-        <BowlingCard
-          surface="cream"
-          ring="ink"
-          shadow="md"
-          contentClassName="px-4 py-3 sm:px-5"
-        >
+  return (
+    <section id="contact" className="scroll-mt-24 bg-cream-2">
+      <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-14">
+        <Eyebrow tone="red">{tContact("title")}</Eyebrow>
+        <h2 className="mt-2 font-display text-2xl leading-[1.05] text-ink sm:text-3xl">
+          {branch.address}
+        </h2>
+        <p className="mt-2 text-sm text-ink/70">{branch.city}</p>
+
+        <ul className="mt-5 grid grid-cols-2 gap-3">
+          {quickContacts.map(({ key, Icon, label, sub, href, external }) => (
+            <li key={key}>
+              <a
+                href={href}
+                target={external ? "_blank" : undefined}
+                rel={external ? "noopener" : undefined}
+                className="flex h-full items-start gap-3 border-2 border-ink bg-paper px-3 py-3 text-start shadow-block-sm transition active:translate-x-[1px] active:translate-y-[1px]"
+              >
+                <span className="grid size-9 shrink-0 place-items-center border-2 border-ink bg-yellow text-ink">
+                  <Icon className="size-4" aria-hidden />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-bold text-ink">
+                    {label}
+                  </span>
+                  <span className="block truncate text-xs text-ink/70">
+                    {sub}
+                  </span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-6 border-2 border-ink bg-paper">
           {branch.hours.map((h, i) => (
             <div
               key={i}
-              className={`flex items-baseline justify-between gap-3 py-2 ${
+              className={`flex items-baseline justify-between gap-3 px-4 py-2.5 ${
                 i < branch.hours.length - 1
-                  ? "border-b border-dotted border-ink/30"
+                  ? "border-b-2 border-dashed border-ink/15"
                   : ""
               }`}
             >
-              <span className="text-[15px] font-extrabold text-ink">
-                {h.day}
-              </span>
+              <span className="text-sm font-extrabold text-ink">{h.day}</span>
               <span
-                className="font-mono text-sm tracking-wide text-ink/80"
+                className="font-mono text-xs text-ink/70 tabular-nums"
                 dir="ltr"
               >
                 {h.isClosed ? tHero("closedNow") : `${h.open} – ${h.close}`}
               </span>
             </div>
           ))}
-        </BowlingCard>
+        </div>
 
-        <div className="mt-5 flex flex-col gap-3">
+        <div className="mt-5">
           <RetroButton
             tone="ink"
             full
@@ -60,16 +114,6 @@ export async function ContactBlock({ branch }: { branch: SiteBranch }) {
               <a href={branch.mapUrl} target="_blank" rel="noopener">
                 <IconMapPin aria-hidden />
                 {t("Cta.getDirections")}
-              </a>
-            }
-          />
-          <RetroButton
-            tone="turq"
-            full
-            render={
-              <a href={`tel:${tel}`}>
-                <IconPhone aria-hidden />
-                {t("Cta.callNow")}
               </a>
             }
           />

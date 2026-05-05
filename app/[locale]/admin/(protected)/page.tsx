@@ -23,7 +23,9 @@ export default async function AdminHomePage({
     .limit(1)
 
   redirect({
-    href: first ? `/admin/branches/${first.slug}/info` : "/admin/branches/new",
+    href: first
+      ? `/admin/branches/${first.slug}/general`
+      : "/admin/branches/new",
     locale,
   })
 }

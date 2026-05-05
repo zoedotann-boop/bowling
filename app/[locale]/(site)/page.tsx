@@ -4,10 +4,10 @@ import { hasLocale } from "next-intl"
 import { routing, type Locale } from "@/i18n/routing"
 import { loadSiteBranch } from "@/lib/site-branch"
 import { Hero } from "@/components/sections/hero"
-import { QuickActions } from "@/components/sections/quick-actions"
+import { ServiceCards } from "@/components/sections/service-cards"
 import { PricingPreview } from "@/components/sections/pricing-preview"
-import { MenuSection } from "@/components/sections/menu-section"
-import { PackagesTeaser } from "@/components/sections/packages-teaser"
+import { BirthdaysTeaser } from "@/components/sections/birthdays-teaser"
+import { SiteGallery } from "@/components/sections/site-gallery"
 import { GoogleReviews } from "@/components/sections/google-reviews"
 import { ContactBlock } from "@/components/sections/contact-block"
 
@@ -25,10 +25,10 @@ export default async function HomePage({
   return (
     <>
       <Hero branch={branch} />
-      <QuickActions />
+      <ServiceCards />
       <PricingPreview branch={branch} />
-      <MenuSection branch={branch} />
-      <PackagesTeaser branch={branch} />
+      <BirthdaysTeaser />
+      <SiteGallery branch={branch} />
       <GoogleReviews branch={branch} />
       <ContactBlock branch={branch} />
     </>
