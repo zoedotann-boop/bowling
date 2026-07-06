@@ -1,23 +1,6 @@
-import { Container } from "./container"
+import { useTranslations } from "next-intl"
 
-const NAV_LINKS = [
-  "עמוד הבית",
-  "תפריט",
-  "ימי הולדת ואירועים",
-  "כרטיס מתנה דיגיטלי",
-  "צרו קשר",
-]
-const BRANCH = [
-  "דרך אבא הלל 301",
-  "(אצטדיון ר״ג שער 2)",
-  "03-5700834",
-  "info@bowling.co.il",
-]
-const HOURS = [
-  "ראשון–חמישי · 10:00–03:00",
-  "שישי · 10:00–03:00",
-  "שבת · 10:00–03:00",
-]
+import { Container } from "./container"
 
 const SOCIALS = [
   { glyph: "f", label: "Facebook", bg: "bg-[#4973c3]" },
@@ -41,6 +24,11 @@ function FooterColumn({ title, items }: { title: string; items: string[] }) {
 }
 
 export function SiteFooter() {
+  const t = useTranslations()
+  const navLinks = t.raw("footer.navLinks") as string[]
+  const branchDetails = t.raw("footer.branchDetails") as string[]
+  const hours = t.raw("footer.hours") as string[]
+
   return (
     <footer className="bg-gold pt-7 pb-5 lg:pt-13 lg:pb-7">
       <Container>
@@ -52,11 +40,12 @@ export function SiteFooter() {
                 🎳
               </span>
               <span className="font-heading text-2xl font-black tracking-[-1px] text-paper lg:text-[26px]">
-                באולינג<span className="text-red">.</span>
+                {t("brand")}
+                <span className="text-red">.</span>
               </span>
             </div>
             <p className="mb-3.5 max-w-[320px] text-sm leading-[1.55] font-medium text-teal lg:mb-4 lg:text-[15px]">
-              מתחם הבאולינג המוביל בישראל. פתוחים כל יום.
+              {t("footer.tagline")}
             </p>
             <div className="flex gap-2.5">
               {SOCIALS.map(({ glyph, label, bg }) => (
@@ -73,22 +62,20 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <FooterColumn title="ניווט" items={NAV_LINKS} />
+            <FooterColumn title={t("footer.navTitle")} items={navLinks} />
           </div>
           <div>
-            <FooterColumn title="סניף רמת גן" items={BRANCH} />
+            <FooterColumn title={t("footer.branchTitle")} items={branchDetails} />
           </div>
           <div className="col-span-2 lg:col-span-1">
-            <FooterColumn title="שעות פתיחה" items={HOURS} />
+            <FooterColumn title={t("footer.hoursTitle")} items={hours} />
           </div>
         </div>
 
         <div className="mt-6 flex flex-col gap-1.5 border-t-2 border-navy/20 pt-[18px] text-center text-[12.5px] font-medium lg:mt-8 lg:flex-row lg:items-center lg:justify-between lg:pt-5 lg:text-[13px]">
-          <span className="text-cream-warm">
-            © באולינג · סניף רמת גן · 2026
-          </span>
+          <span className="text-cream-warm">{t("footer.copyright")}</span>
           <span className="cursor-pointer text-navy underline">
-            הצהרת נגישות
+            {t("footer.accessibility")}
           </span>
         </div>
       </Container>
