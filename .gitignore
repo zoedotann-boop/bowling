@@ -34,3 +34,14 @@ pnpm-debug.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# vercel
+/.vercel
+
+# editors
+.vscode/
+.idea/
+*.swp
+
+# claude
+.claude/settings.local.json
