@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { useTranslations } from "next-intl"
 
 import { Container } from "./container"
@@ -8,16 +9,36 @@ const SOCIALS = [
   { glyph: "♪", label: "TikTok", bg: "bg-[#9101ca]" },
 ]
 
-function FooterColumn({ title, items }: { title: string; items: string[] }) {
+const FOOTER_NAV_HREFS = ["/", "/menu", "/events", "/gift-card", "/contact"]
+
+function FooterColumn({
+  title,
+  items,
+  hrefs,
+}: {
+  title: string
+  items: string[]
+  hrefs?: string[]
+}) {
   return (
     <>
       <div className="mb-3 font-heading text-[15px] font-extrabold text-teal lg:mb-3.5 lg:text-base">
         {title}
       </div>
       <div className="flex flex-col gap-2.5 text-sm font-semibold text-cream-warm lg:text-[15px]">
-        {items.map((l) => (
-          <span key={l}>{l}</span>
-        ))}
+        {items.map((l, i) =>
+          hrefs ? (
+            <Link
+              key={l}
+              href={hrefs[i]}
+              className="w-fit transition-colors hover:text-paper"
+            >
+              {l}
+            </Link>
+          ) : (
+            <span key={l}>{l}</span>
+          )
+        )}
       </div>
     </>
   )
@@ -62,7 +83,11 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <FooterColumn title={t("footer.navTitle")} items={navLinks} />
+            <FooterColumn
+              title={t("footer.navTitle")}
+              items={navLinks}
+              hrefs={FOOTER_NAV_HREFS}
+            />
           </div>
           <div>
             <FooterColumn title={t("footer.branchTitle")} items={branchDetails} />

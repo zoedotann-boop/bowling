@@ -1,5 +1,7 @@
 import { useTranslations } from "next-intl"
 
+import Link from "next/link"
+
 import { cn } from "@/lib/utils"
 import { Container } from "./container"
 
@@ -86,9 +88,12 @@ export function Pricing() {
         <p className="mb-5 text-[15px] leading-[1.55] font-semibold text-[#ffe3e0] lg:mb-6 lg:max-w-[440px] lg:text-[17px]">
           {t("birthdayDescription")}
         </p>
-        <button className="w-full rounded-full border-[3px] border-navy bg-paper px-5 py-3.5 font-heading text-[15px] font-extrabold text-navy transition-colors hover:bg-marigold lg:w-auto lg:px-7 lg:py-4 lg:text-base">
+        <Link
+          href="/events"
+          className="inline-block w-full rounded-full border-[3px] border-navy bg-paper px-5 py-3.5 text-center font-heading text-[15px] font-extrabold text-navy transition-colors hover:bg-marigold lg:w-auto lg:px-7 lg:py-4 lg:text-base"
+        >
           {t("birthdayCta")}
-        </button>
+        </Link>
       </div>
     </Container>
   )

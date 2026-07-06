@@ -5,6 +5,10 @@ import { getLocale, getTranslations } from "next-intl/server"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
+import { PageTransition } from "@/components/page-transition"
+import { PromoBar } from "@/components/home/promo-bar"
+import { SiteHeader } from "@/components/home/site-header"
+import { SiteFooter } from "@/components/home/site-footer"
 import { cn } from "@/lib/utils"
 
 const rubik = Rubik({
@@ -45,7 +49,16 @@ export default async function RootLayout({
     >
       <body>
         <NextIntlClientProvider>
-          <ThemeProvider>{children}</ThemeProvider>
+          <ThemeProvider>
+            <div className="flex min-h-svh flex-col bg-cream">
+              <PromoBar />
+              <SiteHeader />
+              <main className="flex-1">
+                <PageTransition>{children}</PageTransition>
+              </main>
+              <SiteFooter />
+            </div>
+          </ThemeProvider>
         </NextIntlClientProvider>
       </body>
     </html>

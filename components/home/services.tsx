@@ -1,13 +1,14 @@
 import Image from "next/image"
+import Link from "next/link"
 import { useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
 import { Container } from "./container"
 
 const CONFIG = [
-  { strip: "bg-orange", img: "/service-bowling.png" },
-  { strip: "bg-gold", img: "/service-events.png" },
-  { strip: "bg-teal", img: "/service-menu.png" },
+  { strip: "bg-orange", img: "/service-bowling.png", href: "/events" },
+  { strip: "bg-gold", img: "/service-events.png", href: "/events" },
+  { strip: "bg-teal", img: "/service-menu.png", href: "/menu" },
 ]
 
 export function Services() {
@@ -26,9 +27,10 @@ export function Services() {
       </div>
       <div className="flex flex-col gap-3.5 lg:grid lg:grid-cols-3 lg:gap-5">
         {items.map((s, i) => (
-          <div
+          <Link
             key={s.title}
-            className="overflow-hidden rounded-[18px] border-[4px] border-navy bg-paper lg:rounded-[20px]"
+            href={CONFIG[i].href}
+            className="block overflow-hidden rounded-[18px] border-[4px] border-navy bg-paper transition-transform hover:-translate-y-0.5 lg:rounded-[20px]"
           >
             <div className={cn("h-2 border-b-[4px] border-navy", CONFIG[i].strip)} />
             <div className="flex h-full items-center gap-3.5 bg-cream-warm p-[18px] lg:p-6">
@@ -51,7 +53,7 @@ export function Services() {
                 </span>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </Container>

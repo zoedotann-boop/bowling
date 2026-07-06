@@ -1,22 +1,30 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
 import { Container } from "./container"
 
+const NAV_HREFS = ["/", "/menu", "/events", "/gallery"]
+
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
+  const pathname = usePathname()
   const t = useTranslations()
   const navItems = t.raw("header.nav") as string[]
+
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href)
 
   return (
     <header>
       <div className="border-b-[4px] border-navy bg-cream-warm">
         <Container className="flex items-center justify-between gap-4 py-3.5 lg:py-4">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2.5">
+          <Link href="/" className="flex items-center gap-2.5">
             <span className="flex size-10 items-center justify-center rounded-[11px] border-[3px] border-navy bg-red text-xl lg:size-11 lg:text-[22px]">
               🎳
             </span>
@@ -24,21 +32,23 @@ export function SiteHeader() {
               {t("brand")}
               <span className="text-red">.</span>
             </span>
-          </a>
+          </Link>
 
           {/* Desktop nav */}
           <nav className="hidden items-center gap-1 rounded-full border-[3px] border-dotted border-navy bg-cream-warm p-[5px] lg:flex">
             {navItems.map((label, i) => (
-              <a
+              <Link
                 key={label}
-                href="#"
+                href={NAV_HREFS[i]}
                 className={cn(
-                  "rounded-full px-[18px] py-2 font-heading text-sm font-extrabold",
-                  i === 0 ? "bg-navy text-paper" : "text-navy hover:bg-cream"
+                  "rounded-full px-[18px] py-2 font-heading text-sm font-extrabold transition-colors",
+                  isActive(NAV_HREFS[i])
+                    ? "bg-navy text-paper"
+                    : "text-navy hover:bg-cream"
                 )}
               >
                 {label}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -75,18 +85,19 @@ export function SiteHeader() {
         <div className="border-b-[4px] border-navy bg-navy px-5 pt-4 pb-5 lg:hidden">
           <nav className="flex flex-col gap-2">
             {navItems.map((label, i) => (
-              <a
+              <Link
                 key={label}
-                href="#"
+                href={NAV_HREFS[i]}
+                onClick={() => setOpen(false)}
                 className={cn(
                   "px-4 py-3 font-heading text-base font-extrabold",
-                  i === 0
+                  isActive(NAV_HREFS[i])
                     ? "rounded-xl bg-marigold text-navy"
                     : "text-cream-warm"
                 )}
               >
                 {label}
-              </a>
+              </Link>
             ))}
           </nav>
           <div className="mt-3.5 flex gap-2.5">

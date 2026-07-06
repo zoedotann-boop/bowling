@@ -1,5 +1,7 @@
 import { useTranslations } from "next-intl"
 
+import Link from "next/link"
+
 import { cn } from "@/lib/utils"
 import { Container } from "./container"
 
@@ -42,9 +44,12 @@ export function Gallery() {
             </div>
           ))}
         </div>
-        <button className="mt-4 w-full rounded-full border-[3px] border-navy bg-cream px-6 py-3 font-heading text-[15px] font-extrabold text-navy transition-colors hover:bg-cyan lg:mt-6 lg:w-auto">
+        <Link
+          href="/gallery"
+          className="mt-4 inline-block w-full rounded-full border-[3px] border-navy bg-cream px-6 py-3 text-center font-heading text-[15px] font-extrabold text-navy transition-colors hover:bg-cyan lg:mt-6 lg:w-auto"
+        >
           {t("cta")} <span className="text-red">←</span>
-        </button>
+        </Link>
       </Container>
     </section>
   )
