@@ -23,7 +23,7 @@ export function GalleryPage() {
         <span className="font-mono text-[13px] font-bold text-marigold lg:text-sm">
           {t("eyebrow")}
         </span>
-        <h1 className="mt-1.5 font-heading text-[40px] font-black leading-none tracking-[-1.5px] text-navy lg:text-[56px]">
+        <h1 className="mt-1.5 font-heading text-[40px] leading-none font-black tracking-[-1.5px] text-navy lg:text-[56px]">
           {t("title")}
         </h1>
         <p className="mt-3 max-w-xl text-[15px] font-semibold text-mud lg:text-lg">
@@ -31,7 +31,7 @@ export function GalleryPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 [grid-auto-rows:120px] sm:grid-cols-3 lg:grid-cols-4 lg:gap-4 lg:[grid-auto-rows:190px]">
+      <div className="grid [grid-auto-rows:120px] grid-cols-2 gap-3 sm:grid-cols-3 lg:[grid-auto-rows:190px] lg:grid-cols-4 lg:gap-4">
         {TILES.map((tile, i) => (
           <div
             key={i}

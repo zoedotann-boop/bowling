@@ -54,15 +54,21 @@ export function Pricing() {
         <div className="overflow-hidden rounded-[20px] border-[4px] border-navy bg-paper lg:rounded-[22px]">
           <div className={cn(priceRow, "border-b-[4px] border-navy bg-paper")}>
             <div className={cn(priceLabel, "text-navy")}>{t("weekdays")}</div>
-            <div className={cn(priceValue, "text-navy")}>{t("weekdaysPrice")}</div>
+            <div className={cn(priceValue, "text-navy")}>
+              {t("weekdaysPrice")}
+            </div>
           </div>
           <div className={cn(priceRow, "border-b-[4px] border-navy bg-cream")}>
             <div className={cn(priceLabel, "text-navy")}>{t("weekend")}</div>
-            <div className={cn(priceValue, "text-navy")}>{t("weekendPrice")}</div>
+            <div className={cn(priceValue, "text-navy")}>
+              {t("weekendPrice")}
+            </div>
           </div>
           <div className={cn(priceRow, "bg-gold")}>
             <div>
-              <div className={cn(priceLabel, "text-paper")}>{t("thirdGame")}</div>
+              <div className={cn(priceLabel, "text-paper")}>
+                {t("thirdGame")}
+              </div>
               <div className="text-xs font-bold text-[#ffd0cc]">
                 {t("thirdGameNote")}
               </div>

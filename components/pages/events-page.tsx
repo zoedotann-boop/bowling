@@ -1,5 +1,12 @@
 import Link from "next/link"
-import { Cake, Check, Megaphone, PartyPopper, Sparkles, Users } from "lucide-react"
+import {
+  Cake,
+  Check,
+  Megaphone,
+  PartyPopper,
+  Sparkles,
+  Users,
+} from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
@@ -26,7 +33,7 @@ export function EventsPage() {
         <span className="font-mono text-[13px] font-bold text-orange lg:text-sm">
           {t("eyebrow")}
         </span>
-        <h1 className="mt-1.5 font-heading text-[40px] font-black leading-none tracking-[-1.5px] text-navy lg:text-[56px]">
+        <h1 className="mt-1.5 font-heading text-[40px] leading-none font-black tracking-[-1.5px] text-navy lg:text-[56px]">
           {t("title")}
         </h1>
         <p className="mt-3 max-w-xl text-[15px] font-semibold text-mud lg:text-lg">
@@ -44,7 +51,9 @@ export function EventsPage() {
               href="/contact"
               className="group flex flex-col overflow-hidden rounded-[20px] border-[4px] border-navy bg-paper transition-transform hover:-translate-y-1"
             >
-              <div className={cn("h-2 border-b-[4px] border-navy", ACCENTS[i])} />
+              <div
+                className={cn("h-2 border-b-[4px] border-navy", ACCENTS[i])}
+              />
               <div className="flex flex-1 flex-col p-6">
                 <div className="flex size-12 items-center justify-center rounded-xl border-[3px] border-navy bg-cream-warm">
                   <Icon className="size-6 text-navy" strokeWidth={2.25} />
@@ -52,7 +61,7 @@ export function EventsPage() {
                 <div className="mt-4 font-heading text-[22px] font-black text-navy">
                   {c.title}
                 </div>
-                <p className="mt-2 flex-1 text-sm font-semibold leading-relaxed text-mud">
+                <p className="mt-2 flex-1 text-sm leading-relaxed font-semibold text-mud">
                   {c.desc}
                 </p>
                 <span className="mt-4 font-heading text-sm font-extrabold text-red">
@@ -75,7 +84,9 @@ export function EventsPage() {
               <span className="flex size-7 flex-none items-center justify-center rounded-full border-[3px] border-navy bg-mint">
                 <Check className="size-3.5 text-navy" strokeWidth={3} />
               </span>
-              <span className="text-[15px] font-semibold text-navy">{item}</span>
+              <span className="text-[15px] font-semibold text-navy">
+                {item}
+              </span>
             </div>
           ))}
         </div>
@@ -87,7 +98,7 @@ export function EventsPage() {
           <h2 className="font-heading text-[28px] font-black tracking-[-1px] text-paper lg:text-[38px]">
             {t("cta.title")}
           </h2>
-          <p className="mt-2 max-w-[440px] text-[15px] font-semibold leading-[1.55] text-[#ffe3e0] lg:text-[17px]">
+          <p className="mt-2 max-w-[440px] text-[15px] leading-[1.55] font-semibold text-[#ffe3e0] lg:text-[17px]">
             {t("cta.desc")}
           </p>
         </div>

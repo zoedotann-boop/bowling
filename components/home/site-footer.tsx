@@ -90,7 +90,10 @@ export function SiteFooter() {
             />
           </div>
           <div>
-            <FooterColumn title={t("footer.branchTitle")} items={branchDetails} />
+            <FooterColumn
+              title={t("footer.branchTitle")}
+              items={branchDetails}
+            />
           </div>
           <div className="col-span-2 lg:col-span-1">
             <FooterColumn title={t("footer.hoursTitle")} items={hours} />

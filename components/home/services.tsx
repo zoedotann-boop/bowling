@@ -32,7 +32,9 @@ export function Services() {
             href={CONFIG[i].href}
             className="block overflow-hidden rounded-[18px] border-[4px] border-navy bg-paper transition-transform hover:-translate-y-0.5 lg:rounded-[20px]"
           >
-            <div className={cn("h-2 border-b-[4px] border-navy", CONFIG[i].strip)} />
+            <div
+              className={cn("h-2 border-b-[4px] border-navy", CONFIG[i].strip)}
+            />
             <div className="flex h-full items-center gap-3.5 bg-cream-warm p-[18px] lg:p-6">
               <Image
                 src={CONFIG[i].img}
