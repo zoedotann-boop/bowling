@@ -1,0 +1,14 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "app/**/{page,layout,loading,error,not-found,route}.tsx",
+    "components/ui/**/*.{ts,tsx}",
+    ".storybook/{main,preview}.ts"
+  ],
+  "project": [
+    "app/**/*.{ts,tsx}",
+    "components/**/*.{ts,tsx}",
+    "lib/**/*.{ts,tsx}"
+  ],
+  "ignoreDependencies": ["tw-animate-css", "tailwindcss", "shadcn"]
+}
