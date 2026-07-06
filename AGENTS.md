@@ -19,26 +19,33 @@ Use `gh pr create --base main --body-file <file>`. The body MUST follow this str
 
 ```markdown
 ## What this PR does
+
 <1–3 sentences; note that user-facing changes are listed first>
 
 ## User-facing changes
+
 ### 1. <change> — <what the end user notices (behavior, not files)>
+
 ### 2. …
 
 ## Developer-facing
+
 - <tooling / refactor / deps with no user-visible effect — keep short>
 
 ## Tests & checks
+
 - <added/updated tests; which checks pass>
 
 ## How to verify (manual QA)
+
 <optional one-line general rule>
 
-| Where | Do | Expect |
-| --- | --- | --- |
+| Where            | Do       | Expect              |
+| ---------------- | -------- | ------------------- |
 | <route / screen> | <action> | <observable result> |
 
 ## Notes
+
 - <follow-ups / intentional removals / caveats>
 ```
 
