@@ -37,10 +37,7 @@ export function BranchSwitcher({ className }: { className?: string }) {
       >
         {BRANCHES[branchId].name[locale]}
         <ChevronDown
-          className={cn(
-            "size-3.5 transition-transform",
-            open && "rotate-180"
-          )}
+          className={cn("size-3.5 transition-transform", open && "rotate-180")}
           strokeWidth={3}
         />
       </button>
@@ -70,7 +67,9 @@ export function BranchSwitcher({ className }: { className?: string }) {
                 )}
               >
                 {BRANCHES[id].name[locale]}
-                {active && <Check className="size-4 flex-none" strokeWidth={3} />}
+                {active && (
+                  <Check className="size-4 flex-none" strokeWidth={3} />
+                )}
               </button>
             )
           })}

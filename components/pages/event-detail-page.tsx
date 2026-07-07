@@ -780,13 +780,19 @@ function CorporateCta() {
             className="mx-auto flex max-w-3xl flex-col gap-3.5 rounded-[20px] border-[4px] border-dashed border-orange bg-cream-warm p-[22px] lg:rounded-[22px] lg:p-8"
           >
             <div className="grid gap-3.5 sm:grid-cols-2">
-              <input className={inputClass} placeholder={tf("namePlaceholder")} />
+              <input
+                className={inputClass}
+                placeholder={tf("namePlaceholder")}
+              />
               <input
                 type="tel"
                 className={inputClass}
                 placeholder={tf("phonePlaceholder")}
               />
-              <input className={inputClass} placeholder={tf("datePlaceholder")} />
+              <input
+                className={inputClass}
+                placeholder={tf("datePlaceholder")}
+              />
               <input
                 className={inputClass}
                 placeholder={tf("countPlaceholder")}
@@ -817,10 +823,7 @@ export function EventDetailPage({ slug }: { slug: string }) {
   const t = useTranslations("eventDetails")
   const { branch } = useBranch()
   const items = t.raw("items") as Record<string, EventItem>
-  const overrides = t.raw("branch") as Record<
-    string,
-    Record<string, EventItem>
-  >
+  const overrides = t.raw("branch") as Record<string, Record<string, EventItem>>
   // Branch-specific content wins over the shared default.
   const data = overrides?.[branch.id]?.[slug] ?? items[slug]
   const isCorporate = slug === "corporate"

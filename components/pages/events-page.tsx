@@ -23,7 +23,11 @@ const STRIPS = ["bg-orange", "bg-gold", "bg-teal", "bg-cyan", "bg-rust"]
 export function EventsPage() {
   const t = useTranslations("eventsPage")
   const { branch } = useBranch()
-  const allCards = t.raw("cards") as { id: string; title: string; desc: string }[]
+  const allCards = t.raw("cards") as {
+    id: string
+    title: string
+    desc: string
+  }[]
   const cardById = new Map(allCards.map((c) => [c.id, c]))
 
   // Only the events this branch offers, in branch order. Rishon's birthday

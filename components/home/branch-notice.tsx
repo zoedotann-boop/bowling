@@ -49,7 +49,7 @@ export function BranchNotice() {
     <div
       role="dialog"
       aria-modal="true"
-      className="animate-page-in fixed inset-0 z-[90] flex items-center justify-center p-4"
+      className="fixed inset-0 z-[90] flex animate-page-in items-center justify-center p-4"
     >
       {/* Overlay */}
       <button

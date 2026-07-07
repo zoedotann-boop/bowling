@@ -85,7 +85,7 @@ export function Pricing() {
       <SoldierDiscount className="mt-4 lg:hidden" />
 
       {/* Birthday CTA */}
-      <div className="mt-5 overflow-hidden rounded-[24px] border-[5px] border-navy bg-rust lg:mt-12 lg:rounded-[28px] lg:grid lg:grid-cols-2 lg:items-stretch">
+      <div className="mt-5 overflow-hidden rounded-[24px] border-[5px] border-navy bg-rust lg:mt-12 lg:grid lg:grid-cols-2 lg:items-stretch lg:rounded-[28px]">
         <div className="p-[26px] lg:p-11">
           <span className="font-mono text-[13px] font-bold text-[#ffd0cc] lg:text-sm">
             {t("birthdayEyebrow")}
@@ -103,7 +103,7 @@ export function Pricing() {
             {t("birthdayCta")}
           </Link>
         </div>
-        <div className="relative min-h-[220px] border-t-[5px] border-navy lg:min-h-full lg:border-t-0 lg:border-s-[5px] rtl:lg:border-e-[5px] rtl:lg:border-s-0">
+        <div className="relative min-h-[220px] border-t-[5px] border-navy lg:min-h-full lg:border-s-[5px] lg:border-t-0 rtl:lg:border-s-0 rtl:lg:border-e-[5px]">
           <Image
             src="/birthday.png"
             alt={t("birthdayTitle")}

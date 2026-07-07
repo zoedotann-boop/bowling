@@ -36,7 +36,10 @@ export const BRANCHES: Record<BranchId, Branch> = {
     id: "ramat-gan",
     name: { he: "סניף רמת גן", en: "Ramat Gan Branch" },
     addressLine1: { he: "דרך אבא הלל 301", en: "Aba Hillel Rd 301" },
-    addressLine2: { he: "(אצטדיון ר״ג שער 2)", en: "(Ramat Gan Stadium, Gate 2)" },
+    addressLine2: {
+      he: "(אצטדיון ר״ג שער 2)",
+      en: "(Ramat Gan Stadium, Gate 2)",
+    },
     addressFull: {
       he: "דרך אבא הלל 301 (אצטדיון ר״ג שער 2)",
       en: "Aba Hillel Rd 301 (Ramat Gan Stadium, Gate 2)",

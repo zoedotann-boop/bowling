@@ -1,34 +1,35 @@
 "use client"
 
-import { useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { useLocale } from "next-intl"
 
 import { cn } from "@/lib/utils"
-import { setLocale } from "@/i18n/actions"
+
+// Matches LOCALE_COOKIE in i18n/request.ts (kept in sync manually so this
+// client component doesn't import the server-only request config).
+const LOCALE_COOKIE = "NEXT_LOCALE"
 
 export function LangToggle({ className }: { className?: string }) {
   const locale = useLocale()
   const router = useRouter()
-  const [isPending, startTransition] = useTransition()
 
   const next = locale === "he" ? "en" : "he"
   // Show the language the toggle switches TO.
   const label = locale === "he" ? "EN" : "עב"
 
+  const switchLocale = () => {
+    // Persist so the server renders the same locale on the next request.
+    document.cookie = `${LOCALE_COOKIE}=${next};path=/;max-age=${60 * 60 * 24 * 365}`
+    router.refresh()
+  }
+
   return (
     <button
       type="button"
-      disabled={isPending}
-      onClick={() =>
-        startTransition(async () => {
-          await setLocale(next)
-          router.refresh()
-        })
-      }
+      onClick={switchLocale}
       aria-label={locale === "he" ? "Switch to English" : "עבור לעברית"}
       className={cn(
-        "rounded-full border-[3px] border-navy bg-paper px-3.5 py-2 font-heading text-sm font-extrabold text-navy transition-colors hover:bg-marigold disabled:opacity-60",
+        "rounded-full border-[3px] border-navy bg-paper px-3.5 py-2 font-heading text-sm font-extrabold text-navy transition-colors hover:bg-marigold",
         className
       )}
     >
