@@ -2,9 +2,11 @@
 
 import { useState } from "react"
 import { Mail, MapPin, MessageCircle, Phone } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
+import { whatsappUrl } from "@/lib/contact"
+import { useBranch } from "@/components/branch-context"
 import { Container } from "./container"
 
 const ICONS = [MapPin, Mail, Phone, MessageCircle]
@@ -14,7 +16,24 @@ const inputClass =
 
 export function Contact() {
   const t = useTranslations("contact")
-  const info = t.raw("info") as { title: string; value: string }[]
+  const { branch } = useBranch()
+  const locale = useLocale() as "he" | "en"
+  const rawInfo = t.raw("info") as { title: string; value: string }[]
+  // Address (0) and phone (2) come from the active branch.
+  const info = rawInfo.map((item, i) =>
+    i === 0
+      ? { ...item, value: branch.addressFull[locale] }
+      : i === 2
+        ? { ...item, value: branch.phone }
+        : item
+  )
+  // Per-card outbound links: Waze, email, phone, and WhatsApp (last card).
+  const infoHrefs = [
+    branch.wazeUrl,
+    "mailto:info@bowling.co.il",
+    `tel:${branch.phone}`,
+    whatsappUrl(),
+  ]
   const topics = t.raw("topics") as string[]
   const [topic, setTopic] = useState(topics[0])
 
@@ -34,11 +53,11 @@ export function Contact() {
         <div className="mb-4 grid grid-cols-2 gap-3 lg:mb-6 lg:grid-cols-4 lg:gap-4">
           {info.map(({ title, value }, i) => {
             const Icon = ICONS[i]
-            return (
-              <div
-                key={title}
-                className="rounded-[16px] border-[4px] border-dashed border-orange bg-cream-warm p-4 lg:rounded-[18px] lg:p-5"
-              >
+            const href = infoHrefs[i]
+            const cardClass =
+              "block rounded-[16px] border-[4px] border-dashed border-orange bg-cream-warm p-4 transition-colors hover:bg-paper lg:rounded-[18px] lg:p-5"
+            const inner = (
+              <>
                 <Icon className="size-5 text-rust" strokeWidth={2.5} />
                 <div className="mt-1.5 font-heading text-[15px] font-extrabold text-navy lg:mt-2 lg:text-base">
                   {title}
@@ -46,6 +65,21 @@ export function Contact() {
                 <div className="text-[13px] font-semibold text-mud lg:text-sm">
                   {value}
                 </div>
+              </>
+            )
+            return href ? (
+              <a
+                key={title}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cardClass}
+              >
+                {inner}
+              </a>
+            ) : (
+              <div key={title} className={cardClass}>
+                {inner}
               </div>
             )
           })}

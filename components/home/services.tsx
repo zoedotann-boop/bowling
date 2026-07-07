@@ -50,9 +50,11 @@ export function Services() {
                 <p className="mb-1.5 text-sm leading-normal font-semibold text-mud lg:text-[15px]">
                   {s.desc}
                 </p>
-                <span className="cursor-pointer font-heading text-sm font-extrabold text-red lg:text-[15px]">
-                  {s.cta}
-                </span>
+                {i !== 0 && (
+                  <span className="cursor-pointer font-heading text-sm font-extrabold text-red lg:text-[15px]">
+                    {s.cta}
+                  </span>
+                )}
               </div>
             </div>
           </Link>

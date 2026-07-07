@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl"
 
+import Image from "next/image"
 import Link from "next/link"
 
 import { cn } from "@/lib/utils"
@@ -84,22 +85,33 @@ export function Pricing() {
       <SoldierDiscount className="mt-4 lg:hidden" />
 
       {/* Birthday CTA */}
-      <div className="mt-5 overflow-hidden rounded-[24px] border-[5px] border-navy bg-rust p-[26px] lg:mt-12 lg:rounded-[28px] lg:p-11">
-        <span className="font-mono text-[13px] font-bold text-[#ffd0cc] lg:text-sm">
-          {t("birthdayEyebrow")}
-        </span>
-        <h3 className="mt-2 mb-3 font-heading text-[32px] leading-[1.02] font-black tracking-[-1px] text-paper lg:mb-3.5 lg:text-[44px]">
-          {t("birthdayTitle")}
-        </h3>
-        <p className="mb-5 text-[15px] leading-[1.55] font-semibold text-[#ffe3e0] lg:mb-6 lg:max-w-[440px] lg:text-[17px]">
-          {t("birthdayDescription")}
-        </p>
-        <Link
-          href="/events"
-          className="inline-block w-full rounded-full border-[3px] border-navy bg-paper px-5 py-3.5 text-center font-heading text-[15px] font-extrabold text-navy transition-colors hover:bg-marigold lg:w-auto lg:px-7 lg:py-4 lg:text-base"
-        >
-          {t("birthdayCta")}
-        </Link>
+      <div className="mt-5 overflow-hidden rounded-[24px] border-[5px] border-navy bg-rust lg:mt-12 lg:rounded-[28px] lg:grid lg:grid-cols-2 lg:items-stretch">
+        <div className="p-[26px] lg:p-11">
+          <span className="font-mono text-[13px] font-bold text-[#ffd0cc] lg:text-sm">
+            {t("birthdayEyebrow")}
+          </span>
+          <h3 className="mt-2 mb-3 font-heading text-[32px] leading-[1.02] font-black tracking-[-1px] text-paper lg:mb-3.5 lg:text-[44px]">
+            {t("birthdayTitle")}
+          </h3>
+          <p className="mb-5 text-[15px] leading-[1.55] font-semibold text-[#ffe3e0] lg:mb-6 lg:max-w-[440px] lg:text-[17px]">
+            {t("birthdayDescription")}
+          </p>
+          <Link
+            href="/events"
+            className="inline-block w-full rounded-full border-[3px] border-navy bg-paper px-5 py-3.5 text-center font-heading text-[15px] font-extrabold text-navy transition-colors hover:bg-marigold lg:w-auto lg:px-7 lg:py-4 lg:text-base"
+          >
+            {t("birthdayCta")}
+          </Link>
+        </div>
+        <div className="relative min-h-[220px] border-t-[5px] border-navy lg:min-h-full lg:border-t-0 lg:border-s-[5px] rtl:lg:border-e-[5px] rtl:lg:border-s-0">
+          <Image
+            src="/birthday.png"
+            alt={t("birthdayTitle")}
+            fill
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            className="object-cover"
+          />
+        </div>
       </div>
     </Container>
   )

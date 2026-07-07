@@ -1,0 +1,799 @@
+{
+  "metadata": {
+    "title": "Bowling · Ramat Gan Branch",
+    "description": "The perfect outing for family and friends! Modern bowling lanes, bar & restaurant, gymboree, bumper cars and events of all kinds — Ramat Gan branch."
+  },
+  "brand": "Bowling",
+  "header": {
+    "openMenu": "Open menu",
+    "branch": "Ramat Gan Branch ▾",
+    "lang": "EN",
+    "whatsapp": "WhatsApp",
+    "nav": ["Home", "Menu", "Events & Birthdays"]
+  },
+  "floating": {
+    "openNow": "Open now",
+    "whatsapp": "WhatsApp",
+    "scrollTop": "Back to top"
+  },
+  "notice": {
+    "eyebrow": "Please note · Important",
+    "date": "Sunday · 05.07.26",
+    "title": "The bowling alley will be closed between 17:45–21:00",
+    "body": "Before and after we'll be open as usual :)",
+    "footer": "See you soon!",
+    "close": "Got it, thanks"
+  },
+  "hero": {
+    "openNow": "Open now",
+    "titleBefore": "The",
+    "titleHighlight": "perfect",
+    "titleAfter": "outing for family & friends!",
+    "description": "An electric atmosphere until the small hours! Modern bowling lanes, bar & restaurant, gymboree, bumper cars and events of all kinds.",
+    "waze": "Navigate to us (Waze)",
+    "whatsapp": "Talk to us on WhatsApp!",
+    "branchName": "Ramat Gan Branch",
+    "open": "Open",
+    "address": "Aba Hillel Rd 301 (Ramat Gan Stadium, Gate 2)",
+    "wazeShort": "Waze"
+  },
+  "features": [
+    {
+      "title": "Modern lanes",
+      "desc": "14 lanes with pro equipment and LED lighting"
+    },
+    { "title": "For everyone", "desc": "From pros to beginners — fun for all ages" },
+    { "title": "Bar & restaurant", "desc": "Pizzas, burgers, cocktails and more" },
+    { "title": "Open until 3:00", "desc": "Every day of the week, including weekends" }
+  ],
+  "services": {
+    "eyebrow": "Everything at the venue",
+    "title": "Our services",
+    "items": [
+      {
+        "title": "Bowling",
+        "desc": "Professional bowling lanes for all ages, with shoe and ball rental.",
+        "cta": "Details →"
+      },
+      {
+        "title": "Events & Birthdays",
+        "desc": "Ready-made packages with a dedicated host and a festive table for the perfect celebration.",
+        "cta": "Details →"
+      },
+      {
+        "title": "Food & bar menu",
+        "desc": "Meals, snacks and a range of drinks — served right to your lane.",
+        "cta": "To the menu →"
+      }
+    ]
+  },
+  "pricing": {
+    "eyebrow": "Price per game per person · 10 frames",
+    "title": "How much to play?",
+    "description": "The price is per game (10 frames, ~2 throws per frame) per person. Play as many games as you like.",
+    "weekdays": "Sun–Thu",
+    "weekdaysPrice": "₪ 35",
+    "weekend": "Weekends & holidays",
+    "weekendPrice": "₪ 39",
+    "thirdGame": "Third game",
+    "thirdGameNote": "Every visit",
+    "thirdGamePrice": "₪ 10",
+    "soldierTitle": "Soldier discount · ₪ 4 off",
+    "soldierNote": "With a valid military ID. Conscript soldiers only.",
+    "birthdayEyebrow": "Birthdays",
+    "birthdayTitle": "Want to celebrate with us?",
+    "birthdayDescription": "An unforgettable celebration with ready-made packages, a professional production team and a cake ceremony. You celebrate — we take care of the rest.",
+    "birthdayCta": "All the details & packages →"
+  },
+  "gallery": {
+    "eyebrow": "Moments from the venue",
+    "title": "The venue in pictures",
+    "imageLabel": "Image {n}"
+  },
+  "gymboree": {
+    "eyebrow": "Rishon LeZion branch only",
+    "title": "Gymboree & bumper tubes",
+    "bumpers": {
+      "title": "Bumper tubes",
+      "price": "₪ 15",
+      "priceNote": "per round",
+      "desc": "Please follow the safety instructions and the instructor. Use is at the participants' own responsibility."
+    },
+    "entry": {
+      "title": "Gymboree entry",
+      "subtitle": "Paid from age 0",
+      "rows": [
+        { "label": "Sun–Thu", "value": "₪ 35" },
+        { "label": "Fri, Sat, holidays & Chol HaMoed", "value": "₪ 45" }
+      ]
+    },
+    "hours": {
+      "title": "Opening hours",
+      "rows": [
+        { "label": "Sun–Thu", "value": "16:00–20:30" },
+        { "label": "Friday", "value": "12:00–20:00" },
+        { "label": "Sat, holidays & Chol HaMoed", "value": "10:00–20:30" }
+      ]
+    }
+  },
+  "reviews": {
+    "title": "What our guests say about us?",
+    "items": [
+      {
+        "name": "Tamar Yosef",
+        "quote": "\"The kids asked to come back the same week. Highly recommended!\""
+      },
+      {
+        "name": "Itai Bar",
+        "quote": "\"A perfect birthday for my son. The production was smooth and the staff professional.\""
+      },
+      {
+        "name": "Ronit Cohen",
+        "quote": "\"A great place, we celebrated my son's birthday there! Professional staff, wonderful atmosphere.\""
+      }
+    ]
+  },
+  "contact": {
+    "eyebrow": "Leave us a message — we'll get back to you on working days",
+    "title": "Contact us",
+    "info": [
+      { "title": "Our address", "value": "Aba Hillel 301, Ramat Gan" },
+      { "title": "Our email", "value": "info@bowling.co.il" },
+      { "title": "Our phone", "value": "03-5700834" },
+      { "title": "WhatsApp chat", "value": "Quick reply" }
+    ],
+    "formTitle": "Send us a message",
+    "namePlaceholder": "Full name",
+    "phonePlaceholder": "Phone · 050-0000000",
+    "topicLabel": "Subject",
+    "topics": [
+      "General inquiry",
+      "Book a lane",
+      "Birthday",
+      "Private event",
+      "Suggestion"
+    ],
+    "messagePlaceholder": "Tell us what you'd like to know…",
+    "submit": "Send message"
+  },
+  "footer": {
+    "tagline": "Israel's leading bowling venue. Open every day.",
+    "navTitle": "Navigation",
+    "navLinks": [
+      "Home",
+      "Menu",
+      "Birthdays & Events",
+      "Digital gift card",
+      "Contact us"
+    ],
+    "branchTitle": "Ramat Gan Branch",
+    "branchDetails": [
+      "Aba Hillel Rd 301",
+      "(Ramat Gan Stadium, Gate 2)",
+      "03-5700834",
+      "info@bowling.co.il"
+    ],
+    "hoursTitle": "Opening hours",
+    "hours": [
+      "Sunday–Thursday · 10:00–03:00",
+      "Friday · 10:00–03:00",
+      "Saturday · 10:00–03:00"
+    ],
+    "copyright": "© Bowling · Ramat Gan Branch · 2026",
+    "accessibility": "Accessibility statement",
+    "creditPrefix": "Designed & developed by",
+    "creditName": "Zoe Dotan"
+  },
+  "pageMeta": {
+    "menu": "Our menu · Bowling",
+    "events": "Events & Birthdays · Bowling",
+    "contact": "Contact us · Bowling",
+    "giftCard": "Digital gift card · Bowling",
+    "accessibility": "Accessibility statement · Bowling"
+  },
+  "accessibilityPage": {
+    "eyebrow": "Committed to everyone",
+    "title": "Accessibility statement",
+    "updated": "Last updated: July 2026",
+    "intro": "Bowling — Ramat Gan branch places great importance on providing equal, accessible service to all our customers, and works to make both the website and the physical venue accessible in accordance with the Equal Rights for Persons with Disabilities Law and its regulations, and the Israeli standard SI 5568 based on the WCAG 2.1 Level AA guidelines.",
+    "sections": [
+      {
+        "title": "Website accessibility",
+        "items": [
+          "The site can be navigated using the keyboard alone.",
+          "Hierarchical heading structure and alt text on images for screen readers.",
+          "High color contrast and text that can be enlarged up to 200% without loss of content.",
+          "Compatibility with common browsers and mobile devices."
+        ]
+      },
+      {
+        "title": "Physical venue accessibility",
+        "items": [
+          "Accessible parking near the venue entrance.",
+          "Accessible entrance and passages for wheelchairs.",
+          "Accessible restrooms.",
+          "Our staff is happy to assist with any request or special need."
+        ]
+      }
+    ],
+    "contactTitle": "Accessibility contact",
+    "contactText": "Ran into a difficulty browsing or visiting? We'd love to hear and fix it. You can reach our accessibility coordinator:",
+    "contactPhone": "Phone: 03-5700834",
+    "contactEmail": "Email: info@bowling.co.il"
+  },
+  "menuPage": {
+    "eyebrow": "Bar · Restaurant · Sweets",
+    "title": "Our menu",
+    "subtitle": "Fresh food from our kitchen, served right to your lane.",
+    "note": "* The menu is updated from time to time and may vary by season and availability.",
+    "categories": [
+      {
+        "id": "snacks",
+        "label": "Snacks",
+        "items": [
+          { "name": "Pretzel", "price": "₪ 12", "desc": "" },
+          { "name": "Hot dog in a bun", "price": "₪ 19", "desc": "" },
+          { "name": "Edamame", "price": "₪ 25", "desc": "" },
+          { "name": "Nachos", "price": "₪ 26", "desc": "Served with salsa" },
+          {
+            "name": "Fries",
+            "price": "₪ 28",
+            "desc": "Spicy / Bulgarian topping – ₪ 3"
+          },
+          {
+            "name": "Home fries",
+            "price": "₪ 32",
+            "desc": "Potato cubes fried in sweet chili"
+          },
+          {
+            "name": "Pizzush",
+            "price": "₪ 32",
+            "desc": "Toppings: olives, Bulgarian, tuna, corn – ₪ 3"
+          },
+          { "name": "Mashed potato rolls", "price": "₪ 32", "desc": "" },
+          { "name": "Onion rings", "price": "₪ 32", "desc": "" },
+          {
+            "name": "Pretzel bites",
+            "price": "₪ 36",
+            "desc": "Served with cream cheese"
+          },
+          {
+            "name": "Shoshana's toast",
+            "price": "₪ 36",
+            "desc": "Sesame bagel with cheeses, garlic butter and thousand-island sauce"
+          }
+        ]
+      },
+      {
+        "id": "mains",
+        "label": "Main dishes",
+        "items": [
+          { "name": "Mini schnitzels & fries", "price": "₪ 44", "desc": "" },
+          {
+            "name": "Mini burger",
+            "price": "₪ 48",
+            "desc": "2 pcs, patty, a little fries"
+          },
+          {
+            "name": "Family pizza",
+            "price": "₪ 60",
+            "desc": "Toppings: olives, Bulgarian, tuna, corn – ₪ 6"
+          }
+        ]
+      },
+      {
+        "id": "cold",
+        "label": "Soft drinks",
+        "items": [
+          { "name": "Mineral water / soda", "price": "₪ 8", "desc": "" },
+          { "name": "Cola / Zero", "price": "₪ 10", "desc": "" },
+          { "name": "Sprite / Zero", "price": "₪ 10", "desc": "" },
+          {
+            "name": "Schweppes Mug",
+            "price": "₪ 10",
+            "desc": "Apple / berries / peach / grape"
+          },
+          { "name": "Energy drink", "price": "₪ 10", "desc": "" },
+          {
+            "name": "Juices",
+            "price": "₪ 12",
+            "desc": "Cranberry / lemon-mint / orange / grape"
+          },
+          { "name": "Slushy bottle", "price": "₪ 20", "desc": "" }
+        ]
+      },
+      {
+        "id": "hot",
+        "label": "Hot drinks",
+        "items": [
+          { "name": "Tea", "price": "₪ 9", "desc": "" },
+          { "name": "Short espresso", "price": "₪ 9", "desc": "" },
+          { "name": "Long espresso", "price": "₪ 10", "desc": "" },
+          { "name": "Americano / latte", "price": "₪ 12", "desc": "" },
+          { "name": "Hot chocolate", "price": "₪ 12", "desc": "" },
+          { "name": "Instant with milk / iced coffee", "price": "₪ 14", "desc": "" }
+        ]
+      },
+      {
+        "id": "wine",
+        "label": "Wine",
+        "items": [
+          { "name": "Wine can", "price": "₪ 28", "desc": "" },
+          { "name": "Cava / Lambrusco", "price": "₪ 95", "desc": "" },
+          { "name": "White – Blue Nun", "price": "₪ 95", "desc": "" },
+          { "name": "Red – Merlot / Cabernet", "price": "₪ 95", "desc": "" }
+        ]
+      },
+      {
+        "id": "alcohol",
+        "label": "Spirits",
+        "items": [
+          {
+            "name": "Arak",
+            "price": "₪ 19 / 29 / 200",
+            "desc": "Shot / bottle / chaser"
+          },
+          { "name": "Stolichnaya", "price": "₪ 19 / 29 / 300", "desc": "" },
+          { "name": "Jameson", "price": "₪ 25 / 41 / 430", "desc": "" },
+          { "name": "Campari", "price": "₪ 25 / 41 / 360", "desc": "" },
+          { "name": "Bombay gin", "price": "₪ 25 / 41 / 520", "desc": "" },
+          { "name": "Jack Daniel's", "price": "₪ 28 / 44 / 490", "desc": "" }
+        ]
+      },
+      {
+        "id": "beer",
+        "label": "Beers",
+        "items": [
+          { "name": "Carlsberg", "price": "₪ 20", "desc": "" },
+          { "name": "Goldstar", "price": "₪ 20", "desc": "" },
+          { "name": "Goldstar Unfiltered", "price": "₪ 25", "desc": "" },
+          { "name": "Stella", "price": "₪ 25", "desc": "" },
+          { "name": "Corona", "price": "₪ 25", "desc": "" },
+          { "name": "Smirnoff Ice", "price": "₪ 25", "desc": "" }
+        ]
+      },
+      {
+        "id": "sweet",
+        "label": "Sweets",
+        "items": [
+          {
+            "name": "Belgian waffle",
+            "price": "₪ 32",
+            "desc": "Warm or with ice cream"
+          },
+          {
+            "name": "Mini pancakes",
+            "price": "₪ 36",
+            "desc": "With powdered sugar and mini Nutella"
+          },
+          {
+            "name": "Chocolate fudge",
+            "price": "₪ 36",
+            "desc": "Warm chocolate cake"
+          },
+          {
+            "name": "Hot chocolate soufflé",
+            "price": "₪ 36",
+            "desc": "With ice cream, of course"
+          }
+        ]
+      }
+    ]
+  },
+  "eventsPage": {
+    "eyebrow": "Celebrate with us",
+    "title": "Events & Birthdays",
+    "subtitle": "Choose the type of event that suits you — we'll be happy to help with every detail.",
+    "cardCta": "Details & booking",
+    "dealTitle": "Bowling birthdays with a deal",
+    "cards": [
+      {
+        "id": "birthdays",
+        "title": "Birthday at the bowling alley",
+        "desc": "A free-style birthday — a bowling game for all the kids, a dedicated host, a birthday table and a cake ceremony."
+      },
+      {
+        "id": "gymboree",
+        "title": "Gym-birthday",
+        "desc": "A free hour at the gymboree, a meal in a private room and a cake ceremony — two hours of unforgettable fun."
+      },
+      {
+        "id": "no-room",
+        "title": "Birthday without a private room",
+        "desc": "A free-style birthday — a bowling game, a dedicated host, a birthday table and a cake ceremony, without a private room."
+      },
+      {
+        "id": "team",
+        "title": "Class outing",
+        "desc": "A team-building bowling game for the whole class, accompanied by refreshments and a meal served right on the lanes during play."
+      },
+      {
+        "id": "corporate",
+        "title": "Corporate events",
+        "desc": "From 12 participants up to a full venue buyout — buffet, tailored menu, alcohol and a club atmosphere."
+      }
+    ],
+    "included": {
+      "title": "What's included in every event?",
+      "items": [
+        "A dedicated host throughout the event",
+        "A festive table and a cake ceremony",
+        "Unlimited pitchers of water and cordial",
+        "Bowling lanes with shoe and ball rental"
+      ]
+    },
+    "cta": {
+      "title": "Ready to start planning?",
+      "desc": "Leave your details and we'll get back to you with all the options and prices for the perfect event.",
+      "button": "Talk to us"
+    }
+  },
+  "eventDetails": {
+    "backToEvents": "Back to all events",
+    "bookCta": "Book this event",
+    "scheduleTitle": "What's the schedule?",
+    "includedTitle": "What's included",
+    "priceTitle": "Price",
+    "rulesTitle": "Allowed & not allowed to bring",
+    "allowedTitle": "Allowed",
+    "forbiddenTitle": "Not allowed",
+    "extrasTitle": "Pre-arranged upgrades",
+    "extrasNote": "All upgrades by prior arrangement only",
+    "policyTitle": "Booking policy",
+    "policyNote": "Worth reading before you reserve a date",
+    "form": {
+      "title": "Event confirmation form",
+      "desc": "We'll get back to you within 24 hours to confirm the date and arrange the commitment form.",
+      "nameLabel": "Full name",
+      "namePlaceholder": "Israel Israeli",
+      "phoneLabel": "Phone",
+      "phonePlaceholder": "050-0000000",
+      "dateLabel": "Requested date",
+      "datePlaceholder": "Choose a date",
+      "celebrantNameLabel": "Celebrant's name",
+      "celebrantNamePlaceholder": "Child's name",
+      "celebrantAgeLabel": "Celebrant's age",
+      "celebrantAgePlaceholder": "Age",
+      "policyAgree": "I have read and agree to the booking policy",
+      "submit": "Send details and we'll get back to you!",
+      "footnote": "Submitting this form is not a confirmation that the event will take place. Final confirmation is set with the clerk."
+    },
+    "corporate": {
+      "offersTitle": "What we offer",
+      "ctaTitle": "Ready to plan an event?",
+      "ctaDesc": "For more details, prices and coordination — get in touch and we'll get back to you shortly.",
+      "whatsappLabel": "WhatsApp",
+      "whatsappValue": "Quick reply",
+      "phoneLabel": "Phone",
+      "emailLabel": "Email",
+      "form": {
+        "nameLabel": "Name / company",
+        "namePlaceholder": "Israel Ltd.",
+        "phoneLabel": "Phone",
+        "phonePlaceholder": "050-0000000",
+        "dateLabel": "Requested date",
+        "datePlaceholder": "Choose a date",
+        "countLabel": "Number of participants",
+        "countPlaceholder": "+12",
+        "notesLabel": "Notes / special requests",
+        "notesPlaceholder": "Tell us about your event",
+        "submit": "Send details and we'll get back to you!"
+      }
+    },
+    "notAvailable": {
+      "title": "This event isn't available at this branch",
+      "body": "The event you're looking for isn't offered at the current branch. Go to all events or switch branch.",
+      "cta": "All events"
+    },
+    "summaryTitle": "Price summary",
+    "branch": {
+      "rishon": {
+        "birthdays": {
+          "badges": ["Ages 8+", "Minimum 20 kids", "About two hours of fun"],
+          "title": "Bowling birthdays with a deal",
+          "description": "A bowling game for all the kids, a dedicated host, a birthday table in the restaurant and a cake ceremony.",
+          "schedule": {
+            "note": "The event lasts about an hour and a half to two hours",
+            "footnote": "Throughout the event, pitchers of water and cordial are provided to the kids free of charge, at no cost.",
+            "steps": [
+              { "icon": "arrival", "title": "Welcome", "desc": "Arrive 15 min before" },
+              { "icon": "bowling", "title": "Bowling game", "desc": "50–60 minutes" },
+              { "icon": "table", "title": "Birthday table", "desc": "Pizza + Tropit" },
+              { "icon": "cake", "title": "Cake ceremony", "desc": "With the family" }
+            ]
+          },
+          "price": {
+            "note": "Minimum 20 participants. Extra charge for each participant above the minimum.",
+            "cards": [
+              { "tag": "Weekends & holidays", "sub": "Fri–Sat", "label": "Weekend / Chol HaMoed", "price": "₪ 1,280", "note": "Up to 20 participants", "note2": "Over 20 · ₪ 64 / child" },
+              { "sub": "Sun–Thu", "label": "Midweek", "price": "₪ 1,180", "note": "Up to 20 participants", "note2": "Over 20 · ₪ 59 / child" }
+            ]
+          },
+          "includedTitle": "What's in the package",
+          "included": [
+            "A bowling game for all the kids (50–60 min)",
+            "2 slices of family pizza + Tropit per participant",
+            "Pitchers of water and cordial throughout the event",
+            "A host for the welcome, game explanation and cake ceremony",
+            "A birthday table for all participants"
+          ],
+          "includedNotes": [
+            "Extra birthday portion (2 pizza slices + Tropit) — ₪ 28",
+            "Additional host by prior arrangement — ₪ 150",
+            "The price does not include a service charge for the host",
+            "Every extra game is charged at the regular game price"
+          ],
+          "allowed": ["Birthday cake", "Gummy and toffee candy", "Marshmallows", "Cut fruit and vegetables"],
+          "forbidden": ["Food and snacks from outside", "Drinks from outside", "Fireworks and fire", "Hanging decorations outside permitted areas"],
+          "rulesFootnote": "Pitchers of water and cordial are provided free of charge throughout the event. Refreshments and food in the lane area only.",
+          "extrasTitle": "Add-ons & upgrades",
+          "extrasNote": "Choose what suits your celebration",
+          "extras": [
+            { "title": "Arcade ticket", "desc": "Quarter hour / half hour", "price": "₪ 17 / 25" },
+            { "title": "20 helium balloons pack", "desc": "Prepaid", "price": "₪ 100" },
+            { "title": "Signing bowling pin", "desc": "A surprise keepsake", "price": "₪ 120" },
+            { "title": "Slushy bowling-pin bottles", "desc": "Minimum 15 bottles", "price": "₪ 15 / unit" },
+            { "title": "Large drink bottles", "desc": "Minimum 6 bottles", "price": "₪ 15 / unit" },
+            { "title": "10 coffee vouchers", "desc": "Extra voucher at additional cost", "price": "₪ 100" }
+          ],
+          "policy": [
+            { "title": "Reservation deposit", "desc": "A ₪ 200 deposit to secure the event - deducted from the final total." },
+            { "title": "Postponement & cancellation", "desc": "You can postpone or cancel up to 7 days before. Less than that, the deposit is not refunded." },
+            { "title": "December–February", "desc": "During these months, birthdays cannot be reserved on Saturdays." },
+            { "title": "The venue is not closed", "desc": "The bowling alley is not closed for the event and other events may take place at the same time." },
+            { "title": "Payment", "desc": "Cash or credit on site only, no installments. For a single payment at the end, leave a credit card deposit." },
+            { "title": "Commitment form", "desc": "After paying the deposit you must sign the commitment form published on the site." },
+            { "title": "Arrival & lanes", "desc": "Arrive 15 min before the booking. Lane allocation is done up to 10 min." }
+          ],
+          "policyFootnote": "Minimum age: 8. Submitting this form is not a confirmation that the event will take place; final confirmation is set with the clerk and per the bowling schedule.",
+          "form": { "countLabel": "Number of kids", "countPlaceholder": "min. 20", "celebrant": false, "policyCheckbox": true },
+          "formSummary": {
+            "rows": [
+              { "label": "Midweek · 20 kids", "value": "₪ 1,180" },
+              { "label": "Weekend / holidays · 20 kids", "value": "₪ 1,280" }
+            ],
+            "note": "Reservation deposit: ₪ 200 (deducted from the final total)"
+          }
+        }
+      }
+    },
+    "items": {
+      "birthdays": {
+        "badges": ["Ages 8+", "No private room", "Dedicated table included"],
+        "title": "Birthday at the bowling alley",
+        "description": "A free-style celebration - bowling lanes for all the kids, a table with a cloth, pitchers of water and cordial on us at no charge, and a festive cake ceremony. The bowling alley is not closed for the event.",
+        "schedule": {
+          "note": "The event lasts about an hour and a half to two hours",
+          "footnote": "Throughout the event, pitchers of water and cordial are provided to the kids free of charge, at no cost.",
+          "steps": [
+            { "icon": "arrival", "title": "Arrival", "desc": "15 min before the lane booking" },
+            { "icon": "bowling", "title": "Bowling game", "desc": "50–60 minutes" },
+            { "icon": "table", "title": "Birthday table", "desc": "Pizza + Tropit" },
+            { "icon": "cake", "title": "Cake ceremony", "desc": "Festive and unforgettable" }
+          ]
+        },
+        "included": [
+          "Bowling lanes according to the number of kids who actually arrive",
+          "A table with a cloth in the restaurant area",
+          "Pitchers of water and cordial throughout the event - at no cost"
+        ],
+        "allowed": [
+          "Birthday cake only",
+          "Ordering food from us",
+          "Decorations in permitted areas only"
+        ],
+        "forbidden": [
+          "Snacks, food and drinks from outside",
+          "Fireworks on the premises",
+          "Decorations on walls outside permitted areas"
+        ],
+        "extras": [
+          { "title": "20 helium balloons", "desc": "Prepaid only", "price": "₪ 100" },
+          { "title": "Video game tickets", "desc": "15 min / 30 min · mini 15 tickets · prize at the end", "price": "₪ 17 / 25" },
+          { "title": "Large drink bottles", "desc": "Pack of 6 bottles", "price": "₪ 15 / unit" },
+          { "title": "Slushy bowling-pin bottles", "desc": "Pack of 15 bottles", "price": "₪ 15 / unit" },
+          { "title": "Signing bowling pin", "desc": "Write wishes with durable colored markers", "price": "₪ 120" },
+          { "title": "A host from us", "desc": "By prior arrangement only", "price": "₪ 150" }
+        ],
+        "policy": [
+          { "title": "Minimum age", "desc": "Birthdays are held from age 8 and up." },
+          { "title": "Arrival", "desc": "Please arrive 15 minutes before the lane booking." },
+          { "title": "The venue is not closed", "desc": "The bowling alley is not closed for the event - other events may take place at the same time. Management does not commit to a number of lanes - it is set by the number of kids who actually arrive." },
+          { "title": "Conduct rules", "desc": "Kids must wear closed shoes. Kids may not run on the lane or hold balls outside the lane area. Parents must supervise the kids." },
+          { "title": "Payment", "desc": "Payment by credit or cash on site only - no installment option. For a single payment at the end - leave a credit card deposit at reception." },
+          { "title": "Event confirmation", "desc": "Submitting the form is not a confirmation that the event will take place. Final confirmation is set with the clerk and according to the bowling schedule." }
+        ],
+        "form": { "countLabel": "Number of kids", "countPlaceholder": "Min. by age 8", "celebrant": true, "policyCheckbox": false }
+      },
+      "no-room": {
+        "badges": ["Ages 8+", "No private room", "Dedicated table included"],
+        "title": "Birthday without a private room",
+        "description": "A free-style celebration - bowling lanes for all the kids, a table with a cloth, pitchers of water and cordial on us at no charge, and a festive cake ceremony. The bowling alley is not closed for the event.",
+        "schedule": {
+          "note": "The event lasts about an hour and a half to two hours",
+          "footnote": "Throughout the event, pitchers of water and cordial are provided to the kids free of charge, at no cost.",
+          "steps": [
+            { "icon": "arrival", "title": "Arrival", "desc": "15 min before the lane booking" },
+            { "icon": "bowling", "title": "Bowling game", "desc": "50–60 minutes" },
+            { "icon": "table", "title": "Birthday table", "desc": "Pizza + Tropit" },
+            { "icon": "cake", "title": "Cake ceremony", "desc": "Festive and unforgettable" }
+          ]
+        },
+        "included": [
+          "Bowling lanes according to the number of kids who actually arrive",
+          "A table with a cloth in the restaurant area",
+          "Pitchers of water and cordial throughout the event - at no cost"
+        ],
+        "allowed": [
+          "Birthday cake only",
+          "Ordering food from us",
+          "Decorations in permitted areas only"
+        ],
+        "forbidden": [
+          "Snacks, food and drinks from outside",
+          "Fireworks on the premises",
+          "Decorations on walls outside permitted areas"
+        ],
+        "extras": [
+          { "title": "20 helium balloons", "desc": "Prepaid only", "price": "₪ 100" },
+          { "title": "Video game tickets", "desc": "15 min / 30 min · mini 15 tickets · prize at the end", "price": "₪ 17 / 25" },
+          { "title": "Large drink bottles", "desc": "Pack of 6 bottles", "price": "₪ 15 / unit" },
+          { "title": "Slushy bowling-pin bottles", "desc": "Pack of 15 bottles", "price": "₪ 15 / unit" },
+          { "title": "Signing bowling pin", "desc": "Write wishes with durable colored markers", "price": "₪ 120" },
+          { "title": "A host from us", "desc": "By prior arrangement only", "price": "₪ 150" }
+        ],
+        "policy": [
+          { "title": "Minimum age", "desc": "Birthdays are held from age 8 and up." },
+          { "title": "Arrival", "desc": "Please arrive 15 minutes before the lane booking." },
+          { "title": "The venue is not closed", "desc": "The bowling alley is not closed for the event - other events may take place at the same time. Management does not commit to a number of lanes - it is set by the number of kids who actually arrive." },
+          { "title": "Conduct rules", "desc": "Kids must wear closed shoes. Kids may not run on the lane or hold balls outside the lane area. Parents must supervise the kids." },
+          { "title": "Payment", "desc": "Payment by credit or cash on site only - no installment option. For a single payment at the end - leave a credit card deposit at reception." },
+          { "title": "Event confirmation", "desc": "Submitting the form is not a confirmation that the event will take place. Final confirmation is set with the clerk and according to the bowling schedule." }
+        ],
+        "form": { "countLabel": "Number of kids", "countPlaceholder": "Min. by age 8", "celebrant": true, "policyCheckbox": false }
+      },
+      "team": {
+        "badges": ["Ages 8+", "Minimum 20 kids", "About two hours of fun"],
+        "title": "An unforgettable class outing!",
+        "lead": "The hosting and refreshments are served right to the bowling lanes - stay in the energy of the game!",
+        "description": "A bowling game for all the kids, a dedicated host, a birthday table in the restaurant and a cake ceremony.",
+        "schedule": {
+          "note": "",
+          "footnote": "",
+          "steps": [
+            { "icon": "arrival", "title": "Welcome", "desc": "Arrive 15 min before" },
+            { "icon": "bowling", "title": "Bowling game", "desc": "50–60 minutes" },
+            { "icon": "table", "title": "Birthday table", "desc": "Pizza + Tropit" },
+            { "icon": "cake", "title": "Cake ceremony", "desc": "With the family" }
+          ]
+        },
+        "price": {
+          "cards": [
+            { "tag": "Weekends & holidays", "sub": "Fri–Sat", "label": "Weekend / Chol HaMoed", "price": "₪ 1,280", "note": "Price per group · minimum participants" },
+            { "sub": "Sun–Thu", "label": "Midweek", "price": "₪ 1,180", "note": "Price per group · minimum participants" }
+          ]
+        },
+        "included": [
+          "A bowling game for all the kids (50–60 min)",
+          "2 slices of family pizza + Tropit per participant",
+          "Pitchers of water and cordial throughout the event",
+          "A host for the welcome, game explanation and cake ceremony",
+          "A birthday table for all participants"
+        ],
+        "allowed": [
+          "Birthday cake",
+          "Gummy and toffee candy",
+          "Marshmallows",
+          "Cut fruit and vegetables"
+        ],
+        "forbidden": [
+          "Food and snacks from outside",
+          "Drinks from outside",
+          "Fireworks and fire",
+          "Hanging decorations outside permitted areas"
+        ],
+        "extras": [
+          { "title": "Arcade ticket", "desc": "Quarter hour / half hour", "price": "₪ 17 / 25" },
+          { "title": "20 helium balloons pack", "desc": "Prepaid", "price": "₪ 100" },
+          { "title": "Signing bowling pin", "desc": "A surprise keepsake", "price": "₪ 120" },
+          { "title": "Slushy bowling-pin bottles", "desc": "Pack of 15 bottles", "price": "₪ 15 / unit" },
+          { "title": "Large drink bottles", "desc": "Pack of 6 bottles", "price": "₪ 15 / unit" },
+          { "title": "10 coffee vouchers", "desc": "Extra voucher at additional cost", "price": "₪ 100" }
+        ],
+        "policy": [
+          { "title": "Reservation deposit", "desc": "A ₪ 200 deposit to secure the event - deducted from the final total." },
+          { "title": "Postponement & cancellation", "desc": "You can postpone or cancel up to 7 days before. Less than that, the deposit is not refunded." },
+          { "title": "December–February", "desc": "During these months, birthdays cannot be reserved on Saturdays." },
+          { "title": "The venue is not closed", "desc": "The bowling alley is not closed for the event and other events may take place at the same time." },
+          { "title": "Payment", "desc": "Cash or credit on site only. For a single payment at the end - leave a credit card deposit." }
+        ],
+        "form": { "countLabel": "Number of participants", "countPlaceholder": "Minimum", "celebrant": false, "policyCheckbox": true }
+      },
+      "gymboree": {
+        "badges": ["Ages 0+", "Minimum 20 participants", "About two hours of fun"],
+        "title": "Gym-birthday",
+        "description": "Birthdays in our magical gymboree - a free hour in the space, a meal in a private room and a festive cake ceremony. Two unforgettable hours!",
+        "schedule": {
+          "note": "",
+          "footnote": "",
+          "steps": [
+            { "icon": "arrival", "title": "Welcome", "desc": "A host hands out entry bands per the list" },
+            { "icon": "gym", "title": "Free gymboree", "desc": "A free hour in the magical space" },
+            { "icon": "meal", "title": "Meal in the room", "desc": "Pizza + Tropit + pitchers of water and cordial" },
+            { "icon": "cake", "title": "Cake ceremony", "desc": "And off home to open presents" }
+          ]
+        },
+        "price": {
+          "cards": [
+            { "sub": "All week", "label": "Sun to Sat", "price": "₪ 1,200", "note": "Up to 20 participants · each additional child ₪ 60" }
+          ]
+        },
+        "included": [
+          "A free hour at the gymboree (the venue is not closed for the event)",
+          "A private birthday room for two hours",
+          "Birthday portion: a slice of family pizza + Tropit per participant",
+          "Pitchers of water and cordial throughout the event in the room",
+          "A dedicated host throughout the event"
+        ],
+        "allowed": [
+          "Cake — only with a birthday-portions order",
+          "Gummy candy, toffee and marshmallows",
+          "Decorations in the designated area only"
+        ],
+        "forbidden": [
+          "Food and drinks from outside",
+          "Pizzas from outside (the costs do not change)",
+          "Fireworks and fire",
+          "Decorations on the venue walls"
+        ],
+        "extras": [
+          { "title": "Video game tickets", "desc": "Quarter hour / half hour · mini 15 tickets · prize at the end", "price": "₪ 17 / 25" },
+          { "title": "20 helium balloons", "desc": "Prepaid only", "price": "₪ 100" },
+          { "title": "Slushy bowling-pin bottles", "desc": "Pack of 15 bottles", "price": "₪ 15 / unit" },
+          { "title": "Drink bottles", "desc": "Pack of 6 bottles", "price": "₪ 15 / unit" },
+          { "title": "Bumper tubes", "desc": "4 min per round · pack of 15 participants", "price": "₪ 12 / unit" },
+          { "title": "Coffee vouchers", "desc": "Pack of 10 vouchers · each additional voucher ₪ 10", "price": "₪ 100" }
+        ],
+        "policy": [
+          { "title": "Minimum participants", "desc": "The event is held with a minimum of 20 participants. If fewer than 20 arrive, the charge will be for 20 participants. Paid from age 0 — every child taking part in the activity is charged." },
+          { "title": "Event duration", "desc": "The activity lasts two hours. The birthday room is limited to two hours. After the event you may return to the gymboree according to opening hours." },
+          { "title": "The venue is not closed", "desc": "The gymboree and bowling alley are not closed for the event — other customers and events may take place at the same time." },
+          { "title": "Children list", "desc": "Prepare a list of children who will enter the gymboree. The host hands out entry bands per the list. Do not arrive more than half an hour before the event starts." },
+          { "title": "Deposit & cancellation", "desc": "You can postpone or cancel up to 7 days before the event — the deposit is refunded. Less than 7 days — the deposit is not refunded." },
+          { "title": "Payment", "desc": "Payment by credit or cash on site only, no installment option. Parents wishing to open a drinks tab will provide a security credit card with the waiter." },
+          { "title": "Conduct rules", "desc": "Children must follow the host's instructions. Management is not responsible for loss and/or theft on the premises. Breaking the rules gives the bowling alley the right to claim damages." }
+        ],
+        "form": { "countLabel": "Number of participants", "countPlaceholder": "Minimum", "celebrant": false, "policyCheckbox": true }
+      },
+      "corporate": {
+        "badges": ["From 12 participants", "Buffet & drinks", "Alcohol & atmosphere"],
+        "title": "Corporate events",
+        "description": "Our bowling alley is the perfect place for any event you can think of - from a small department of 12 people to a large company that wants the place all to itself. Bar/bat mitzvah, parties - there's everything here for everyone.",
+        "offers": [
+          { "icon": "drinks", "title": "Alcohol & atmosphere", "desc": "A rich alcohol menu with the atmosphere, design and sound of a club." },
+          { "icon": "menu", "title": "Custom menu", "desc": "You can build it in advance from the venue's menu and know exactly what you get and for how much." },
+          { "icon": "buffet", "title": "Buffet with food & drinks", "desc": "Buffet menus with unlimited food and drinks plus games - at attractive prices." }
+        ]
+      }
+    }
+  },
+  "giftCardPage": {
+    "eyebrow": "The perfect gift",
+    "title": "Digital gift card",
+    "subtitle": "Not sure what to buy? A digital bowling gift card is always a winning idea — sent straight to email and suitable for any occasion.",
+    "cardName": "Gift card",
+    "cardTagline": "Bowling · Ramat Gan Branch",
+    "amountLabel": "Choose an amount",
+    "amounts": ["₪ 100", "₪ 150", "₪ 200", "₪ 300"],
+    "cta": "Buy a gift card",
+    "note": "The card is valid for one year from purchase and can be redeemed on any visit.",
+    "perks": [
+      {
+        "title": "Sent instantly",
+        "desc": "The card arrives by email within minutes of purchase."
+      },
+      { "title": "For everyone", "desc": "Games, food and bar — all in one place." },
+      { "title": "Valid for a year", "desc": "Redeem whenever you like, on any visit." }
+    ]
+  }
+}

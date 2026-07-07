@@ -1,37 +1,53 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { X } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
+import { whatsappUrl } from "@/lib/contact"
+import { useBranch } from "@/components/branch-context"
 import { Container } from "./container"
+import { LangToggle } from "./lang-toggle"
+import { BranchSwitcher } from "./branch-switcher"
 
-const NAV_HREFS = ["/", "/menu", "/events", "/gallery"]
+const NAV_HREFS = ["/", "/menu", "/events"]
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
   const t = useTranslations()
+  const { branch } = useBranch()
   const navItems = t.raw("header.nav") as string[]
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href)
 
+  // Lock body scroll while the off-canvas menu is open.
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : ""
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [open])
+
   return (
     <header>
       <div className="border-b-[4px] border-navy bg-cream-warm">
-        <Container className="flex items-center justify-between gap-4 py-3.5 lg:py-4">
+        <Container className="flex items-center justify-between gap-4 py-3 lg:py-3.5">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5">
-            <span className="flex size-10 items-center justify-center rounded-[11px] border-[3px] border-navy bg-red text-xl lg:size-11 lg:text-[22px]">
-              🎳
-            </span>
-            <span className="font-heading text-2xl font-black tracking-[-1px] text-navy lg:text-[28px]">
-              {t("brand")}
-              <span className="text-red">.</span>
-            </span>
+          <Link href="/" className="flex items-center">
+            <Image
+              src={branch.logo.src}
+              alt={t("brand")}
+              width={branch.logo.width}
+              height={branch.logo.height}
+              priority
+              className="h-11 w-auto lg:h-14"
+            />
           </Link>
 
           {/* Desktop nav */}
@@ -54,21 +70,22 @@ export function SiteHeader() {
 
           {/* Desktop actions */}
           <div className="hidden items-center gap-2.5 lg:flex">
-            <div className="inline-flex items-center gap-1.5 rounded-full border-[3px] border-navy bg-paper px-3.5 py-[7px] text-[13px] font-extrabold text-navy">
-              {t("header.branch")}
-            </div>
-            <div className="rounded-full border-[3px] border-navy bg-paper px-3.5 py-2 font-heading text-sm font-extrabold text-navy">
-              {t("header.lang")}
-            </div>
-            <button className="rounded-full border-[3px] border-navy bg-rust px-5 py-2.5 font-heading text-sm font-extrabold text-paper transition-colors hover:bg-red">
+            <BranchSwitcher />
+            <LangToggle />
+            <a
+              href={whatsappUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full border-[3px] border-navy bg-rust px-5 py-2.5 font-heading text-sm font-extrabold text-paper transition-colors hover:bg-red"
+            >
               {t("header.whatsapp")}
-            </button>
+            </a>
           </div>
 
           {/* Mobile hamburger */}
           <button
             type="button"
-            onClick={() => setOpen((v) => !v)}
+            onClick={() => setOpen(true)}
             aria-label={t("header.openMenu")}
             aria-expanded={open}
             className="flex size-11 flex-col items-center justify-center gap-1 rounded-xl border-[3px] border-navy bg-paper lg:hidden"
@@ -80,36 +97,83 @@ export function SiteHeader() {
         </Container>
       </div>
 
-      {/* Mobile menu drawer */}
-      {open && (
-        <div className="border-b-[4px] border-navy bg-navy px-5 pt-4 pb-5 lg:hidden">
-          <nav className="flex flex-col gap-2">
+      {/* Mobile off-canvas menu (slides in from the side) */}
+      <div
+        className={cn(
+          "fixed inset-0 z-[70] lg:hidden",
+          open ? "" : "pointer-events-none"
+        )}
+        aria-hidden={!open}
+      >
+        {/* Overlay */}
+        <button
+          type="button"
+          tabIndex={open ? 0 : -1}
+          aria-label={t("header.openMenu")}
+          onClick={() => setOpen(false)}
+          className={cn(
+            "absolute inset-0 bg-navy/50 transition-opacity duration-300",
+            open ? "opacity-100" : "opacity-0"
+          )}
+        />
+        {/* Panel */}
+        <div
+          className={cn(
+            "absolute inset-y-0 end-0 flex w-[82%] max-w-xs flex-col overflow-y-auto border-s-[4px] border-dotted border-navy bg-[#faf0e3] px-5 pt-5 pb-8 shadow-2xl transition-transform duration-300 ease-out",
+            open ? "translate-x-0" : "translate-x-full rtl:-translate-x-full"
+          )}
+        >
+          <div className="mb-5 flex items-center justify-between">
+            <Image
+              src={branch.logo.src}
+              alt={t("brand")}
+              width={branch.logo.width}
+              height={branch.logo.height}
+              className="h-10 w-auto"
+            />
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label="Close"
+              className="flex size-10 items-center justify-center rounded-xl border-[3px] border-navy bg-paper"
+            >
+              <X className="size-5 text-navy" strokeWidth={3} />
+            </button>
+          </div>
+
+          <nav className="flex flex-col gap-2.5">
             {navItems.map((label, i) => (
               <Link
                 key={label}
                 href={NAV_HREFS[i]}
                 onClick={() => setOpen(false)}
                 className={cn(
-                  "px-4 py-3 font-heading text-base font-extrabold",
+                  "rounded-xl border-[3px] border-dotted px-4 py-3 font-heading text-base font-extrabold transition-colors",
                   isActive(NAV_HREFS[i])
-                    ? "rounded-xl bg-marigold text-navy"
-                    : "text-cream-warm"
+                    ? "border-navy bg-navy text-paper"
+                    : "border-navy/40 text-navy hover:bg-cream-warm"
                 )}
               >
                 {label}
               </Link>
             ))}
           </nav>
-          <div className="mt-3.5 flex gap-2.5">
-            <div className="flex flex-1 items-center justify-center gap-1.5 rounded-full border-[3px] border-cream-warm bg-paper px-2.5 py-[11px] text-[13px] font-extrabold text-navy">
-              {t("header.branch")}
-            </div>
-            <div className="rounded-full border-[3px] border-cream-warm bg-paper px-4 py-[11px] font-heading text-sm font-extrabold text-navy">
-              {t("header.lang")}
-            </div>
+
+          <div className="mt-4 flex gap-2.5">
+            <BranchSwitcher className="flex-1 py-[11px]" />
+            <LangToggle className="px-4 py-[11px]" />
           </div>
+
+          <a
+            href={whatsappUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 rounded-full border-[3px] border-navy bg-rust px-5 py-3 text-center font-heading text-sm font-extrabold text-paper transition-colors hover:bg-red"
+          >
+            {t("header.whatsapp")}
+          </a>
         </div>
-      )}
+      </div>
     </header>
   )
 }

@@ -1,6 +1,9 @@
-import Image from "next/image"
-import { useTranslations } from "next-intl"
+"use client"
 
+import Image from "next/image"
+import { useLocale, useTranslations } from "next-intl"
+
+import { useBranch } from "@/components/branch-context"
 import { Container } from "./container"
 
 const IMAGES = [
@@ -12,6 +15,8 @@ const IMAGES = [
 
 export function FeatureStrip() {
   const t = useTranslations()
+  const { branch } = useBranch()
+  const locale = useLocale() as "he" | "en"
   const features = t.raw("features") as { title: string; desc: string }[]
 
   return (
@@ -35,7 +40,7 @@ export function FeatureStrip() {
               {f.title}
             </div>
             <div className="mt-1 text-[13px] font-semibold text-mud lg:text-sm">
-              {f.desc}
+              {i === 0 ? branch.laneDesc[locale] : f.desc}
             </div>
           </div>
         ))}

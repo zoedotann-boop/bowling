@@ -1,6 +1,10 @@
-import Link from "next/link"
-import { useTranslations } from "next-intl"
+"use client"
 
+import Image from "next/image"
+import Link from "next/link"
+import { useLocale, useTranslations } from "next-intl"
+
+import { useBranch } from "@/components/branch-context"
 import { Container } from "./container"
 
 const SOCIALS = [
@@ -25,13 +29,13 @@ function FooterColumn({
       <div className="mb-3 font-heading text-[15px] font-extrabold text-teal lg:mb-3.5 lg:text-base">
         {title}
       </div>
-      <div className="flex flex-col gap-2.5 text-sm font-semibold text-cream-warm lg:text-[15px]">
+      <div className="flex flex-col gap-2.5 text-sm font-semibold text-mud lg:text-[15px]">
         {items.map((l, i) =>
           hrefs ? (
             <Link
               key={l}
               href={hrefs[i]}
-              className="w-fit transition-colors hover:text-paper"
+              className="w-fit transition-colors hover:text-navy"
             >
               {l}
             </Link>
@@ -46,26 +50,31 @@ function FooterColumn({
 
 export function SiteFooter() {
   const t = useTranslations()
+  const { branch } = useBranch()
+  const locale = useLocale() as "he" | "en"
   const navLinks = t.raw("footer.navLinks") as string[]
-  const branchDetails = t.raw("footer.branchDetails") as string[]
+  const branchDetails = [
+    branch.addressLine1[locale],
+    branch.addressLine2[locale],
+    branch.phone,
+    "info@bowling.co.il",
+  ]
   const hours = t.raw("footer.hours") as string[]
 
   return (
-    <footer className="bg-gold pt-7 pb-5 lg:pt-13 lg:pb-7">
+    <footer className="border-t-[4px] border-navy bg-cream-warm pt-7 pb-5 lg:pt-13 lg:pb-7">
       <Container>
         <div className="grid grid-cols-2 gap-6 lg:grid-cols-[1.6fr_1fr_1fr_1fr] lg:gap-8">
           {/* Brand */}
           <div className="col-span-2 lg:col-span-1">
-            <div className="mb-3 flex items-center gap-2.5">
-              <span className="flex size-9 items-center justify-center rounded-[11px] border-[3px] border-paper bg-red text-lg lg:size-10 lg:text-xl">
-                🎳
-              </span>
-              <span className="font-heading text-2xl font-black tracking-[-1px] text-paper lg:text-[26px]">
-                {t("brand")}
-                <span className="text-red">.</span>
-              </span>
-            </div>
-            <p className="mb-3.5 max-w-[320px] text-sm leading-[1.55] font-medium text-teal lg:mb-4 lg:text-[15px]">
+            <Image
+              src={branch.logo.src}
+              alt={t("brand")}
+              width={branch.logo.width}
+              height={branch.logo.height}
+              className="mb-3 h-12 w-auto lg:h-14"
+            />
+            <p className="mb-3.5 max-w-[320px] text-sm leading-[1.55] font-medium text-mud lg:mb-4 lg:text-[15px]">
               {t("footer.tagline")}
             </p>
             <div className="flex gap-2.5">
@@ -74,7 +83,7 @@ export function SiteFooter() {
                   key={label}
                   href="#"
                   aria-label={label}
-                  className={`flex size-10 items-center justify-center rounded-xl border-[3px] border-paper text-lg font-black text-paper lg:size-[42px] ${bg}`}
+                  className={`flex size-10 items-center justify-center rounded-xl border-[3px] border-navy text-lg font-black text-paper lg:size-[42px] ${bg}`}
                 >
                   {glyph}
                 </a>
@@ -90,21 +99,34 @@ export function SiteFooter() {
             />
           </div>
           <div>
-            <FooterColumn
-              title={t("footer.branchTitle")}
-              items={branchDetails}
-            />
+            <FooterColumn title={branch.name[locale]} items={branchDetails} />
           </div>
           <div className="col-span-2 lg:col-span-1">
             <FooterColumn title={t("footer.hoursTitle")} items={hours} />
           </div>
         </div>
 
-        <div className="mt-6 flex flex-col gap-1.5 border-t-2 border-navy/20 pt-[18px] text-center text-[12.5px] font-medium lg:mt-8 lg:flex-row lg:items-center lg:justify-between lg:pt-5 lg:text-[13px]">
-          <span className="text-cream-warm">{t("footer.copyright")}</span>
-          <span className="cursor-pointer text-navy underline">
-            {t("footer.accessibility")}
-          </span>
+        <div className="mt-6 flex flex-col gap-2.5 border-t-2 border-navy/15 pt-[18px] text-center text-[12.5px] font-medium lg:mt-8 lg:flex-row lg:items-center lg:justify-between lg:pt-5 lg:text-[13px]">
+          <span className="text-mud">{t("footer.copyright")}</span>
+          <div className="flex flex-col items-center gap-1.5 lg:flex-row lg:gap-4">
+            <span className="text-mud">
+              {t("footer.creditPrefix")}{" "}
+              <a
+                href="https://zoedotan.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-extrabold text-navy underline transition-colors hover:text-paper"
+              >
+                {t("footer.creditName")}
+              </a>
+            </span>
+            <Link
+              href="/accessibility"
+              className="text-navy underline transition-colors hover:text-paper"
+            >
+              {t("footer.accessibility")}
+            </Link>
+          </div>
         </div>
       </Container>
     </footer>
