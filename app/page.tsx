@@ -1,6 +1,7 @@
 import { Contact } from "@/components/home/contact"
 import { FeatureStrip } from "@/components/home/feature-strip"
 import { Gallery } from "@/components/home/gallery"
+import { Gymboree } from "@/components/home/gymboree"
 import { Hero } from "@/components/home/hero"
 import { Pricing } from "@/components/home/pricing"
 import { Reviews } from "@/components/home/reviews"
@@ -13,6 +14,7 @@ export default function Page() {
       <FeatureStrip />
       <Services />
       <Pricing />
+      <Gymboree />
       <Gallery />
       <Reviews />
       <Contact />

@@ -11,21 +11,8 @@ export function Reviews() {
 
   return (
     <Container className="pt-7 pb-1 lg:pt-14">
-      <div className="mb-4 lg:mb-8 lg:flex lg:items-end lg:justify-between">
-        <div className="flex items-center gap-3 lg:order-2">
-          <span className="font-heading text-[40px] leading-none font-black text-orange lg:text-[44px]">
-            {t("score")}
-          </span>
-          <div>
-            <div className="text-lg tracking-[2px] text-marigold lg:text-xl">
-              ★★★★★
-            </div>
-            <div className="text-xs font-bold text-mud lg:text-[13px]">
-              {t("count")}
-            </div>
-          </div>
-        </div>
-        <h2 className="mt-2.5 font-heading text-[28px] font-black tracking-[-1px] text-navy lg:order-1 lg:mt-0 lg:text-[44px]">
+      <div className="mb-4 lg:mb-8">
+        <h2 className="font-heading text-[28px] font-black tracking-[-1px] text-navy lg:text-[44px]">
           {t("title")}
         </h2>
       </div>

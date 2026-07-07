@@ -1,31 +1,45 @@
+"use client"
+
+import Image from "next/image"
 import Link from "next/link"
-import {
-  Cake,
-  Check,
-  Megaphone,
-  PartyPopper,
-  Sparkles,
-  Users,
-} from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
+import { whatsappUrl } from "@/lib/contact"
+import { useBranch } from "@/components/branch-context"
 import { Container } from "@/components/home/container"
 
-const ICONS: Record<string, typeof Cake> = {
-  birthdays: Cake,
-  gymboree: PartyPopper,
-  "no-room": Sparkles,
-  team: Users,
-  corporate: Megaphone,
+const ICONS: Record<string, string> = {
+  birthdays: "/events/birthdays.png",
+  gymboree: "/events/gymboree.png",
+  "no-room": "/events/no-room.png",
+  team: "/events/team.png",
+  corporate: "/events/corporate.png",
 }
 
-const ACCENTS = ["bg-marigold", "bg-cyan", "bg-pink", "bg-teal", "bg-rust"]
+// Top-strip accent colors, matching the home "Services" cards.
+const STRIPS = ["bg-orange", "bg-gold", "bg-teal", "bg-cyan", "bg-rust"]
 
 export function EventsPage() {
   const t = useTranslations("eventsPage")
-  const cards = t.raw("cards") as { id: string; title: string; desc: string }[]
-  const included = t.raw("included.items") as string[]
+  const { branch } = useBranch()
+  const allCards = t.raw("cards") as {
+    id: string
+    title: string
+    desc: string
+  }[]
+  const cardById = new Map(allCards.map((c) => [c.id, c]))
+
+  // Only the events this branch offers, in branch order. Rishon's birthday
+  // card uses the "deal" title.
+  const cards = branch.events
+    .map((id) => cardById.get(id))
+    .filter((c): c is { id: string; title: string; desc: string } => Boolean(c))
+    .map((c) =>
+      branch.id === "rishon" && c.id === "birthdays"
+        ? { ...c, title: t("dealTitle") }
+        : c
+    )
 
   return (
     <Container className="py-9 lg:py-16">
@@ -41,59 +55,46 @@ export function EventsPage() {
         </p>
       </div>
 
-      {/* Event type cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {cards.map((c, i) => {
-          const Icon = ICONS[c.id] ?? Sparkles
-          return (
-            <Link
-              key={c.id}
-              href="/contact"
-              className="group flex flex-col overflow-hidden rounded-[20px] border-[4px] border-navy bg-paper transition-transform hover:-translate-y-1"
-            >
-              <div
-                className={cn("h-2 border-b-[4px] border-navy", ACCENTS[i])}
+      {/* Event type cards — styled exactly like the home "Services" cards */}
+      <div className="flex flex-col gap-3.5 lg:grid lg:grid-cols-3 lg:gap-5">
+        {cards.map((c, i) => (
+          <Link
+            key={c.id}
+            href={`/events/${c.id}`}
+            className="block overflow-hidden rounded-[18px] border-[4px] border-navy bg-paper transition-transform hover:-translate-y-0.5 lg:rounded-[20px]"
+          >
+            <div
+              className={cn(
+                "h-2 border-b-[4px] border-navy",
+                STRIPS[i % STRIPS.length]
+              )}
+            />
+            <div className="flex h-full items-center gap-3.5 bg-cream-warm p-[18px] lg:p-6">
+              <Image
+                src={ICONS[c.id] ?? ICONS.birthdays}
+                alt={c.title}
+                width={84}
+                height={84}
+                className="size-[74px] shrink-0 object-contain lg:size-[84px]"
               />
-              <div className="flex flex-1 flex-col p-6">
-                <div className="flex size-12 items-center justify-center rounded-xl border-[3px] border-navy bg-cream-warm">
-                  <Icon className="size-6 text-navy" strokeWidth={2.25} />
-                </div>
-                <div className="mt-4 font-heading text-[22px] font-black text-navy">
+              <div>
+                <div className="mb-1 font-heading text-xl font-black text-navy lg:text-[22px]">
                   {c.title}
                 </div>
-                <p className="mt-2 flex-1 text-sm leading-relaxed font-semibold text-mud">
+                <p className="mb-1.5 text-sm leading-normal font-semibold text-mud lg:text-[15px]">
                   {c.desc}
                 </p>
-                <span className="mt-4 font-heading text-sm font-extrabold text-red">
+                <span className="cursor-pointer font-heading text-sm font-extrabold text-red lg:text-[15px]">
                   {t("cardCta")} ←
                 </span>
               </div>
-            </Link>
-          )
-        })}
-      </div>
-
-      {/* What's included */}
-      <div className="mt-8 rounded-[24px] border-[4px] border-dotted border-navy p-6 lg:mt-12 lg:p-8">
-        <h2 className="font-heading text-[24px] font-black tracking-[-0.5px] text-navy lg:text-[30px]">
-          {t("included.title")}
-        </h2>
-        <div className="mt-5 grid gap-3 sm:grid-cols-2">
-          {included.map((item) => (
-            <div key={item} className="flex items-center gap-3">
-              <span className="flex size-7 flex-none items-center justify-center rounded-full border-[3px] border-navy bg-mint">
-                <Check className="size-3.5 text-navy" strokeWidth={3} />
-              </span>
-              <span className="text-[15px] font-semibold text-navy">
-                {item}
-              </span>
             </div>
-          ))}
-        </div>
+          </Link>
+        ))}
       </div>
 
       {/* CTA */}
-      <div className="mt-6 overflow-hidden rounded-[24px] border-[5px] border-navy bg-rust p-7 lg:mt-8 lg:flex lg:items-center lg:justify-between lg:gap-8 lg:p-11">
+      <div className="mt-6 overflow-hidden rounded-[24px] bg-rust p-7 shadow-sm lg:mt-10 lg:flex lg:items-center lg:justify-between lg:gap-8 lg:p-11">
         <div>
           <h2 className="font-heading text-[28px] font-black tracking-[-1px] text-paper lg:text-[38px]">
             {t("cta.title")}
@@ -102,12 +103,14 @@ export function EventsPage() {
             {t("cta.desc")}
           </p>
         </div>
-        <Link
-          href="/contact"
+        <a
+          href={whatsappUrl()}
+          target="_blank"
+          rel="noopener noreferrer"
           className="mt-5 inline-block rounded-full border-[3px] border-navy bg-paper px-7 py-3.5 text-center font-heading text-[15px] font-extrabold text-navy transition-colors hover:bg-marigold lg:mt-0 lg:flex-none lg:text-base"
         >
           {t("cta.button")} ←
-        </Link>
+        </a>
       </div>
     </Container>
   )

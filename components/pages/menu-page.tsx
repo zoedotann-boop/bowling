@@ -58,7 +58,7 @@ export function MenuPage() {
           {current.items.map((d) => (
             <div
               key={d.name}
-              className="rounded-2xl border-[3px] border-navy bg-paper p-4"
+              className="rounded-2xl border-[3px] border-dotted border-navy bg-cream p-4"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="font-heading text-[15px] font-black text-navy lg:text-base">
