@@ -5,6 +5,7 @@ import Image from "next/image"
 import { useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
+import { LedDot } from "@/components/decor/led-dot"
 import { Container } from "./container"
 
 // Each tile maps to an image in /public/gallery. The third tile spans two rows
@@ -49,12 +50,12 @@ export function Gallery() {
   }, [openIndex, close, show])
 
   return (
-    <section className="mt-6 border-y-[4px] border-navy bg-cream-warm py-7 lg:mt-14 lg:py-14">
+    <section className="mt-6 border-y border-navy py-7 lg:mt-14 lg:py-14">
       <Container>
-        <span className="font-mono text-[13px] font-bold text-marigold lg:text-sm">
+        <span className="font-mono text-[13px] font-bold text-secondary lg:text-sm"><LedDot className="me-2 align-middle" />
           {t("eyebrow")}
         </span>
-        <h2 className="mt-1.5 mb-4 font-heading text-[34px] font-black tracking-[-1px] text-navy lg:mb-6 lg:text-[48px]">
+        <h2 className="mt-1.5 mb-4 font-heading text-[34px] font-black tracking-[-1px] neon-sign-purple lg:mb-6 lg:text-[48px]">
           {t("title")}
         </h2>
         <div className="grid [grid-auto-rows:120px] grid-cols-2 gap-3 lg:[grid-auto-rows:180px] lg:grid-cols-[1fr_1fr_1.5fr] lg:gap-4">
@@ -65,7 +66,7 @@ export function Gallery() {
               onClick={() => setOpenIndex(i)}
               aria-label={t("imageLabel", { n: i + 1 })}
               className={cn(
-                "group relative overflow-hidden rounded-[16px] border-[4px] border-navy lg:rounded-[18px]",
+                "group relative overflow-hidden rounded-sm border border-navy glow-primary transition-shadow hover:glow-cyan",
                 tile.cls
               )}
             >
@@ -87,13 +88,13 @@ export function Gallery() {
           role="dialog"
           aria-modal="true"
           onClick={close}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-navy/85 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-navy-deep/90 p-4 backdrop-blur-sm"
         >
           <button
             type="button"
             onClick={close}
             aria-label="Close"
-            className="absolute end-4 top-4 flex size-11 items-center justify-center rounded-full border-[3px] border-paper bg-navy text-2xl font-black text-paper transition-colors hover:bg-rust"
+            className="absolute end-4 top-4 flex size-11 items-center justify-center rounded-full border border-primary bg-card text-2xl font-black text-primary glow-primary transition-colors hover:border-secondary hover:text-secondary hover:glow-cyan"
           >
             ×
           </button>
@@ -105,14 +106,14 @@ export function Gallery() {
               show(-1)
             }}
             aria-label="Previous"
-            className="absolute start-3 top-1/2 flex size-12 -translate-y-1/2 items-center justify-center rounded-full border-[3px] border-paper bg-navy text-2xl font-black text-paper transition-colors hover:bg-rust lg:start-8"
+            className="absolute start-3 top-1/2 flex size-12 -translate-y-1/2 items-center justify-center rounded-full border border-primary bg-card text-2xl font-black text-primary glow-primary transition-colors hover:border-secondary hover:text-secondary hover:glow-cyan lg:start-8"
           >
             ‹
           </button>
 
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative h-[70vh] w-full max-w-4xl overflow-hidden rounded-[18px] border-[4px] border-paper"
+            className="relative h-[70vh] w-full max-w-4xl overflow-hidden rounded-sm border border-primary glow-primary"
           >
             <Image
               src={TILES[openIndex].src}
@@ -131,7 +132,7 @@ export function Gallery() {
               show(1)
             }}
             aria-label="Next"
-            className="absolute end-3 top-1/2 flex size-12 -translate-y-1/2 items-center justify-center rounded-full border-[3px] border-paper bg-navy text-2xl font-black text-paper transition-colors hover:bg-rust lg:end-8"
+            className="absolute end-3 top-1/2 flex size-12 -translate-y-1/2 items-center justify-center rounded-full border border-primary bg-card text-2xl font-black text-primary glow-primary transition-colors hover:border-secondary hover:text-secondary hover:glow-cyan lg:end-8"
           >
             ›
           </button>

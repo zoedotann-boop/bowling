@@ -3,12 +3,13 @@ import Link from "next/link"
 import { useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
+import { LedDot } from "@/components/decor/led-dot"
 import { Container } from "./container"
 
 const CONFIG = [
-  { strip: "bg-orange", img: "/service-bowling.png", href: "/events" },
-  { strip: "bg-gold", img: "/service-events.png", href: "/events" },
-  { strip: "bg-teal", img: "/service-menu.png", href: "/menu" },
+  { strip: "bg-primary", img: "/icons/bowling.png", href: "/events" },
+  { strip: "bg-secondary", img: "/icons/events.png", href: "/events" },
+  { strip: "bg-primary", img: "/icons/menu.png", href: "/menu" },
 ]
 
 export function Services() {
@@ -18,10 +19,11 @@ export function Services() {
   return (
     <Container className="pt-7 pb-1 lg:pt-14">
       <div className="mb-4.5 lg:mb-7">
-        <span className="font-mono text-[13px] font-bold text-teal lg:text-sm">
+        <span className="font-mono text-[13px] font-bold text-secondary lg:text-sm">
+          <LedDot className="me-2 align-middle" />
           {t("eyebrow")}
         </span>
-        <h2 className="mt-1.5 font-heading text-[34px] font-black tracking-[-1px] text-navy lg:text-[48px]">
+        <h2 className="mt-1.5 font-heading text-[34px] font-black tracking-[-1px] neon-sign-purple lg:text-[48px]">
           {t("title")}
         </h2>
       </div>
@@ -30,24 +32,22 @@ export function Services() {
           <Link
             key={s.title}
             href={CONFIG[i].href}
-            className="block overflow-hidden rounded-[18px] border-[4px] border-navy bg-paper transition-transform hover:-translate-y-0.5 lg:rounded-[20px]"
+            className="block overflow-hidden border border-border bg-paper transition-colors hover:border-primary"
           >
-            <div
-              className={cn("h-2 border-b-[4px] border-navy", CONFIG[i].strip)}
-            />
-            <div className="flex h-full items-center gap-3.5 bg-cream-warm p-[18px] lg:p-6">
+            <div className={cn("h-1", CONFIG[i].strip)} />
+            <div className="flex h-full items-center gap-4 p-[18px] lg:p-6">
               <Image
                 src={CONFIG[i].img}
-                alt={s.title}
-                width={84}
-                height={84}
-                className="size-[74px] shrink-0 object-contain lg:size-[84px]"
+                alt=""
+                width={329}
+                height={207}
+                className="h-[68px] w-auto shrink-0 lg:h-20"
               />
               <div>
                 <div className="mb-1 font-heading text-xl font-black text-navy lg:text-[22px]">
                   {s.title}
                 </div>
-                <p className="mb-1.5 text-sm leading-normal font-semibold text-mud lg:text-[15px]">
+                <p className="mb-1.5 text-sm leading-normal font-medium text-mud lg:text-[15px]">
                   {s.desc}
                 </p>
                 {i !== 0 && (

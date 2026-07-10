@@ -11,7 +11,7 @@ function WhatsAppGlyph() {
   return (
     <svg
       viewBox="0 0 24 24"
-      className="size-6 fill-paper"
+      className="size-6 fill-foreground"
       aria-hidden="true"
       focusable="false"
     >
@@ -39,7 +39,7 @@ export function MobileFloatingActions() {
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         aria-label={t("scrollTop")}
         className={cn(
-          "fixed end-4 bottom-[84px] z-40 flex size-12 items-center justify-center rounded-full border-[3px] border-navy bg-paper text-navy shadow-lg transition-all duration-300",
+          "fixed end-4 bottom-[84px] z-40 flex size-12 items-center justify-center rounded-full border border-navy bg-card text-navy glow-primary transition-all duration-300",
           showTop
             ? "translate-y-0 opacity-100"
             : "pointer-events-none translate-y-3 opacity-0"
@@ -52,9 +52,9 @@ export function MobileFloatingActions() {
       <div className="fixed inset-x-3 bottom-3 z-40 flex items-center justify-between gap-2.5">
         <a
           href="tel:03-5700834"
-          className="flex items-center justify-center gap-2 rounded-full border-[3px] border-navy bg-mint px-4 py-3 font-heading text-[15px] font-extrabold text-navy shadow-lg"
+          className="flex items-center justify-center gap-2 rounded-sm border border-primary bg-card px-4 py-3 font-heading text-[15px] font-extrabold text-primary glow-primary"
         >
-          <span className="size-2.5 animate-blink rounded-full bg-navy" />
+          <span className="size-2.5 animate-blink rounded-full bg-secondary" />
           {t("openNow")}
         </a>
         <a
@@ -62,7 +62,7 @@ export function MobileFloatingActions() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={t("whatsapp")}
-          className="flex size-12 flex-none items-center justify-center rounded-full border-[3px] border-navy bg-[#25D366] shadow-lg"
+          className="flex size-12 flex-none items-center justify-center rounded-full border border-navy bg-[#25D366]"
         >
           <WhatsAppGlyph />
         </a>

@@ -29,7 +29,7 @@ export function LangToggle({ className }: { className?: string }) {
       onClick={switchLocale}
       aria-label={locale === "he" ? "Switch to English" : "עבור לעברית"}
       className={cn(
-        "rounded-full border-[3px] border-navy bg-paper px-3.5 py-2 font-heading text-sm font-extrabold text-navy transition-colors hover:bg-marigold",
+        "rounded-sm border border-primary bg-card px-3.5 py-2 font-heading text-sm font-extrabold text-foreground glow-primary transition-colors hover:border-secondary hover:text-secondary hover:glow-cyan",
         className
       )}
     >

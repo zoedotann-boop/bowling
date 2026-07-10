@@ -4,12 +4,13 @@ import { Clock, Ticket, Zap } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import { useBranch } from "@/components/branch-context"
+import { LedDot } from "@/components/decor/led-dot"
 import { Container } from "./container"
 
 type Row = { label: string; value: string }
 
 const cardClass =
-  "rounded-[16px] border-[4px] border-dashed border-orange bg-cream-warm p-5 lg:rounded-[18px] lg:p-6"
+  "rounded-sm border border-border bg-card p-5 lg:p-6"
 
 export function Gymboree() {
   const t = useTranslations("gymboree")
@@ -22,16 +23,16 @@ export function Gymboree() {
   const hoursRows = t.raw("hours.rows") as Row[]
 
   return (
-    <section className="mt-6 border-t-[4px] border-navy bg-teal py-8 lg:mt-14 lg:py-16">
+    <section className="mt-6 border-t border-navy py-8 lg:mt-14 lg:py-16">
       <Container>
         <div className="mb-6 text-center lg:mb-9">
-          <span className="font-mono text-xs font-bold text-orange lg:text-sm">
+          <span className="font-mono text-xs font-bold text-secondary lg:text-sm"><LedDot color="secondary" className="me-2 align-middle" />
             {t("eyebrow")}
           </span>
-          <h2 className="mt-1.5 font-heading text-[34px] font-black tracking-[-1px] text-cream-warm lg:text-[48px]">
+          <h2 className="mt-1.5 font-heading text-[34px] font-black tracking-[-1px] text-foreground neon-sign-purple lg:text-[48px]">
             {t("title")}
           </h2>
-          <div className="mx-auto mt-3 h-[7px] w-[70px] rounded-full bg-rust lg:w-20" />
+          <div className="mx-auto mt-3 h-[7px] w-[70px] rounded-sm bg-primary lg:w-20" />
         </div>
 
         <div className="grid gap-3 lg:grid-cols-3 lg:gap-4">
