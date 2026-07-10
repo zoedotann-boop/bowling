@@ -62,7 +62,7 @@ export function BranchSwitcher({ className }: { className?: string }) {
                 className={cn(
                   "flex w-full items-center justify-between gap-2 px-4 py-3 text-start font-heading text-sm font-extrabold transition-colors",
                   active
-                    ? "bg-primary text-primary-foreground glow-primary"
+                    ? "glow-primary bg-primary text-primary-foreground"
                     : "text-navy hover:bg-cream-warm hover:text-secondary"
                 )}
               >

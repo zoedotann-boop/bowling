@@ -12,7 +12,7 @@ function SoldierDiscount({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-2 rounded-sm border border-primary bg-card px-3.5 py-2.5 glow-primary",
+        "glow-primary inline-flex items-center gap-2 rounded-sm border border-primary bg-card px-3.5 py-2.5",
         className
       )}
     >
@@ -40,10 +40,11 @@ export function Pricing() {
       <div className="lg:grid lg:grid-cols-2 lg:items-center lg:gap-10">
         {/* Intro */}
         <div>
-          <span className="font-mono text-[13px] font-bold text-secondary lg:text-sm"><LedDot color="secondary" className="me-2 align-middle" />
+          <span className="font-mono text-[13px] font-bold text-secondary lg:text-sm">
+            <LedDot color="secondary" className="me-2 align-middle" />
             {t("eyebrow")}
           </span>
-          <h2 className="mt-1.5 mb-3 font-heading text-[38px] leading-none font-black tracking-[-1px] neon-sign-purple lg:mb-4 lg:text-[52px]">
+          <h2 className="neon-sign-purple mt-1.5 mb-3 font-heading text-[38px] leading-none font-black tracking-[-1px] lg:mb-4 lg:text-[52px]">
             {t("title")}
           </h2>
           <p className="mb-4 text-[15px] leading-[1.55] font-semibold text-mud lg:mb-5 lg:max-w-[380px] lg:text-base">
@@ -53,7 +54,7 @@ export function Pricing() {
         </div>
 
         {/* Price table */}
-        <div className="overflow-hidden rounded-sm border border-navy bg-paper transition-shadow hover:glow-cyan lg:rounded-sm">
+        <div className="hover:glow-cyan overflow-hidden rounded-sm border border-navy bg-paper transition-shadow lg:rounded-sm">
           <div className={cn(priceRow, "border-b border-border bg-card")}>
             <div className={cn(priceLabel, "text-navy")}>{t("weekdays")}</div>
             <div className={cn(priceValue, "text-navy")}>
@@ -66,7 +67,7 @@ export function Pricing() {
               {t("weekendPrice")}
             </div>
           </div>
-          <div className={cn(priceRow, "bg-primary glow-primary")}>
+          <div className={cn(priceRow, "glow-primary bg-primary")}>
             <div>
               <div className={cn(priceLabel, "text-primary-foreground")}>
                 {t("thirdGame")}
@@ -88,10 +89,11 @@ export function Pricing() {
       {/* Birthday CTA */}
       <div className="neon-frame-magenta mt-5 overflow-hidden rounded-sm bg-card lg:mt-12 lg:grid lg:grid-cols-2 lg:items-stretch">
         <div className="p-[26px] lg:p-11">
-          <span className="font-mono text-[13px] font-bold text-secondary lg:text-sm"><LedDot color="secondary" className="me-2 align-middle" />
+          <span className="font-mono text-[13px] font-bold text-secondary lg:text-sm">
+            <LedDot color="secondary" className="me-2 align-middle" />
             {t("birthdayEyebrow")}
           </span>
-          <h3 className="mt-2 mb-3 font-heading text-[32px] leading-[1.02] font-black tracking-[-1px] text-foreground text-glow-primary lg:mb-3.5 lg:text-[44px]">
+          <h3 className="text-glow-primary mt-2 mb-3 font-heading text-[32px] leading-[1.02] font-black tracking-[-1px] text-foreground lg:mb-3.5 lg:text-[44px]">
             {t("birthdayTitle")}
           </h3>
           <p className="mb-5 text-[15px] leading-[1.55] font-semibold text-muted-foreground lg:mb-6 lg:max-w-[440px] lg:text-[17px]">
@@ -99,7 +101,7 @@ export function Pricing() {
           </p>
           <Link
             href="/events"
-            className="inline-block w-full rounded-sm border border-primary bg-primary px-5 py-3.5 text-center font-heading text-[15px] font-extrabold text-primary-foreground glow-primary transition-colors hover:bg-secondary hover:text-secondary-foreground hover:border-secondary hover:glow-cyan lg:w-auto lg:px-7 lg:py-4 lg:text-base"
+            className="glow-primary hover:glow-cyan inline-block w-full rounded-sm border border-primary bg-primary px-5 py-3.5 text-center font-heading text-[15px] font-extrabold text-primary-foreground transition-colors hover:border-secondary hover:bg-secondary hover:text-secondary-foreground lg:w-auto lg:px-7 lg:py-4 lg:text-base"
           >
             {t("birthdayCta")}
           </Link>

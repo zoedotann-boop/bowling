@@ -11,7 +11,10 @@ export function PinsSettle({ className }: { className?: string }) {
   return (
     <div
       aria-hidden="true"
-      className={cn("flex items-end justify-center gap-2 select-none", className)}
+      className={cn(
+        "flex items-end justify-center gap-2 select-none",
+        className
+      )}
     >
       {TILTS.map((tilt, i) => (
         <svg

@@ -42,10 +42,11 @@ export function Contact() {
     <section className="mt-6 border-t border-navy py-8 lg:mt-14 lg:py-16">
       <Container>
         <div className="mb-6 text-center lg:mb-9">
-          <span className="font-mono text-xs font-bold text-secondary lg:text-sm"><LedDot color="secondary" className="me-2 align-middle" />
+          <span className="font-mono text-xs font-bold text-secondary lg:text-sm">
+            <LedDot color="secondary" className="me-2 align-middle" />
             {t("eyebrow")}
           </span>
-          <h2 className="mt-1.5 font-heading text-[38px] font-black tracking-[-1px] text-foreground neon-sign-purple lg:text-[52px]">
+          <h2 className="neon-sign-purple mt-1.5 font-heading text-[38px] font-black tracking-[-1px] text-foreground lg:text-[52px]">
             {t("title")}
           </h2>
           <div className="mx-auto mt-3 h-[7px] w-[70px] rounded-sm bg-primary lg:w-20" />
@@ -117,7 +118,7 @@ export function Contact() {
                 className={cn(
                   "rounded-sm border border-navy px-3.5 py-1.5 text-[12.5px] font-extrabold transition-colors lg:px-4 lg:py-2 lg:text-[13px]",
                   topic === option
-                    ? "bg-primary text-primary-foreground glow-primary"
+                    ? "glow-primary bg-primary text-primary-foreground"
                     : "bg-card text-foreground hover:border-secondary hover:text-secondary"
                 )}
               >
@@ -134,7 +135,7 @@ export function Contact() {
           />
           <button
             type="submit"
-            className="w-full rounded-sm border border-primary bg-primary px-5 py-3.5 font-heading text-[17px] font-black text-primary-foreground glow-primary transition-colors hover:bg-secondary hover:border-secondary hover:text-secondary-foreground lg:py-4 lg:text-lg"
+            className="glow-primary w-full rounded-sm border border-primary bg-primary px-5 py-3.5 font-heading text-[17px] font-black text-primary-foreground transition-colors hover:border-secondary hover:bg-secondary hover:text-secondary-foreground lg:py-4 lg:text-lg"
           >
             {t("submit")}
           </button>

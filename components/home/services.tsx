@@ -23,7 +23,7 @@ export function Services() {
           <LedDot className="me-2 align-middle" />
           {t("eyebrow")}
         </span>
-        <h2 className="mt-1.5 font-heading text-[34px] font-black tracking-[-1px] neon-sign-purple lg:text-[48px]">
+        <h2 className="neon-sign-purple mt-1.5 font-heading text-[34px] font-black tracking-[-1px] lg:text-[48px]">
           {t("title")}
         </h2>
       </div>

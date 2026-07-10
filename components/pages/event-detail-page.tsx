@@ -45,7 +45,13 @@ const BADGE_ACCENTS = [
   "border-secondary text-secondary",
   "border-primary text-primary",
 ]
-const STRIPS = ["bg-primary", "bg-secondary", "bg-primary", "bg-secondary", "bg-primary"]
+const STRIPS = [
+  "bg-primary",
+  "bg-secondary",
+  "bg-primary",
+  "bg-secondary",
+  "bg-primary",
+]
 
 interface Step {
   icon: string
@@ -177,7 +183,7 @@ function Hero({
             <span
               key={b}
               className={cn(
-                "rounded-sm border bg-card px-3 py-1 font-heading text-[12.5px] font-extrabold glow-primary",
+                "glow-primary rounded-sm border bg-card px-3 py-1 font-heading text-[12.5px] font-extrabold",
                 BADGE_ACCENTS[i % BADGE_ACCENTS.length]
               )}
             >
@@ -185,7 +191,7 @@ function Hero({
             </span>
           ))}
         </div>
-        <h1 className="mt-3.5 font-heading text-[40px] leading-[1.02] font-black tracking-[-1.5px] neon-sign-purple lg:text-[56px]">
+        <h1 className="neon-sign-purple mt-3.5 font-heading text-[40px] leading-[1.02] font-black tracking-[-1.5px] lg:text-[56px]">
           {data.title}
         </h1>
         {data.lead ? (
@@ -198,7 +204,7 @@ function Hero({
         </p>
         <a
           href="#book"
-          className="mt-6 inline-flex items-center gap-2 rounded-sm border border-primary bg-primary px-6 py-3.5 font-heading text-[15px] font-extrabold text-primary-foreground glow-primary transition-colors hover:bg-secondary hover:text-secondary-foreground lg:text-base"
+          className="glow-primary mt-6 inline-flex items-center gap-2 rounded-sm border border-primary bg-primary px-6 py-3.5 font-heading text-[15px] font-extrabold text-primary-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground lg:text-base"
         >
           {bookLabel}
           <ArrowLeft className="size-4 ltr:rotate-180" strokeWidth={3} />
@@ -251,7 +257,7 @@ function Schedule({
                   className="size-full object-cover"
                 />
               </div>
-              <span className="flex size-6 items-center justify-center rounded-full bg-primary font-heading text-[12px] font-black text-primary-foreground glow-primary">
+              <span className="glow-primary flex size-6 items-center justify-center rounded-full bg-primary font-heading text-[12px] font-black text-primary-foreground">
                 {i + 1}
               </span>
             </div>
@@ -293,7 +299,7 @@ function PriceSection({
             className={cn(
               "relative overflow-hidden rounded-sm border p-6 lg:p-7",
               card.tag
-                ? "border-primary bg-card glow-primary"
+                ? "glow-primary border-primary bg-card"
                 : "border-border bg-card"
             )}
           >
@@ -376,9 +382,14 @@ function IncludedSection({
             )}
           >
             <span className="flex size-6 flex-none items-center justify-center rounded-full border border-secondary bg-secondary">
-              <Check className="size-3 text-secondary-foreground" strokeWidth={3} />
+              <Check
+                className="size-3 text-secondary-foreground"
+                strokeWidth={3}
+              />
             </span>
-            <span className="text-[15px] font-semibold text-foreground">{item}</span>
+            <span className="text-[15px] font-semibold text-foreground">
+              {item}
+            </span>
           </div>
         ))}
       </div>
@@ -422,7 +433,10 @@ function RuleCard({
             )}
           >
             {ok ? (
-              <Check className="size-4 text-secondary-foreground" strokeWidth={3} />
+              <Check
+                className="size-4 text-secondary-foreground"
+                strokeWidth={3}
+              />
             ) : (
               <X className="size-4 text-foreground" strokeWidth={3} />
             )}
@@ -435,7 +449,10 @@ function RuleCard({
           {items.map((item) => (
             <div key={item} className="flex items-center gap-2.5">
               {ok ? (
-                <Check className="size-4 flex-none text-secondary" strokeWidth={3} />
+                <Check
+                  className="size-4 flex-none text-secondary"
+                  strokeWidth={3}
+                />
               ) : (
                 <X className="size-4 flex-none text-red" strokeWidth={3} />
               )}
@@ -580,7 +597,7 @@ function BookingForm({
           <h2 className="font-heading text-[32px] font-black tracking-[-1px] text-navy lg:text-[46px]">
             {t("title")}
           </h2>
-          <div className="mx-auto mt-3 h-[7px] w-[70px] rounded-full bg-primary glow-primary lg:w-20" />
+          <div className="glow-primary mx-auto mt-3 h-[7px] w-[70px] rounded-full bg-primary lg:w-20" />
           <p className="mx-auto mt-3 max-w-[520px] text-[14px] leading-[1.55] font-semibold text-muted-foreground lg:text-[16px]">
             {t("desc")}
           </p>
@@ -655,7 +672,7 @@ function BookingForm({
 
           <button
             type="submit"
-            className="mt-1 w-full rounded-sm border border-primary bg-primary px-5 py-3.5 font-heading text-[17px] font-black text-primary-foreground glow-primary transition-colors hover:bg-secondary hover:text-secondary-foreground lg:py-4 lg:text-lg"
+            className="glow-primary mt-1 w-full rounded-sm border border-primary bg-primary px-5 py-3.5 font-heading text-[17px] font-black text-primary-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground lg:py-4 lg:text-lg"
           >
             {t("submit")}
           </button>
@@ -684,7 +701,7 @@ function CorporateOffers({ data }: { data: EventItem }) {
         {offers.map((offer, i) => (
           <div
             key={offer.title}
-            className="overflow-hidden rounded-sm border border-border bg-card transition-all hover:border-primary hover:glow-primary"
+            className="hover:glow-primary overflow-hidden rounded-sm border border-border bg-card transition-all hover:border-primary"
           >
             <div
               className={cn(
@@ -755,7 +772,7 @@ function CorporateCta() {
             <h2 className="font-heading text-[32px] font-black tracking-[-1px] text-navy lg:text-[46px]">
               {t("ctaTitle")}
             </h2>
-            <div className="mx-auto mt-3 h-[7px] w-[70px] rounded-full bg-primary glow-primary lg:w-20" />
+            <div className="glow-primary mx-auto mt-3 h-[7px] w-[70px] rounded-full bg-primary lg:w-20" />
             <p className="mx-auto mt-3 max-w-[520px] text-[14px] leading-[1.55] font-semibold text-muted-foreground lg:text-[16px]">
               {t("ctaDesc")}
             </p>
@@ -810,7 +827,7 @@ function CorporateCta() {
             />
             <button
               type="submit"
-              className="mt-1 w-full rounded-sm border border-primary bg-primary px-5 py-3.5 font-heading text-[17px] font-black text-primary-foreground glow-primary transition-colors hover:bg-secondary hover:text-secondary-foreground lg:py-4 lg:text-lg"
+              className="glow-primary mt-1 w-full rounded-sm border border-primary bg-primary px-5 py-3.5 font-heading text-[17px] font-black text-primary-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground lg:py-4 lg:text-lg"
             >
               {tf("submit")}
             </button>
@@ -846,7 +863,7 @@ export function EventDetailPage({ slug }: { slug: string }) {
         </p>
         <Link
           href="/events"
-          className="mt-6 inline-flex items-center gap-2 rounded-sm border border-primary bg-primary px-6 py-3.5 font-heading text-[15px] font-extrabold text-primary-foreground glow-primary transition-colors hover:bg-secondary hover:text-secondary-foreground"
+          className="glow-primary mt-6 inline-flex items-center gap-2 rounded-sm border border-primary bg-primary px-6 py-3.5 font-heading text-[15px] font-extrabold text-primary-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground"
         >
           {t("notAvailable.cta")}
           <ArrowLeft className="size-4 ltr:rotate-180" strokeWidth={3} />

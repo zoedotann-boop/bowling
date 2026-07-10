@@ -18,7 +18,13 @@ const ICONS: Record<string, string> = {
 }
 
 // Top-strip accent colors — neon light strips alternating purple/cyan.
-const STRIPS = ["bg-primary", "bg-secondary", "bg-primary", "bg-secondary", "bg-primary"]
+const STRIPS = [
+  "bg-primary",
+  "bg-secondary",
+  "bg-primary",
+  "bg-secondary",
+  "bg-primary",
+]
 
 export function EventsPage() {
   const t = useTranslations("eventsPage")
@@ -47,7 +53,7 @@ export function EventsPage() {
         <span className="font-mono text-[13px] font-bold text-secondary lg:text-sm">
           {t("eyebrow")}
         </span>
-        <h1 className="mt-1.5 font-heading text-[40px] leading-none font-black tracking-[-1.5px] neon-sign-purple lg:text-[56px]">
+        <h1 className="neon-sign-purple mt-1.5 font-heading text-[40px] leading-none font-black tracking-[-1.5px] lg:text-[56px]">
           {t("title")}
         </h1>
         <p className="mt-3 max-w-xl text-[15px] font-semibold text-mud lg:text-lg">
@@ -61,7 +67,7 @@ export function EventsPage() {
           <Link
             key={c.id}
             href={`/events/${c.id}`}
-            className="block overflow-hidden rounded-sm border border-border bg-card transition-all hover:-translate-y-0.5 hover:border-primary hover:glow-primary"
+            className="hover:glow-primary block overflow-hidden rounded-sm border border-border bg-card transition-all hover:-translate-y-0.5 hover:border-primary"
           >
             <div
               className={cn(
@@ -107,7 +113,7 @@ export function EventsPage() {
           href={whatsappUrl()}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-5 inline-block rounded-sm border border-primary bg-primary px-7 py-3.5 text-center font-heading text-[15px] font-extrabold text-primary-foreground glow-primary transition-colors hover:bg-secondary hover:text-secondary-foreground lg:mt-0 lg:flex-none lg:text-base"
+          className="glow-primary mt-5 inline-block rounded-sm border border-primary bg-primary px-7 py-3.5 text-center font-heading text-[15px] font-extrabold text-primary-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground lg:mt-0 lg:flex-none lg:text-base"
         >
           {t("cta.button")} ←
         </a>

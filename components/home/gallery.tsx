@@ -52,10 +52,11 @@ export function Gallery() {
   return (
     <section className="mt-6 border-y border-navy py-7 lg:mt-14 lg:py-14">
       <Container>
-        <span className="font-mono text-[13px] font-bold text-secondary lg:text-sm"><LedDot className="me-2 align-middle" />
+        <span className="font-mono text-[13px] font-bold text-secondary lg:text-sm">
+          <LedDot className="me-2 align-middle" />
           {t("eyebrow")}
         </span>
-        <h2 className="mt-1.5 mb-4 font-heading text-[34px] font-black tracking-[-1px] neon-sign-purple lg:mb-6 lg:text-[48px]">
+        <h2 className="neon-sign-purple mt-1.5 mb-4 font-heading text-[34px] font-black tracking-[-1px] lg:mb-6 lg:text-[48px]">
           {t("title")}
         </h2>
         <div className="grid [grid-auto-rows:120px] grid-cols-2 gap-3 lg:[grid-auto-rows:180px] lg:grid-cols-[1fr_1fr_1.5fr] lg:gap-4">
@@ -66,7 +67,7 @@ export function Gallery() {
               onClick={() => setOpenIndex(i)}
               aria-label={t("imageLabel", { n: i + 1 })}
               className={cn(
-                "group relative overflow-hidden rounded-sm border border-navy glow-primary transition-shadow hover:glow-cyan",
+                "group glow-primary hover:glow-cyan relative overflow-hidden rounded-sm border border-navy transition-shadow",
                 tile.cls
               )}
             >
@@ -94,7 +95,7 @@ export function Gallery() {
             type="button"
             onClick={close}
             aria-label="Close"
-            className="absolute end-4 top-4 flex size-11 items-center justify-center rounded-full border border-primary bg-card text-2xl font-black text-primary glow-primary transition-colors hover:border-secondary hover:text-secondary hover:glow-cyan"
+            className="glow-primary hover:glow-cyan absolute end-4 top-4 flex size-11 items-center justify-center rounded-full border border-primary bg-card text-2xl font-black text-primary transition-colors hover:border-secondary hover:text-secondary"
           >
             ×
           </button>
@@ -106,14 +107,14 @@ export function Gallery() {
               show(-1)
             }}
             aria-label="Previous"
-            className="absolute start-3 top-1/2 flex size-12 -translate-y-1/2 items-center justify-center rounded-full border border-primary bg-card text-2xl font-black text-primary glow-primary transition-colors hover:border-secondary hover:text-secondary hover:glow-cyan lg:start-8"
+            className="glow-primary hover:glow-cyan absolute start-3 top-1/2 flex size-12 -translate-y-1/2 items-center justify-center rounded-full border border-primary bg-card text-2xl font-black text-primary transition-colors hover:border-secondary hover:text-secondary lg:start-8"
           >
             ‹
           </button>
 
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative h-[70vh] w-full max-w-4xl overflow-hidden rounded-sm border border-primary glow-primary"
+            className="glow-primary relative h-[70vh] w-full max-w-4xl overflow-hidden rounded-sm border border-primary"
           >
             <Image
               src={TILES[openIndex].src}
@@ -132,7 +133,7 @@ export function Gallery() {
               show(1)
             }}
             aria-label="Next"
-            className="absolute end-3 top-1/2 flex size-12 -translate-y-1/2 items-center justify-center rounded-full border border-primary bg-card text-2xl font-black text-primary glow-primary transition-colors hover:border-secondary hover:text-secondary hover:glow-cyan lg:end-8"
+            className="glow-primary hover:glow-cyan absolute end-3 top-1/2 flex size-12 -translate-y-1/2 items-center justify-center rounded-full border border-primary bg-card text-2xl font-black text-primary transition-colors hover:border-secondary hover:text-secondary lg:end-8"
           >
             ›
           </button>

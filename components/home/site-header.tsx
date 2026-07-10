@@ -59,8 +59,8 @@ export function SiteHeader() {
                 className={cn(
                   "rounded-sm px-[18px] py-2 font-heading text-sm font-extrabold transition-colors",
                   isActive(NAV_HREFS[i])
-                    ? "bg-primary text-primary-foreground glow-primary"
-                    : "text-navy hover:text-secondary hover:bg-card"
+                    ? "glow-primary bg-primary text-primary-foreground"
+                    : "text-navy hover:bg-card hover:text-secondary"
                 )}
               >
                 {label}
@@ -76,7 +76,7 @@ export function SiteHeader() {
               href={whatsappUrl()}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-sm border border-primary bg-primary px-5 py-2.5 font-heading text-sm font-extrabold text-primary-foreground glow-primary transition-colors hover:bg-secondary hover:text-secondary-foreground hover:border-secondary hover:glow-cyan"
+              className="glow-primary hover:glow-cyan rounded-sm border border-primary bg-primary px-5 py-2.5 font-heading text-sm font-extrabold text-primary-foreground transition-colors hover:border-secondary hover:bg-secondary hover:text-secondary-foreground"
             >
               {t("header.whatsapp")}
             </a>
@@ -150,7 +150,7 @@ export function SiteHeader() {
                 className={cn(
                   "rounded-sm border px-4 py-3 font-heading text-base font-extrabold transition-colors",
                   isActive(NAV_HREFS[i])
-                    ? "border-primary bg-primary text-primary-foreground glow-primary"
+                    ? "glow-primary border-primary bg-primary text-primary-foreground"
                     : "border-border text-navy hover:border-secondary hover:text-secondary"
                 )}
               >
@@ -168,7 +168,7 @@ export function SiteHeader() {
             href={whatsappUrl()}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-3 rounded-sm border border-primary bg-primary px-5 py-3 text-center font-heading text-sm font-extrabold text-primary-foreground glow-primary transition-colors hover:bg-secondary hover:text-secondary-foreground hover:border-secondary hover:glow-cyan"
+            className="glow-primary hover:glow-cyan mt-3 rounded-sm border border-primary bg-primary px-5 py-3 text-center font-heading text-sm font-extrabold text-primary-foreground transition-colors hover:border-secondary hover:bg-secondary hover:text-secondary-foreground"
           >
             {t("header.whatsapp")}
           </a>

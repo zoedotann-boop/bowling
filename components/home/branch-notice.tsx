@@ -60,7 +60,7 @@ export function BranchNotice() {
       />
 
       {/* Card */}
-      <div className="relative w-full max-w-md overflow-hidden rounded-sm border-2 border-navy bg-card glow-primary">
+      <div className="glow-primary relative w-full max-w-md overflow-hidden rounded-sm border-2 border-navy bg-card">
         <div className="h-2.5 border-b border-navy bg-red" />
 
         <button
@@ -73,7 +73,7 @@ export function BranchNotice() {
         </button>
 
         <div className="px-7 pt-7 pb-8 text-center lg:px-9 lg:pb-9">
-          <span className="inline-block rounded-sm border border-primary bg-card px-3.5 py-1 font-mono text-[12px] font-bold text-primary glow-primary">
+          <span className="glow-primary inline-block rounded-sm border border-primary bg-card px-3.5 py-1 font-mono text-[12px] font-bold text-primary">
             {t("eyebrow")}
           </span>
 
@@ -95,7 +95,7 @@ export function BranchNotice() {
           <button
             type="button"
             onClick={close}
-            className="mt-6 w-full rounded-sm border border-primary bg-primary px-6 py-3.5 font-heading text-[15px] font-extrabold text-primary-foreground glow-primary transition-colors hover:bg-secondary hover:border-secondary hover:text-secondary-foreground"
+            className="glow-primary mt-6 w-full rounded-sm border border-primary bg-primary px-6 py-3.5 font-heading text-[15px] font-extrabold text-primary-foreground transition-colors hover:border-secondary hover:bg-secondary hover:text-secondary-foreground"
           >
             {t("close")}
           </button>

@@ -7,7 +7,7 @@ const meta = {
   component: Container,
   args: {
     children: (
-      <div className="rounded-sm border border-navy bg-cream-warm px-4 py-8 text-center font-heading font-extrabold text-navy glow-primary">
+      <div className="glow-primary rounded-sm border border-navy bg-cream-warm px-4 py-8 text-center font-heading font-extrabold text-navy">
         Container content (max-width 1200px, responsive padding)
       </div>
     ),

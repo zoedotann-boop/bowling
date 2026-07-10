@@ -24,7 +24,7 @@ export function MenuPage() {
         <span className="font-mono text-[13px] font-bold text-secondary lg:text-sm">
           {t("eyebrow")}
         </span>
-        <h1 className="mt-1.5 font-heading text-[40px] leading-none font-black tracking-[-1.5px] neon-sign-purple lg:text-[56px]">
+        <h1 className="neon-sign-purple mt-1.5 font-heading text-[40px] leading-none font-black tracking-[-1.5px] lg:text-[56px]">
           {t("title")}
         </h1>
         <p className="mt-3 text-[15px] font-semibold text-mud lg:text-lg">
@@ -43,7 +43,7 @@ export function MenuPage() {
                 className={cn(
                   "shrink-0 rounded-sm border px-4 py-2 font-heading text-[13px] font-extrabold transition-colors lg:text-start lg:text-sm",
                   active === c.id
-                    ? "border-primary bg-primary text-primary-foreground glow-primary"
+                    ? "glow-primary border-primary bg-primary text-primary-foreground"
                     : "border-border bg-card text-foreground hover:border-primary hover:text-primary"
                 )}
               >

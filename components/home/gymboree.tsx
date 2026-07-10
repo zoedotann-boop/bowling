@@ -9,8 +9,7 @@ import { Container } from "./container"
 
 type Row = { label: string; value: string }
 
-const cardClass =
-  "rounded-sm border border-border bg-card p-5 lg:p-6"
+const cardClass = "rounded-sm border border-border bg-card p-5 lg:p-6"
 
 export function Gymboree() {
   const t = useTranslations("gymboree")
@@ -26,10 +25,11 @@ export function Gymboree() {
     <section className="mt-6 border-t border-navy py-8 lg:mt-14 lg:py-16">
       <Container>
         <div className="mb-6 text-center lg:mb-9">
-          <span className="font-mono text-xs font-bold text-secondary lg:text-sm"><LedDot color="secondary" className="me-2 align-middle" />
+          <span className="font-mono text-xs font-bold text-secondary lg:text-sm">
+            <LedDot color="secondary" className="me-2 align-middle" />
             {t("eyebrow")}
           </span>
-          <h2 className="mt-1.5 font-heading text-[34px] font-black tracking-[-1px] text-foreground neon-sign-purple lg:text-[48px]">
+          <h2 className="neon-sign-purple mt-1.5 font-heading text-[34px] font-black tracking-[-1px] text-foreground lg:text-[48px]">
             {t("title")}
           </h2>
           <div className="mx-auto mt-3 h-[7px] w-[70px] rounded-sm bg-primary lg:w-20" />

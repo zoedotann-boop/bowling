@@ -12,7 +12,7 @@ export function Reviews() {
   return (
     <Container className="pt-7 pb-1 lg:pt-14">
       <div className="mb-4 lg:mb-8">
-        <h2 className="font-heading text-[28px] font-black tracking-[-1px] neon-sign-purple lg:text-[44px]">
+        <h2 className="neon-sign-purple font-heading text-[28px] font-black tracking-[-1px] lg:text-[44px]">
           {t("title")}
         </h2>
       </div>
@@ -20,7 +20,7 @@ export function Reviews() {
         {items.map((r, i) => (
           <div
             key={r.name}
-            className="rounded-sm border border-navy bg-paper p-5 transition-shadow hover:glow-cyan lg:p-6"
+            className="hover:glow-cyan rounded-sm border border-navy bg-paper p-5 transition-shadow lg:p-6"
           >
             <div className="mb-2.5 text-base tracking-[2px] text-marigold lg:mb-3 lg:text-[17px]">
               ★★★★★

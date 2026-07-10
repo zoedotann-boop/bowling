@@ -13,7 +13,7 @@ export function AccessibilityPage() {
         <span className="font-mono text-[13px] font-bold text-secondary lg:text-sm">
           {t("eyebrow")}
         </span>
-        <h1 className="mt-1.5 font-heading text-[40px] leading-none font-black tracking-[-1.5px] neon-sign-purple lg:text-[56px]">
+        <h1 className="neon-sign-purple mt-1.5 font-heading text-[40px] leading-none font-black tracking-[-1.5px] lg:text-[56px]">
           {t("title")}
         </h1>
         <p className="mt-2 font-mono text-[12.5px] font-bold text-faint lg:text-[13px]">
@@ -38,7 +38,10 @@ export function AccessibilityPage() {
               {section.items.map((item) => (
                 <div key={item} className="flex items-start gap-3">
                   <span className="mt-0.5 flex size-6 flex-none items-center justify-center rounded-full border border-secondary bg-secondary">
-                    <Check className="size-3 text-secondary-foreground" strokeWidth={3} />
+                    <Check
+                      className="size-3 text-secondary-foreground"
+                      strokeWidth={3}
+                    />
                   </span>
                   <span className="text-[15px] font-semibold text-foreground">
                     {item}
@@ -50,7 +53,7 @@ export function AccessibilityPage() {
         ))}
       </div>
 
-      <div className="mt-8 overflow-hidden rounded-sm border border-primary bg-card p-7 glow-primary lg:mt-12 lg:p-11">
+      <div className="glow-primary mt-8 overflow-hidden rounded-sm border border-primary bg-card p-7 lg:mt-12 lg:p-11">
         <h2 className="font-heading text-[24px] font-black tracking-[-0.5px] text-navy lg:text-[32px]">
           {t("contactTitle")}
         </h2>

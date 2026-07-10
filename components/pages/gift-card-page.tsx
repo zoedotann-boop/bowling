@@ -18,7 +18,7 @@ export function GiftCardPage() {
         <span className="font-mono text-[13px] font-bold text-secondary lg:text-sm">
           {t("eyebrow")}
         </span>
-        <h1 className="mt-1.5 font-heading text-[40px] leading-none font-black tracking-[-1.5px] neon-sign-purple lg:text-[56px]">
+        <h1 className="neon-sign-purple mt-1.5 font-heading text-[40px] leading-none font-black tracking-[-1.5px] lg:text-[56px]">
           {t("title")}
         </h1>
         <p className="mt-3 max-w-2xl text-[15px] font-semibold text-mud lg:text-lg">
@@ -28,7 +28,7 @@ export function GiftCardPage() {
 
       <div className="grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
         {/* Card visual */}
-        <div className="relative overflow-hidden rounded-sm border-2 border-primary bg-card p-7 glow-primary lg:p-9">
+        <div className="glow-primary relative overflow-hidden rounded-sm border-2 border-primary bg-card p-7 lg:p-9">
           <div
             className="pointer-events-none absolute -top-16 -left-16 size-48 rounded-full bg-secondary/20"
             aria-hidden
@@ -39,7 +39,7 @@ export function GiftCardPage() {
             </span>
             <span className="text-2xl">🎳</span>
           </div>
-          <div className="relative mt-12 font-heading text-[44px] font-black text-primary text-glow-primary lg:mt-16 lg:text-[56px]">
+          <div className="text-glow-primary relative mt-12 font-heading text-[44px] font-black text-primary lg:mt-16 lg:text-[56px]">
             {amount}
           </div>
           <div className="relative mt-2 font-mono text-xs font-bold text-muted-foreground">
@@ -60,7 +60,7 @@ export function GiftCardPage() {
                 className={cn(
                   "rounded-sm border px-5 py-2.5 font-heading text-[15px] font-extrabold transition-colors",
                   amount === a
-                    ? "border-primary bg-primary text-primary-foreground glow-primary"
+                    ? "glow-primary border-primary bg-primary text-primary-foreground"
                     : "border-border bg-card text-foreground hover:border-primary hover:text-primary"
                 )}
               >
@@ -68,7 +68,7 @@ export function GiftCardPage() {
               </button>
             ))}
           </div>
-          <button className="mt-6 w-full rounded-sm border border-primary bg-primary px-6 py-4 font-heading text-[17px] font-black text-primary-foreground glow-primary transition-colors hover:bg-secondary hover:text-secondary-foreground sm:w-auto">
+          <button className="glow-primary mt-6 w-full rounded-sm border border-primary bg-primary px-6 py-4 font-heading text-[17px] font-black text-primary-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground sm:w-auto">
             {t("cta")} ←
           </button>
           <p className="mt-4 text-[13px] font-semibold text-mud">{t("note")}</p>

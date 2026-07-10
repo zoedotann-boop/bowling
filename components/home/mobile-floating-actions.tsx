@@ -39,7 +39,7 @@ export function MobileFloatingActions() {
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         aria-label={t("scrollTop")}
         className={cn(
-          "fixed end-4 bottom-[84px] z-40 flex size-12 items-center justify-center rounded-full border border-navy bg-card text-navy glow-primary transition-all duration-300",
+          "glow-primary fixed end-4 bottom-[84px] z-40 flex size-12 items-center justify-center rounded-full border border-navy bg-card text-navy transition-all duration-300",
           showTop
             ? "translate-y-0 opacity-100"
             : "pointer-events-none translate-y-3 opacity-0"
@@ -52,7 +52,7 @@ export function MobileFloatingActions() {
       <div className="fixed inset-x-3 bottom-3 z-40 flex items-center justify-between gap-2.5">
         <a
           href="tel:03-5700834"
-          className="flex items-center justify-center gap-2 rounded-sm border border-primary bg-card px-4 py-3 font-heading text-[15px] font-extrabold text-primary glow-primary"
+          className="glow-primary flex items-center justify-center gap-2 rounded-sm border border-primary bg-card px-4 py-3 font-heading text-[15px] font-extrabold text-primary"
         >
           <span className="size-2.5 animate-blink rounded-full bg-secondary" />
           {t("openNow")}
