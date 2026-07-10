@@ -36,7 +36,7 @@ export function SiteHeader() {
 
   return (
     <header>
-      <div className="border-b-[4px] border-navy bg-cream-warm">
+      <div className="border-b border-navy bg-cream-warm">
         <Container className="flex items-center justify-between gap-4 py-3 lg:py-3.5">
           {/* Logo */}
           <Link href="/" className="flex items-center">
@@ -51,16 +51,16 @@ export function SiteHeader() {
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden items-center gap-1 rounded-full border-[3px] border-dotted border-navy bg-cream-warm p-[5px] lg:flex">
+          <nav className="hidden items-center gap-1 rounded-sm border border-navy bg-cream-warm p-[5px] lg:flex">
             {navItems.map((label, i) => (
               <Link
                 key={label}
                 href={NAV_HREFS[i]}
                 className={cn(
-                  "rounded-full px-[18px] py-2 font-heading text-sm font-extrabold transition-colors",
+                  "rounded-sm px-[18px] py-2 font-heading text-sm font-extrabold transition-colors",
                   isActive(NAV_HREFS[i])
-                    ? "bg-navy text-paper"
-                    : "text-navy hover:bg-cream"
+                    ? "glow-primary bg-primary text-primary-foreground"
+                    : "text-navy hover:bg-card hover:text-secondary"
                 )}
               >
                 {label}
@@ -76,7 +76,7 @@ export function SiteHeader() {
               href={whatsappUrl()}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full border-[3px] border-navy bg-rust px-5 py-2.5 font-heading text-sm font-extrabold text-paper transition-colors hover:bg-red"
+              className="glow-primary hover:glow-cyan rounded-sm border border-primary bg-primary px-5 py-2.5 font-heading text-sm font-extrabold text-primary-foreground transition-colors hover:border-secondary hover:bg-secondary hover:text-secondary-foreground"
             >
               {t("header.whatsapp")}
             </a>
@@ -88,7 +88,7 @@ export function SiteHeader() {
             onClick={() => setOpen(true)}
             aria-label={t("header.openMenu")}
             aria-expanded={open}
-            className="flex size-11 flex-col items-center justify-center gap-1 rounded-xl border-[3px] border-navy bg-paper lg:hidden"
+            className="flex size-11 flex-col items-center justify-center gap-1 rounded-sm border border-navy bg-card lg:hidden"
           >
             <span className="h-[2.5px] w-5 rounded bg-navy" />
             <span className="h-[2.5px] w-5 rounded bg-navy" />
@@ -112,14 +112,14 @@ export function SiteHeader() {
           aria-label={t("header.openMenu")}
           onClick={() => setOpen(false)}
           className={cn(
-            "absolute inset-0 bg-navy/50 transition-opacity duration-300",
+            "absolute inset-0 bg-navy-deep/80 transition-opacity duration-300",
             open ? "opacity-100" : "opacity-0"
           )}
         />
         {/* Panel */}
         <div
           className={cn(
-            "absolute inset-y-0 end-0 flex w-[82%] max-w-xs flex-col overflow-y-auto border-s-[4px] border-dotted border-navy bg-[#faf0e3] px-5 pt-5 pb-8 shadow-2xl transition-transform duration-300 ease-out",
+            "absolute inset-y-0 end-0 flex w-[82%] max-w-xs flex-col overflow-y-auto border-s border-navy bg-[#1a1a1a] px-5 pt-5 pb-8 transition-transform duration-300 ease-out",
             open ? "translate-x-0" : "translate-x-full rtl:-translate-x-full"
           )}
         >
@@ -135,7 +135,7 @@ export function SiteHeader() {
               type="button"
               onClick={() => setOpen(false)}
               aria-label="Close"
-              className="flex size-10 items-center justify-center rounded-xl border-[3px] border-navy bg-paper"
+              className="flex size-10 items-center justify-center rounded-sm border border-navy bg-card"
             >
               <X className="size-5 text-navy" strokeWidth={3} />
             </button>
@@ -148,10 +148,10 @@ export function SiteHeader() {
                 href={NAV_HREFS[i]}
                 onClick={() => setOpen(false)}
                 className={cn(
-                  "rounded-xl border-[3px] border-dotted px-4 py-3 font-heading text-base font-extrabold transition-colors",
+                  "rounded-sm border px-4 py-3 font-heading text-base font-extrabold transition-colors",
                   isActive(NAV_HREFS[i])
-                    ? "border-navy bg-navy text-paper"
-                    : "border-navy/40 text-navy hover:bg-cream-warm"
+                    ? "glow-primary border-primary bg-primary text-primary-foreground"
+                    : "border-border text-navy hover:border-secondary hover:text-secondary"
                 )}
               >
                 {label}
@@ -168,7 +168,7 @@ export function SiteHeader() {
             href={whatsappUrl()}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-3 rounded-full border-[3px] border-navy bg-rust px-5 py-3 text-center font-heading text-sm font-extrabold text-paper transition-colors hover:bg-red"
+            className="glow-primary hover:glow-cyan mt-3 rounded-sm border border-primary bg-primary px-5 py-3 text-center font-heading text-sm font-extrabold text-primary-foreground transition-colors hover:border-secondary hover:bg-secondary hover:text-secondary-foreground"
           >
             {t("header.whatsapp")}
           </a>

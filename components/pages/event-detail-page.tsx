@@ -39,9 +39,19 @@ const HERO_PHOTOS: Record<string, string> = {
   birthdays: "/events/birthdays-hero.png",
 }
 
-// Hero badge + Services-style strip accents, matching the homepage palette.
-const BADGE_ACCENTS = ["bg-marigold", "bg-cyan", "bg-pink"]
-const STRIPS = ["bg-orange", "bg-gold", "bg-teal", "bg-cyan", "bg-rust"]
+// Hero badge + Services-style strip accents — neon light strips.
+const BADGE_ACCENTS = [
+  "border-primary text-primary",
+  "border-secondary text-secondary",
+  "border-primary text-primary",
+]
+const STRIPS = [
+  "bg-primary",
+  "bg-secondary",
+  "bg-primary",
+  "bg-secondary",
+  "bg-primary",
+]
 
 interface Step {
   icon: string
@@ -105,7 +115,7 @@ interface EventItem {
 
 // Inputs match the homepage Contact form.
 const inputClass =
-  "rounded-xl border-[3px] border-navy bg-paper px-4 py-3 text-[15px] font-semibold text-navy placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-marigold lg:py-3.5"
+  "rounded-sm border border-border bg-card px-4 py-3 text-[15px] font-semibold text-foreground placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-primary lg:py-3.5"
 
 // ---------------------------------------------------------------------------
 // Section building blocks
@@ -125,7 +135,7 @@ function SectionHeading({
       <h2
         className={cn(
           "font-heading text-[28px] font-black tracking-[-1px] lg:text-[36px]",
-          onDark ? "text-paper" : "text-navy"
+          onDark ? "text-navy" : "text-navy"
         )}
       >
         {title}
@@ -134,7 +144,7 @@ function SectionHeading({
         <p
           className={cn(
             "mt-1 text-sm font-semibold lg:text-[15px]",
-            onDark ? "text-[#ffe3e0]" : "text-mud"
+            onDark ? "text-muted-foreground" : "text-mud"
           )}
         >
           {note}
@@ -173,7 +183,7 @@ function Hero({
             <span
               key={b}
               className={cn(
-                "rounded-full border-[3px] border-navy px-3 py-1 font-heading text-[12.5px] font-extrabold text-navy",
+                "glow-primary rounded-sm border bg-card px-3 py-1 font-heading text-[12.5px] font-extrabold",
                 BADGE_ACCENTS[i % BADGE_ACCENTS.length]
               )}
             >
@@ -181,7 +191,7 @@ function Hero({
             </span>
           ))}
         </div>
-        <h1 className="mt-3.5 font-heading text-[40px] leading-[1.02] font-black tracking-[-1.5px] text-navy lg:text-[56px]">
+        <h1 className="neon-sign-purple mt-3.5 font-heading text-[40px] leading-[1.02] font-black tracking-[-1.5px] lg:text-[56px]">
           {data.title}
         </h1>
         {data.lead ? (
@@ -194,7 +204,7 @@ function Hero({
         </p>
         <a
           href="#book"
-          className="mt-6 inline-flex items-center gap-2 rounded-full border-[3px] border-navy bg-navy px-6 py-3.5 font-heading text-[15px] font-extrabold text-paper transition-colors hover:bg-rust lg:text-base"
+          className="glow-primary mt-6 inline-flex items-center gap-2 rounded-sm border border-primary bg-primary px-6 py-3.5 font-heading text-[15px] font-extrabold text-primary-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground lg:text-base"
         >
           {bookLabel}
           <ArrowLeft className="size-4 ltr:rotate-180" strokeWidth={3} />
@@ -203,8 +213,8 @@ function Hero({
 
       <div
         className={cn(
-          "relative order-2 mt-6 aspect-[4/3] overflow-hidden rounded-[28px] border-[4px] border-navy lg:mt-0",
-          photo ? "bg-navy" : "border-dotted bg-cream-warm"
+          "relative order-2 mt-6 aspect-[4/3] overflow-hidden rounded-sm border border-primary lg:mt-0",
+          photo ? "bg-card" : "bg-card"
         )}
       >
         <Image
@@ -235,10 +245,10 @@ function Schedule({
         {data.steps.map((step, i) => (
           <div
             key={step.title}
-            className="rounded-[18px] border-[4px] border-dotted border-navy bg-cream-warm p-4 lg:rounded-[20px] lg:p-[22px]"
+            className="rounded-sm border border-border bg-card p-4 lg:p-[22px]"
           >
             <div className="flex items-center justify-between">
-              <div className="size-14 overflow-hidden rounded-full border-[3px] border-navy bg-cream lg:size-[60px]">
+              <div className="size-14 overflow-hidden rounded-full border border-border bg-background lg:size-[60px]">
                 <Image
                   src={STEP_IMAGES[step.icon] ?? STEP_IMAGES.arrival}
                   alt={step.title}
@@ -247,7 +257,7 @@ function Schedule({
                   className="size-full object-cover"
                 />
               </div>
-              <span className="flex size-6 items-center justify-center rounded-full bg-navy font-heading text-[12px] font-black text-paper">
+              <span className="glow-primary flex size-6 items-center justify-center rounded-full bg-primary font-heading text-[12px] font-black text-primary-foreground">
                 {i + 1}
               </span>
             </div>
@@ -261,7 +271,7 @@ function Schedule({
         ))}
       </div>
       {data.footnote ? (
-        <p className="mt-4 text-[13px] font-semibold text-[#ffe3e0]">
+        <p className="mt-4 text-[13px] font-semibold text-muted-foreground">
           {data.footnote}
         </p>
       ) : null}
@@ -287,19 +297,21 @@ function PriceSection({
           <div
             key={card.label}
             className={cn(
-              "relative overflow-hidden rounded-[22px] border-[4px] border-navy p-6 lg:p-7",
-              card.tag ? "bg-rust" : "bg-cream-warm"
+              "relative overflow-hidden rounded-sm border p-6 lg:p-7",
+              card.tag
+                ? "glow-primary border-primary bg-card"
+                : "border-border bg-card"
             )}
           >
             {card.tag ? (
-              <span className="absolute end-5 top-5 rounded-full border-2 border-navy bg-marigold px-3 py-0.5 font-heading text-[11px] font-extrabold text-navy">
+              <span className="absolute end-5 top-5 rounded-sm border border-primary bg-primary px-3 py-0.5 font-heading text-[11px] font-extrabold text-primary-foreground">
                 {card.tag}
               </span>
             ) : null}
             <div
               className={cn(
                 "font-mono text-[12.5px] font-bold",
-                card.tag ? "text-[#ffd0cc]" : "text-mud"
+                card.tag ? "text-secondary" : "text-mud"
               )}
             >
               {card.sub}
@@ -307,7 +319,7 @@ function PriceSection({
             <div
               className={cn(
                 "mt-0.5 font-heading text-[19px] font-black",
-                card.tag ? "text-paper" : "text-navy"
+                card.tag ? "text-foreground" : "text-navy"
               )}
             >
               {card.label}
@@ -315,7 +327,7 @@ function PriceSection({
             <div
               className={cn(
                 "mt-4 font-heading text-[44px] leading-none font-black",
-                card.tag ? "text-marigold" : "text-rust"
+                card.tag ? "text-primary" : "text-rust"
               )}
             >
               {card.price}
@@ -323,7 +335,7 @@ function PriceSection({
             <div
               className={cn(
                 "mt-2 text-[12.5px] font-semibold",
-                card.tag ? "text-[#ffe3e0]" : "text-mud"
+                card.tag ? "text-muted-foreground" : "text-mud"
               )}
             >
               {card.note}
@@ -331,10 +343,10 @@ function PriceSection({
             {card.note2 ? (
               <div
                 className={cn(
-                  "mt-1.5 inline-block rounded-full border-2 px-2.5 py-0.5 font-heading text-[12px] font-extrabold",
+                  "mt-1.5 inline-block rounded-sm border px-2.5 py-0.5 font-heading text-[12px] font-extrabold",
                   card.tag
-                    ? "border-paper/40 text-paper"
-                    : "border-navy bg-marigold text-navy"
+                    ? "border-secondary text-secondary"
+                    : "border-primary bg-primary text-primary-foreground"
                 )}
               >
                 {card.note2}
@@ -360,19 +372,24 @@ function IncludedSection({
   return (
     <div>
       <SectionHeading title={title} />
-      <div className="overflow-hidden rounded-[22px] border-[4px] border-navy bg-paper">
+      <div className="overflow-hidden rounded-sm border border-border bg-card">
         {items.map((item, i) => (
           <div
             key={item}
             className={cn(
-              "flex items-center gap-3 border-b-[3px] border-navy px-5 py-4 last:border-b-0 lg:px-6",
-              i % 2 ? "bg-cream" : "bg-paper"
+              "flex items-center gap-3 border-b border-border px-5 py-4 last:border-b-0 lg:px-6",
+              i % 2 ? "bg-background" : "bg-card"
             )}
           >
-            <span className="flex size-6 flex-none items-center justify-center rounded-full border-[3px] border-navy bg-mint">
-              <Check className="size-3 text-navy" strokeWidth={3} />
+            <span className="flex size-6 flex-none items-center justify-center rounded-full border border-secondary bg-secondary">
+              <Check
+                className="size-3 text-secondary-foreground"
+                strokeWidth={3}
+              />
             </span>
-            <span className="text-[15px] font-semibold text-navy">{item}</span>
+            <span className="text-[15px] font-semibold text-foreground">
+              {item}
+            </span>
           </div>
         ))}
       </div>
@@ -400,25 +417,28 @@ function RuleCard({
   ok: boolean
 }) {
   return (
-    <div className="overflow-hidden rounded-[18px] border-[4px] border-navy bg-paper lg:rounded-[20px]">
+    <div className="overflow-hidden rounded-sm border border-border bg-card">
       <div
         className={cn(
-          "h-2 border-b-[4px] border-navy",
-          ok ? "bg-mint" : "bg-red"
+          "h-2 border-b border-border",
+          ok ? "bg-secondary" : "bg-red"
         )}
       />
-      <div className="bg-cream-warm p-5 lg:p-6">
+      <div className="bg-card p-5 lg:p-6">
         <div className="flex items-center gap-2">
           <span
             className={cn(
-              "flex size-7 items-center justify-center rounded-full border-[3px] border-navy",
-              ok ? "bg-mint" : "bg-red"
+              "flex size-7 items-center justify-center rounded-full border",
+              ok ? "border-secondary bg-secondary" : "border-red bg-red"
             )}
           >
             {ok ? (
-              <Check className="size-4 text-navy" strokeWidth={3} />
+              <Check
+                className="size-4 text-secondary-foreground"
+                strokeWidth={3}
+              />
             ) : (
-              <X className="size-4 text-paper" strokeWidth={3} />
+              <X className="size-4 text-foreground" strokeWidth={3} />
             )}
           </span>
           <span className="font-heading text-[18px] font-black text-navy">
@@ -429,11 +449,14 @@ function RuleCard({
           {items.map((item) => (
             <div key={item} className="flex items-center gap-2.5">
               {ok ? (
-                <Check className="size-4 flex-none text-teal" strokeWidth={3} />
+                <Check
+                  className="size-4 flex-none text-secondary"
+                  strokeWidth={3}
+                />
               ) : (
-                <X className="size-4 flex-none text-rust" strokeWidth={3} />
+                <X className="size-4 flex-none text-red" strokeWidth={3} />
               )}
-              <span className="text-[14.5px] font-semibold text-navy">
+              <span className="text-[14.5px] font-semibold text-foreground">
                 {item}
               </span>
             </div>
@@ -490,7 +513,7 @@ function ExtrasSection({
         {extras.map((extra) => (
           <div
             key={extra.title}
-            className="flex items-start justify-between gap-3 rounded-[18px] border-[4px] border-dotted border-navy p-5"
+            className="flex items-start justify-between gap-3 rounded-sm border border-border bg-card p-5 transition-colors hover:border-primary"
           >
             <div>
               <div className="font-heading text-[15px] font-black text-navy">
@@ -527,13 +550,13 @@ function PolicySection({
   return (
     <div>
       <SectionHeading title={title} note={note} />
-      <div className="overflow-hidden rounded-[22px] border-[4px] border-navy bg-paper">
+      <div className="overflow-hidden rounded-sm border border-border bg-card">
         {rows.map((row, i) => (
           <div
             key={row.title}
             className={cn(
-              "border-b-[3px] border-navy px-5 py-4 last:border-b-0 lg:px-6",
-              i % 2 ? "bg-cream" : "bg-paper"
+              "border-b border-border px-5 py-4 last:border-b-0 lg:px-6",
+              i % 2 ? "bg-background" : "bg-card"
             )}
           >
             <div className="font-heading text-[15px] font-black text-navy">
@@ -567,21 +590,21 @@ function BookingForm({
   return (
     <section
       id="book"
-      className="mt-10 border-t-[4px] border-navy bg-teal py-8 lg:mt-16 lg:py-16"
+      className="mt-10 border-t border-border bg-background py-8 lg:mt-16 lg:py-16"
     >
       <Container>
         <div className="mb-6 text-center lg:mb-9">
-          <h2 className="font-heading text-[32px] font-black tracking-[-1px] text-cream-warm lg:text-[46px]">
+          <h2 className="font-heading text-[32px] font-black tracking-[-1px] text-navy lg:text-[46px]">
             {t("title")}
           </h2>
-          <div className="mx-auto mt-3 h-[7px] w-[70px] rounded-full bg-rust lg:w-20" />
-          <p className="mx-auto mt-3 max-w-[520px] text-[14px] leading-[1.55] font-semibold text-cream-warm/80 lg:text-[16px]">
+          <div className="glow-primary mx-auto mt-3 h-[7px] w-[70px] rounded-full bg-primary lg:w-20" />
+          <p className="mx-auto mt-3 max-w-[520px] text-[14px] leading-[1.55] font-semibold text-muted-foreground lg:text-[16px]">
             {t("desc")}
           </p>
         </div>
 
         {summary ? (
-          <div className="mx-auto mb-4 max-w-3xl rounded-[18px] border-[3px] border-navy bg-paper p-5 lg:p-6">
+          <div className="mx-auto mb-4 max-w-3xl rounded-sm border border-border bg-card p-5 lg:p-6">
             <div className="font-heading text-[15px] font-black text-navy">
               {te("summaryTitle")}
             </div>
@@ -589,9 +612,9 @@ function BookingForm({
               {summary.rows.map((r) => (
                 <div
                   key={r.label}
-                  className="flex items-center justify-between gap-3 border-t-2 border-navy/10 pt-2 first:border-t-0 first:pt-0"
+                  className="flex items-center justify-between gap-3 border-t border-border pt-2 first:border-t-0 first:pt-0"
                 >
-                  <span className="text-[13.5px] font-semibold text-navy">
+                  <span className="text-[13.5px] font-semibold text-foreground">
                     {r.label}
                   </span>
                   <span className="font-heading text-[16px] font-black whitespace-nowrap text-rust">
@@ -610,7 +633,7 @@ function BookingForm({
 
         <form
           onSubmit={(e) => e.preventDefault()}
-          className="mx-auto flex max-w-3xl flex-col gap-3.5 rounded-[20px] border-[4px] border-dashed border-orange bg-cream-warm p-[22px] lg:rounded-[22px] lg:p-8"
+          className="mx-auto flex max-w-3xl flex-col gap-3.5 rounded-sm border border-primary bg-card p-[22px] lg:p-8"
         >
           <div className="grid gap-3.5 sm:grid-cols-2">
             <input className={inputClass} placeholder={t("namePlaceholder")} />
@@ -636,12 +659,12 @@ function BookingForm({
           </div>
 
           {form.policyCheckbox ? (
-            <label className="flex items-center gap-2.5 text-[13px] font-bold text-navy">
+            <label className="flex items-center gap-2.5 text-[13px] font-bold text-foreground">
               <input
                 type="checkbox"
                 checked={agreed}
                 onChange={(e) => setAgreed(e.target.checked)}
-                className="size-4 accent-rust"
+                className="size-4 accent-primary"
               />
               {t("policyAgree")}
             </label>
@@ -649,7 +672,7 @@ function BookingForm({
 
           <button
             type="submit"
-            className="mt-1 w-full rounded-full border-[3px] border-navy bg-rust px-5 py-3.5 font-heading text-[17px] font-black text-paper transition-colors hover:bg-navy lg:py-4 lg:text-lg"
+            className="glow-primary mt-1 w-full rounded-sm border border-primary bg-primary px-5 py-3.5 font-heading text-[17px] font-black text-primary-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground lg:py-4 lg:text-lg"
           >
             {t("submit")}
           </button>
@@ -678,15 +701,15 @@ function CorporateOffers({ data }: { data: EventItem }) {
         {offers.map((offer, i) => (
           <div
             key={offer.title}
-            className="overflow-hidden rounded-[18px] border-[4px] border-navy bg-paper lg:rounded-[20px]"
+            className="hover:glow-primary overflow-hidden rounded-sm border border-border bg-card transition-all hover:border-primary"
           >
             <div
               className={cn(
-                "h-2 border-b-[4px] border-navy",
+                "h-2 border-b border-border",
                 STRIPS[i % STRIPS.length]
               )}
             />
-            <div className="flex h-full items-center gap-3.5 bg-cream-warm p-[18px] lg:p-6">
+            <div className="flex h-full items-center gap-3.5 bg-card p-[18px] lg:p-6">
               <Image
                 src={OFFER_IMAGES[offer.icon] ?? OFFER_IMAGES.drinks}
                 alt={offer.title}
@@ -742,15 +765,15 @@ function CorporateCta() {
       {/* CTA — styled like the homepage Contact section */}
       <section
         id="book"
-        className="mt-12 border-t-[4px] border-navy bg-teal py-8 lg:mt-16 lg:py-16"
+        className="mt-12 border-t border-border bg-background py-8 lg:mt-16 lg:py-16"
       >
         <Container>
           <div className="mb-6 text-center lg:mb-9">
-            <h2 className="font-heading text-[32px] font-black tracking-[-1px] text-cream-warm lg:text-[46px]">
+            <h2 className="font-heading text-[32px] font-black tracking-[-1px] text-navy lg:text-[46px]">
               {t("ctaTitle")}
             </h2>
-            <div className="mx-auto mt-3 h-[7px] w-[70px] rounded-full bg-rust lg:w-20" />
-            <p className="mx-auto mt-3 max-w-[520px] text-[14px] leading-[1.55] font-semibold text-cream-warm/80 lg:text-[16px]">
+            <div className="glow-primary mx-auto mt-3 h-[7px] w-[70px] rounded-full bg-primary lg:w-20" />
+            <p className="mx-auto mt-3 max-w-[520px] text-[14px] leading-[1.55] font-semibold text-muted-foreground lg:text-[16px]">
               {t("ctaDesc")}
             </p>
           </div>
@@ -762,9 +785,9 @@ function CorporateCta() {
                 href={c.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block rounded-[16px] border-[4px] border-dashed border-orange bg-cream-warm p-4 transition-colors hover:bg-paper lg:rounded-[18px] lg:p-5"
+                className="block rounded-sm border border-border bg-card p-4 transition-colors hover:border-primary lg:p-5"
               >
-                <c.icon className="size-5 text-rust" strokeWidth={2.5} />
+                <c.icon className="size-5 text-secondary" strokeWidth={2.5} />
                 <div className="mt-1.5 font-heading text-[15px] font-extrabold text-navy lg:mt-2 lg:text-base">
                   {c.label}
                 </div>
@@ -777,7 +800,7 @@ function CorporateCta() {
 
           <form
             onSubmit={(e) => e.preventDefault()}
-            className="mx-auto flex max-w-3xl flex-col gap-3.5 rounded-[20px] border-[4px] border-dashed border-orange bg-cream-warm p-[22px] lg:rounded-[22px] lg:p-8"
+            className="mx-auto flex max-w-3xl flex-col gap-3.5 rounded-sm border border-primary bg-card p-[22px] lg:p-8"
           >
             <div className="grid gap-3.5 sm:grid-cols-2">
               <input
@@ -804,7 +827,7 @@ function CorporateCta() {
             />
             <button
               type="submit"
-              className="mt-1 w-full rounded-full border-[3px] border-navy bg-rust px-5 py-3.5 font-heading text-[17px] font-black text-paper transition-colors hover:bg-navy lg:py-4 lg:text-lg"
+              className="glow-primary mt-1 w-full rounded-sm border border-primary bg-primary px-5 py-3.5 font-heading text-[17px] font-black text-primary-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground lg:py-4 lg:text-lg"
             >
               {tf("submit")}
             </button>
@@ -840,7 +863,7 @@ export function EventDetailPage({ slug }: { slug: string }) {
         </p>
         <Link
           href="/events"
-          className="mt-6 inline-flex items-center gap-2 rounded-full border-[3px] border-navy bg-navy px-6 py-3.5 font-heading text-[15px] font-extrabold text-paper transition-colors hover:bg-rust"
+          className="glow-primary mt-6 inline-flex items-center gap-2 rounded-sm border border-primary bg-primary px-6 py-3.5 font-heading text-[15px] font-extrabold text-primary-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground"
         >
           {t("notAvailable.cta")}
           <ArrowLeft className="size-4 ltr:rotate-180" strokeWidth={3} />
@@ -863,7 +886,7 @@ export function EventDetailPage({ slug }: { slug: string }) {
       {isCorporate ? (
         <>
           {/* Offers — cream-warm band, like the homepage Gallery */}
-          <section className="border-y-[4px] border-navy bg-cream-warm py-10 lg:py-14">
+          <section className="border-y border-border bg-background py-10 lg:py-14">
             <Container>
               <CorporateOffers data={data} />
             </Container>
@@ -874,7 +897,7 @@ export function EventDetailPage({ slug }: { slug: string }) {
         <>
           {/* Schedule — rust band */}
           {data.schedule ? (
-            <section className="border-y-[4px] border-navy bg-rust py-10 lg:py-14">
+            <section className="border-y border-border bg-background py-10 lg:py-14">
               <Container>
                 <Schedule data={data.schedule} title={t("scheduleTitle")} />
               </Container>
@@ -917,7 +940,7 @@ export function EventDetailPage({ slug }: { slug: string }) {
 
           {/* Policy — cream-warm band before the teal booking form */}
           {data.policy ? (
-            <section className="border-t-[4px] border-navy bg-cream-warm py-10 lg:py-14">
+            <section className="border-t border-border bg-background py-10 lg:py-14">
               <Container>
                 <PolicySection
                   rows={data.policy}

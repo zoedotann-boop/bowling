@@ -21,10 +21,10 @@ export function MenuPage() {
   return (
     <Container className="py-9 lg:py-16">
       <div className="mb-7 lg:mb-11">
-        <span className="font-mono text-[13px] font-bold text-orange lg:text-sm">
+        <span className="font-mono text-[13px] font-bold text-secondary lg:text-sm">
           {t("eyebrow")}
         </span>
-        <h1 className="mt-1.5 font-heading text-[40px] leading-none font-black tracking-[-1.5px] text-navy lg:text-[56px]">
+        <h1 className="neon-sign-purple mt-1.5 font-heading text-[40px] leading-none font-black tracking-[-1.5px] lg:text-[56px]">
           {t("title")}
         </h1>
         <p className="mt-3 text-[15px] font-semibold text-mud lg:text-lg">
@@ -41,10 +41,10 @@ export function MenuPage() {
                 key={c.id}
                 onClick={() => setActive(c.id)}
                 className={cn(
-                  "shrink-0 rounded-full border-[3px] border-navy px-4 py-2 font-heading text-[13px] font-extrabold transition-colors lg:rounded-xl lg:text-start lg:text-sm",
+                  "shrink-0 rounded-sm border px-4 py-2 font-heading text-[13px] font-extrabold transition-colors lg:text-start lg:text-sm",
                   active === c.id
-                    ? "bg-navy text-paper"
-                    : "bg-paper text-navy hover:bg-cream-warm"
+                    ? "glow-primary border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-card text-foreground hover:border-primary hover:text-primary"
                 )}
               >
                 {c.label}
@@ -58,7 +58,7 @@ export function MenuPage() {
           {current.items.map((d) => (
             <div
               key={d.name}
-              className="rounded-2xl border-[3px] border-dotted border-navy bg-cream p-4"
+              className="rounded-sm border border-border bg-card p-4 transition-colors hover:border-primary"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="font-heading text-[15px] font-black text-navy lg:text-base">

@@ -31,7 +31,7 @@ export function BranchSwitcher({ className }: { className?: string }) {
         aria-expanded={open}
         aria-haspopup="listbox"
         className={cn(
-          "inline-flex w-full items-center justify-center gap-1.5 rounded-full border-[3px] border-navy bg-paper px-3.5 py-[7px] text-[13px] font-extrabold text-navy transition-colors hover:bg-cream-warm",
+          "inline-flex w-full items-center justify-center gap-1.5 rounded-sm border border-navy bg-card px-3.5 py-[7px] text-[13px] font-extrabold text-navy transition-colors hover:border-secondary hover:text-secondary",
           className
         )}
       >
@@ -45,7 +45,7 @@ export function BranchSwitcher({ className }: { className?: string }) {
       {open && (
         <div
           role="listbox"
-          className="absolute end-0 z-50 mt-2 w-56 overflow-hidden rounded-2xl border-[3px] border-navy bg-paper shadow-xl"
+          className="absolute end-0 z-50 mt-2 w-56 overflow-hidden rounded-sm border border-navy bg-card"
         >
           {branchIds.map((id) => {
             const active = id === branchId
@@ -62,8 +62,8 @@ export function BranchSwitcher({ className }: { className?: string }) {
                 className={cn(
                   "flex w-full items-center justify-between gap-2 px-4 py-3 text-start font-heading text-sm font-extrabold transition-colors",
                   active
-                    ? "bg-navy text-paper"
-                    : "text-navy hover:bg-cream-warm"
+                    ? "glow-primary bg-primary text-primary-foreground"
+                    : "text-navy hover:bg-cream-warm hover:text-secondary"
                 )}
               >
                 {BRANCHES[id].name[locale]}

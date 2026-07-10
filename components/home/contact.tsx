@@ -7,12 +7,13 @@ import { useLocale, useTranslations } from "next-intl"
 import { cn } from "@/lib/utils"
 import { whatsappUrl } from "@/lib/contact"
 import { useBranch } from "@/components/branch-context"
+import { LedDot } from "@/components/decor/led-dot"
 import { Container } from "./container"
 
 const ICONS = [MapPin, Mail, Phone, MessageCircle]
 
 const inputClass =
-  "rounded-xl border-[3px] border-navy bg-paper px-4 py-3 text-[15px] font-semibold text-navy placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-marigold lg:py-3.5"
+  "rounded-sm border border-border bg-card px-4 py-3 text-[15px] font-semibold text-foreground placeholder:text-faint focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary lg:py-3.5"
 
 export function Contact() {
   const t = useTranslations("contact")
@@ -38,16 +39,17 @@ export function Contact() {
   const [topic, setTopic] = useState(topics[0])
 
   return (
-    <section className="mt-6 border-t-[4px] border-navy bg-teal py-8 lg:mt-14 lg:py-16">
+    <section className="mt-6 border-t border-navy py-8 lg:mt-14 lg:py-16">
       <Container>
         <div className="mb-6 text-center lg:mb-9">
-          <span className="font-mono text-xs font-bold text-orange lg:text-sm">
+          <span className="font-mono text-xs font-bold text-secondary lg:text-sm">
+            <LedDot color="secondary" className="me-2 align-middle" />
             {t("eyebrow")}
           </span>
-          <h2 className="mt-1.5 font-heading text-[38px] font-black tracking-[-1px] text-cream-warm lg:text-[52px]">
+          <h2 className="neon-sign-purple mt-1.5 font-heading text-[38px] font-black tracking-[-1px] text-foreground lg:text-[52px]">
             {t("title")}
           </h2>
-          <div className="mx-auto mt-3 h-[7px] w-[70px] rounded-full bg-rust lg:w-20" />
+          <div className="mx-auto mt-3 h-[7px] w-[70px] rounded-sm bg-primary lg:w-20" />
         </div>
 
         <div className="mb-4 grid grid-cols-2 gap-3 lg:mb-6 lg:grid-cols-4 lg:gap-4">
@@ -55,7 +57,7 @@ export function Contact() {
             const Icon = ICONS[i]
             const href = infoHrefs[i]
             const cardClass =
-              "block rounded-[16px] border-[4px] border-dashed border-orange bg-cream-warm p-4 transition-colors hover:bg-paper lg:rounded-[18px] lg:p-5"
+              "block rounded-sm border border-border bg-card p-4 transition-colors hover:border-primary lg:p-5"
             const inner = (
               <>
                 <Icon className="size-5 text-rust" strokeWidth={2.5} />
@@ -87,7 +89,7 @@ export function Contact() {
 
         <form
           onSubmit={(e) => e.preventDefault()}
-          className="rounded-[20px] border-[4px] border-dashed border-orange bg-cream-warm p-[22px] lg:rounded-[22px] lg:p-8"
+          className="rounded-sm border border-primary bg-card p-[22px] lg:p-8"
         >
           <div className="mb-4 font-heading text-[21px] font-black text-navy lg:mb-5 lg:text-2xl">
             {t("formTitle")}
@@ -114,8 +116,10 @@ export function Contact() {
                 type="button"
                 onClick={() => setTopic(option)}
                 className={cn(
-                  "rounded-full border-[3px] border-navy px-3.5 py-1.5 text-[12.5px] font-extrabold transition-colors lg:px-4 lg:py-2 lg:text-[13px]",
-                  topic === option ? "bg-rust text-paper" : "bg-paper text-navy"
+                  "rounded-sm border border-navy px-3.5 py-1.5 text-[12.5px] font-extrabold transition-colors lg:px-4 lg:py-2 lg:text-[13px]",
+                  topic === option
+                    ? "glow-primary bg-primary text-primary-foreground"
+                    : "bg-card text-foreground hover:border-secondary hover:text-secondary"
                 )}
               >
                 {option}
@@ -131,7 +135,7 @@ export function Contact() {
           />
           <button
             type="submit"
-            className="w-full rounded-full border-[3px] border-navy bg-rust px-5 py-3.5 font-heading text-[17px] font-black text-paper transition-colors hover:bg-navy lg:py-4 lg:text-lg"
+            className="glow-primary w-full rounded-sm border border-primary bg-primary px-5 py-3.5 font-heading text-[17px] font-black text-primary-foreground transition-colors hover:border-secondary hover:bg-secondary hover:text-secondary-foreground lg:py-4 lg:text-lg"
           >
             {t("submit")}
           </button>

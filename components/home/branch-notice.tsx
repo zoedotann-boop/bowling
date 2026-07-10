@@ -56,28 +56,28 @@ export function BranchNotice() {
         type="button"
         aria-label={t("close")}
         onClick={close}
-        className="absolute inset-0 bg-navy/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-navy-deep/80 backdrop-blur-sm"
       />
 
       {/* Card */}
-      <div className="relative w-full max-w-md overflow-hidden rounded-[26px] border-[5px] border-navy bg-cream-warm shadow-2xl">
-        <div className="h-2.5 border-b-[4px] border-navy bg-red" />
+      <div className="glow-primary relative w-full max-w-md overflow-hidden rounded-sm border-2 border-navy bg-card">
+        <div className="h-2.5 border-b border-navy bg-red" />
 
         <button
           type="button"
           onClick={close}
           aria-label={t("close")}
-          className="absolute end-4 top-5 flex size-9 items-center justify-center rounded-full border-[3px] border-navy bg-paper text-navy transition-colors hover:bg-red hover:text-paper"
+          className="absolute end-4 top-5 flex size-9 items-center justify-center rounded-full border border-navy bg-card text-navy transition-colors hover:bg-red hover:text-foreground"
         >
           <X className="size-4" strokeWidth={3} />
         </button>
 
         <div className="px-7 pt-7 pb-8 text-center lg:px-9 lg:pb-9">
-          <span className="inline-block rounded-full border-[3px] border-navy bg-marigold px-3.5 py-1 font-mono text-[12px] font-bold text-navy">
+          <span className="glow-primary inline-block rounded-sm border border-primary bg-card px-3.5 py-1 font-mono text-[12px] font-bold text-primary">
             {t("eyebrow")}
           </span>
 
-          <div className="mx-auto mt-5 flex size-14 items-center justify-center rounded-2xl border-[4px] border-dotted border-navy bg-paper">
+          <div className="mx-auto mt-5 flex size-14 items-center justify-center rounded-sm border border-navy bg-card">
             <CalendarClock className="size-7 text-rust" strokeWidth={2.25} />
           </div>
 
@@ -88,14 +88,14 @@ export function BranchNotice() {
             {t("title")}
           </h2>
           <p className="mt-3 text-[15px] font-semibold text-mud">{t("body")}</p>
-          <p className="mt-4 font-heading text-[19px] font-black text-teal">
+          <p className="mt-4 font-heading text-[19px] font-black text-secondary">
             {t("footer")}
           </p>
 
           <button
             type="button"
             onClick={close}
-            className="mt-6 w-full rounded-full border-[3px] border-navy bg-navy px-6 py-3.5 font-heading text-[15px] font-extrabold text-paper transition-colors hover:bg-rust"
+            className="glow-primary mt-6 w-full rounded-sm border border-primary bg-primary px-6 py-3.5 font-heading text-[15px] font-extrabold text-primary-foreground transition-colors hover:border-secondary hover:bg-secondary hover:text-secondary-foreground"
           >
             {t("close")}
           </button>
