@@ -5,6 +5,7 @@ import {
   useEffect,
   useRef,
   useState,
+  useSyncExternalStore,
   type TouchEvent,
 } from "react"
 import { createPortal } from "react-dom"
@@ -34,9 +35,18 @@ const TILES = [
 // Minimum horizontal travel (px) that counts as a navigation swipe.
 const SWIPE_THRESHOLD = 50
 
+// The portal target is `null` on the server and `document.body` on the client,
+// read via useSyncExternalStore so no browser global is touched during SSR.
+const subscribe = () => () => {}
+
 export function Gallery() {
   const t = useTranslations("gallery")
   const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const portalTarget = useSyncExternalStore(
+    subscribe,
+    () => document.body,
+    () => null
+  )
 
   const close = useCallback(() => setOpenIndex(null), [])
   const show = useCallback(
@@ -116,9 +126,10 @@ export function Gallery() {
 
       {/* Lightbox — portaled to <body> so a transformed ancestor (the
           .animate-page-in wrapper) can't become the containing block for
-          `position: fixed` and drop the overlay far down the page. openIndex
-          is null on the server, so the portal only runs after a client click. */}
-      {openIndex !== null &&
+          `position: fixed` and drop the overlay far down the page. portalTarget
+          is null on the server, so the portal only renders on the client. */}
+      {portalTarget &&
+        openIndex !== null &&
         createPortal(
           <div
             role="dialog"
@@ -182,7 +193,7 @@ export function Gallery() {
               ›
             </button>
           </div>,
-          document.body
+          portalTarget
         )}
     </section>
   )

@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useCallback, useContext, useState } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 
 import {
   BRANCH_COOKIE,
@@ -26,15 +26,14 @@ export function BranchProvider({
 }) {
   const [branchId, setBranchId] = useState<BranchId>(initial)
 
-  const setBranch = useCallback((id: BranchId) => {
-    setBranchId(id)
-    // Persist so the server renders the same branch on the next request.
-    document.cookie = `${BRANCH_COOKIE}=${id};path=/;max-age=${60 * 60 * 24 * 365}`
-  }, [])
+  // Persist the selection so the server renders the same branch next request.
+  useEffect(() => {
+    document.cookie = `${BRANCH_COOKIE}=${branchId};path=/;max-age=${60 * 60 * 24 * 365}`
+  }, [branchId])
 
   return (
     <BranchContext.Provider
-      value={{ branch: BRANCHES[branchId], branchId, setBranch }}
+      value={{ branch: BRANCHES[branchId], branchId, setBranch: setBranchId }}
     >
       {children}
     </BranchContext.Provider>
