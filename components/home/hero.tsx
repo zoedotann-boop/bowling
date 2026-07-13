@@ -2,7 +2,9 @@
 
 import { useLocale, useTranslations } from "next-intl"
 
+import { cn } from "@/lib/utils"
 import { whatsappUrl } from "@/lib/contact"
+import { useIsOpen } from "@/lib/hours"
 import { useBranch } from "@/components/branch-context"
 import { NeonSign } from "@/components/decor/neon-sign"
 import { PinsSettle } from "@/components/decor/pins-settle"
@@ -12,6 +14,7 @@ export function Hero() {
   const t = useTranslations("hero")
   const { branch } = useBranch()
   const locale = useLocale() as "he" | "en"
+  const isOpen = useIsOpen() ?? true
 
   return (
     <section className="relative isolate overflow-hidden bg-background">
@@ -46,10 +49,15 @@ export function Hero() {
           <NeonSign flicker />
         </div>
 
-        {/* Open-now status — quiet, one cyan dot */}
+        {/* Open/closed status — green when open, red when closed */}
         <div className="inline-flex items-center gap-2 border border-border bg-card px-3 py-1 text-[12px] font-semibold text-muted-foreground lg:text-[13px]">
-          <span className="size-1.5 animate-blink bg-primary" />
-          {branch.name[locale]} · {t("openNow")}
+          <span
+            className={cn(
+              "size-1.5 animate-blink",
+              isOpen ? "bg-green" : "bg-secondary"
+            )}
+          />
+          {branch.name[locale]} · {t(isOpen ? "openNow" : "closedNow")}
         </div>
 
         <h1 className="mt-4 mb-3.5 font-heading text-[42px] leading-[1.03] font-black tracking-[-1.5px] text-navy lg:mt-5 lg:mb-5 lg:text-[64px] lg:leading-[0.98] lg:tracking-[-2px]">
@@ -89,9 +97,19 @@ export function Hero() {
               <span className="font-heading text-[16px] font-black text-foreground">
                 {branch.name[locale]}
               </span>
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-primary">
-                <span className="size-1.5 rounded-full bg-primary" />
-                {t("open")}
+              <span
+                className={cn(
+                  "inline-flex items-center gap-1.5 text-[11px] font-bold",
+                  isOpen ? "text-green" : "text-secondary"
+                )}
+              >
+                <span
+                  className={cn(
+                    "size-1.5 rounded-full",
+                    isOpen ? "bg-green" : "bg-secondary"
+                  )}
+                />
+                {t(isOpen ? "open" : "closed")}
               </span>
             </div>
             <div className="mt-1 text-[12.5px] font-medium text-mud">

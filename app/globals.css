@@ -88,6 +88,7 @@
   --color-marigold: #02b2cd; /* accent → cyan */
   --color-rust: #02b2cd; /* small accents → cyan */
   --color-red: #e2212a; /* the red pop (kept) */
+  --color-green: #22c55e; /* "open now" status */
   --color-pink: #e2212a;
   --color-magenta: #e2212a;
   /* Retired hues → concrete neutrals */

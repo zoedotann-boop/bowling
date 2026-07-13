@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
 import { whatsappUrl } from "@/lib/contact"
+import { useIsOpen } from "@/lib/hours"
 
 function WhatsAppGlyph() {
   return (
@@ -23,6 +24,7 @@ function WhatsAppGlyph() {
 export function MobileFloatingActions() {
   const t = useTranslations("floating")
   const [showTop, setShowTop] = useState(false)
+  const isOpen = useIsOpen() ?? true
 
   useEffect(() => {
     const onScroll = () => setShowTop(window.scrollY > 400)
@@ -54,8 +56,13 @@ export function MobileFloatingActions() {
           href="tel:03-5700834"
           className="glow-primary flex items-center justify-center gap-2 rounded-sm border border-primary bg-card px-4 py-3 font-heading text-[15px] font-extrabold text-primary"
         >
-          <span className="size-2.5 animate-blink rounded-full bg-secondary" />
-          {t("openNow")}
+          <span
+            className={cn(
+              "size-2.5 animate-blink rounded-full",
+              isOpen ? "bg-green" : "bg-secondary"
+            )}
+          />
+          {t(isOpen ? "openNow" : "closedNow")}
         </a>
         <a
           href={whatsappUrl()}
