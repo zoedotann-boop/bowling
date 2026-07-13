@@ -1,6 +1,14 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type TouchEvent,
+} from "react"
+import { createPortal } from "react-dom"
 import Image from "next/image"
 import { useTranslations } from "next-intl"
 
@@ -8,22 +16,37 @@ import { cn } from "@/lib/utils"
 import { LedDot } from "@/components/decor/led-dot"
 import { Container } from "./container"
 
-// Each tile maps to an image in /public/gallery. The third tile spans two rows
-// on desktop to keep the original mosaic layout.
+// Each tile maps to an image in /public/gallery. Intrinsic dimensions let the
+// lightbox size each image to its natural aspect ratio. The third tile spans
+// two rows on desktop to keep the original mosaic layout.
 const TILES = [
-  { src: "/gallery/1.png", cls: "" },
-  { src: "/gallery/2.png", cls: "" },
+  { src: "/gallery/1.png", w: 795, h: 463, cls: "" },
+  { src: "/gallery/2.png", w: 782, h: 459, cls: "" },
   {
     src: "/gallery/3.png",
+    w: 756,
+    h: 461,
     cls: "col-span-2 lg:col-span-1 lg:col-start-3 lg:row-start-1 lg:row-span-2",
   },
-  { src: "/gallery/4.png", cls: "" },
-  { src: "/gallery/5.png", cls: "" },
+  { src: "/gallery/4.png", w: 757, h: 461, cls: "" },
+  { src: "/gallery/5.png", w: 862, h: 1252, cls: "" },
 ]
+
+// Minimum horizontal travel (px) that counts as a navigation swipe.
+const SWIPE_THRESHOLD = 50
+
+// The portal target is `null` on the server and `document.body` on the client,
+// read via useSyncExternalStore so no browser global is touched during SSR.
+const subscribe = () => () => {}
 
 export function Gallery() {
   const t = useTranslations("gallery")
   const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const portalTarget = useSyncExternalStore(
+    subscribe,
+    () => document.body,
+    () => null
+  )
 
   const close = useCallback(() => setOpenIndex(null), [])
   const show = useCallback(
@@ -33,6 +56,24 @@ export function Gallery() {
       ),
     []
   )
+
+  // Track the initial touch so a horizontal drag navigates instead of closing.
+  const touchStart = useRef<{ x: number; y: number } | null>(null)
+  const onTouchStart = (e: TouchEvent) => {
+    const t = e.touches[0]
+    touchStart.current = { x: t.clientX, y: t.clientY }
+  }
+  const onTouchEnd = (e: TouchEvent) => {
+    const start = touchStart.current
+    touchStart.current = null
+    if (!start) return
+    const t = e.changedTouches[0]
+    const dx = t.clientX - start.x
+    const dy = t.clientY - start.y
+    if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
+      show(dx < 0 ? 1 : -1)
+    }
+  }
 
   useEffect(() => {
     if (openIndex === null) return
@@ -83,62 +124,77 @@ export function Gallery() {
         </div>
       </Container>
 
-      {/* Lightbox */}
-      {openIndex !== null && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          onClick={close}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-navy-deep/90 p-4 backdrop-blur-sm"
-        >
-          <button
-            type="button"
-            onClick={close}
-            aria-label="Close"
-            className="glow-primary hover:glow-cyan absolute end-4 top-4 flex size-11 items-center justify-center rounded-full border border-primary bg-card text-2xl font-black text-primary transition-colors hover:border-secondary hover:text-secondary"
-          >
-            ×
-          </button>
-
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation()
-              show(-1)
-            }}
-            aria-label="Previous"
-            className="glow-primary hover:glow-cyan absolute start-3 top-1/2 flex size-12 -translate-y-1/2 items-center justify-center rounded-full border border-primary bg-card text-2xl font-black text-primary transition-colors hover:border-secondary hover:text-secondary lg:start-8"
-          >
-            ‹
-          </button>
-
+      {/* Lightbox — portaled to <body> so a transformed ancestor (the
+          .animate-page-in wrapper) can't become the containing block for
+          `position: fixed` and drop the overlay far down the page. portalTarget
+          is null on the server, so the portal only renders on the client. */}
+      {portalTarget &&
+        openIndex !== null &&
+        createPortal(
           <div
-            onClick={(e) => e.stopPropagation()}
-            className="glow-primary relative h-[70vh] w-full max-w-4xl overflow-hidden rounded-sm border border-primary"
+            role="dialog"
+            aria-modal="true"
+            onClick={close}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-navy-deep/90 p-4 backdrop-blur-sm"
           >
-            <Image
-              src={TILES[openIndex].src}
-              alt={t("imageLabel", { n: openIndex + 1 })}
-              fill
-              sizes="100vw"
-              className="object-contain"
-              priority
-            />
-          </div>
+            <button
+              type="button"
+              onClick={close}
+              aria-label="Close"
+              className="glow-primary hover:glow-cyan absolute end-4 top-4 z-10 flex size-11 items-center justify-center rounded-full border border-primary bg-card text-2xl font-black text-primary transition-colors hover:border-secondary hover:text-secondary"
+            >
+              ×
+            </button>
 
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation()
-              show(1)
-            }}
-            aria-label="Next"
-            className="glow-primary hover:glow-cyan absolute end-3 top-1/2 flex size-12 -translate-y-1/2 items-center justify-center rounded-full border border-primary bg-card text-2xl font-black text-primary transition-colors hover:border-secondary hover:text-secondary lg:end-8"
-          >
-            ›
-          </button>
-        </div>
-      )}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                show(-1)
+              }}
+              aria-label="Previous"
+              className="glow-primary hover:glow-cyan absolute start-3 top-1/2 z-10 flex size-12 -translate-y-1/2 items-center justify-center rounded-full border border-primary bg-card text-2xl font-black text-primary transition-colors hover:border-secondary hover:text-secondary lg:start-8"
+            >
+              ‹
+            </button>
+
+            <div
+              onClick={(e) => e.stopPropagation()}
+              onTouchStart={onTouchStart}
+              onTouchEnd={onTouchEnd}
+              // The frame matches each image's aspect ratio and grows to the
+              // largest size that still fits within 92vw × 88vh, so `fill`
+              // scales the image up to fill the screen without cropping.
+              style={{
+                aspectRatio: `${TILES[openIndex].w} / ${TILES[openIndex].h}`,
+                width: `min(92vw, calc(88vh * ${TILES[openIndex].w} / ${TILES[openIndex].h}))`,
+              }}
+              className="glow-primary relative overflow-hidden rounded-sm border border-primary"
+            >
+              <Image
+                src={TILES[openIndex].src}
+                alt={t("imageLabel", { n: openIndex + 1 })}
+                fill
+                sizes="92vw"
+                className="object-cover"
+                priority
+              />
+            </div>
+
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                show(1)
+              }}
+              aria-label="Next"
+              className="glow-primary hover:glow-cyan absolute end-3 top-1/2 z-10 flex size-12 -translate-y-1/2 items-center justify-center rounded-full border border-primary bg-card text-2xl font-black text-primary transition-colors hover:border-secondary hover:text-secondary lg:end-8"
+            >
+              ›
+            </button>
+          </div>,
+          portalTarget
+        )}
     </section>
   )
 }
