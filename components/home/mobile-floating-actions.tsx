@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl"
 import { cn } from "@/lib/utils"
 import { whatsappUrl } from "@/lib/contact"
 import { useIsOpen } from "@/lib/hours"
+import { useBranch } from "@/components/branch-context"
 
 function WhatsAppGlyph() {
   return (
@@ -23,6 +24,7 @@ function WhatsAppGlyph() {
 
 export function MobileFloatingActions() {
   const t = useTranslations("floating")
+  const { branch } = useBranch()
   const [showTop, setShowTop] = useState(false)
   const isOpen = useIsOpen() ?? true
 
@@ -65,7 +67,7 @@ export function MobileFloatingActions() {
           {t(isOpen ? "openNow" : "closedNow")}
         </a>
         <a
-          href={whatsappUrl()}
+          href={whatsappUrl(branch.whatsapp)}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={t("whatsapp")}

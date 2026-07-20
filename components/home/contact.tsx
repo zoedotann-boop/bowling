@@ -33,7 +33,7 @@ export function Contact() {
     branch.wazeUrl,
     "mailto:info@bowling.co.il",
     `tel:${branch.phone}`,
-    whatsappUrl(),
+    whatsappUrl(branch.whatsapp),
   ]
   const topics = t.raw("topics") as string[]
   const [topic, setTopic] = useState(topics[0])
