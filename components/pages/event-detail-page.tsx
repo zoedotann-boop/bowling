@@ -744,7 +744,7 @@ function CorporateCta() {
       icon: MessageCircle,
       label: t("whatsappLabel"),
       value: t("whatsappValue"),
-      href: whatsappUrl(),
+      href: whatsappUrl(branch.whatsapp),
     },
     {
       icon: Phone,

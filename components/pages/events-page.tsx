@@ -110,7 +110,7 @@ export function EventsPage() {
           </p>
         </div>
         <a
-          href={whatsappUrl()}
+          href={whatsappUrl(branch.whatsapp)}
           target="_blank"
           rel="noopener noreferrer"
           className="glow-primary mt-5 inline-block rounded-sm border border-primary bg-primary px-7 py-3.5 text-center font-heading text-[15px] font-extrabold text-primary-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground lg:mt-0 lg:flex-none lg:text-base"

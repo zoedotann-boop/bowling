@@ -73,7 +73,7 @@ export function SiteHeader() {
             <BranchSwitcher />
             <LangToggle />
             <a
-              href={whatsappUrl()}
+              href={whatsappUrl(branch.whatsapp)}
               target="_blank"
               rel="noopener noreferrer"
               className="glow-primary hover:glow-cyan rounded-sm border border-primary bg-primary px-5 py-2.5 font-heading text-sm font-extrabold text-primary-foreground transition-colors hover:border-secondary hover:bg-secondary hover:text-secondary-foreground"
@@ -165,7 +165,7 @@ export function SiteHeader() {
           </div>
 
           <a
-            href={whatsappUrl()}
+            href={whatsappUrl(branch.whatsapp)}
             target="_blank"
             rel="noopener noreferrer"
             className="glow-primary hover:glow-cyan mt-3 rounded-sm border border-primary bg-primary px-5 py-3 text-center font-heading text-sm font-extrabold text-primary-foreground transition-colors hover:border-secondary hover:bg-secondary hover:text-secondary-foreground"

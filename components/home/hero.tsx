@@ -81,7 +81,7 @@ export function Hero() {
             {t("waze")}
           </a>
           <a
-            href={whatsappUrl()}
+            href={whatsappUrl(branch.whatsapp)}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center rounded-sm border border-navy/30 bg-transparent px-6 py-[15px] font-heading text-base font-extrabold text-foreground transition-colors hover:border-primary hover:text-primary lg:py-4 lg:text-[17px]"

@@ -15,6 +15,8 @@ export interface Branch {
   addressLine2: Localized
   addressFull: Localized
   phone: string
+  /** Branch WhatsApp lead number (international format, digits only, no "+"). */
+  whatsapp: string
   lanes: number
   laneDesc: Localized
   wazeUrl: string
@@ -45,6 +47,7 @@ export const BRANCHES: Record<BranchId, Branch> = {
       en: "Aba Hillel Rd 301 (Ramat Gan Stadium, Gate 2)",
     },
     phone: "03-5700834",
+    whatsapp: "972549854428",
     lanes: 14,
     laneDesc: {
       he: "14 מסלולים עם ציוד מקצועי ותאורת LED",
@@ -66,6 +69,7 @@ export const BRANCHES: Record<BranchId, Branch> = {
       en: "HaYehudim Blvd 24 (Azorion Mall)",
     },
     phone: "03-9550021",
+    whatsapp: "972549629579",
     lanes: 16,
     laneDesc: {
       he: "16 מסלולים עם ציוד מקצועי ותאורת LED",
