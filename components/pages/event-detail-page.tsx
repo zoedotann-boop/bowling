@@ -1,26 +1,32 @@
 "use client"
 
-import { useState } from "react"
+import {
+  useRef,
+  useState,
+  type ChangeEvent,
+  type FormEvent,
+  type InputHTMLAttributes,
+} from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowLeft, Check, Mail, MessageCircle, Phone, X } from "lucide-react"
+import {
+  ArrowLeft,
+  Check,
+  Eraser,
+  Mail,
+  MessageCircle,
+  Phone,
+  X,
+} from "lucide-react"
 import { useTranslations } from "next-intl"
+import SignatureCanvas from "react-signature-canvas"
 
 import { cn } from "@/lib/utils"
 import { whatsappUrl } from "@/lib/contact"
 import { useBranch } from "@/components/branch-context"
 import { Container } from "@/components/home/container"
 
-// Illustrated sticker icons for the schedule steps and corporate offers.
-const STEP_IMAGES: Record<string, string> = {
-  arrival: "/events/steps/arrival.png",
-  bowling: "/events/steps/bowling.png",
-  table: "/events/steps/table.png",
-  cake: "/events/steps/cake.png",
-  gym: "/events/steps/gym.png",
-  meal: "/events/steps/meal.png",
-}
-
+// Illustrated sticker icons for the corporate offers.
 const OFFER_IMAGES: Record<string, string> = {
   drinks: "/events/steps/alcohol.png",
   menu: "/events/steps/menu.png",
@@ -230,7 +236,7 @@ function Hero({
   )
 }
 
-// "מה הלו״ז?" — styled like the homepage FeatureStrip (dotted cards + round icon).
+// "מה הלו״ז?" — minimalist numbered timeline (no cards), cyan step numbers for pop.
 function Schedule({
   data,
   title,
@@ -241,37 +247,25 @@ function Schedule({
   return (
     <div>
       <SectionHeading title={title} note={data.note || undefined} onDark />
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-[18px]">
+      <div className="grid grid-cols-2 gap-x-6 gap-y-6 lg:grid-cols-4 lg:gap-x-8">
         {data.steps.map((step, i) => (
-          <div
-            key={step.title}
-            className="rounded-sm border border-border bg-card p-4 lg:p-[22px]"
-          >
-            <div className="flex items-center justify-between">
-              <div className="size-14 overflow-hidden rounded-full border border-border bg-background lg:size-[60px]">
-                <Image
-                  src={STEP_IMAGES[step.icon] ?? STEP_IMAGES.arrival}
-                  alt={step.title}
-                  width={60}
-                  height={60}
-                  className="size-full object-cover"
-                />
-              </div>
-              <span className="glow-primary flex size-6 items-center justify-center rounded-full bg-primary font-heading text-[12px] font-black text-primary-foreground">
-                {i + 1}
+          <div key={step.title} className="border-t-2 border-primary/40 pt-3">
+            <div className="flex items-baseline gap-2">
+              <span className="font-heading text-[13px] font-black text-primary">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span className="font-heading text-base font-extrabold text-navy lg:text-[19px]">
+                {step.title}
               </span>
             </div>
-            <div className="mt-3 font-heading text-base font-extrabold text-navy lg:text-[19px]">
-              {step.title}
-            </div>
-            <div className="mt-1 text-[13px] font-semibold text-mud lg:text-sm">
+            <p className="mt-1 text-[13px] font-semibold text-mud lg:text-sm">
               {step.desc}
-            </div>
+            </p>
           </div>
         ))}
       </div>
       {data.footnote ? (
-        <p className="mt-4 text-[13px] font-semibold text-muted-foreground">
+        <p className="mt-5 text-[13px] font-semibold text-muted-foreground italic">
           {data.footnote}
         </p>
       ) : null}
@@ -292,63 +286,38 @@ function PriceSection({
   return (
     <div>
       <SectionHeading title={title} note={note} />
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-x-8 gap-y-8 sm:grid-cols-2">
         {cards.map((card) => (
           <div
             key={card.label}
             className={cn(
-              "relative overflow-hidden rounded-sm border p-6 lg:p-7",
-              card.tag
-                ? "glow-primary border-primary bg-card"
-                : "border-border bg-card"
+              "border-t-2 pt-4",
+              card.tag ? "border-primary" : "border-border"
             )}
           >
-            {card.tag ? (
-              <span className="absolute end-5 top-5 rounded-sm border border-primary bg-primary px-3 py-0.5 font-heading text-[11px] font-extrabold text-primary-foreground">
-                {card.tag}
-              </span>
-            ) : null}
-            <div
-              className={cn(
-                "font-mono text-[12.5px] font-bold",
-                card.tag ? "text-secondary" : "text-mud"
-              )}
-            >
-              {card.sub}
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <div className="font-mono text-[12.5px] font-bold text-mud">
+                  {card.sub}
+                </div>
+                <div className="mt-0.5 font-heading text-[19px] font-black text-navy">
+                  {card.label}
+                </div>
+              </div>
+              {card.tag ? (
+                <span className="flex-none rounded-sm bg-primary px-3 py-0.5 font-heading text-[11px] font-extrabold text-primary-foreground">
+                  {card.tag}
+                </span>
+              ) : null}
             </div>
-            <div
-              className={cn(
-                "mt-0.5 font-heading text-[19px] font-black",
-                card.tag ? "text-foreground" : "text-navy"
-              )}
-            >
-              {card.label}
-            </div>
-            <div
-              className={cn(
-                "mt-4 font-heading text-[44px] leading-none font-black",
-                card.tag ? "text-primary" : "text-rust"
-              )}
-            >
+            <div className="mt-4 font-heading text-[44px] leading-none font-black text-primary">
               {card.price}
             </div>
-            <div
-              className={cn(
-                "mt-2 text-[12.5px] font-semibold",
-                card.tag ? "text-muted-foreground" : "text-mud"
-              )}
-            >
+            <div className="mt-2 text-[12.5px] font-semibold text-mud">
               {card.note}
             </div>
             {card.note2 ? (
-              <div
-                className={cn(
-                  "mt-1.5 inline-block rounded-sm border px-2.5 py-0.5 font-heading text-[12px] font-extrabold",
-                  card.tag
-                    ? "border-secondary text-secondary"
-                    : "border-primary bg-primary text-primary-foreground"
-                )}
-              >
+              <div className="mt-2 inline-block border-b-2 border-primary/40 pb-0.5 font-heading text-[12px] font-extrabold text-navy">
                 {card.note2}
               </div>
             ) : null}
@@ -359,7 +328,7 @@ function PriceSection({
   )
 }
 
-// "מה כלול" — styled like the homepage Pricing table (navy rows, alternating bg).
+// "מה כלול" — calm typographic list echoing the terms block, cyan checks for pop.
 function IncludedSection({
   items,
   title,
@@ -372,27 +341,22 @@ function IncludedSection({
   return (
     <div>
       <SectionHeading title={title} />
-      <div className="overflow-hidden rounded-sm border border-border bg-card">
-        {items.map((item, i) => (
-          <div
+      <ul className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
+        {items.map((item) => (
+          <li
             key={item}
-            className={cn(
-              "flex items-center gap-3 border-b border-border px-5 py-4 last:border-b-0 lg:px-6",
-              i % 2 ? "bg-background" : "bg-card"
-            )}
+            className="flex items-start gap-3 border-b border-border/60 pb-3"
           >
-            <span className="flex size-6 flex-none items-center justify-center rounded-full border border-secondary bg-secondary">
-              <Check
-                className="size-3 text-secondary-foreground"
-                strokeWidth={3}
-              />
-            </span>
-            <span className="text-[15px] font-semibold text-foreground">
+            <Check
+              className="mt-0.5 size-4 flex-none text-primary"
+              strokeWidth={3}
+            />
+            <span className="text-[15px] leading-relaxed font-semibold text-foreground">
               {item}
             </span>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
       {notes && notes.length ? (
         <ul className="mt-4 flex flex-col gap-1.5">
           {notes.map((n) => (
@@ -406,7 +370,7 @@ function IncludedSection({
   )
 }
 
-// "מותר ואסור" — styled like the homepage Services cards (colored top strip).
+// "מותר ואסור" — calm typographic column; cyan accent for allowed, red for forbidden.
 function RuleCard({
   heading,
   items,
@@ -417,52 +381,46 @@ function RuleCard({
   ok: boolean
 }) {
   return (
-    <div className="overflow-hidden rounded-sm border border-border bg-card">
+    <div>
       <div
         className={cn(
-          "h-2 border-b border-border",
-          ok ? "bg-secondary" : "bg-red"
+          "flex items-center gap-2.5 border-b-2 pb-2.5",
+          ok ? "border-primary/40" : "border-red/40"
         )}
-      />
-      <div className="bg-card p-5 lg:p-6">
-        <div className="flex items-center gap-2">
-          <span
-            className={cn(
-              "flex size-7 items-center justify-center rounded-full border",
-              ok ? "border-secondary bg-secondary" : "border-red bg-red"
-            )}
-          >
+      >
+        <span
+          className={cn(
+            "flex size-7 flex-none items-center justify-center rounded-full",
+            ok ? "bg-primary" : "bg-red"
+          )}
+        >
+          {ok ? (
+            <Check className="size-4 text-primary-foreground" strokeWidth={3} />
+          ) : (
+            <X className="size-4 text-secondary-foreground" strokeWidth={3} />
+          )}
+        </span>
+        <span className="font-heading text-[18px] font-black text-navy">
+          {heading}
+        </span>
+      </div>
+      <ul className="mt-3.5 flex flex-col gap-2.5">
+        {items.map((item) => (
+          <li key={item} className="flex items-start gap-2.5">
             {ok ? (
               <Check
-                className="size-4 text-secondary-foreground"
+                className="mt-0.5 size-4 flex-none text-primary"
                 strokeWidth={3}
               />
             ) : (
-              <X className="size-4 text-foreground" strokeWidth={3} />
+              <X className="mt-0.5 size-4 flex-none text-red" strokeWidth={3} />
             )}
-          </span>
-          <span className="font-heading text-[18px] font-black text-navy">
-            {heading}
-          </span>
-        </div>
-        <div className="mt-3 flex flex-col gap-2.5">
-          {items.map((item) => (
-            <div key={item} className="flex items-center gap-2.5">
-              {ok ? (
-                <Check
-                  className="size-4 flex-none text-secondary"
-                  strokeWidth={3}
-                />
-              ) : (
-                <X className="size-4 flex-none text-red" strokeWidth={3} />
-              )}
-              <span className="text-[14.5px] font-semibold text-foreground">
-                {item}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
+            <span className="text-[14.5px] leading-relaxed font-semibold text-foreground">
+              {item}
+            </span>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
@@ -485,12 +443,14 @@ function RulesSection({
   return (
     <div>
       <SectionHeading title={title} />
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-8 sm:grid-cols-2 lg:gap-12">
         <RuleCard heading={allowedTitle} items={allowed} ok />
         <RuleCard heading={forbiddenTitle} items={forbidden} ok={false} />
       </div>
       {footnote ? (
-        <p className="mt-4 text-[13px] font-semibold text-mud">{footnote}</p>
+        <p className="mt-5 text-[13px] font-semibold text-mud italic">
+          {footnote}
+        </p>
       ) : null}
     </div>
   )
@@ -535,8 +495,8 @@ function ExtrasSection({
   )
 }
 
-// "מדיניות הזמנה" — styled like the homepage Pricing table (navy rows).
-function PolicySection({
+// Terms & conditions — a single, continuous document-style text block.
+function TermsSection({
   rows,
   title,
   note,
@@ -548,44 +508,305 @@ function PolicySection({
   footnote?: string
 }) {
   return (
-    <div>
+    <div className="mx-auto max-w-3xl">
       <SectionHeading title={title} note={note} />
-      <div className="overflow-hidden rounded-sm border border-border bg-card">
-        {rows.map((row, i) => (
-          <div
-            key={row.title}
-            className={cn(
-              "border-b border-border px-5 py-4 last:border-b-0 lg:px-6",
-              i % 2 ? "bg-background" : "bg-card"
-            )}
-          >
-            <div className="font-heading text-[15px] font-black text-navy">
+      <div className="space-y-4 text-[14px] leading-[1.8] font-semibold text-mud lg:text-[15px]">
+        {rows.map((row) => (
+          <p key={row.title}>
+            <strong className="font-heading font-black text-navy">
               {row.title}
-            </div>
-            <p className="mt-1 text-[13.5px] leading-relaxed font-semibold text-mud">
-              {row.desc}
-            </p>
-          </div>
+            </strong>
+            {" – "}
+            {row.desc}
+          </p>
         ))}
       </div>
       {footnote ? (
-        <p className="mt-4 text-[13px] font-semibold text-mud">{footnote}</p>
+        <p className="mt-5 text-[13px] font-semibold text-mud italic">
+          {footnote}
+        </p>
       ) : null}
     </div>
   )
 }
 
-// Booking form — styled like the homepage Contact section (teal + dashed card).
+// A single labelled input, matching the homepage Contact form styling.
+function Field({
+  label,
+  ...props
+}: { label: string } & InputHTMLAttributes<HTMLInputElement>) {
+  return (
+    <label className="flex flex-col gap-1.5">
+      <span className="font-heading text-[13px] font-extrabold text-navy">
+        {label}
+      </span>
+      <input className={inputClass} {...props} />
+    </label>
+  )
+}
+
+const EMPTY_FIELDS = {
+  firstName: "",
+  lastName: "",
+  idNumber: "",
+  celebrants: "",
+  email: "",
+  phone: "",
+  date: "",
+}
+
+// Booking / commitment form. Used by every event (standard + corporate):
+// the visitor acknowledges the terms, picks upgrades and signs before sending.
 function BookingForm({
-  form,
+  event,
+  upgrades,
+}: {
+  event: string
+  upgrades?: Extra[]
+}) {
+  const t = useTranslations("eventDetails.form")
+  const sigRef = useRef<SignatureCanvas>(null)
+
+  const [fields, setFields] = useState(EMPTY_FIELDS)
+  const [selectedUpgrades, setSelectedUpgrades] = useState<string[]>([])
+  const [agreed, setAgreed] = useState(false)
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
+    "idle"
+  )
+  const [error, setError] = useState<string | null>(null)
+
+  const update =
+    (key: keyof typeof fields) => (e: ChangeEvent<HTMLInputElement>) =>
+      setFields((prev) => ({ ...prev, [key]: e.target.value }))
+
+  const toggleUpgrade = (title: string) =>
+    setSelectedUpgrades((prev) =>
+      prev.includes(title) ? prev.filter((u) => u !== title) : [...prev, title]
+    )
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setError(null)
+
+    if (!agreed) {
+      setError(t("errorTerms"))
+      return
+    }
+    if (sigRef.current?.isEmpty() ?? true) {
+      setError(t("errorSignature"))
+      return
+    }
+
+    setStatus("sending")
+    try {
+      const res = await fetch("/api/events/booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          event,
+          ...fields,
+          upgrades: selectedUpgrades,
+          signature: sigRef.current?.toDataURL("image/png"),
+        }),
+      })
+      if (!res.ok) throw new Error("request failed")
+      setStatus("sent")
+      setFields(EMPTY_FIELDS)
+      setSelectedUpgrades([])
+      setAgreed(false)
+      sigRef.current?.clear()
+    } catch {
+      setStatus("error")
+      setError(t("error"))
+    }
+  }
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="mx-auto flex max-w-3xl flex-col gap-5 rounded-sm border border-primary bg-card p-[22px] lg:p-8"
+    >
+      {/* Mandatory terms acknowledgement, right above the fields. */}
+      <label className="flex items-start gap-2.5 rounded-sm border border-primary/40 bg-background p-4 text-[13.5px] leading-relaxed font-bold text-foreground">
+        <input
+          type="checkbox"
+          checked={agreed}
+          onChange={(e) => setAgreed(e.target.checked)}
+          className="mt-0.5 size-4 shrink-0 accent-primary"
+        />
+        {t("termsConfirm")}
+      </label>
+
+      <div className="grid gap-3.5 sm:grid-cols-2">
+        <Field
+          label={t("firstNameLabel")}
+          value={fields.firstName}
+          onChange={update("firstName")}
+          placeholder={t("firstNamePlaceholder")}
+          autoComplete="given-name"
+          required
+        />
+        <Field
+          label={t("lastNameLabel")}
+          value={fields.lastName}
+          onChange={update("lastName")}
+          placeholder={t("lastNamePlaceholder")}
+          autoComplete="family-name"
+          required
+        />
+        <Field
+          label={t("idLabel")}
+          value={fields.idNumber}
+          onChange={update("idNumber")}
+          placeholder={t("idPlaceholder")}
+          inputMode="numeric"
+          required
+        />
+        <Field
+          label={t("celebrantsLabel")}
+          value={fields.celebrants}
+          onChange={update("celebrants")}
+          placeholder={t("celebrantsPlaceholder")}
+        />
+        <Field
+          label={t("emailLabel")}
+          type="email"
+          value={fields.email}
+          onChange={update("email")}
+          placeholder={t("emailPlaceholder")}
+          autoComplete="email"
+          required
+        />
+        <Field
+          label={t("phoneLabel")}
+          type="tel"
+          value={fields.phone}
+          onChange={update("phone")}
+          placeholder={t("phonePlaceholder")}
+          autoComplete="tel"
+          required
+        />
+        <Field
+          label={t("dateLabel")}
+          type="date"
+          value={fields.date}
+          onChange={update("date")}
+          required
+        />
+      </div>
+
+      {upgrades?.length ? (
+        <fieldset>
+          <legend className="font-heading text-[15px] font-black text-navy">
+            {t("upgradesTitle")}
+          </legend>
+          <p className="mt-0.5 mb-2.5 text-[12.5px] font-semibold text-mud">
+            {t("upgradesNote")}
+          </p>
+          <div className="grid gap-2.5 sm:grid-cols-2">
+            {upgrades.map((u) => {
+              const checked = selectedUpgrades.includes(u.title)
+              return (
+                <label
+                  key={u.title}
+                  className={cn(
+                    "flex cursor-pointer items-center gap-3 rounded-sm border p-3 transition-colors",
+                    checked
+                      ? "glow-primary border-primary bg-primary/5"
+                      : "border-border bg-background hover:border-primary/50"
+                  )}
+                >
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() => toggleUpgrade(u.title)}
+                    className="size-4 shrink-0 accent-primary"
+                  />
+                  <span className="flex-1">
+                    <span className="block font-heading text-[14px] font-extrabold text-navy">
+                      {u.title}
+                    </span>
+                    {u.desc ? (
+                      <span className="block text-[12px] font-semibold text-mud">
+                        {u.desc}
+                      </span>
+                    ) : null}
+                  </span>
+                  <span className="font-heading text-[14px] font-black whitespace-nowrap text-rust">
+                    {u.price}
+                  </span>
+                </label>
+              )
+            })}
+          </div>
+        </fieldset>
+      ) : null}
+
+      {/* Digital signature pad. */}
+      <div>
+        <div className="mb-2 flex items-center justify-between gap-3">
+          <div>
+            <div className="font-heading text-[15px] font-black text-navy">
+              {t("signatureTitle")}
+            </div>
+            <p className="text-[12.5px] font-semibold text-mud">
+              {t("signatureHint")}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => sigRef.current?.clear()}
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-sm border border-border bg-background px-3 py-1.5 font-heading text-[12.5px] font-extrabold text-mud transition-colors hover:border-primary hover:text-navy"
+          >
+            <Eraser className="size-3.5" strokeWidth={2.5} />
+            {t("signatureClear")}
+          </button>
+        </div>
+        <div className="overflow-hidden rounded-sm border border-border bg-white">
+          <SignatureCanvas
+            ref={sigRef}
+            penColor="#0f172a"
+            canvasProps={{ className: "h-40 w-full touch-none lg:h-48" }}
+          />
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        disabled={!agreed || status === "sending"}
+        className="glow-primary mt-1 w-full rounded-sm border border-primary bg-primary px-5 py-3.5 font-heading text-[17px] font-black text-primary-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground disabled:cursor-not-allowed disabled:opacity-50 lg:py-4 lg:text-lg"
+      >
+        {status === "sending" ? t("sending") : t("submit")}
+      </button>
+
+      {status === "sent" ? (
+        <p className="text-center text-[13.5px] font-bold text-secondary">
+          {t("success")}
+        </p>
+      ) : null}
+      {error ? (
+        <p className="text-center text-[13.5px] font-bold text-rust">{error}</p>
+      ) : null}
+
+      <p className="text-center text-[12px] font-medium text-mud">
+        {t("footnote")}
+      </p>
+    </form>
+  )
+}
+
+// Booking band for standard events — heading, price summary and the form.
+function BookingSection({
+  event,
+  upgrades,
   summary,
 }: {
-  form: FormConfig
+  event: string
+  upgrades?: Extra[]
   summary?: FormSummary
 }) {
   const t = useTranslations("eventDetails.form")
   const te = useTranslations("eventDetails")
-  const [agreed, setAgreed] = useState(false)
 
   return (
     <section
@@ -631,55 +852,7 @@ function BookingForm({
           </div>
         ) : null}
 
-        <form
-          onSubmit={(e) => e.preventDefault()}
-          className="mx-auto flex max-w-3xl flex-col gap-3.5 rounded-sm border border-primary bg-card p-[22px] lg:p-8"
-        >
-          <div className="grid gap-3.5 sm:grid-cols-2">
-            <input className={inputClass} placeholder={t("namePlaceholder")} />
-            <input
-              type="tel"
-              className={inputClass}
-              placeholder={t("phonePlaceholder")}
-            />
-            <input className={inputClass} placeholder={t("datePlaceholder")} />
-            <input className={inputClass} placeholder={form.countPlaceholder} />
-            {form.celebrant ? (
-              <>
-                <input
-                  className={inputClass}
-                  placeholder={t("celebrantNamePlaceholder")}
-                />
-                <input
-                  className={inputClass}
-                  placeholder={t("celebrantAgePlaceholder")}
-                />
-              </>
-            ) : null}
-          </div>
-
-          {form.policyCheckbox ? (
-            <label className="flex items-center gap-2.5 text-[13px] font-bold text-foreground">
-              <input
-                type="checkbox"
-                checked={agreed}
-                onChange={(e) => setAgreed(e.target.checked)}
-                className="size-4 accent-primary"
-              />
-              {t("policyAgree")}
-            </label>
-          ) : null}
-
-          <button
-            type="submit"
-            className="glow-primary mt-1 w-full rounded-sm border border-primary bg-primary px-5 py-3.5 font-heading text-[17px] font-black text-primary-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground lg:py-4 lg:text-lg"
-          >
-            {t("submit")}
-          </button>
-          <p className="text-center text-[12px] font-medium text-mud">
-            {t("footnote")}
-          </p>
-        </form>
+        <BookingForm event={event} upgrades={upgrades} />
       </Container>
     </section>
   )
@@ -734,9 +907,8 @@ function CorporateOffers({ data }: { data: EventItem }) {
 }
 
 // CTA — styled like the homepage Contact section. Rendered full-bleed.
-function CorporateCta() {
+function CorporateCta({ data }: { data: EventItem }) {
   const t = useTranslations("eventDetails.corporate")
-  const tf = useTranslations("eventDetails.corporate.form")
   const { branch } = useBranch()
 
   const contactCards = [
@@ -798,40 +970,7 @@ function CorporateCta() {
             ))}
           </div>
 
-          <form
-            onSubmit={(e) => e.preventDefault()}
-            className="mx-auto flex max-w-3xl flex-col gap-3.5 rounded-sm border border-primary bg-card p-[22px] lg:p-8"
-          >
-            <div className="grid gap-3.5 sm:grid-cols-2">
-              <input
-                className={inputClass}
-                placeholder={tf("namePlaceholder")}
-              />
-              <input
-                type="tel"
-                className={inputClass}
-                placeholder={tf("phonePlaceholder")}
-              />
-              <input
-                className={inputClass}
-                placeholder={tf("datePlaceholder")}
-              />
-              <input
-                className={inputClass}
-                placeholder={tf("countPlaceholder")}
-              />
-            </div>
-            <textarea
-              className={cn(inputClass, "h-24 w-full resize-none")}
-              placeholder={tf("notesPlaceholder")}
-            />
-            <button
-              type="submit"
-              className="glow-primary mt-1 w-full rounded-sm border border-primary bg-primary px-5 py-3.5 font-heading text-[17px] font-black text-primary-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground lg:py-4 lg:text-lg"
-            >
-              {tf("submit")}
-            </button>
-          </form>
+          <BookingForm event={data.title} upgrades={data.extras} />
         </Container>
       </section>
     </>
@@ -891,7 +1030,7 @@ export function EventDetailPage({ slug }: { slug: string }) {
               <CorporateOffers data={data} />
             </Container>
           </section>
-          <CorporateCta />
+          <CorporateCta data={data} />
         </>
       ) : (
         <>
@@ -938,11 +1077,11 @@ export function EventDetailPage({ slug }: { slug: string }) {
             ) : null}
           </Container>
 
-          {/* Policy — cream-warm band before the teal booking form */}
+          {/* Terms & conditions — continuous document before the booking form */}
           {data.policy ? (
             <section className="border-t border-border bg-background py-10 lg:py-14">
               <Container>
-                <PolicySection
+                <TermsSection
                   rows={data.policy}
                   title={t("policyTitle")}
                   note={t("policyNote")}
@@ -953,7 +1092,11 @@ export function EventDetailPage({ slug }: { slug: string }) {
           ) : null}
 
           {data.form ? (
-            <BookingForm form={data.form} summary={data.formSummary} />
+            <BookingSection
+              event={data.title}
+              upgrades={data.extras}
+              summary={data.formSummary}
+            />
           ) : null}
         </>
       )}
