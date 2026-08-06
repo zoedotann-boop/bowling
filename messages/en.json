@@ -32,6 +32,7 @@
     "titleHighlight": "perfect",
     "titleAfter": "outing for family & friends!",
     "description": "An electric atmosphere until the small hours! Modern bowling lanes, bar & restaurant, gymboree, bumper cars and events of all kinds.",
+    "descriptionNoGymboree": "An electric atmosphere until the small hours! Modern bowling lanes, bar & restaurant and events of all kinds.",
     "waze": "Navigate to us (Waze)",
     "whatsapp": "Talk to us on WhatsApp!",
     "branchName": "Ramat Gan Branch",
@@ -487,15 +488,6 @@
       "errorSignature": "Please sign before submitting the form.",
       "footnote": "Submitting this form is not final confirmation of the event. Final confirmation is set with the clerk."
     },
-    "corporate": {
-      "offersTitle": "What we offer",
-      "ctaTitle": "Ready to plan an event?",
-      "ctaDesc": "For more details, prices and coordination — fill in the form or reach us through the channels below.",
-      "whatsappLabel": "WhatsApp",
-      "whatsappValue": "Quick reply",
-      "phoneLabel": "Phone",
-      "emailLabel": "Email"
-    },
     "notAvailable": {
       "title": "This event isn't available at this branch",
       "body": "The event you're looking for isn't offered at the current branch. Go to all events or switch branch.",
@@ -887,10 +879,10 @@
         "badges": ["Ages 8+", "Minimum 20 kids", "About two hours of fun"],
         "title": "An unforgettable class outing!",
         "lead": "The hosting and refreshments are served right to the bowling lanes - stay in the energy of the game!",
-        "description": "A bowling game for all the kids, a dedicated host, a birthday table in the restaurant and a cake ceremony.",
+        "description": "A bowling game for all the kids with a dedicated host, rhythmic music and an electric atmosphere. Free games on the video equipment, a fun competition between the kids and an unforgettable bonding experience.",
         "schedule": {
-          "note": "",
-          "footnote": "",
+          "note": "A class outing has no birthday table and no cake ceremony - the focus is on the game and the bonding.",
+          "footnote": "Throughout the event the kids are served pitchers of water and cordial freely, at no cost.",
           "steps": [
             {
               "icon": "arrival",
@@ -903,14 +895,14 @@
               "desc": "50–60 minutes"
             },
             {
-              "icon": "table",
-              "title": "Birthday table",
-              "desc": "Pizza + Tropit"
+              "icon": "food",
+              "title": "Refreshments to the lane",
+              "desc": "Pizza & drinks to the lanes"
             },
             {
-              "icon": "cake",
-              "title": "Cake ceremony",
-              "desc": "With the family"
+              "icon": "party",
+              "title": "Competition & bonding",
+              "desc": "Music, games and competition"
             }
           ]
         },
@@ -933,13 +925,15 @@
         },
         "included": [
           "A bowling game for all the kids (50–60 min)",
+          "A dedicated host for the welcome and game explanation",
           "2 slices of family pizza + Tropit per participant",
           "Pitchers of water and cordial throughout the event",
-          "A host for the welcome, game explanation and cake ceremony",
-          "A birthday table for all participants"
+          "Rhythmic music and an electric atmosphere",
+          "Free games on the video equipment",
+          "A fun competition between the kids and a bonding experience"
         ],
         "allowed": [
-          "Birthday cake",
+          "A cake from home",
           "Gummy and toffee candy",
           "Marshmallows",
           "Cut fruit and vegetables"
@@ -1003,13 +997,7 @@
             "title": "Payment",
             "desc": "Cash or credit on site only. For a single payment at the end - leave a credit card deposit."
           }
-        ],
-        "form": {
-          "countLabel": "Number of participants",
-          "countPlaceholder": "Minimum",
-          "celebrant": false,
-          "policyCheckbox": true
-        }
+        ]
       },
       "gymboree": {
         "badges": [
@@ -1149,23 +1137,20 @@
           "Alcohol & atmosphere"
         ],
         "title": "Corporate events",
-        "description": "Our bowling alley is the perfect place for any event you can think of - from a small department of 12 people to a large company that wants the place all to itself. Bar/bat mitzvah, parties - there's everything here for everyone.",
-        "offers": [
-          {
-            "icon": "drinks",
-            "title": "Alcohol & atmosphere",
-            "desc": "A rich alcohol menu with the atmosphere, design and sound of a club."
-          },
-          {
-            "icon": "menu",
-            "title": "Custom menu",
-            "desc": "You can build it in advance from the venue's menu and know exactly what you get and for how much."
-          },
-          {
-            "icon": "buffet",
-            "title": "Buffet with food & drinks",
-            "desc": "Buffet menus with unlimited food and drinks plus games - at attractive prices."
-          }
+        "description": "Our bowling alley is the perfect place for any event - from a small department of 12 people to a large company that wants the place all to itself. Bar/bat mitzvah, parties and team outings - there's everything here for everyone.",
+        "includedTitle": "What we offer",
+        "included": [
+          "A range of buffet menus to choose from - tailored to any type of event",
+          "Unlimited soft drinks",
+          "Unlimited food across a variety of dishes",
+          "A custom menu - know in advance exactly what you get and for how much",
+          "A rich alcohol bar with the design, sound and atmosphere of a club",
+          "Bowling games and an electric atmosphere for all participants"
+        ],
+        "groupOptionsTitle": "Private lanes & venue buyout",
+        "groupOptions": [
+          "Reserve a set number of lanes for a private group",
+          "Buy out the entire venue for an event - small or large, on request"
         ]
       }
     }

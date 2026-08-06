@@ -67,7 +67,7 @@ export function Hero() {
         </h1>
 
         <p className="mb-[18px] text-base leading-[1.55] font-medium text-mud lg:mx-auto lg:mb-8 lg:max-w-[560px] lg:text-[18px]">
-          {t("description")}
+          {t(branch.hasGymboree ? "description" : "descriptionNoGymboree")}
         </p>
 
         <div className="mt-14 flex flex-col gap-2.5 lg:mt-0 lg:flex-row lg:justify-center">
