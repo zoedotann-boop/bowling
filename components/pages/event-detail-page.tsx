@@ -9,29 +9,14 @@ import {
 } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import {
-  ArrowLeft,
-  Check,
-  Eraser,
-  Mail,
-  MessageCircle,
-  Phone,
-  X,
-} from "lucide-react"
+import { ArrowLeft, Check, Eraser, X } from "lucide-react"
 import { useTranslations } from "next-intl"
 import SignatureCanvas from "react-signature-canvas"
 
 import { cn } from "@/lib/utils"
-import { whatsappUrl } from "@/lib/contact"
 import { useBranch } from "@/components/branch-context"
+import { Contact } from "@/components/home/contact"
 import { Container } from "@/components/home/container"
-
-// Illustrated sticker icons for the corporate offers.
-const OFFER_IMAGES: Record<string, string> = {
-  drinks: "/events/steps/alcohol.png",
-  menu: "/events/steps/menu.png",
-  buffet: "/events/steps/buffet.png",
-}
 
 // Card illustration shown in the hero. Birthdays uses a real photo.
 const EVENT_IMAGES: Record<string, string> = {
@@ -50,13 +35,6 @@ const BADGE_ACCENTS = [
   "border-primary text-primary",
   "border-secondary text-secondary",
   "border-primary text-primary",
-]
-const STRIPS = [
-  "bg-primary",
-  "bg-secondary",
-  "bg-primary",
-  "bg-secondary",
-  "bg-primary",
 ]
 
 interface Step {
@@ -78,11 +56,6 @@ interface PriceCard {
   note2?: string
 }
 interface PolicyRow {
-  title: string
-  desc: string
-}
-interface Offer {
-  icon: string
   title: string
   desc: string
 }
@@ -114,7 +87,9 @@ interface EventItem {
   extrasNote?: string
   policy?: PolicyRow[]
   policyFootnote?: string
-  offers?: Offer[]
+  /** Corporate: private-lane / venue-buyout options, shown as a flat checklist. */
+  groupOptions?: string[]
+  groupOptionsTitle?: string
   form?: FormConfig
   formSummary?: FormSummary
 }
@@ -859,125 +834,6 @@ function BookingSection({
 }
 
 // ---------------------------------------------------------------------------
-// Corporate variant
-// ---------------------------------------------------------------------------
-
-// Offers — styled like the homepage Services cards. Rendered inside a band.
-function CorporateOffers({ data }: { data: EventItem }) {
-  const t = useTranslations("eventDetails.corporate")
-  const offers = data.offers ?? []
-
-  return (
-    <div>
-      <SectionHeading title={t("offersTitle")} />
-      <div className="flex flex-col gap-3.5 lg:grid lg:grid-cols-3 lg:gap-5">
-        {offers.map((offer, i) => (
-          <div
-            key={offer.title}
-            className="hover:glow-primary overflow-hidden rounded-sm border border-border bg-card transition-all hover:border-primary"
-          >
-            <div
-              className={cn(
-                "h-2 border-b border-border",
-                STRIPS[i % STRIPS.length]
-              )}
-            />
-            <div className="flex h-full items-center gap-3.5 bg-card p-[18px] lg:p-6">
-              <Image
-                src={OFFER_IMAGES[offer.icon] ?? OFFER_IMAGES.drinks}
-                alt={offer.title}
-                width={84}
-                height={84}
-                className="size-[74px] shrink-0 object-contain lg:size-[84px]"
-              />
-              <div>
-                <div className="mb-1 font-heading text-xl font-black text-navy lg:text-[22px]">
-                  {offer.title}
-                </div>
-                <p className="text-sm leading-normal font-semibold text-mud lg:text-[15px]">
-                  {offer.desc}
-                </p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-// CTA — styled like the homepage Contact section. Rendered full-bleed.
-function CorporateCta({ data }: { data: EventItem }) {
-  const t = useTranslations("eventDetails.corporate")
-  const { branch } = useBranch()
-
-  const contactCards = [
-    {
-      icon: MessageCircle,
-      label: t("whatsappLabel"),
-      value: t("whatsappValue"),
-      href: whatsappUrl(branch.whatsapp),
-    },
-    {
-      icon: Phone,
-      label: t("phoneLabel"),
-      value: branch.phone,
-      href: `tel:${branch.phone}`,
-    },
-    {
-      icon: Mail,
-      label: t("emailLabel"),
-      value: "info@bowling.co.il",
-      href: "mailto:info@bowling.co.il",
-    },
-  ]
-
-  return (
-    <>
-      {/* CTA — styled like the homepage Contact section */}
-      <section
-        id="book"
-        className="mt-12 border-t border-border bg-background py-8 lg:mt-16 lg:py-16"
-      >
-        <Container>
-          <div className="mb-6 text-center lg:mb-9">
-            <h2 className="font-heading text-[32px] font-black tracking-[-1px] text-navy lg:text-[46px]">
-              {t("ctaTitle")}
-            </h2>
-            <div className="glow-primary mx-auto mt-3 h-[7px] w-[70px] rounded-full bg-primary lg:w-20" />
-            <p className="mx-auto mt-3 max-w-[520px] text-[14px] leading-[1.55] font-semibold text-muted-foreground lg:text-[16px]">
-              {t("ctaDesc")}
-            </p>
-          </div>
-
-          <div className="mb-4 grid gap-3 sm:grid-cols-3 lg:mb-6 lg:gap-4">
-            {contactCards.map((c) => (
-              <a
-                key={c.label}
-                href={c.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block rounded-sm border border-border bg-card p-4 transition-colors hover:border-primary lg:p-5"
-              >
-                <c.icon className="size-5 text-secondary" strokeWidth={2.5} />
-                <div className="mt-1.5 font-heading text-[15px] font-extrabold text-navy lg:mt-2 lg:text-base">
-                  {c.label}
-                </div>
-                <div className="text-[13px] font-semibold text-mud lg:text-sm">
-                  {c.value}
-                </div>
-              </a>
-            ))}
-          </div>
-
-          <BookingForm event={data.title} upgrades={data.extras} />
-        </Container>
-      </section>
-    </>
-  )
-}
-
-// ---------------------------------------------------------------------------
 // Page
 // ---------------------------------------------------------------------------
 
@@ -989,6 +845,9 @@ export function EventDetailPage({ slug }: { slug: string }) {
   // Branch-specific content wins over the shared default.
   const data = overrides?.[branch.id]?.[slug] ?? items[slug]
   const isCorporate = slug === "corporate"
+  // Corporate and team outings skip the commitment form and use the shared
+  // homepage contact form for enquiries instead.
+  const usesContactForm = isCorporate || slug === "team"
 
   // This event isn't offered at the selected branch.
   if (!branch.events.includes(slug)) {
@@ -1023,15 +882,24 @@ export function EventDetailPage({ slug }: { slug: string }) {
       </Container>
 
       {isCorporate ? (
-        <>
-          {/* Offers — cream-warm band, like the homepage Gallery */}
-          <section className="border-y border-border bg-background py-10 lg:py-14">
-            <Container>
-              <CorporateOffers data={data} />
-            </Container>
-          </section>
-          <CorporateCta data={data} />
-        </>
+        /* Corporate — flat, birthdays-style checklists (offerings + group options) */
+        <section className="border-t border-border bg-background py-10 lg:py-14">
+          <Container className="flex flex-col gap-12 lg:gap-16">
+            {data.included ? (
+              <IncludedSection
+                items={data.included}
+                title={data.includedTitle ?? t("includedTitle")}
+                notes={data.includedNotes}
+              />
+            ) : null}
+            {data.groupOptions ? (
+              <IncludedSection
+                items={data.groupOptions}
+                title={data.groupOptionsTitle ?? t("includedTitle")}
+              />
+            ) : null}
+          </Container>
+        </section>
       ) : (
         <>
           {/* Schedule — rust band */}
@@ -1090,16 +958,22 @@ export function EventDetailPage({ slug }: { slug: string }) {
               </Container>
             </section>
           ) : null}
-
-          {data.form ? (
-            <BookingSection
-              event={data.title}
-              upgrades={data.extras}
-              summary={data.formSummary}
-            />
-          ) : null}
         </>
       )}
+
+      {/* Enquiry: corporate/team use the shared contact form; others sign the
+          commitment form. */}
+      {usesContactForm ? (
+        <div id="book" className="scroll-mt-20">
+          <Contact />
+        </div>
+      ) : data.form ? (
+        <BookingSection
+          event={data.title}
+          upgrades={data.extras}
+          summary={data.formSummary}
+        />
+      ) : null}
     </>
   )
 }
