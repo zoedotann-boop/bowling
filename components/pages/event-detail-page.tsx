@@ -4,8 +4,10 @@ import {
   useRef,
   useState,
   type ChangeEvent,
+  type ComponentType,
   type FormEvent,
   type InputHTMLAttributes,
+  type SVGProps,
 } from "react"
 import Image from "next/image"
 import Link from "next/link"
@@ -15,16 +17,23 @@ import SignatureCanvas from "react-signature-canvas"
 
 import { cn } from "@/lib/utils"
 import { useBranch } from "@/components/branch-context"
+import {
+  BirthdaysIllustration,
+  CorporateIllustration,
+  GymboreeIllustration,
+  NoRoomIllustration,
+  TeamIllustration,
+} from "@/components/illustrations"
 import { Contact } from "@/components/home/contact"
 import { Container } from "@/components/home/container"
 
-// Card illustration shown in the hero. Birthdays uses a real photo.
-const EVENT_IMAGES: Record<string, string> = {
-  birthdays: "/events/birthdays.png",
-  "no-room": "/events/no-room.png",
-  team: "/events/team.png",
-  gymboree: "/events/gymboree.png",
-  corporate: "/events/corporate.png",
+// Hand-drawn illustration shown in the hero. Birthdays uses a real photo.
+const ILLUSTRATIONS: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
+  birthdays: BirthdaysIllustration,
+  "no-room": NoRoomIllustration,
+  team: TeamIllustration,
+  gymboree: GymboreeIllustration,
+  corporate: CorporateIllustration,
 }
 const HERO_PHOTOS: Record<string, string> = {
   birthdays: "/events/birthdays-hero.png",
@@ -147,7 +156,7 @@ function Hero({
   bookLabel: string
 }) {
   const photo = HERO_PHOTOS[slug]
-  const heroSrc = photo ?? EVENT_IMAGES[slug] ?? EVENT_IMAGES.birthdays
+  const Illustration = ILLUSTRATIONS[slug] ?? BirthdaysIllustration
 
   return (
     <div className="lg:grid lg:grid-cols-2 lg:items-center lg:gap-12">
@@ -192,20 +201,19 @@ function Hero({
         </a>
       </div>
 
-      <div
-        className={cn(
-          "relative order-2 mt-6 aspect-[4/3] overflow-hidden rounded-sm border border-primary lg:mt-0",
-          photo ? "bg-card" : "bg-card"
+      <div className="relative order-2 mt-6 aspect-[4/3] overflow-hidden rounded-sm border border-primary bg-card lg:mt-0">
+        {photo ? (
+          <Image
+            src={photo}
+            alt={data.title}
+            fill
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            className="object-cover"
+            priority
+          />
+        ) : (
+          <Illustration className="absolute inset-0 h-full w-full p-8" />
         )}
-      >
-        <Image
-          src={heroSrc}
-          alt={data.title}
-          fill
-          sizes="(max-width: 1024px) 100vw, 50vw"
-          className={photo ? "object-cover" : "object-contain p-8"}
-          priority
-        />
       </div>
     </div>
   )
