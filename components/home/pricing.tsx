@@ -1,10 +1,10 @@
 import { useTranslations } from "next-intl"
 
-import Image from "next/image"
 import Link from "next/link"
 
 import { cn } from "@/lib/utils"
 import { LedDot } from "@/components/decor/led-dot"
+import { BirthdayScene } from "@/components/illustrations"
 import { Container } from "./container"
 
 function SoldierDiscount({ className }: { className?: string }) {
@@ -106,14 +106,8 @@ export function Pricing() {
             {t("birthdayCta")}
           </Link>
         </div>
-        <div className="relative min-h-[220px] border-t-2 border-primary lg:min-h-full lg:border-s-2 lg:border-t-0 rtl:lg:border-s-0 rtl:lg:border-e-2">
-          <Image
-            src="/birthday.png"
-            alt={t("birthdayTitle")}
-            fill
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            className="object-cover"
-          />
+        <div className="relative min-h-[220px] border-t-2 border-primary bg-navy-deep lg:min-h-full lg:border-s-2 lg:border-t-0 rtl:lg:border-s-0 rtl:lg:border-e-2">
+          <BirthdayScene className="absolute inset-0 h-full w-full p-6" />
         </div>
       </div>
     </Container>

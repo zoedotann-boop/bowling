@@ -1,6 +1,6 @@
 "use client"
 
-import Image from "next/image"
+import type { ComponentType, SVGProps } from "react"
 import Link from "next/link"
 import { useTranslations } from "next-intl"
 
@@ -8,13 +8,20 @@ import { cn } from "@/lib/utils"
 import { whatsappUrl } from "@/lib/contact"
 import { useBranch } from "@/components/branch-context"
 import { Container } from "@/components/home/container"
+import {
+  BirthdaysIllustration,
+  CorporateIllustration,
+  GymboreeIllustration,
+  NoRoomIllustration,
+  TeamIllustration,
+} from "@/components/illustrations"
 
-const ICONS: Record<string, string> = {
-  birthdays: "/events/birthdays.png",
-  gymboree: "/events/gymboree.png",
-  "no-room": "/events/no-room.png",
-  team: "/events/team.png",
-  corporate: "/events/corporate.png",
+const ILLUSTRATIONS: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
+  birthdays: BirthdaysIllustration,
+  gymboree: GymboreeIllustration,
+  "no-room": NoRoomIllustration,
+  team: TeamIllustration,
+  corporate: CorporateIllustration,
 }
 
 // Top-strip accent colors — neon light strips alternating purple/cyan.
@@ -63,40 +70,37 @@ export function EventsPage() {
 
       {/* Event type cards — styled exactly like the home "Services" cards */}
       <div className="flex flex-col gap-3.5 lg:grid lg:grid-cols-3 lg:gap-5">
-        {cards.map((c, i) => (
-          <Link
-            key={c.id}
-            href={`/events/${c.id}`}
-            className="hover:glow-primary block overflow-hidden rounded-sm border border-border bg-card transition-all hover:-translate-y-0.5 hover:border-primary"
-          >
-            <div
-              className={cn(
-                "h-2 border-b border-border",
-                STRIPS[i % STRIPS.length]
-              )}
-            />
-            <div className="flex h-full items-center gap-3.5 bg-card p-[18px] lg:p-6">
-              <Image
-                src={ICONS[c.id] ?? ICONS.birthdays}
-                alt={c.title}
-                width={84}
-                height={84}
-                className="size-[74px] shrink-0 object-contain lg:size-[84px]"
+        {cards.map((c, i) => {
+          const Illustration = ILLUSTRATIONS[c.id] ?? BirthdaysIllustration
+          return (
+            <Link
+              key={c.id}
+              href={`/events/${c.id}`}
+              className="hover:glow-primary block overflow-hidden rounded-sm border border-border bg-card transition-all hover:-translate-y-0.5 hover:border-primary"
+            >
+              <div
+                className={cn(
+                  "h-2 border-b border-border",
+                  STRIPS[i % STRIPS.length]
+                )}
               />
-              <div>
-                <div className="mb-1 font-heading text-xl font-black text-navy lg:text-[22px]">
-                  {c.title}
+              <div className="flex h-full items-center gap-3.5 bg-card p-[18px] lg:p-6">
+                <Illustration className="h-[74px] w-auto shrink-0 lg:h-[84px]" />
+                <div>
+                  <div className="mb-1 font-heading text-xl font-black text-navy lg:text-[22px]">
+                    {c.title}
+                  </div>
+                  <p className="mb-1.5 text-sm leading-normal font-semibold text-mud lg:text-[15px]">
+                    {c.desc}
+                  </p>
+                  <span className="cursor-pointer font-heading text-sm font-extrabold text-red lg:text-[15px]">
+                    {t("cardCta")} ←
+                  </span>
                 </div>
-                <p className="mb-1.5 text-sm leading-normal font-semibold text-mud lg:text-[15px]">
-                  {c.desc}
-                </p>
-                <span className="cursor-pointer font-heading text-sm font-extrabold text-red lg:text-[15px]">
-                  {t("cardCta")} ←
-                </span>
               </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          )
+        })}
       </div>
 
       {/* CTA */}
