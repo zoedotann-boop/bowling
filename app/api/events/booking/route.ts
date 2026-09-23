@@ -1,5 +1,11 @@
+import { and, eq } from "drizzle-orm"
+import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 import { Resend } from "resend"
+
+import { db } from "@/lib/db"
+import { eventType, lead, location } from "@/lib/db/schema"
+import { BRANCH_COOKIE } from "@/lib/branches"
 
 // Payload posted by the event BookingForm (components/pages/event-detail-page.tsx).
 interface BookingPayload {
@@ -64,6 +70,44 @@ function renderEmail(payload: BookingPayload) {
     </div>`
 }
 
+// Resolves the active branch/event type (best-effort) and stores the lead. The
+// branch cookie maps to a location slug; the payload `event` maps to an event
+// type slug within it. Anything unresolved is stored as null.
+async function persistLead(payload: BookingPayload) {
+  const cookieStore = await cookies()
+  const branchSlug = cookieStore.get(BRANCH_COOKIE)?.value
+
+  const loc = branchSlug
+    ? await db.query.location.findFirst({
+        where: eq(location.slug, branchSlug),
+        columns: { id: true },
+      })
+    : undefined
+
+  const type =
+    loc && payload.event
+      ? await db.query.eventType.findFirst({
+          where: and(
+            eq(eventType.locationId, loc.id),
+            eq(eventType.slug, payload.event)
+          ),
+          columns: { id: true },
+        })
+      : undefined
+
+  const { firstName, lastName, email, phone, upgrades, ...rest } = payload
+  await db.insert(lead).values({
+    locationId: loc?.id ?? null,
+    eventTypeId: type?.id ?? null,
+    firstName: firstName ?? null,
+    lastName: lastName ?? null,
+    email: email ?? null,
+    phone: phone ?? null,
+    selectedUpgrades: upgrades ?? [],
+    formData: rest,
+  })
+}
+
 export async function POST(request: Request) {
   const apiKey = process.env.RESEND_API_KEY
   const from = process.env.CONTACT_FROM_EMAIL
@@ -93,6 +137,10 @@ export async function POST(request: Request) {
       { status: 400 }
     )
   }
+
+  // Best-effort: persist the submission as a lead so it shows in the admin.
+  // Never let a DB hiccup block the confirmation email.
+  await persistLead(payload).catch(() => {})
 
   // Turn the signature data URL into a PNG attachment.
   const base64 = signature.replace(/^data:image\/png;base64,/, "")
