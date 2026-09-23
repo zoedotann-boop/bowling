@@ -6,14 +6,14 @@ import postgres from "postgres"
 import * as relations from "./relations"
 import * as schema from "./schema"
 
-const connectionString = process.env.DATABASE_URL
-
-if (!connectionString) {
-  throw new Error("DATABASE_URL is not set")
-}
+// Don't throw when DATABASE_URL is unset: `next build` imports this module while
+// collecting page data, so a throw here would break the build (e.g. on a host
+// without the env var configured). postgres-js connects lazily, so a missing
+// URL only surfaces as a connection error when a query actually runs.
+const connectionString = process.env.DATABASE_URL ?? ""
 
 // Reuse a single postgres client across hot-reloads in development to avoid
-// exhausting connections. postgres-js connects lazily on first query.
+// exhausting connections.
 const globalForDb = globalThis as unknown as {
   client?: ReturnType<typeof postgres>
 }
