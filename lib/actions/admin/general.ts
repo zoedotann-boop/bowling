@@ -7,16 +7,19 @@ import { db } from "@/lib/db"
 import { location, siteContent } from "@/lib/db/schema"
 
 import { generalSchema } from "./schemas"
-import { type ActionResult, OK } from "./shared"
+import { type ActionResult, OK, readSlug } from "./shared"
 
 // Saves a location's core settings (contact, hours, SEO) plus its site chrome
 // copy. Access gate → validate → update location row → upsert site content.
 export async function saveGeneral(input: unknown): Promise<ActionResult> {
+  const { location: loc } = await requireLocationAccess(
+    readSlug(input),
+    "settings"
+  )
+
   const parsed = generalSchema.safeParse(input)
   if (!parsed.success) return { ok: false, error: "invalid" }
   const data = parsed.data
-
-  const { location: loc } = await requireLocationAccess(data.slug, "settings")
 
   await db
     .update(location)

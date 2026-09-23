@@ -15,17 +15,20 @@ import {
 } from "@/lib/db/schema"
 
 import { homeSchema } from "./schemas"
-import { type ActionResult, OK, syncCollection } from "./shared"
+import { type ActionResult, OK, readSlug, syncCollection } from "./shared"
 
 // Saves the home page: singleton content rows (upserted) plus five reorderable
 // collections synced via syncCollection. sortOrder is injected from array index.
 export async function saveHome(input: unknown): Promise<ActionResult> {
+  const { location: loc } = await requireLocationAccess(
+    readSlug(input),
+    "content"
+  )
+  const locationId = loc.id
+
   const parsed = homeSchema.safeParse(input)
   if (!parsed.success) return { ok: false, error: "invalid" }
   const data = parsed.data
-
-  const { location: loc } = await requireLocationAccess(data.slug, "content")
-  const locationId = loc.id
 
   const homeValues = {
     heroTitle: data.heroTitle,

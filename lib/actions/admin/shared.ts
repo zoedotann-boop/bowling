@@ -6,6 +6,20 @@ export type ActionResult = { ok: true } | { ok: false; error: string }
 
 export const OK: ActionResult = { ok: true }
 
+// Reads the `slug` off unvalidated action input so the access gate can run
+// first (full zod validation happens after authentication).
+export function readSlug(input: unknown): string {
+  if (
+    typeof input === "object" &&
+    input !== null &&
+    "slug" in input &&
+    typeof (input as { slug: unknown }).slug === "string"
+  ) {
+    return (input as { slug: string }).slug
+  }
+  return ""
+}
+
 export const localizedSchema = z.object({
   he: z.string(),
   en: z.string().optional(),
