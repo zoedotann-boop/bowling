@@ -6,6 +6,7 @@ import { Hero } from "@/components/home/hero"
 import { Pricing } from "@/components/home/pricing"
 import { Reviews } from "@/components/home/reviews"
 import { Services } from "@/components/home/services"
+import { SloganStrip } from "@/components/home/slogan-strip"
 
 // Concrete canvas. Sections are unified but separated by a subtle tonal step.
 export default function Page() {
@@ -15,6 +16,7 @@ export default function Page() {
       <div className="bg-[#141517]">
         <FeatureStrip />
       </div>
+      <SloganStrip />
       <div className="bg-[#191b1d]">
         <Services />
       </div>
