@@ -10,5 +10,6 @@
     "components/**/*.{ts,tsx}",
     "lib/**/*.{ts,tsx}"
   ],
-  "ignoreDependencies": ["tw-animate-css", "tailwindcss", "shadcn"]
+  "ignoreDependencies": ["tw-animate-css", "tailwindcss", "shadcn"],
+  "ignore": ["lib/db/relations.ts"]
 }

@@ -1,20 +1,18 @@
 import { getRequestConfig } from "next-intl/server"
 import { cookies } from "next/headers"
 
-// Two locales: Hebrew (default, RTL) and English (LTR). The active locale is
-// stored in a cookie set by the language toggle in the header.
-export const locales = ["he", "en"] as const
-export type Locale = (typeof locales)[number]
-export const defaultLocale: Locale = "he"
+import { defaultLocale, isLocale, LOCALE_COOKIE } from "@/lib/locales"
 
-export const LOCALE_COOKIE = "NEXT_LOCALE"
+// Two locales: Hebrew (default, RTL) and English (LTR). The active locale is
+// stored in a cookie set by the language toggle in the header. The locale
+// definitions live in lib/locales.ts so schema/client code can share them.
+export { locales, defaultLocale, LOCALE_COOKIE } from "@/lib/locales"
+export type { Locale } from "@/lib/locales"
 
 export default getRequestConfig(async () => {
   const store = await cookies()
   const cookieLocale = store.get(LOCALE_COOKIE)?.value
-  const locale = locales.includes(cookieLocale as Locale)
-    ? (cookieLocale as Locale)
-    : defaultLocale
+  const locale = isLocale(cookieLocale) ? cookieLocale : defaultLocale
 
   return {
     locale,

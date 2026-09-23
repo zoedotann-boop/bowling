@@ -19,9 +19,14 @@ const BranchContext = createContext<BranchContextValue | null>(null)
 
 export function BranchProvider({
   initial,
+  branches,
   children,
 }: {
   initial: BranchId
+  // DB-backed branch data (merged over the hardcoded defaults by the caller).
+  // Optional so the provider still works without a database (falls back to the
+  // static BRANCHES).
+  branches?: Record<BranchId, Branch>
   children: React.ReactNode
 }) {
   const [branchId, setBranchId] = useState<BranchId>(initial)
@@ -31,9 +36,11 @@ export function BranchProvider({
     document.cookie = `${BRANCH_COOKIE}=${branchId};path=/;max-age=${60 * 60 * 24 * 365}`
   }, [branchId])
 
+  const branch = branches?.[branchId] ?? BRANCHES[branchId]
+
   return (
     <BranchContext.Provider
-      value={{ branch: BRANCHES[branchId], branchId, setBranch: setBranchId }}
+      value={{ branch, branchId, setBranch: setBranchId }}
     >
       {children}
     </BranchContext.Provider>
