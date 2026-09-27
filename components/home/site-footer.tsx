@@ -95,10 +95,12 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-6 flex flex-col gap-2.5 border-t border-border pt-[18px] text-center text-[12.5px] font-medium lg:mt-8 lg:flex-row lg:items-center lg:justify-between lg:pt-5 lg:text-[13px]">
-          <span className="text-mud">{t("footer.copyright")}</span>
-          <div className="flex flex-col items-center gap-1.5 lg:flex-row lg:gap-4">
-            <span className="text-mud">
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 border-t border-border pt-[18px] text-center text-[12.5px] font-medium lg:mt-8 lg:justify-between lg:pt-5 lg:text-[13px]">
+          <span className="whitespace-nowrap text-mud">
+            {t("footer.copyright")}
+          </span>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            <span className="whitespace-nowrap text-mud">
               {t("footer.creditPrefix")}{" "}
               <a
                 href="https://zoedotan.com"
@@ -109,16 +111,18 @@ export function SiteFooter() {
                 {t("footer.creditName")}
               </a>
             </span>
-            {LEGAL_PAGE_KINDS.map((kind) => (
-              <Link
-                key={kind}
-                href={`/${kind}`}
-                className="text-navy underline transition-colors hover:text-secondary"
-              >
-                {t(`footer.${kind}`)}
-              </Link>
-            ))}
-            <LangToggle className="mt-1.5 lg:mt-0" />
+            <div className="flex items-center gap-4 whitespace-nowrap">
+              {LEGAL_PAGE_KINDS.map((kind) => (
+                <Link
+                  key={kind}
+                  href={`/${kind}`}
+                  className="text-navy underline transition-colors hover:text-secondary"
+                >
+                  {t(`footer.${kind}`)}
+                </Link>
+              ))}
+              <LangToggle />
+            </div>
           </div>
         </div>
       </Container>
