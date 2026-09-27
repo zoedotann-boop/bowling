@@ -41,7 +41,9 @@ is missing, the route responds with `500 { error: "Email service is not configur
 The admin lives under `/admin` (login at `/admin/login`) and manages per-location
 content: settings, home page, menu, events (multiple event types), plus
 owner-only Locations and Team. It uses **Drizzle ORM + PostgreSQL** and
-**Better Auth** (email + password, signup disabled).
+**Better Auth**, passwordless: sign-in emails a one-time code (via the
+`emailOTP` plugin, so `RESEND_API_KEY`/`CONTACT_FROM_EMAIL` are required to log
+in) and public signup is disabled.
 
 ### Setup
 
@@ -58,12 +60,13 @@ Then:
 ```bash
 bun run db:generate   # generate SQL migrations from lib/db/schema
 bun run db:migrate    # apply them to DATABASE_URL
-bun run db:seed       # create the owner login + the two branches
+bun run db:seed       # create the owner + the two branches
 ```
 
-`db:seed` creates an owner from `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD`
-(defaults `owner@example.com` / `changeme123`). There is no public signup —
-users are provisioned by an owner.
+`db:seed` creates an owner from `SEED_ADMIN_EMAIL` (default
+`owner@example.com`); there are no passwords. Sign in at `/admin/login` by
+entering that address — Better Auth emails a one-time code. There is no public
+signup: users are provisioned by an owner.
 
 ### Architecture
 

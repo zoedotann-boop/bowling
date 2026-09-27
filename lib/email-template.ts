@@ -135,6 +135,14 @@ export function bulletList(items: string[]): string {
   return `<ul dir="rtl" style="margin:0;padding-right:20px;padding-left:0;font-family:${FONT};font-size:14px;line-height:1.6;color:${C.soft};direction:rtl;text-align:right;">${li}</ul>`
 }
 
+// A large, spaced one-time sign-in code on a raised slab with a cyan top edge.
+// Kept LTR since the code is digits.
+export function otpCode(code: string): string {
+  return `<table role="presentation" dir="ltr" width="100%" cellpadding="0" cellspacing="0" style="margin:4px 0 8px;border-collapse:separate;">
+    <tr><td align="center" style="padding:20px;background:${C.rowAlt};border:1px solid ${C.border};border-top:2px solid ${C.cyan};border-radius:2px;font-family:${FONT};font-size:34px;font-weight:900;letter-spacing:0.4em;color:${C.text};text-align:center;">${escapeHtml(code)}</td></tr>
+  </table>`
+}
+
 // A short note paragraph (muted).
 export function noteParagraph(text: string): string {
   return `<p style="margin:8px 0 0;font-family:${FONT};font-size:14px;line-height:1.6;color:${C.muted};text-align:right;">${escapeHtml(text)}</p>`

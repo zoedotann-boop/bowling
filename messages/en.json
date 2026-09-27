@@ -1373,11 +1373,17 @@
   "admin": {
     "signIn": {
       "title": "Admin sign in",
+      "subtitle": "This area is for the team only. We'll email you a one-time code.",
       "email": "Email",
-      "password": "Password",
+      "sendCode": "Send code",
+      "sending": "Sending code…",
+      "codeSent": "We sent a 6-digit code to {email}. Enter it here.",
+      "code": "Verification code",
+      "changeEmail": "Change email",
       "submit": "Sign in",
       "pending": "Signing in…",
-      "error": "Incorrect email or password"
+      "sendError": "We couldn't send the code. Check the address and try again.",
+      "error": "That code is wrong or has expired."
     },
     "nav": {
       "brand": "Admin",

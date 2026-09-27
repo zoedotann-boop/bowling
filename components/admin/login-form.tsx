@@ -9,24 +9,44 @@ import { Button } from "@/components/ui/button"
 import { ADMIN_ROOT } from "@/lib/admin/routes"
 import { authClient } from "@/lib/auth-client"
 
+// Passwordless sign-in: step 1 emails a one-time code to the address, step 2
+// verifies the code. Public sign-up is disabled, so a code is only ever sent to
+// a provisioned admin.
 export function LoginForm() {
   const t = useTranslations("admin.signIn")
   const router = useRouter()
   const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState(false)
+  const [code, setCode] = useState("")
+  const [sent, setSent] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [pending, setPending] = useState(false)
 
-  async function handleSubmit(event: React.FormEvent) {
+  async function requestCode(event: React.FormEvent) {
     event.preventDefault()
     setPending(true)
-    setError(false)
-    const { error: signInError } = await authClient.signIn.email({
+    setError(null)
+    const { error: sendError } = await authClient.emailOtp.sendVerificationOtp({
       email,
-      password,
+      type: "sign-in",
     })
-    if (signInError) {
-      setError(true)
+    setPending(false)
+    if (sendError) {
+      setError(t("sendError"))
+      return
+    }
+    setSent(true)
+  }
+
+  async function verifyCode(event: React.FormEvent) {
+    event.preventDefault()
+    setPending(true)
+    setError(null)
+    const { error: verifyError } = await authClient.signIn.emailOtp({
+      email,
+      otp: code,
+    })
+    if (verifyError) {
+      setError(t("error"))
       setPending(false)
       return
     }
@@ -36,36 +56,62 @@ export function LoginForm() {
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={sent ? verifyCode : requestCode}
       className="w-full max-w-sm space-y-4 rounded-lg border border-border bg-card p-6"
     >
       <h1 className="text-lg font-semibold">{t("title")}</h1>
-      <AdminField label={t("email")} htmlFor="email">
-        <AdminInput
-          id="email"
-          type="email"
-          dir="ltr"
-          autoComplete="email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          required
-        />
-      </AdminField>
-      <AdminField label={t("password")} htmlFor="password">
-        <AdminInput
-          id="password"
-          type="password"
-          dir="ltr"
-          autoComplete="current-password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          required
-        />
-      </AdminField>
-      {error && <p className="text-sm text-destructive">{t("error")}</p>}
+      <p className="text-sm text-muted-foreground">
+        {sent ? t("codeSent", { email }) : t("subtitle")}
+      </p>
+      {sent ? (
+        <AdminField label={t("code")} htmlFor="code">
+          <AdminInput
+            id="code"
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            dir="ltr"
+            autoFocus
+            value={code}
+            onChange={(event) => setCode(event.target.value)}
+            required
+          />
+        </AdminField>
+      ) : (
+        <AdminField label={t("email")} htmlFor="email">
+          <AdminInput
+            id="email"
+            type="email"
+            dir="ltr"
+            autoComplete="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            required
+          />
+        </AdminField>
+      )}
+      {error && <p className="text-sm text-destructive">{error}</p>}
       <Button type="submit" disabled={pending} className="w-full">
-        {pending ? t("pending") : t("submit")}
+        {pending
+          ? sent
+            ? t("pending")
+            : t("sending")
+          : sent
+            ? t("submit")
+            : t("sendCode")}
       </Button>
+      {sent && (
+        <button
+          type="button"
+          onClick={() => {
+            setSent(false)
+            setCode("")
+            setError(null)
+          }}
+          className="block w-full text-center text-sm text-muted-foreground underline"
+        >
+          {t("changeEmail")}
+        </button>
+      )}
     </form>
   )
 }

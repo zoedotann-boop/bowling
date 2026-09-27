@@ -8,8 +8,8 @@ import { pickLocale } from "@/lib/localized"
 import type { Locale } from "@/lib/locales"
 
 // Owner-only overview of admin users, their role, and location memberships.
-// Provisioning new users (email + password) is done via the seed script /
-// Better Auth — there is no public signup.
+// Provisioning new users is done via the seed script / Better Auth — there is
+// no public signup. Sign-in is passwordless (a one-time code is emailed).
 export default async function TeamPage() {
   await requireOwnerAccess()
   const team = await listTeam()
