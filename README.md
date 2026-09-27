@@ -22,21 +22,24 @@ import { Button } from "@/components/ui/button"
 
 ## Environment variables
 
-Create a `.env` file (git-ignored). The event booking form
-(`app/api/events/booking/route.ts`) emails submissions via [Resend](https://resend.com):
+Create a `.env` file (git-ignored). The contact form
+(`app/api/contact/route.ts`) and the event commitment form
+(`app/api/events/booking/route.ts`) email submissions via [Resend](https://resend.com):
 
 | Variable             | Description                                                                 |
 | -------------------- | --------------------------------------------------------------------------- |
 | `RESEND_API_KEY`     | Resend API key (Resend dashboard → API Keys).                               |
 | `CONTACT_FROM_EMAIL` | Sender address on a **domain verified in Resend** (e.g. `events@yourdomain.com`). Unverified domains are rejected. |
-| `EVENTS_TO_EMAIL`    | Inbox that receives event booking submissions (the signature is attached as `signature.png`). |
+| `EVENTS_TO_EMAIL`    | Fallback inbox for inquiries when a location has no **Inquiries inbox** set in the admin (the event form attaches the signature as `signature.png`). |
 
-If any of these are missing, the route responds with `500 { error: "Email service is not configured." }`.
+Each location's **Inquiries inbox** (admin → Settings) takes priority over
+`EVENTS_TO_EMAIL`; if neither is set, or `RESEND_API_KEY`/`CONTACT_FROM_EMAIL`
+is missing, the route responds with `500 { error: "Email service is not configured." }`.
 
 ## Admin
 
 The admin lives under `/admin` (login at `/admin/login`) and manages per-location
-content: settings, home page, menu, events (multiple event types), leads, plus
+content: settings, home page, menu, events (multiple event types), plus
 owner-only Locations and Team. It uses **Drizzle ORM + PostgreSQL** and
 **Better Auth** (email + password, signup disabled).
 

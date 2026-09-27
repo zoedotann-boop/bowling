@@ -4,7 +4,6 @@ import { NextIntlClientProvider } from "next-intl"
 import { getLocale, getTranslations } from "next-intl/server"
 
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 
 const rubik = Rubik({
@@ -31,7 +30,9 @@ export const viewport: Viewport = {
 
 // Minimal root: html/body + global providers only. Public pages add the site
 // chrome in app/(site)/layout.tsx; the admin adds its own shell — so neither
-// bleeds into the other.
+// bleeds into the other. The venue has one canonical look (dark industrial
+// neon), so the `dark` class is hardcoded here — that's all shadcn's `dark:`
+// variant utilities need, with no theme-switching runtime.
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -43,13 +44,15 @@ export default async function RootLayout({
     <html
       lang={locale}
       dir={locale === "he" ? "rtl" : "ltr"}
-      suppressHydrationWarning
-      className={cn("antialiased", rubik.variable, heebo.variable, "font-sans")}
+      className={cn(
+        "dark antialiased",
+        rubik.variable,
+        heebo.variable,
+        "font-sans"
+      )}
     >
       <body>
-        <NextIntlClientProvider>
-          <ThemeProvider>{children}</ThemeProvider>
-        </NextIntlClientProvider>
+        <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>
     </html>
   )

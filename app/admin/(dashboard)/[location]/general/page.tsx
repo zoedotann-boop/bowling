@@ -23,6 +23,7 @@ export default async function GeneralPage({
     phone: data?.phone ?? "",
     whatsapp: data?.whatsapp ?? "",
     email: data?.email ?? "",
+    inquiriesEmail: data?.inquiriesEmail ?? "",
     wazeUrl: data?.wazeUrl ?? "",
     logoUrl: data?.logoUrl ?? "",
     lanes: data?.lanes ?? 0,

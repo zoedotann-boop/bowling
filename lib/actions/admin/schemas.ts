@@ -40,6 +40,7 @@ export const generalSchema = z.object({
   phone: z.string(),
   whatsapp: z.string(),
   email: z.string(),
+  inquiriesEmail: z.string(),
   wazeUrl: z.string(),
   logoUrl: z.string(),
   lanes: z.number().int().nonnegative(),
