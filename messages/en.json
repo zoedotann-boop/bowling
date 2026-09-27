@@ -199,7 +199,6 @@
       "Home",
       "Menu",
       "Birthdays & Events",
-      "Digital gift card",
       "Contact us"
     ],
     "branchTitle": "Ramat Gan Branch",
@@ -225,7 +224,6 @@
     "menu": "Our menu · Bowling",
     "events": "Events & Birthdays · Bowling",
     "contact": "Contact us · Bowling",
-    "giftCard": "Digital gift card · Bowling",
     "accessibility": "Accessibility statement · Bowling",
     "terms": "Terms of use · Bowling",
     "notFound": "Page not found · Bowling"
@@ -236,7 +234,7 @@
       "eyebrow": "The fine print",
       "title": "Terms of use",
       "defaultBody": [
-        "Welcome to the Bowling website. Using the site — including browsing its content, buying a gift card and sending inquiries or event bookings — is subject to the terms below, and browsing the site means you accept them.",
+        "Welcome to the Bowling website. Using the site — including browsing its content and sending inquiries or event bookings — is subject to the terms below, and browsing the site means you accept them.",
         "",
         "## Using the site",
         "- The site provides information about the venue, services, menu and events, and lets you contact us and book.",
@@ -247,10 +245,6 @@
         "- Prices on the site include VAT and may change. The binding price is the one given when your booking is confirmed.",
         "- Submitting a booking or inquiry form is not a confirmed booking; it is confirmed only once our team gets back to you.",
         "- The booking, deposit and cancellation terms of each event are listed on its booking form and are accepted when you submit it.",
-        "",
-        "## Gift cards",
-        "- A gift card can be redeemed at the venue according to the terms printed on it and within its validity period.",
-        "- Cancellations and refunds are handled in accordance with the Israeli Consumer Protection Law, 1981, and its regulations.",
         "",
         "## Safety at the venue",
         "- Please follow staff instructions and the safety rules posted at the venue.",
@@ -1372,36 +1366,6 @@
         ]
       }
     }
-  },
-  "giftCardPage": {
-    "eyebrow": "The perfect gift",
-    "title": "Digital gift card",
-    "subtitle": "Not sure what to buy? A digital bowling gift card is always a winning idea — sent straight to email and suitable for any occasion.",
-    "cardName": "Gift card",
-    "cardTagline": "Bowling · Ramat Gan Branch",
-    "amountLabel": "Choose an amount",
-    "amounts": [
-      "₪ 100",
-      "₪ 150",
-      "₪ 200",
-      "₪ 300"
-    ],
-    "cta": "Buy a gift card",
-    "note": "The card is valid for one year from purchase and can be redeemed on any visit.",
-    "perks": [
-      {
-        "title": "Sent instantly",
-        "desc": "The card arrives by email within minutes of purchase."
-      },
-      {
-        "title": "For everyone",
-        "desc": "Games, food and bar — all in one place."
-      },
-      {
-        "title": "Valid for a year",
-        "desc": "Redeem whenever you like, on any visit."
-      }
-    ]
   },
   "notFoundPage": {
     "title": "Gutter ball!",

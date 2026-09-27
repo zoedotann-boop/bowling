@@ -9,8 +9,9 @@ import { pickLocale } from "@/lib/localized"
 import { useBranch } from "@/components/branch-context"
 import { useSiteContent } from "@/components/site-content-context"
 import { Container } from "./container"
+import { LangToggle } from "./lang-toggle"
 
-const FOOTER_NAV_HREFS = ["/", "/menu", "/events", "/gift-card", "/contact"]
+const FOOTER_NAV_HREFS = ["/", "/menu", "/events", "/contact"]
 
 function FooterColumn({
   title,
@@ -117,6 +118,7 @@ export function SiteFooter() {
                 {t(`footer.${kind}`)}
               </Link>
             ))}
+            <LangToggle className="mt-1.5 lg:mt-0" />
           </div>
         </div>
       </Container>

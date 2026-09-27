@@ -11,7 +11,6 @@ import { cn } from "@/lib/utils"
 import { whatsappUrl } from "@/lib/contact"
 import { useBranch } from "@/components/branch-context"
 import { Container } from "./container"
-import { LangToggle } from "./lang-toggle"
 import { BranchSwitcher } from "./branch-switcher"
 
 const NAV_HREFS = ["/", "/menu", "/events"]
@@ -67,7 +66,6 @@ export function SiteHeader() {
 
           <div className="hidden items-center gap-2.5 lg:flex">
             <BranchSwitcher />
-            <LangToggle />
             <a
               href={whatsappUrl(branch.whatsapp)}
               target="_blank"
@@ -151,9 +149,8 @@ export function SiteHeader() {
             ))}
           </nav>
 
-          <div className="mt-4 flex gap-2.5">
-            <BranchSwitcher className="flex-1 py-[11px]" />
-            <LangToggle className="px-4 py-[11px]" />
+          <div className="mt-4">
+            <BranchSwitcher className="py-3" />
           </div>
 
           <a
