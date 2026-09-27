@@ -57,7 +57,7 @@ export function SiteFooter() {
     branch.addressLine1[locale],
     branch.addressLine2[locale],
     branch.phone,
-    "info@bowling.co.il",
+    branch.email,
   ]
   const hours = t.raw("footer.hours") as string[]
 

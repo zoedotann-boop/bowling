@@ -2,7 +2,6 @@
 
 import {
   Home,
-  Inbox,
   LogOut,
   MapPin,
   Menu as MenuIcon,
@@ -43,7 +42,6 @@ const SECTION_ICONS: Record<string, typeof Home> = {
   home: Home,
   menu: UtensilsCrossed,
   events: PartyPopper,
-  leads: Inbox,
   locations: MapPin,
   team: Users,
 }

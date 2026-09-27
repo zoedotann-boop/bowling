@@ -1,11 +1,6 @@
-import { and, eq } from "drizzle-orm"
-import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
-import { Resend } from "resend"
 
-import { db } from "@/lib/db"
-import { eventType, lead, location } from "@/lib/db/schema"
-import { BRANCH_COOKIE } from "@/lib/branches"
+import { escapeHtml, resolveInquiriesRecipient, sendMail } from "@/lib/email"
 
 // Payload posted by the event BookingForm (components/pages/event-detail-page.tsx).
 interface BookingPayload {
@@ -21,19 +16,6 @@ interface BookingPayload {
   // A "data:image/png;base64,..." data URL of the hand-drawn signature.
   signature?: string
 }
-
-const escapeHtml = (value: string) =>
-  value.replace(
-    /[&<>"']/g,
-    (char) =>
-      ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;",
-      })[char] as string
-  )
 
 function renderEmail(payload: BookingPayload) {
   const row = (label: string, value?: string) =>
@@ -70,56 +52,7 @@ function renderEmail(payload: BookingPayload) {
     </div>`
 }
 
-// Resolves the active branch/event type (best-effort) and stores the lead. The
-// branch cookie maps to a location slug; the payload `event` maps to an event
-// type slug within it. Anything unresolved is stored as null.
-async function persistLead(payload: BookingPayload) {
-  const cookieStore = await cookies()
-  const branchSlug = cookieStore.get(BRANCH_COOKIE)?.value
-
-  const loc = branchSlug
-    ? await db.query.location.findFirst({
-        where: eq(location.slug, branchSlug),
-        columns: { id: true },
-      })
-    : undefined
-
-  const type =
-    loc && payload.event
-      ? await db.query.eventType.findFirst({
-          where: and(
-            eq(eventType.locationId, loc.id),
-            eq(eventType.slug, payload.event)
-          ),
-          columns: { id: true },
-        })
-      : undefined
-
-  const { firstName, lastName, email, phone, upgrades, ...rest } = payload
-  await db.insert(lead).values({
-    locationId: loc?.id ?? null,
-    eventTypeId: type?.id ?? null,
-    firstName: firstName ?? null,
-    lastName: lastName ?? null,
-    email: email ?? null,
-    phone: phone ?? null,
-    selectedUpgrades: upgrades ?? [],
-    formData: rest,
-  })
-}
-
 export async function POST(request: Request) {
-  const apiKey = process.env.RESEND_API_KEY
-  const from = process.env.CONTACT_FROM_EMAIL
-  const to = process.env.EVENTS_TO_EMAIL
-
-  if (!apiKey || !from || !to) {
-    return NextResponse.json(
-      { error: "Email service is not configured." },
-      { status: 500 }
-    )
-  }
-
   let payload: BookingPayload
   try {
     payload = (await request.json()) as BookingPayload
@@ -138,16 +71,18 @@ export async function POST(request: Request) {
     )
   }
 
-  // Best-effort: persist the submission as a lead so it shows in the admin.
-  // Never let a DB hiccup block the confirmation email.
-  await persistLead(payload).catch(() => {})
+  const to = await resolveInquiriesRecipient()
+  if (!to) {
+    return NextResponse.json(
+      { error: "Email service is not configured." },
+      { status: 500 }
+    )
+  }
 
   // Turn the signature data URL into a PNG attachment.
   const base64 = signature.replace(/^data:image\/png;base64,/, "")
-  const resend = new Resend(apiKey)
 
-  const { error } = await resend.emails.send({
-    from,
+  const result = await sendMail({
     to,
     replyTo: email,
     subject: `טופס אירוע חדש · ${payload.event ?? ""} · ${firstName} ${lastName}`,
@@ -157,11 +92,9 @@ export async function POST(request: Request) {
     ],
   })
 
-  if (error) {
-    return NextResponse.json(
-      { error: "Failed to send email." },
-      { status: 502 }
-    )
+  if (!result.ok) {
+    const status = result.reason === "not_configured" ? 500 : 502
+    return NextResponse.json({ error: "Failed to send email." }, { status })
   }
 
   return NextResponse.json({ ok: true })

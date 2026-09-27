@@ -37,6 +37,7 @@ function mergeBranch(base: Branch, row: BranchRow | undefined): Branch {
     addressFull: loc(row.addressFull, base.addressFull),
     laneDesc: loc(row.laneDesc, base.laneDesc),
     phone: row.phone || base.phone,
+    email: row.email || base.email,
     whatsapp: row.whatsapp || base.whatsapp,
     wazeUrl: row.wazeUrl || base.wazeUrl,
     lanes: row.lanes || base.lanes,

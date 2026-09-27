@@ -20,23 +20,52 @@ export function Contact() {
   const { branch } = useBranch()
   const locale = useLocale() as "he" | "en"
   const rawInfo = t.raw("info") as { title: string; value: string }[]
-  // Address (0) and phone (2) come from the active branch.
+  // Address (0), email (1) and phone (2) come from the active branch.
   const info = rawInfo.map((item, i) =>
     i === 0
       ? { ...item, value: branch.addressFull[locale] }
-      : i === 2
-        ? { ...item, value: branch.phone }
-        : item
+      : i === 1
+        ? { ...item, value: branch.email }
+        : i === 2
+          ? { ...item, value: branch.phone }
+          : item
   )
   // Per-card outbound links: Waze, email, phone, and WhatsApp (last card).
   const infoHrefs = [
     branch.wazeUrl,
-    "mailto:info@bowling.co.il",
+    `mailto:${branch.email}`,
     `tel:${branch.phone}`,
     whatsappUrl(branch.whatsapp),
   ]
   const topics = t.raw("topics") as string[]
   const [topic, setTopic] = useState(topics[0])
+  const [name, setName] = useState("")
+  const [phone, setPhone] = useState("")
+  const [message, setMessage] = useState("")
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
+    "idle"
+  )
+
+  async function handleSubmit(event: React.FormEvent) {
+    event.preventDefault()
+    if (status === "sending") return
+    setStatus("sending")
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phone, topic, message }),
+      })
+      if (!res.ok) throw new Error("request failed")
+      setStatus("sent")
+      setName("")
+      setPhone("")
+      setMessage("")
+      setTopic(topics[0])
+    } catch {
+      setStatus("error")
+    }
+  }
 
   return (
     <section className="mt-6 border-t border-navy py-8 lg:mt-14 lg:py-16">
@@ -88,7 +117,7 @@ export function Contact() {
         </div>
 
         <form
-          onSubmit={(e) => e.preventDefault()}
+          onSubmit={handleSubmit}
           className="rounded-sm border border-primary bg-card p-[22px] lg:p-8"
         >
           <div className="mb-4 font-heading text-[21px] font-black text-navy lg:mb-5 lg:text-2xl">
@@ -97,11 +126,17 @@ export function Contact() {
           <div className="mb-3.5 flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:gap-3.5">
             <input
               type="text"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               placeholder={t("namePlaceholder")}
               className={inputClass}
             />
             <input
               type="tel"
+              required
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
               placeholder={t("phonePlaceholder")}
               className={inputClass}
             />
@@ -127,6 +162,8 @@ export function Contact() {
             ))}
           </div>
           <textarea
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
             placeholder={t("messagePlaceholder")}
             className={cn(
               inputClass,
@@ -135,10 +172,27 @@ export function Contact() {
           />
           <button
             type="submit"
-            className="glow-primary w-full rounded-sm border border-primary bg-primary px-5 py-3.5 font-heading text-[17px] font-black text-primary-foreground transition-colors hover:border-secondary hover:bg-secondary hover:text-secondary-foreground lg:py-4 lg:text-lg"
+            disabled={status === "sending"}
+            className="glow-primary w-full rounded-sm border border-primary bg-primary px-5 py-3.5 font-heading text-[17px] font-black text-primary-foreground transition-colors hover:border-secondary hover:bg-secondary hover:text-secondary-foreground disabled:cursor-not-allowed disabled:opacity-60 lg:py-4 lg:text-lg"
           >
-            {t("submit")}
+            {status === "sending" ? t("sending") : t("submit")}
           </button>
+          {status === "sent" && (
+            <p
+              role="status"
+              className="mt-3 text-center text-sm font-bold text-primary"
+            >
+              {t("success")}
+            </p>
+          )}
+          {status === "error" && (
+            <p
+              role="alert"
+              className="mt-3 text-center text-sm font-bold text-rust"
+            >
+              {t("error")}
+            </p>
+          )}
         </form>
       </Container>
     </section>

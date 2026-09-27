@@ -15,6 +15,8 @@ export interface Branch {
   addressLine2: Localized
   addressFull: Localized
   phone: string
+  /** Public contact email shown on the site (footer + contact page). */
+  email: string
   /** Branch WhatsApp lead number (international format, digits only, no "+"). */
   whatsapp: string
   lanes: number
@@ -47,6 +49,7 @@ export const BRANCHES: Record<BranchId, Branch> = {
       en: "Aba Hillel Rd 301 (Ramat Gan Stadium, Gate 2)",
     },
     phone: "03-5700834",
+    email: "info@bowling.co.il",
     whatsapp: "972549854428",
     lanes: 14,
     laneDesc: {
@@ -69,6 +72,7 @@ export const BRANCHES: Record<BranchId, Branch> = {
       en: "HaYehudim Blvd 24 (Azorion Mall)",
     },
     phone: "03-9550021",
+    email: "info@bowling.co.il",
     whatsapp: "972549629579",
     lanes: 16,
     laneDesc: {
