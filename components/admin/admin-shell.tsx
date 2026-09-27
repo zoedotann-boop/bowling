@@ -1,6 +1,7 @@
 "use client"
 
 import {
+  ExternalLink,
   Home,
   Inbox,
   LogOut,
@@ -206,6 +207,18 @@ export function AdminShell({
             {user.name}
           </div>
         )}
+        <Button
+          variant="ghost"
+          size="sm"
+          title={collapsed ? t("viewSite") : undefined}
+          className="w-full justify-start"
+          render={
+            <a href="/" target="_blank" rel="noopener noreferrer">
+              <ExternalLink />
+              {!collapsed && t("viewSite")}
+            </a>
+          }
+        />
         <Button
           type="button"
           variant="ghost"
