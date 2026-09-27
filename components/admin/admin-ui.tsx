@@ -1,6 +1,7 @@
 "use client"
 
 import { Switch } from "@base-ui/react/switch"
+import { ChevronDown } from "lucide-react"
 import type * as React from "react"
 
 import { cn } from "@/lib/utils"
@@ -97,15 +98,26 @@ export function AdminTextarea({
   )
 }
 
+// The native arrow ignores padding and hugs the edge, so it's replaced with an
+// icon inset like the text on the start side.
 export function AdminSelect({
   className,
   children,
   ...props
 }: React.ComponentProps<"select">) {
   return (
-    <select className={cn(controlClass, "pe-8", className)} {...props}>
-      {children}
-    </select>
+    <div className="relative">
+      <select
+        className={cn(controlClass, "appearance-none pe-9", className)}
+        {...props}
+      >
+        {children}
+      </select>
+      <ChevronDown
+        aria-hidden
+        className="pointer-events-none absolute end-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+      />
+    </div>
   )
 }
 

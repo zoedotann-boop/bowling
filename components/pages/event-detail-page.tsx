@@ -11,7 +11,7 @@ import {
 } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowLeft, Check, Eraser, X } from "lucide-react"
+import { ArrowLeft, Check, ChevronDown, Eraser, X } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import SignatureCanvas from "react-signature-canvas"
 
@@ -601,19 +601,27 @@ function DynamicField({
           required={field.isRequired}
         />
       ) : field.type === "select" ? (
-        <select
-          className={inputClass}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          required={field.isRequired}
-        >
-          <option value="">{placeholder || "—"}</option>
-          {(field.options ?? []).map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {pickLocale(opt.label, locale)}
-            </option>
-          ))}
-        </select>
+        // Custom chevron: the native arrow ignores padding and hugs the edge.
+        <div className="relative">
+          <select
+            className={cn(inputClass, "w-full appearance-none pe-11")}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            required={field.isRequired}
+          >
+            <option value="">{placeholder || "—"}</option>
+            {(field.options ?? []).map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {pickLocale(opt.label, locale)}
+              </option>
+            ))}
+          </select>
+          <ChevronDown
+            aria-hidden
+            className="pointer-events-none absolute end-4 top-1/2 size-4 -translate-y-1/2 text-navy"
+            strokeWidth={3}
+          />
+        </div>
       ) : (
         <input
           type={INPUT_TYPES[field.type]}
