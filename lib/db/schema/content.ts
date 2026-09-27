@@ -1,12 +1,16 @@
 import {
   boolean,
   integer,
+  pgEnum,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core"
+
+import { LEGAL_PAGE_KINDS } from "@/lib/legal"
 
 import { localized, timestamps } from "./_shared"
 import { location } from "./locations"
@@ -127,3 +131,18 @@ export const contactSubject = pgTable("contact_subject", {
   sortOrder: integer("sort_order").notNull().default(0),
   ...timestamps,
 })
+
+export const legalPageKind = pgEnum("legal_page_kind", LEGAL_PAGE_KINDS)
+
+export const legalPage = pgTable(
+  "legal_page",
+  {
+    locationId: uuid("location_id")
+      .notNull()
+      .references(() => location.id, { onDelete: "cascade" }),
+    kind: legalPageKind("kind").notNull(),
+    body: localized().notNull(),
+    ...timestamps,
+  },
+  (table) => [primaryKey({ columns: [table.locationId, table.kind] })]
+)

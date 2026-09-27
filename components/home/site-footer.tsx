@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useLocale, useTranslations } from "next-intl"
 
+import { LEGAL_PAGE_KINDS } from "@/lib/legal"
 import { pickLocale } from "@/lib/localized"
 import { useBranch } from "@/components/branch-context"
 import { useSiteContent } from "@/components/site-content-context"
@@ -108,12 +109,15 @@ export function SiteFooter() {
                 {t("footer.creditName")}
               </a>
             </span>
-            <Link
-              href="/accessibility"
-              className="text-navy underline transition-colors hover:text-secondary"
-            >
-              {t("footer.accessibility")}
-            </Link>
+            {LEGAL_PAGE_KINDS.map((kind) => (
+              <Link
+                key={kind}
+                href={`/${kind}`}
+                className="text-navy underline transition-colors hover:text-secondary"
+              >
+                {t(`footer.${kind}`)}
+              </Link>
+            ))}
             <LangToggle className="mt-1.5 lg:mt-0" />
           </div>
         </div>

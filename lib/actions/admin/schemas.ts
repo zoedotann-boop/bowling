@@ -64,6 +64,13 @@ export const generalSchema = z.object({
 })
 export type GeneralDraft = z.infer<typeof generalSchema>
 
+export const legalSchema = z.object({
+  slug: z.string(),
+  terms: localizedSchema,
+  accessibility: localizedSchema,
+})
+export type LegalDraft = z.infer<typeof legalSchema>
+
 const homeFeatureSchema = z.object({
   id: rowIdSchema,
   icon: z.string(),

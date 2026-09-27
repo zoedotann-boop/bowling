@@ -11,6 +11,7 @@ export function LocalizedField({
   value,
   onChange,
   multiline,
+  rows,
   placeholder,
 }: {
   label: string
@@ -18,6 +19,7 @@ export function LocalizedField({
   value: Localized
   onChange: (value: Localized) => void
   multiline?: boolean
+  rows?: number
   placeholder?: string
 }) {
   const { locale } = useSectionContext()
@@ -33,6 +35,7 @@ export function LocalizedField({
       {multiline ? (
         <AdminTextarea
           dir={dir}
+          rows={rows}
           value={current}
           placeholder={placeholder}
           onChange={(event) => handleChange(event.target.value)}

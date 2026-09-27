@@ -7,10 +7,10 @@ import { getLegalPages } from "@/lib/db/queries/site"
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("pageMeta")
-  return { title: t("accessibility") }
+  return { title: t("terms") }
 }
 
 export default async function Page() {
-  const pages = byBranch(await getLegalPages("accessibility").catch(() => []))
-  return <LegalPage kind="accessibility" pages={pages} />
+  const pages = byBranch(await getLegalPages("terms").catch(() => []))
+  return <LegalPage kind="terms" pages={pages} />
 }

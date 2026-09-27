@@ -53,8 +53,8 @@ is missing, the route responds with `500 { error: "Email service is not configur
 ## Admin
 
 The admin lives under `/admin` (login at `/admin/login`) and manages per-location
-content: settings, home page, menu, events (multiple event types), plus
-owner-only Locations and Team. It uses **Drizzle ORM + PostgreSQL** and
+content: settings, home page, menu, events (multiple event types), the
+**Terms & accessibility** pages, plus owner-only Locations and Team. It uses **Drizzle ORM + PostgreSQL** and
 **Better Auth**, passwordless: sign-in emails a one-time code (via the
 `emailOTP` plugin, so `RESEND_API_KEY`/`CONTACT_FROM_EMAIL` are required to log
 in) and public signup is disabled.
@@ -77,6 +77,8 @@ bun run db:generate   # generate SQL migrations from lib/db/schema
 bun run db:migrate    # apply them (DATABASE_URL_UNPOOLED if set, else DATABASE_URL)
 bun run db:seed       # create the owner + the two branches
 ```
+
+Unit tests run with `bun test` (`bun run test`).
 
 `db:seed` creates an owner from `SEED_ADMIN_EMAIL` (default
 `owner@example.com`); there are no passwords. Sign in at `/admin/login` by
@@ -122,6 +124,15 @@ The public pages render the admin's content live from the database:
   the database is unavailable or a field is unset. Copy that the admin does not
   manage (UI chrome, pricing/gymboree sections, event badges / price cards /
   rules / policy) stays in `messages/*`.
+- **Legal pages** `/terms` (תקנון האתר) and `/accessibility` (הצהרת נגישות)
+  render the branch's `legal_page` row (admin → **Terms & accessibility**,
+  managers and owners). The body is plain text: `## ` starts a section card,
+  `- ` a checklist item, a blank line a new paragraph (`parseLegalBody` in
+  `lib/legal.ts`). Each language that is empty falls back to the default copy
+  in `messages/*` (`legalPages.<kind>.defaultBody`); the editor opens
+  prefilled with it, and saving text identical to the default (or clearing it)
+  stores nothing, so the default keeps tracking `messages/*` and "Last updated"
+  reflects real edits only.
 - **Event booking** the booking form renders the event type's dynamic
   `eventFormField`s when defined, otherwise the built-in fields; `POST
   /api/events/booking` stores answers in `lead.formData` and the signature in

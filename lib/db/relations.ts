@@ -8,6 +8,7 @@ import {
   homeContent,
   homeFeature,
   homeService,
+  legalPage,
   pricingContent,
   siteContent,
 } from "./schema/content"
@@ -34,6 +35,7 @@ export const locationRelations = relations(location, ({ one, many }) => ({
   contactSubjects: many(contactSubject),
   menuCategories: many(menuCategory),
   eventTypes: many(eventType),
+  legalPages: many(legalPage),
   members: many(locationMember),
 }))
 
@@ -89,6 +91,13 @@ export const galleryImageRelations = relations(galleryImage, ({ one }) => ({
 export const contactSubjectRelations = relations(contactSubject, ({ one }) => ({
   location: one(location, {
     fields: [contactSubject.locationId],
+    references: [location.id],
+  }),
+}))
+
+export const legalPageRelations = relations(legalPage, ({ one }) => ({
+  location: one(location, {
+    fields: [legalPage.locationId],
     references: [location.id],
   }),
 }))

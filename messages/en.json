@@ -216,6 +216,7 @@
     ],
     "copyright": "© Bowling · Ramat Gan Branch · 2026",
     "accessibility": "Accessibility statement",
+    "terms": "Terms of use",
     "creditPrefix": "Designed & developed by",
     "creditName": "Zoe Dotan"
   },
@@ -224,37 +225,76 @@
     "events": "Events & Birthdays · Bowling",
     "contact": "Contact us · Bowling",
     "accessibility": "Accessibility statement · Bowling",
+    "terms": "Terms of use · Bowling",
     "notFound": "Page not found · Bowling"
   },
-  "accessibilityPage": {
-    "eyebrow": "Committed to everyone",
-    "title": "Accessibility statement",
-    "updated": "Last updated: July 2026",
-    "intro": "Bowling — Ramat Gan branch places great importance on providing equal, accessible service to all our customers, and works to make both the website and the physical venue accessible in accordance with the Equal Rights for Persons with Disabilities Law and its regulations, and the Israeli standard SI 5568 based on the WCAG 2.1 Level AA guidelines.",
-    "sections": [
-      {
-        "title": "Website accessibility",
-        "items": [
-          "The site can be navigated using the keyboard alone.",
-          "Hierarchical heading structure and alt text on images for screen readers.",
-          "High color contrast and text that can be enlarged up to 200% without loss of content.",
-          "Compatibility with common browsers and mobile devices."
-        ]
-      },
-      {
-        "title": "Physical venue accessibility",
-        "items": [
-          "Accessible parking near the venue entrance.",
-          "Accessible entrance and passages for wheelchairs.",
-          "Accessible restrooms.",
-          "Our staff is happy to assist with any request or special need."
-        ]
-      }
-    ],
-    "contactTitle": "Accessibility contact",
-    "contactText": "Ran into a difficulty browsing or visiting? We'd love to hear and fix it. You can reach our accessibility coordinator:",
-    "contactPhone": "Phone: 03-5700834",
-    "contactEmail": "Email: info@bowling.co.il"
+  "legalPages": {
+    "updated": "Last updated: {date}",
+    "terms": {
+      "eyebrow": "The fine print",
+      "title": "Terms of use",
+      "defaultBody": [
+        "Welcome to the Bowling website. Using the site — including browsing its content and sending inquiries or event bookings — is subject to the terms below, and browsing the site means you accept them.",
+        "",
+        "## Using the site",
+        "- The site provides information about the venue, services, menu and events, and lets you contact us and book.",
+        "- Do not use the site for any unlawful purpose or in a way that could disrupt its normal operation.",
+        "- We may update the site's content and these terms from time to time without prior notice.",
+        "",
+        "## Prices, bookings and events",
+        "- Prices on the site include VAT and may change. The binding price is the one given when your booking is confirmed.",
+        "- Submitting a booking or inquiry form is not a confirmed booking; it is confirmed only once our team gets back to you.",
+        "- The booking, deposit and cancellation terms of each event are listed on its booking form and are accepted when you submit it.",
+        "",
+        "## Safety at the venue",
+        "- Please follow staff instructions and the safety rules posted at the venue.",
+        "- Playing on the lanes requires dedicated bowling shoes.",
+        "- Minors stay at the venue under the responsibility of their parents or an accompanying adult.",
+        "",
+        "## Privacy",
+        "- Details you submit through the site's forms (such as name, phone and email) are used only to handle your inquiry or booking.",
+        "- We do not sell or share your details with third parties, except service providers needed to run the site (such as email delivery) or as required by law.",
+        "",
+        "## Intellectual property",
+        "- All content on the site, including text, images, logos and design, belongs to the venue or its rights holders and may not be copied or used without prior written permission.",
+        "",
+        "## Liability",
+        "- Information on the site is provided as is. We try to keep it accurate and up to date, but errors or changes may occur, for example in opening hours or the menu.",
+        "- The venue is not liable for damage caused by using the site or relying on its information, except as required by law.",
+        "",
+        "## Governing law",
+        "- These terms are governed solely by Israeli law, and the competent courts of the Tel Aviv district have exclusive jurisdiction.",
+        "",
+        "## Contact",
+        "Questions about these terms? Reach us at:",
+        "Phone: 03-5700834",
+        "Email: info@bowling.co.il"
+      ]
+    },
+    "accessibility": {
+      "eyebrow": "Committed to everyone",
+      "title": "Accessibility statement",
+      "defaultBody": [
+        "Bowling — Ramat Gan branch places great importance on providing equal, accessible service to all our customers, and works to make both the website and the physical venue accessible in accordance with the Equal Rights for Persons with Disabilities Law and its regulations, and the Israeli standard SI 5568 based on the WCAG 2.1 Level AA guidelines.",
+        "",
+        "## Website accessibility",
+        "- The site can be navigated using the keyboard alone.",
+        "- Hierarchical heading structure and alt text on images for screen readers.",
+        "- High color contrast and text that can be enlarged up to 200% without loss of content.",
+        "- Compatibility with common browsers and mobile devices.",
+        "",
+        "## Physical venue accessibility",
+        "- Accessible parking near the venue entrance.",
+        "- Accessible entrance and passages for wheelchairs.",
+        "- Accessible restrooms.",
+        "- Our staff is happy to assist with any request or special need.",
+        "",
+        "## Accessibility contact",
+        "Ran into a difficulty browsing or visiting? We'd love to hear and fix it. You can reach our accessibility coordinator:",
+        "Phone: 03-5700834",
+        "Email: info@bowling.co.il"
+      ]
+    }
   },
   "menuPage": {
     "eyebrow": "Bar · Restaurant · Sweets",
@@ -1355,6 +1395,7 @@
       "reviews": "Google reviews",
       "menu": "Menu",
       "events": "Events",
+      "legal": "Terms & accessibility",
       "locations": "Locations",
       "team": "Team",
       "location": "Location",
@@ -1652,6 +1693,16 @@
       "optionLabelTip": "The option text the customer sees in the dropdown.",
       "fieldRequired": "Required field",
       "fieldRequiredTip": "When on, the customer must fill this field before the form can be submitted."
+    },
+    "legal": {
+      "title": "Terms & accessibility",
+      "description": "The text of this branch's terms of use and accessibility statement pages.",
+      "terms": "Terms of use",
+      "accessibility": "Accessibility statement",
+      "body": "Page content",
+      "bodyTip": "Section heading: a line starting with ## · List item: a line starting with - · A blank line separates paragraphs.",
+      "defaultHint": "Any language left empty (or unchanged) shows the default text. To go back to the default, clear all the text and save.",
+      "viewPage": "View page"
     },
     "locations": {
       "title": "Locations",
