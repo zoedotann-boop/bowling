@@ -308,71 +308,12 @@ export function HomeForm({
         />
       </AdminCard>
 
-      <AdminCard title={t("reviews")}>
+      <AdminCard title={t("reviews")} description={t("reviewsDescription")}>
         <LocalizedField
           label={t("reviewsTitle")}
           tooltip={t("reviewsTitleTip")}
           value={draft.reviewsTitle}
           onChange={(value) => set("reviewsTitle", value)}
-        />
-        <RowTable
-          items={draft.reviews}
-          onChange={(items) => set("reviews", items)}
-          createItem={() => ({
-            author: emptyLocalized(),
-            quote: emptyLocalized(),
-            rating: 5,
-          })}
-          addLabel={t("addReview")}
-          columns={[
-            {
-              header: t("reviewAuthor"),
-              cell: (item) => item.author.he || "—",
-            },
-            {
-              header: t("reviewRating"),
-              cell: (item) => "★".repeat(item.rating),
-              className: "w-24",
-            },
-          ]}
-          editTitle={() => t("reviewEditTitle")}
-          renderRow={(item, index, update) => (
-            <div className="space-y-4">
-              <LocalizedField
-                label={t("reviewAuthor")}
-                tooltip={t("reviewAuthorTip")}
-                value={item.author}
-                onChange={(author) => update({ ...item, author })}
-              />
-              <LocalizedField
-                label={t("reviewQuote")}
-                tooltip={t("reviewQuoteTip")}
-                multiline
-                value={item.quote}
-                onChange={(quote) => update({ ...item, quote })}
-              />
-              <AdminField
-                label={t("reviewRating")}
-                tooltip={t("reviewRatingTip")}
-              >
-                <AdminInput
-                  type="number"
-                  min={1}
-                  max={5}
-                  value={item.rating}
-                  onChange={(event) =>
-                    update({
-                      ...item,
-                      rating: Math.min(
-                        5,
-                        Math.max(1, Number(event.target.value) || 1)
-                      ),
-                    })
-                  }
-                />
-              </AdminField>
-            </div>
-          )}
         />
       </AdminCard>
 

@@ -15,6 +15,10 @@ export async function getSiteLocations() {
   return db.query.location.findMany({ orderBy: [asc(location.sortOrder)] })
 }
 
+// Published Google reviews shown on the home page, capped so the grid stays tidy
+// (three rows on desktop).
+const MAX_HOME_REVIEWS = 9
+
 // Home page + shared chrome content (hero, features, services, gallery, reviews,
 // contact, footer note, pricing) for every location, keyed by slug on the client.
 export async function getHomeContent() {
@@ -26,10 +30,10 @@ export async function getHomeContent() {
       site: true,
       features: { orderBy: (f) => [asc(f.sortOrder)] },
       services: { orderBy: (f) => [asc(f.sortOrder)] },
-      reviews: { orderBy: (f) => [asc(f.sortOrder)] },
       googleReviews: {
         where: (r, { eq }) => eq(r.isPublished, true),
         orderBy: (r) => [asc(r.sortOrder), desc(r.publishedAt)],
+        limit: MAX_HOME_REVIEWS,
       },
       galleryImages: { orderBy: (f) => [asc(f.sortOrder)] },
       contactSubjects: { orderBy: (f) => [asc(f.sortOrder)] },

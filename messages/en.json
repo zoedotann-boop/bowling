@@ -151,20 +151,7 @@
   "reviews": {
     "title": "What our guests say about us?",
     "ratingValue": "{rating} stars",
-    "items": [
-      {
-        "name": "Tamar Yosef",
-        "quote": "\"The kids asked to come back the same week. Highly recommended!\""
-      },
-      {
-        "name": "Itai Bar",
-        "quote": "\"A perfect birthday for my son. The production was smooth and the staff professional.\""
-      },
-      {
-        "name": "Ronit Cohen",
-        "quote": "\"A great place, we celebrated my son's birthday there! Professional staff, wonderful atmosphere.\""
-      }
-    ]
+    "moreOnGoogle": "All reviews on Google"
   },
   "contact": {
     "eyebrow": "Leave us a message — we'll get back to you on working days",
@@ -1565,16 +1552,9 @@
       "imageAlt": "Alt text",
       "imageAltTip": "Describes the photo for screen readers and when the image fails to load. Keep it short and factual.",
       "reviews": "Reviews",
+      "reviewsDescription": "The reviews themselves are real Google reviews — choose which appear in the Google reviews section. The section is hidden until at least one is shown.",
       "reviewsTitle": "Reviews title",
-      "reviewsTitleTip": "Heading above the customer reviews section.",
-      "addReview": "Add review",
-      "reviewAuthor": "Author",
-      "reviewAuthorTip": "Name of the reviewer shown with the quote (e.g. Dana L.).",
-      "reviewRating": "Rating",
-      "reviewRatingTip": "Star rating from 1 to 5, shown as stars next to the review.",
-      "reviewEditTitle": "Review",
-      "reviewQuote": "Quote",
-      "reviewQuoteTip": "The review text shown to visitors. A sentence or two works best.",
+      "reviewsTitleTip": "Heading above the home page reviews section.",
       "contact": "Contact",
       "contactTitle": "Title",
       "contactTitleTip": "Heading of the contact section at the bottom of the home page.",
@@ -1589,7 +1569,7 @@
       "title": "Google reviews",
       "description": "Automatically pull Google Maps reviews and choose which appear on the site.",
       "googleTitle": "Google connection",
-      "googleDescription": "Enter the branch's Google Maps Place ID, save, then sync to pull the latest reviews.",
+      "googleDescription": "Enter the branch's Google Maps Place ID, save, then sync to pull its most relevant reviews.",
       "placeId": "Place ID",
       "placeIdTip": "The business's Google Maps place identifier. Find it with Google's Place ID Finder tool.",
       "autoSync": "Daily automatic sync",

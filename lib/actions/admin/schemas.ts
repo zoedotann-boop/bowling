@@ -88,12 +88,6 @@ const homeServiceSchema = z.object({
   description: localizedSchema,
   imageUrl: z.string(),
 })
-const homeReviewSchema = z.object({
-  id: rowIdSchema,
-  author: localizedSchema,
-  quote: localizedSchema,
-  rating: z.number().int().min(1).max(5),
-})
 const galleryImageSchema = z.object({
   id: rowIdSchema,
   imageUrl: z.string(),
@@ -141,7 +135,6 @@ export const homeSchema = z.object({
   pricing: pricingSchema,
   features: z.array(homeFeatureSchema),
   services: z.array(homeServiceSchema),
-  reviews: z.array(homeReviewSchema),
   gallery: z.array(galleryImageSchema),
   contactSubjects: z.array(contactSubjectSchema),
 })

@@ -10,7 +10,6 @@ import {
   galleryImage,
   homeContent,
   homeFeature,
-  homeReview,
   homeService,
   pricingContent,
   siteContent,
@@ -19,7 +18,7 @@ import {
 import { homeSchema } from "./schemas"
 import { type ActionResult, OK, readSlug, syncCollection } from "./shared"
 
-// Saves the home page: singleton content rows (upserted) plus five reorderable
+// Saves the home page: singleton content rows (upserted) plus four reorderable
 // collections synced via syncCollection. sortOrder is injected from array index.
 export async function saveHome(input: unknown): Promise<ActionResult> {
   const { location: loc } = await requireLocationAccess(
@@ -125,38 +124,6 @@ export async function saveHome(input: unknown): Promise<ActionResult> {
     },
     remove: async (id) => {
       await db.delete(homeService).where(eq(homeService.id, id))
-    },
-  })
-
-  const reviews = await db.query.homeReview.findMany({
-    where: eq(homeReview.locationId, locationId),
-    columns: { id: true },
-  })
-  await syncCollection({
-    existingIds: reviews.map((row) => row.id),
-    incoming: data.reviews.map((row, sortOrder) => ({ ...row, sortOrder })),
-    insert: async (row) => {
-      await db.insert(homeReview).values({
-        locationId,
-        author: row.author,
-        quote: row.quote,
-        rating: row.rating,
-        sortOrder: row.sortOrder,
-      })
-    },
-    update: async (id, row) => {
-      await db
-        .update(homeReview)
-        .set({
-          author: row.author,
-          quote: row.quote,
-          rating: row.rating,
-          sortOrder: row.sortOrder,
-        })
-        .where(eq(homeReview.id, id))
-    },
-    remove: async (id) => {
-      await db.delete(homeReview).where(eq(homeReview.id, id))
     },
   })
 

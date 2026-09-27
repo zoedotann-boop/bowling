@@ -85,9 +85,6 @@ async function backfill() {
       .delete(schema.homeService)
       .where(eq(schema.homeService.locationId, locationId))
     await db
-      .delete(schema.homeReview)
-      .where(eq(schema.homeReview.locationId, locationId))
-    await db
       .delete(schema.contactSubject)
       .where(eq(schema.contactSubject.locationId, locationId))
     await db
@@ -175,17 +172,6 @@ async function backfill() {
         locationId,
         title: L(["services", "items", i, "title"]),
         description: L(["services", "items", i, "desc"]),
-        sortOrder: i,
-      }))
-    )
-
-    // --- reviews ---
-    await db.insert(schema.homeReview).values(
-      arr(["reviews", "items"]).map((_, i) => ({
-        locationId,
-        author: L(["reviews", "items", i, "name"]),
-        quote: L(["reviews", "items", i, "quote"]),
-        rating: 5,
         sortOrder: i,
       }))
     )
