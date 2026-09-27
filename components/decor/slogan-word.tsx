@@ -3,10 +3,6 @@ import Image from "next/image"
 import type { Slogan } from "@/lib/slogans"
 import { cn } from "@/lib/utils"
 
-// Renders one venue slogan as its authentic painted letters, baseline-aligned
-// like the wall. `dir="ltr"` keeps the letter order correct inside the RTL site.
-// Size it with a font-size on `className` (letters are `1em` tall); word gaps and
-// overlap scale with it. Decorative brand art — aria-hidden.
 export function SloganWord({
   slogan,
   className,

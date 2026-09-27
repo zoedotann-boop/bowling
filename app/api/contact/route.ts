@@ -8,7 +8,6 @@ import {
 import { BRAND_HE, detailTable, emailShell } from "@/lib/email-template"
 import type { Branch } from "@/lib/branches"
 
-// Payload posted by the public contact form (components/home/contact.tsx).
 interface ContactPayload {
   name?: string
   phone?: string
@@ -17,7 +16,6 @@ interface ContactPayload {
   message?: string
 }
 
-// The submitted details as label/value rows, skipping empty optional fields.
 function detailRows(payload: ContactPayload): [string, string][] {
   return (
     [
@@ -32,7 +30,6 @@ function detailRows(payload: ContactPayload): [string, string][] {
     .map(([label, value]) => [label, value!.trim()])
 }
 
-// The email the venue team receives for each new inquiry.
 function renderManagerEmail(payload: ContactPayload, branch: Branch): string {
   return emailShell({
     branch,
@@ -43,7 +40,6 @@ function renderManagerEmail(payload: ContactPayload, branch: Branch): string {
   })
 }
 
-// The confirmation the customer receives after submitting the form.
 function renderCustomerEmail(payload: ContactPayload, branch: Branch): string {
   const summary = detailRows(payload).filter(([label]) =>
     ["נושא", "הודעה"].includes(label)
@@ -87,7 +83,6 @@ export async function POST(request: Request) {
     )
   }
 
-  // The venue notification is the critical send; its failure fails the request.
   const result = await sendMail({
     to,
     replyTo: email?.trim() || undefined,
@@ -100,7 +95,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Failed to send email." }, { status })
   }
 
-  // Best-effort confirmation to the customer; never blocks the response.
   if (email?.trim()) {
     await sendMail({
       to: email.trim(),

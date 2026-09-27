@@ -1,7 +1,3 @@
-// The venue's painted slogan letters, grouped into words for the scrolling
-// ticker (components/home/slogan-ticker.tsx). Each glyph is an SVG in
-// public/slogans/<slug>/; add a word by dropping its letters there + an entry.
-
 interface SloganGlyph {
   src: string
   width: number

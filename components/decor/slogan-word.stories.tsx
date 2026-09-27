@@ -11,7 +11,6 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-// Each venue slogan assembled from its authentic painted letters.
 export const Words: Story = {
   render: () => (
     <div className="flex flex-col items-start gap-6 bg-cream-warm p-8">

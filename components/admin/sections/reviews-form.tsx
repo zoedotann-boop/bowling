@@ -39,7 +39,6 @@ export function ReviewsForm({
   const [draft, setDraft] = useState(initial)
   const [syncing, startSync] = useTransition()
 
-  // Sync reads the *persisted* place id from the DB, so require a saved one.
   const hasPlaceId = Boolean(initial.googlePlaceId.trim())
 
   function setReviews(reviews: GoogleReviewDraft[]) {

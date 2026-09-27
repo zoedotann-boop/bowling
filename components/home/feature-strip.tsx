@@ -14,8 +14,6 @@ import {
 import { LedCorners } from "@/components/decor/led-corners"
 import { Container } from "./container"
 
-// Custom bowling line icons — matched to the features order in messages
-// (new lanes, suits-everyone, bar & restaurant, open until 3am).
 const ICONS = [LanesIcon, EveryoneIcon, BarIcon, OpenLateIcon]
 
 export function FeatureStrip() {
@@ -23,7 +21,6 @@ export function FeatureStrip() {
   const { branch } = useBranch()
   const locale = useLocale() as "he" | "en"
   const dbFeatures = useSiteContent()?.features ?? []
-  // Admin-managed feature cards win; fall back to the next-intl copy.
   const features = dbFeatures.length
     ? dbFeatures.map((f) => ({
         title: pickLocale(f.label, locale),

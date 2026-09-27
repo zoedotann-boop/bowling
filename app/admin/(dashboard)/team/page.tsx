@@ -6,8 +6,6 @@ import { listAllLocations, listTeam } from "@/lib/db/queries/admin"
 import { pickLocale } from "@/lib/localized"
 import type { Locale } from "@/lib/locales"
 
-// Owner-only: add, edit and remove admin users and their location access.
-// There is no public signup — this page is how people get into the admin.
 export default async function TeamPage() {
   const owner = await requireOwnerAccess()
   const [team, locations, locale] = await Promise.all([

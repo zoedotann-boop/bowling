@@ -8,9 +8,6 @@ import { cn } from "@/lib/utils"
 
 import { InfoTooltip } from "./info-tooltip"
 
-// Dense, tool-like primitives shared by every admin page. Sizing lives here so
-// tweaking one control moves every page together (never override per page).
-
 export function AdminCard({
   title,
   description,
@@ -98,8 +95,6 @@ export function AdminTextarea({
   )
 }
 
-// The native arrow ignores padding and hugs the edge, so it's replaced with an
-// icon inset like the text on the start side.
 export function AdminSelect({
   className,
   children,
@@ -145,7 +140,6 @@ function AdminToggle({
   )
 }
 
-// A labeled boolean row (toggle + label + optional description).
 export function AdminFlag({
   label,
   description,

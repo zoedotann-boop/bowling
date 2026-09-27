@@ -26,7 +26,6 @@ export function SiteHeader() {
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href)
 
-  // Lock body scroll while the off-canvas menu is open.
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : ""
     return () => {
@@ -38,7 +37,6 @@ export function SiteHeader() {
     <header>
       <div className="border-b border-navy bg-cream-warm">
         <Container className="flex items-center justify-between gap-4 py-3 lg:py-3.5">
-          {/* Logo */}
           <Link href="/" className="flex items-center">
             <Image
               src={branch.logo.src}
@@ -50,7 +48,6 @@ export function SiteHeader() {
             />
           </Link>
 
-          {/* Desktop nav */}
           <nav className="hidden items-center gap-1 rounded-sm border border-navy bg-cream-warm p-[5px] lg:flex">
             {navItems.map((label, i) => (
               <Link
@@ -68,7 +65,6 @@ export function SiteHeader() {
             ))}
           </nav>
 
-          {/* Desktop actions */}
           <div className="hidden items-center gap-2.5 lg:flex">
             <BranchSwitcher />
             <LangToggle />
@@ -82,7 +78,6 @@ export function SiteHeader() {
             </a>
           </div>
 
-          {/* Mobile hamburger */}
           <button
             type="button"
             onClick={() => setOpen(true)}
@@ -97,7 +92,6 @@ export function SiteHeader() {
         </Container>
       </div>
 
-      {/* Mobile off-canvas menu (slides in from the side) */}
       <div
         className={cn(
           "fixed inset-0 z-[70] lg:hidden",
@@ -105,7 +99,6 @@ export function SiteHeader() {
         )}
         aria-hidden={!open}
       >
-        {/* Overlay */}
         <button
           type="button"
           tabIndex={open ? 0 : -1}
@@ -116,7 +109,6 @@ export function SiteHeader() {
             open ? "opacity-100" : "opacity-0"
           )}
         />
-        {/* Panel */}
         <div
           className={cn(
             "absolute inset-y-0 end-0 flex w-[82%] max-w-xs flex-col overflow-y-auto border-s border-navy bg-[#1a1a1a] px-5 pt-5 pb-8 transition-transform duration-300 ease-out",

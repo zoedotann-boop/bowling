@@ -47,15 +47,12 @@ export function Pricing() {
   const locale = useLocale() as "he" | "en"
   const pricing = useSiteContent()?.pricing
 
-  // Prefer the admin-edited value for the active locale; fall back to the
-  // translated default when the field is empty or the branch has no row yet.
   const val = (value: Localized | null | undefined, key: string) =>
     pickLocale(value, locale) || t(key)
 
   return (
     <Container className="pt-7 pb-1 lg:pt-14">
       <div className="lg:grid lg:grid-cols-2 lg:items-center lg:gap-10">
-        {/* Intro */}
         <div>
           <span className="font-mono text-[13px] font-bold text-secondary lg:text-sm">
             <LedDot color="secondary" className="me-2 align-middle" />
@@ -74,7 +71,6 @@ export function Pricing() {
           />
         </div>
 
-        {/* Price table */}
         <div className="hover:glow-cyan overflow-hidden rounded-sm border border-navy bg-paper transition-shadow lg:rounded-sm">
           <div className={cn(priceRow, "border-b border-border bg-card")}>
             <div className={cn(priceLabel, "text-navy")}>
@@ -108,14 +104,12 @@ export function Pricing() {
         </div>
       </div>
 
-      {/* Soldier discount (mobile placement) */}
       <SoldierDiscount
         title={val(pricing?.soldierTitle, "soldierTitle")}
         note={val(pricing?.soldierNote, "soldierNote")}
         className="mt-4 lg:hidden"
       />
 
-      {/* Birthday CTA */}
       <div className="neon-frame-magenta mt-5 overflow-hidden rounded-sm bg-card lg:mt-12 lg:grid lg:grid-cols-2 lg:items-stretch">
         <div className="p-[26px] lg:p-11">
           <span className="font-mono text-[13px] font-bold text-secondary lg:text-sm">

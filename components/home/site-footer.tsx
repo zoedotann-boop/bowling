@@ -64,7 +64,6 @@ export function SiteFooter() {
     email,
   ]
   const hours = t.raw("footer.hours") as string[]
-  // Admin-managed footer note; fall back to the next-intl tagline.
   const tagline =
     pickLocale(content?.site?.footerNote, locale) || t("footer.tagline")
 
@@ -72,7 +71,6 @@ export function SiteFooter() {
     <footer className="border-t border-navy bg-cream-warm pt-7 pb-5 lg:pt-13 lg:pb-7">
       <Container>
         <div className="grid grid-cols-2 gap-6 lg:grid-cols-[1.6fr_1fr_1fr_1fr] lg:gap-8">
-          {/* Brand */}
           <div className="col-span-2 lg:col-span-1">
             <Image
               src={branch.logo.src}

@@ -3,8 +3,6 @@
 import { Tooltip } from "@base-ui/react/tooltip"
 import { Info } from "lucide-react"
 
-// A small "?" info affordance that reveals helper text on hover/focus. Used by
-// AdminField and RowTable column headers via the `tooltip`/`fooTip` convention.
 export function InfoTooltip({ text }: { text: string }) {
   return (
     <Tooltip.Root>

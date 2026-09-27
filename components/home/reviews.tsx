@@ -9,9 +9,6 @@ import { Container } from "./container"
 
 const AVATAR_BG = ["bg-pink", "bg-cyan", "bg-marigold"]
 
-// Real Google Maps reviews pulled by the pooler (lib/google/*) and published by
-// an admin. The section is hidden until the branch has at least one, so the
-// site never shows placeholder testimonials.
 export function Reviews() {
   const t = useTranslations("reviews")
   const locale = useLocale() as "he" | "en"

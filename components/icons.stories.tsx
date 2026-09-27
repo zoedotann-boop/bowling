@@ -28,9 +28,6 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-// Vector illustrations used as the service and feature icons; colour is baked in
-// from the palette tokens (outline → foreground, cyan → primary, red →
-// secondary).
 export const Gallery: Story = {
   render: () => (
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">

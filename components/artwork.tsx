@@ -1,13 +1,7 @@
 import type { SVGProps } from "react"
 
-// Vector-traced neon illustrations (provided as design assets). The three
-// source colours are remapped to design tokens so the art follows the
-// palette: outline → --foreground, cyan → --primary, red → --secondary.
-// These are shared building blocks; the icon/illustration modules alias them
-// to the names the pages import.
 type ArtProps = SVGProps<SVGSVGElement>
 
-// A party popper spraying confetti over a cake.
 export function PartyPopperArt(props: ArtProps) {
   return (
     <svg
@@ -67,7 +61,6 @@ export function PartyPopperArt(props: ArtProps) {
   )
 }
 
-// A briefcase with a document — corporate.
 export function BriefcaseArt(props: ArtProps) {
   return (
     <svg
@@ -109,7 +102,6 @@ export function BriefcaseArt(props: ArtProps) {
   )
 }
 
-// A cocktail glass beside a burger — bar & food.
 export function DrinksArt(props: ArtProps) {
   return (
     <svg
@@ -153,7 +145,6 @@ export function DrinksArt(props: ArtProps) {
   )
 }
 
-// A a group of people celebrating with arms raised.
 export function GroupArt(props: ArtProps) {
   return (
     <svg
@@ -200,7 +191,6 @@ export function GroupArt(props: ArtProps) {
   )
 }
 
-// A two people sharing a high five — team.
 export function HighFiveArt(props: ArtProps) {
   return (
     <svg
@@ -243,7 +233,6 @@ export function HighFiveArt(props: ArtProps) {
   )
 }
 
-// A a clock near midnight — late-night hours.
 export function ClockArt(props: ArtProps) {
   return (
     <svg
@@ -292,7 +281,6 @@ export function ClockArt(props: ArtProps) {
   )
 }
 
-// A an open menu booklet with a burger and drink.
 export function MenuArt(props: ArtProps) {
   return (
     <svg
@@ -348,7 +336,6 @@ export function MenuArt(props: ArtProps) {
   )
 }
 
-// A a birthday cake with a party popper and confetti.
 export function CakeCardArt(props: ArtProps) {
   return (
     <svg
@@ -413,7 +400,6 @@ export function CakeCardArt(props: ArtProps) {
   )
 }
 
-// A three bowling pins seen from the front.
 export function PinsArt(props: ArtProps) {
   return (
     <svg
@@ -466,7 +452,6 @@ export function PinsArt(props: ArtProps) {
   )
 }
 
-// A a bouncy-castle playhouse — kids' playground.
 export function PlaygroundArt(props: ArtProps) {
   return (
     <svg

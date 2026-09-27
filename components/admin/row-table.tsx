@@ -50,10 +50,6 @@ interface RowTableProps<T> {
   ) => React.ReactNode
 }
 
-// The workhorse for every list. Controlled (items/onChange are a slice of the
-// draft), reorderable with dnd-kit, and dual-mode: a top-level table edits rows
-// in a modal, a nested one (inside a dialog) expands rows inline — never a
-// dialog inside a dialog.
 export function RowTable<T>({
   items,
   onChange,
@@ -67,8 +63,6 @@ export function RowTable<T>({
   const t = useTranslations("admin.common")
   const inDialog = useInDialog()
 
-  // Draft rows may have no id yet, so dnd-kit sorts by array index. Reordering
-  // rewrites the array (via onChange), which keeps indices contiguous.
   const itemIds = items.map((_, index) => index)
 
   const [editing, setEditing] = useState<number | null>(null)
@@ -102,7 +96,7 @@ export function RowTable<T>({
     onChange(arrayMove(items, from, to))
   }
 
-  const columnCount = columns.length + 2 // drag handle + actions
+  const columnCount = columns.length + 2
 
   return (
     <div className="space-y-2">
@@ -194,7 +188,6 @@ export function RowTable<T>({
         {addLabel}
       </Button>
 
-      {/* Top-level: edit in a modal, confirm deletion in a modal. */}
       {!inDialog && editing !== null && items[editing] !== undefined && (
         <AdminModal
           open
@@ -321,7 +314,6 @@ function SortableRow<T>({
         </td>
       </tr>
 
-      {/* Nested (inside a dialog): the editor expands inline as an extra row. */}
       {expanded && (
         <tr className="border-b border-border/60 bg-muted/40">
           <td colSpan={columnCount} className="p-3">

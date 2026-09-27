@@ -5,22 +5,12 @@ import { asc, desc } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { location } from "@/lib/db/schema"
 
-// Public read layer. Mirrors the editor reads in queries/admin.ts, but returns
-// every visible location at once (the branch switcher swaps content client-side
-// without a reload, so the client needs all branches) and filters out anything
-// hidden (invisible categories, menu items, event types, form fields).
-
-// Returns all locations ordered for the branch switcher.
 export async function getSiteLocations() {
   return db.query.location.findMany({ orderBy: [asc(location.sortOrder)] })
 }
 
-// Published Google reviews shown on the home page, capped so the grid stays tidy
-// (three rows on desktop).
 const MAX_HOME_REVIEWS = 9
 
-// Home page + shared chrome content (hero, features, services, gallery, reviews,
-// contact, footer note, pricing) for every location, keyed by slug on the client.
 export async function getHomeContent() {
   return db.query.location.findMany({
     orderBy: [asc(location.sortOrder)],
@@ -41,7 +31,6 @@ export async function getHomeContent() {
   })
 }
 
-// Menu (heading/intro + visible categories and their visible items) per location.
 export async function getMenus() {
   return db.query.location.findMany({
     orderBy: [asc(location.sortOrder)],
@@ -61,8 +50,6 @@ export async function getMenus() {
   })
 }
 
-// Visible event types (with content, steps, package lines, upgrades and the
-// dynamic booking-form fields) per location.
 export async function getEvents() {
   return db.query.location.findMany({
     orderBy: [asc(location.sortOrder)],
@@ -85,7 +72,6 @@ export async function getEvents() {
   })
 }
 
-// Row shapes exposed to the client providers/components.
 export type SiteHomeContent = Awaited<ReturnType<typeof getHomeContent>>[number]
 export type SiteMenu = Awaited<ReturnType<typeof getMenus>>[number]
 export type SiteEventLocation = Awaited<ReturnType<typeof getEvents>>[number]

@@ -5,10 +5,6 @@ import { asc, desc } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { location } from "@/lib/db/schema"
 
-// Editor-side reads: full views with every child ordered by sortOrder. The
-// public site uses its own (capped/filtered) reads. All take a locationId, not
-// a slug — pages resolve the slug via requireLocationAccess first.
-
 export async function getGeneralEditor(locationId: string) {
   return db.query.location.findFirst({
     where: (fields, { eq }) => eq(fields.id, locationId),

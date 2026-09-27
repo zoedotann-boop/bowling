@@ -63,8 +63,6 @@ export interface AdminShellUser {
 const COLLAPSE_KEY = "admin:sidebar-collapsed"
 const COLLAPSE_EVENT = "admin:sidebar-collapse"
 
-// Persisted (localStorage) sidebar collapse preference, read via an external
-// store so there's no setState-in-effect on mount.
 function useCollapsed(): [boolean, () => void] {
   const collapsed = useSyncExternalStore(
     (onChange) => {
@@ -236,10 +234,8 @@ export function AdminShell({
   return (
     <ToastProvider>
       <div className="flex h-svh overflow-hidden bg-cream">
-        {/* Desktop sidebar */}
         <div className="hidden md:block">{sidebar}</div>
 
-        {/* Mobile drawer */}
         {mobileOpen && (
           <div className="fixed inset-0 z-40 md:hidden">
             <button

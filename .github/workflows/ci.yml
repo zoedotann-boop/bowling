@@ -43,6 +43,17 @@ jobs:
       - run: bun install --frozen-lockfile
       - run: bun run knip
 
+  commentless:
+    name: Commentless
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - run: bun run comments:check
+
   react-doctor:
     name: React Doctor
     runs-on: ubuntu-latest

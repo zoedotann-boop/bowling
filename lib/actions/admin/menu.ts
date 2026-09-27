@@ -9,10 +9,6 @@ import { menuCategory, menuContent, menuItem } from "@/lib/db/schema"
 import { menuSchema } from "./schemas"
 import { type ActionResult, OK, readSlug, syncCollection } from "./shared"
 
-// Saves the two-level menu (category → item). Two-level parents can't use a
-// top-level syncCollection: insert new categories first with `.returning({ id })`
-// to map array index → id, delete removed categories by hand, then sync each
-// category's items.
 export async function saveMenu(input: unknown): Promise<ActionResult> {
   const { location: loc } = await requireLocationAccess(
     readSlug(input),

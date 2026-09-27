@@ -5,9 +5,6 @@ import type { Localized } from "@/lib/db/schema/_shared"
 import { AdminField, AdminInput, AdminTextarea } from "./admin-ui"
 import { useSectionContext } from "./section-form"
 
-// Edits a single locale slice of a Localized value — the active locale comes
-// from the SectionForm language toggle. Hebrew is the source language; leaving
-// a translation blank falls back to Hebrew on the public site.
 export function LocalizedField({
   label,
   tooltip,

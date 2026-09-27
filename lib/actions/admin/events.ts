@@ -16,10 +16,6 @@ import {
 import { eventsSchema, type EventTypeDraft } from "./schemas"
 import { type ActionResult, OK, readSlug, syncCollection } from "./shared"
 
-// Saves all event types for a location. Each event type owns a content
-// singleton plus four reorderable collections. Same two-level pattern as the
-// menu, with manual uniqueness checks (zod can't express uniqueness across an
-// array) for event-type slugs and per-type form-field keys.
 export async function saveEvents(input: unknown): Promise<ActionResult> {
   const { location: loc } = await requireLocationAccess(
     readSlug(input),

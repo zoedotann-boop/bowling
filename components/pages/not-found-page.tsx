@@ -5,8 +5,6 @@ import { Container } from "@/components/home/container"
 import { LaneLines } from "@/components/decor/lane-lines"
 import { PinsSettle } from "@/components/decor/pins-settle"
 
-// A flat bowling ball standing in for the "0" of 404 — three finger holes
-// punched through in the page background color.
 function BowlingBall() {
   return (
     <svg viewBox="0 0 100 100" className="size-[0.74em]" aria-hidden="true">
@@ -18,8 +16,6 @@ function BowlingBall() {
   )
 }
 
-// Themed public 404 body (used by app/not-found.tsx and app/(site)/not-found.tsx):
-// the rack is still standing because the ball went in the gutter.
 export function NotFoundPage() {
   const t = useTranslations("notFoundPage")
 

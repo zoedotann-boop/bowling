@@ -28,11 +28,6 @@ export const viewport: Viewport = {
   themeColor: "#1a1a1a",
 }
 
-// Minimal root: html/body + global providers only. Public pages add the site
-// chrome in app/(site)/layout.tsx; the admin adds its own shell — so neither
-// bleeds into the other. The venue has one canonical look (dark industrial
-// neon), so the `dark` class is hardcoded here — that's all shadcn's `dark:`
-// variant utilities need, with no theme-switching runtime.
 export default async function RootLayout({
   children,
 }: Readonly<{

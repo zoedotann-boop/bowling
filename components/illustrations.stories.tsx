@@ -25,7 +25,6 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-// Event illustrations used on the event cards and detail heroes.
 export const Gallery: Story = {
   render: () => (
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
@@ -42,7 +41,6 @@ export const Gallery: Story = {
   ),
 }
 
-// The birthday scene as it fills the pricing CTA panel.
 export const Birthday: Story = {
   render: () => (
     <div className="relative h-64 w-full max-w-md overflow-hidden rounded-sm border border-primary bg-navy-deep">

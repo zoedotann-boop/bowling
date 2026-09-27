@@ -7,10 +7,6 @@ import { db } from "@/lib/db"
 import { account, session, user, verification } from "@/lib/db/schema"
 import { sendLoginOtp } from "@/lib/auth-email"
 
-// Passwordless admin auth: sign-in is a one-time code emailed via the emailOTP
-// plugin, with public sign-up disabled so a code is only ever sent to an admin
-// that an owner has already provisioned. The `role` column is exposed as a
-// read-only additional field so it rides along on the session user.
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg",
@@ -32,7 +28,6 @@ export const auth = betterAuth({
         await sendLoginOtp(email, otp)
       },
     }),
-    // Must be the last plugin so it can set cookies from Server Actions.
     nextCookies(),
   ],
 })

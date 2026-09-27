@@ -3,10 +3,6 @@ import { Fragment } from "react"
 import { SloganWord } from "@/components/decor/slogan-word"
 import { SLOGANS } from "@/lib/slogans"
 
-// A static, single-line banner of the venue's painted slogans, separated by a
-// small dot. The font-size scales with the viewport (clamped) so all five fit on
-// one row and fill the width — big on desktop, smaller on phones. Purely
-// decorative brand art (no motion).
 export function SloganStrip() {
   return (
     <section

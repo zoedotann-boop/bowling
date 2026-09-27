@@ -28,7 +28,6 @@ function review(
   }
 }
 
-// Only the fields Reviews reads; the rest of the home content is irrelevant here.
 function withContent(
   content: Pick<SiteHomeContent, "googlePlaceId" | "googleReviews">
 ) {
@@ -74,5 +73,4 @@ export const Default: Story = {
   ],
 }
 
-// No published Google reviews → the section renders nothing.
 export const Empty: Story = {}

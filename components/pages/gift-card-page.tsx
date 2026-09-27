@@ -27,7 +27,6 @@ export function GiftCardPage() {
       </div>
 
       <div className="grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
-        {/* Card visual */}
         <div className="glow-primary relative overflow-hidden rounded-sm border-2 border-primary bg-card p-7 lg:p-9">
           <div
             className="pointer-events-none absolute -top-16 -left-16 size-48 rounded-full bg-secondary/20"
@@ -47,7 +46,6 @@ export function GiftCardPage() {
           </div>
         </div>
 
-        {/* Controls */}
         <div>
           <div className="font-heading text-sm font-extrabold text-navy">
             {t("amountLabel")}
@@ -75,7 +73,6 @@ export function GiftCardPage() {
         </div>
       </div>
 
-      {/* Perks */}
       <div className="mt-10 grid gap-4 sm:grid-cols-3 lg:mt-14">
         {perks.map((p) => (
           <div

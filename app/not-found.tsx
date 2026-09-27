@@ -9,9 +9,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t("notFound") }
 }
 
-// Unmatched URLs anywhere in the app. It sits above the (site) layout, so it
-// adds the site chrome itself to keep the header/footer navigation. `notFound()`
-// calls are handled closer by app/(site)/ and app/admin/(dashboard)/not-found.
 export default function NotFound() {
   return (
     <SiteChrome>

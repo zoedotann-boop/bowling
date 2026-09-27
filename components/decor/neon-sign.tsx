@@ -1,8 +1,5 @@
 import { cn } from "@/lib/utils"
 
-// The venue's LED sign, rendered FLAT (no glow/shadow): an off-white "BOWLING"
-// wordmark inside a thin cyan LED-panel border. Latin, so it's font-agnostic
-// alongside the site's Hebrew content. Optional subtle LED flicker.
 export function NeonSign({
   text = "BOWLING",
   className,

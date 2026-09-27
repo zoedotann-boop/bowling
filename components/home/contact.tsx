@@ -25,7 +25,6 @@ export function Contact() {
   const site = content?.site
   const email = content?.email?.trim() || "info@bowling.co.il"
   const rawInfo = t.raw("info") as { title: string; value: string }[]
-  // Address (0), email (1) and phone (2) come from the active branch / DB.
   const info = rawInfo.map((item, i) =>
     i === 0
       ? { ...item, value: branch.addressFull[locale] }
@@ -35,14 +34,12 @@ export function Contact() {
           ? { ...item, value: branch.phone }
           : item
   )
-  // Per-card outbound links: Waze, email, phone, and WhatsApp (last card).
   const infoHrefs = [
     branch.wazeUrl,
     `mailto:${email}`,
     `tel:${branch.phone}`,
     whatsappUrl(branch.whatsapp),
   ]
-  // Admin-managed contact subjects win; fall back to the next-intl copy.
   const dbTopics = content?.contactSubjects ?? []
   const topics = dbTopics.length
     ? dbTopics.map((s) => pickLocale(s.label, locale))

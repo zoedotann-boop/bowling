@@ -8,10 +8,6 @@ import { BRANCHES, type BranchId } from "@/lib/branches"
 import heMessages from "@/messages/he.json"
 import enMessages from "@/messages/en.json"
 
-// Backfills the DB from the site's hardcoded content: branch details from
-// lib/branches.ts and copy from messages/*.json. Idempotent per location
-// (clears and re-inserts that location's content). Run with `bun run db:backfill`.
-
 const he = heMessages as Record<string, unknown>
 const en = enMessages as Record<string, unknown>
 
@@ -19,7 +15,6 @@ const en = enMessages as Record<string, unknown>
 const path = (tree: any, keys: (string | number)[]): unknown =>
   keys.reduce((node, key) => (node == null ? node : node[key]), tree)
 
-// Builds a Localized value from the same key-path in both message trees.
 function L(keys: (string | number)[]): Localized {
   const hev = path(he, keys)
   const env = path(en, keys)
@@ -29,7 +24,6 @@ function L(keys: (string | number)[]): Localized {
   }
 }
 
-// Parses the first integer out of a price string ("100 ₪", "₪ 12", "17 / 25 ₪").
 function money(value: unknown): number | null {
   if (typeof value !== "string") return null
   const match = value.match(/\d+/)
@@ -50,7 +44,6 @@ async function backfill() {
   for (const branchId of Object.keys(BRANCHES) as BranchId[]) {
     const branch = BRANCHES[branchId]
 
-    // --- location details (upsert by slug) ---
     const locationValues = {
       slug: branch.id,
       name: branch.name,
@@ -77,7 +70,6 @@ async function backfill() {
       .where(eq(schema.location.slug, branch.id))
     const locationId = loc.id
 
-    // --- clear this location's content (idempotent re-run) ---
     await db
       .delete(schema.homeFeature)
       .where(eq(schema.homeFeature.locationId, locationId))
@@ -94,7 +86,6 @@ async function backfill() {
       .delete(schema.eventType)
       .where(eq(schema.eventType.locationId, locationId))
 
-    // --- home content ---
     const homeValues = {
       heroTitle: {
         he: `${path(he, ["hero", "titleBefore"]) ?? ""} ${path(he, ["hero", "titleHighlight"]) ?? ""} ${path(he, ["hero", "titleAfter"]) ?? ""}`.trim(),
@@ -128,7 +119,6 @@ async function backfill() {
         set: siteValues,
       })
 
-    // --- pricing ---
     const pricingValues = {
       eyebrow: L(["pricing", "eyebrow"]),
       title: L(["pricing", "title"]),
@@ -155,7 +145,6 @@ async function backfill() {
         set: pricingValues,
       })
 
-    // --- features ---
     await db.insert(schema.homeFeature).values(
       arr(["features"]).map((_, i) => ({
         locationId,
@@ -166,7 +155,6 @@ async function backfill() {
       }))
     )
 
-    // --- services ---
     await db.insert(schema.homeService).values(
       arr(["services", "items"]).map((_, i) => ({
         locationId,
@@ -176,7 +164,6 @@ async function backfill() {
       }))
     )
 
-    // --- contact subjects ---
     await db.insert(schema.contactSubject).values(
       arr(["contact", "topics"]).map((_, i) => ({
         locationId,
@@ -185,7 +172,6 @@ async function backfill() {
       }))
     )
 
-    // --- menu ---
     const menuValues = {
       heading: L(["menuPage", "title"]),
       intro: L(["menuPage", "subtitle"]),
@@ -221,7 +207,6 @@ async function backfill() {
       }
     }
 
-    // --- event types (per branch) ---
     const cards = arr(["eventsPage", "cards"]) as { id: string }[]
     for (let e = 0; e < branch.events.length; e++) {
       const slug = branch.events[e]

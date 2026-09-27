@@ -4,9 +4,6 @@ import { ImageIcon } from "lucide-react"
 
 import { AdminField, AdminInput } from "./admin-ui"
 
-// A URL-based image field with a small preview. Blank URLs are normalized to
-// null by the save action before writing. (No blob upload wired yet — a URL is
-// the source of truth.)
 export function ImageField({
   label,
   tooltip,

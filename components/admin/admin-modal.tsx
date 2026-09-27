@@ -6,9 +6,6 @@ import { createContext, useContext, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
-// True when the current subtree is rendered inside a native <dialog>. RowTable
-// reads this to avoid opening a dialog inside a dialog (it expands inline
-// instead). See the "never a dialog inside a dialog" rule.
 const InDialogContext = createContext(false)
 
 export function useInDialog(): boolean {
@@ -36,8 +33,6 @@ function useDialogElement(open: boolean, onClose: () => void) {
   return ref
 }
 
-// Dialogs render inside a section's <form>, so a stray Enter would submit/publish
-// the whole draft. Swallow Enter on inputs (textareas keep it for newlines).
 function swallowEnter(event: React.KeyboardEvent) {
   const target = event.target as HTMLElement
   if (event.key === "Enter" && target.tagName === "INPUT") {
@@ -87,8 +82,6 @@ export function AdminModal({
             <X />
           </Button>
         </header>
-        {/* No save button — the editor mutates the draft in place; the section
-            header publishes. */}
         <div className="max-h-[70vh] overflow-y-auto p-4">{children}</div>
       </InDialogContext.Provider>
     </dialog>

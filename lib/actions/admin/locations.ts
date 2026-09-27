@@ -9,8 +9,6 @@ import { location } from "@/lib/db/schema"
 import { locationsSchema } from "./schemas"
 import { type ActionResult, OK } from "./shared"
 
-// Owner-only: create/rename/reorder/remove locations. The per-location General
-// page fills in the rest of a location's details.
 export async function saveLocations(input: unknown): Promise<ActionResult> {
   await requireOwnerAccess()
 
@@ -48,7 +46,6 @@ export async function saveLocations(input: unknown): Promise<ActionResult> {
         name: row.name,
         isVisible: row.isVisible,
         sortOrder,
-        // Required localized columns — the General page fills these in.
         addressLine1: { he: "" },
         addressFull: { he: "" },
       })

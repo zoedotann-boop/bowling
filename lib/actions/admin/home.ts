@@ -18,8 +18,6 @@ import {
 import { homeSchema } from "./schemas"
 import { type ActionResult, OK, readSlug, syncCollection } from "./shared"
 
-// Saves the home page: singleton content rows (upserted) plus four reorderable
-// collections synced via syncCollection. sortOrder is injected from array index.
 export async function saveHome(input: unknown): Promise<ActionResult> {
   const { location: loc } = await requireLocationAccess(
     readSlug(input),
@@ -185,7 +183,6 @@ export async function saveHome(input: unknown): Promise<ActionResult> {
     },
   })
 
-  // The public home page reads this content, so refresh its cache immediately.
   revalidatePath("/")
 
   return OK
