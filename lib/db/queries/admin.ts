@@ -1,6 +1,6 @@
 import "server-only"
 
-import { asc } from "drizzle-orm"
+import { asc, desc } from "drizzle-orm"
 
 import { db } from "@/lib/db"
 import { location } from "@/lib/db/schema"
@@ -28,6 +28,18 @@ export async function getHomeEditor(locationId: string) {
       reviews: { orderBy: (f) => [asc(f.sortOrder)] },
       galleryImages: { orderBy: (f) => [asc(f.sortOrder)] },
       contactSubjects: { orderBy: (f) => [asc(f.sortOrder)] },
+    },
+  })
+}
+
+export async function getReviewsEditor(locationId: string) {
+  return db.query.location.findFirst({
+    where: (fields, { eq }) => eq(fields.id, locationId),
+    columns: { googlePlaceId: true, googleReviewsAutoSync: true },
+    with: {
+      googleReviews: {
+        orderBy: (f) => [asc(f.sortOrder), desc(f.publishedAt)],
+      },
     },
   })
 }

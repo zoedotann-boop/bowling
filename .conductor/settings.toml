@@ -8,7 +8,7 @@ setup    = "bun install"   # on workspace create: install dependencies
 run_mode = "concurrent"
 
 [scripts.run.dev]
-command = "bun run dev --port $CONDUCTOR_PORT"
+command = "bun run dev"
 default = true
 icon    = "play"
 

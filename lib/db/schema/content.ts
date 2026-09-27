@@ -1,4 +1,12 @@
-import { integer, pgTable, text, uuid } from "drizzle-orm/pg-core"
+import {
+  boolean,
+  integer,
+  pgTable,
+  text,
+  timestamp,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core"
 
 import { localized, timestamps } from "./_shared"
 import { location } from "./locations"
@@ -95,6 +103,35 @@ export const homeReview = pgTable("home_review", {
   sortOrder: integer("sort_order").notNull().default(0),
   ...timestamps,
 })
+
+// Google reviews pulled from Google Maps by the pooler (lib/google/*). Unlike
+// homeReview these are single-language (the reviewer's own words) and are keyed
+// by Google's stable review id so re-syncs update in place instead of
+// duplicating. Only isPublished rows surface on the public site; the admin's
+// publish choice is preserved across syncs.
+export const googleReview = pgTable(
+  "google_review",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    locationId: uuid("location_id")
+      .notNull()
+      .references(() => location.id, { onDelete: "cascade" }),
+    externalId: text("external_id").notNull(),
+    authorName: text("author_name").notNull().default(""),
+    rating: integer("rating").notNull().default(5),
+    text: text("text").notNull().default(""),
+    publishedAt: timestamp("published_at").notNull().defaultNow(),
+    isPublished: boolean("is_published").notNull().default(true),
+    sortOrder: integer("sort_order").notNull().default(0),
+    ...timestamps,
+  },
+  (table) => [
+    uniqueIndex("google_review_location_external_idx").on(
+      table.locationId,
+      table.externalId
+    ),
+  ]
+)
 
 // Gallery images for the home page.
 export const galleryImage = pgTable("gallery_image", {
