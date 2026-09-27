@@ -12,6 +12,13 @@ export async function getGeneralEditor(locationId: string) {
   })
 }
 
+export async function getLegalEditor(locationId: string) {
+  return db.query.legalPage.findMany({
+    where: (fields, { eq }) => eq(fields.locationId, locationId),
+    columns: { kind: true, body: true },
+  })
+}
+
 export async function getHomeEditor(locationId: string) {
   return db.query.location.findFirst({
     where: (fields, { eq }) => eq(fields.id, locationId),

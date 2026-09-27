@@ -9,6 +9,7 @@ import {
   PanelRightClose,
   PanelRightOpen,
   PartyPopper,
+  Scale,
   Settings,
   Star,
   UtensilsCrossed,
@@ -45,6 +46,7 @@ const SECTION_ICONS: Record<string, typeof Home> = {
   reviews: Star,
   menu: UtensilsCrossed,
   events: PartyPopper,
+  legal: Scale,
   locations: MapPin,
   team: Users,
 }

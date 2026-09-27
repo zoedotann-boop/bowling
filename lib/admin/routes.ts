@@ -18,6 +18,7 @@ export const ADMIN_SECTIONS: AdminSection[] = [
   { key: "reviews", capability: "content" },
   { key: "menu", capability: "content" },
   { key: "events", capability: "content" },
+  { key: "legal", capability: "settings" },
 ]
 
 export const OWNER_SECTIONS = [

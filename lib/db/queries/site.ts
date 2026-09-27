@@ -1,9 +1,10 @@
 import "server-only"
 
-import { asc, desc } from "drizzle-orm"
+import { asc, desc, eq } from "drizzle-orm"
 
 import { db } from "@/lib/db"
-import { location } from "@/lib/db/schema"
+import { legalPage, location } from "@/lib/db/schema"
+import type { LegalPageKind } from "@/lib/legal"
 
 export async function getSiteLocations() {
   return db.query.location.findMany({ orderBy: [asc(location.sortOrder)] })
@@ -72,7 +73,20 @@ export async function getEvents() {
   })
 }
 
+export async function getLegalPages(kind: LegalPageKind) {
+  return db
+    .select({
+      slug: location.slug,
+      body: legalPage.body,
+      updatedAt: legalPage.updatedAt,
+    })
+    .from(legalPage)
+    .innerJoin(location, eq(legalPage.locationId, location.id))
+    .where(eq(legalPage.kind, kind))
+}
+
 export type SiteHomeContent = Awaited<ReturnType<typeof getHomeContent>>[number]
 export type SiteMenu = Awaited<ReturnType<typeof getMenus>>[number]
 export type SiteEventLocation = Awaited<ReturnType<typeof getEvents>>[number]
 export type SiteEventType = SiteEventLocation["eventTypes"][number]
+export type SiteLegalPage = Awaited<ReturnType<typeof getLegalPages>>[number]
