@@ -61,11 +61,13 @@ export function LocationsForm({ initial }: { initial: LocationsDraft }) {
               </AdminField>
               <LocalizedField
                 label={t("name")}
+                tooltip={t("nameTip")}
                 value={item.name}
                 onChange={(name) => update({ ...item, name })}
               />
               <AdminFlag
                 label={common("visible")}
+                description={common("visibleTip")}
                 checked={item.isVisible}
                 onCheckedChange={(isVisible) => update({ ...item, isVisible })}
               />

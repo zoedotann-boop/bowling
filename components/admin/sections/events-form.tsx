@@ -75,7 +75,7 @@ export function EventsForm({
             onChange={(event) => update({ ...field, key: event.target.value })}
           />
         </AdminField>
-        <AdminField label={t("fieldType")}>
+        <AdminField label={t("fieldType")} tooltip={t("fieldTypeTip")}>
           <AdminSelect
             value={field.type}
             onChange={(event) =>
@@ -94,17 +94,19 @@ export function EventsForm({
         </AdminField>
         <LocalizedField
           label={t("fieldLabel")}
+          tooltip={t("fieldLabelTip")}
           value={field.label}
           onChange={(label) => update({ ...field, label })}
         />
         <LocalizedField
           label={t("fieldPlaceholder")}
+          tooltip={t("fieldPlaceholderTip")}
           value={field.placeholder}
           onChange={(placeholder) => update({ ...field, placeholder })}
         />
         {field.type === "number" && (
           <div className="grid grid-cols-2 gap-4">
-            <AdminField label={t("fieldMin")}>
+            <AdminField label={t("fieldMin")} tooltip={t("fieldMinTip")}>
               <AdminInput
                 type="number"
                 dir="ltr"
@@ -120,7 +122,7 @@ export function EventsForm({
                 }
               />
             </AdminField>
-            <AdminField label={t("fieldMax")}>
+            <AdminField label={t("fieldMax")} tooltip={t("fieldMaxTip")}>
               <AdminInput
                 type="number"
                 dir="ltr"
@@ -155,7 +157,10 @@ export function EventsForm({
               editTitle={(option) => option.value || t("optionValue")}
               renderRow={(option, index, updateOption) => (
                 <div className="space-y-4">
-                  <AdminField label={t("optionValue")}>
+                  <AdminField
+                    label={t("optionValue")}
+                    tooltip={t("optionValueTip")}
+                  >
                     <AdminInput
                       dir="ltr"
                       value={option.value}
@@ -166,6 +171,7 @@ export function EventsForm({
                   </AdminField>
                   <LocalizedField
                     label={t("optionLabel")}
+                    tooltip={t("optionLabelTip")}
                     value={option.label}
                     onChange={(label) => updateOption({ ...option, label })}
                   />
@@ -176,11 +182,13 @@ export function EventsForm({
         )}
         <AdminFlag
           label={t("fieldRequired")}
+          description={t("fieldRequiredTip")}
           checked={field.isRequired}
           onCheckedChange={(isRequired) => update({ ...field, isRequired })}
         />
         <AdminFlag
           label={common("visible")}
+          description={common("visibleTip")}
           checked={field.isVisible}
           onCheckedChange={(isVisible) => update({ ...field, isVisible })}
         />
@@ -206,11 +214,13 @@ export function EventsForm({
         </AdminField>
         <LocalizedField
           label={t("typeName")}
+          tooltip={t("typeNameTip")}
           value={type.name}
           onChange={(name) => update({ ...type, name })}
         />
         <AdminFlag
           label={common("visible")}
+          description={common("visibleTip")}
           checked={type.isVisible}
           onCheckedChange={(isVisible) => update({ ...type, isVisible })}
         />
@@ -218,11 +228,13 @@ export function EventsForm({
         <AdminCard title={t("packageDetails")}>
           <LocalizedField
             label={t("heroTitle")}
+            tooltip={t("heroTitleTip")}
             value={type.content.heroTitle}
             onChange={(heroTitle) => setContent({ heroTitle })}
           />
           <LocalizedField
             label={t("heroDescription")}
+            tooltip={t("heroDescriptionTip")}
             multiline
             value={type.content.heroDescription}
             onChange={(heroDescription) => setContent({ heroDescription })}
@@ -230,11 +242,13 @@ export function EventsForm({
           <div className="grid gap-4 sm:grid-cols-2">
             <MoneyField
               label={t("packageAmount")}
+              tooltip={t("packageAmountTip")}
               value={type.content.packageAmount}
               onChange={(packageAmount) => setContent({ packageAmount })}
             />
             <MoneyField
               label={t("packageChildrenCount")}
+              tooltip={t("packageChildrenCountTip")}
               value={type.content.packageChildrenCount}
               onChange={(packageChildrenCount) =>
                 setContent({ packageChildrenCount })
@@ -242,23 +256,27 @@ export function EventsForm({
             />
             <MoneyField
               label={t("extraChildAmount")}
+              tooltip={t("extraChildAmountTip")}
               value={type.content.extraChildAmount}
               onChange={(extraChildAmount) => setContent({ extraChildAmount })}
             />
             <MoneyField
               label={t("depositAmount")}
+              tooltip={t("depositAmountTip")}
               value={type.content.depositAmount}
               onChange={(depositAmount) => setContent({ depositAmount })}
             />
           </div>
           <LocalizedField
             label={t("formIntro")}
+            tooltip={t("formIntroTip")}
             multiline
             value={type.content.formIntro}
             onChange={(formIntro) => setContent({ formIntro })}
           />
           <LocalizedField
             label={t("formTerms")}
+            tooltip={t("formTermsTip")}
             multiline
             value={type.content.formTerms}
             onChange={(formTerms) => setContent({ formTerms })}
@@ -290,11 +308,13 @@ export function EventsForm({
               <div className="space-y-4">
                 <LocalizedField
                   label={t("stepTitle")}
+                  tooltip={t("stepTitleTip")}
                   value={step.title}
                   onChange={(title) => updateStep({ ...step, title })}
                 />
                 <LocalizedField
                   label={t("stepDescription")}
+                  tooltip={t("stepDescriptionTip")}
                   multiline
                   value={step.description}
                   onChange={(description) =>
@@ -319,6 +339,7 @@ export function EventsForm({
             renderRow={(line, index, updateLine) => (
               <LocalizedField
                 label={t("lineLabel")}
+                tooltip={t("lineLabelTip")}
                 value={line.label}
                 onChange={(label) => updateLine({ ...line, label })}
               />
@@ -343,11 +364,13 @@ export function EventsForm({
               <div className="space-y-4">
                 <LocalizedField
                   label={t("upgradeLabel")}
+                  tooltip={t("upgradeLabelTip")}
                   value={upgrade.label}
                   onChange={(label) => updateUpgrade({ ...upgrade, label })}
                 />
                 <MoneyField
                   label={t("upgradeAmount")}
+                  tooltip={t("upgradeAmountTip")}
                   value={upgrade.amount}
                   onChange={(amount) => updateUpgrade({ ...upgrade, amount })}
                 />
