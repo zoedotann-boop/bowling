@@ -66,6 +66,7 @@ Add these to `.env` (already scaffolded):
 | Variable              | Description                                              |
 | --------------------- | -------------------------------------------------------- |
 | `DATABASE_URL`        | PostgreSQL connection string (Neon, Supabase, or local). |
+| `DATABASE_URL_UNPOOLED` | Optional direct (non-pooler) connection string. `db:migrate` uses it when set, and hides Postgres `NOTICE` output. On Neon, drop `-pooler` from the host. |
 | `BETTER_AUTH_SECRET`  | Random signing secret, min 32 chars (`openssl rand -base64 32`). |
 | `BETTER_AUTH_URL`     | Public base URL, no trailing slash (dev: `http://localhost:3000`). |
 
@@ -73,7 +74,7 @@ Then:
 
 ```bash
 bun run db:generate   # generate SQL migrations from lib/db/schema
-bun run db:migrate    # apply them to DATABASE_URL
+bun run db:migrate    # apply them (DATABASE_URL_UNPOOLED if set, else DATABASE_URL)
 bun run db:seed       # create the owner + the two branches
 ```
 
