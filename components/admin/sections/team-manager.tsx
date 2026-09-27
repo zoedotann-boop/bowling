@@ -41,6 +41,7 @@ interface TeamMember {
 
 const headerCell = "px-4 py-2.5 text-start font-medium"
 const bodyCell = "px-4 py-3 align-middle"
+const wideOnly = "hidden sm:table-cell"
 
 async function run(action: () => Promise<ActionResult>): Promise<ActionResult> {
   try {
@@ -92,18 +93,18 @@ export function TeamManager({
         </Button>
       </header>
 
-      <AdminCard className="overflow-x-auto p-0">
-        <table className="w-full min-w-xl border-collapse text-sm">
+      <AdminCard className="relative overflow-x-auto p-0">
+        <table className="w-full border-collapse text-sm sm:min-w-xl">
           <thead>
             <tr className="border-b border-border bg-muted/40 text-xs text-muted-foreground">
               <th className={cn(headerCell, "w-2/5")}>{t("name")}</th>
-              <th className={headerCell}>
+              <th className={cn(headerCell, wideOnly)}>
                 <span className="inline-flex items-center gap-1">
                   {t("role")}
                   <InfoTooltip text={t("roleTip")} />
                 </span>
               </th>
-              <th className={headerCell}>
+              <th className={cn(headerCell, wideOnly)}>
                 <span className="inline-flex items-center gap-1">
                   {t("locations")}
                   <InfoTooltip text={t("locationsTip")} />
@@ -140,38 +141,24 @@ export function TeamManager({
                       <div className="truncate text-xs text-muted-foreground">
                         <span dir="ltr">{member.email}</span>
                       </div>
+                      <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-xs sm:hidden">
+                        <RoleBadge role={member.role} />
+                        <MemberLocations
+                          member={member}
+                          locationNames={locationNames}
+                        />
+                      </div>
                     </div>
                   </div>
                 </td>
-                <td className={bodyCell}>
-                  <span
-                    className={cn(
-                      "inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap",
-                      member.role === "owner"
-                        ? "bg-primary/15 text-primary"
-                        : "bg-muted text-foreground"
-                    )}
-                  >
-                    {t(`roles.${member.role}`)}
-                  </span>
+                <td className={cn(bodyCell, wideOnly)}>
+                  <RoleBadge role={member.role} />
                 </td>
-                <td className={bodyCell}>
-                  {member.role === "owner" ? (
-                    <span className="text-muted-foreground">
-                      {t("allLocations")}
-                    </span>
-                  ) : (
-                    <div className="flex flex-wrap gap-1.5">
-                      {member.locationIds.map((id) => (
-                        <span
-                          key={id}
-                          className="rounded-md border border-border px-2 py-0.5 text-xs whitespace-nowrap"
-                        >
-                          {locationNames.get(id)}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+                <td className={cn(bodyCell, wideOnly)}>
+                  <MemberLocations
+                    member={member}
+                    locationNames={locationNames}
+                  />
                 </td>
                 <td className="px-3 py-3">
                   <div className="flex justify-end gap-1">
@@ -225,6 +212,47 @@ export function TeamManager({
           cancelLabel={common("cancel")}
         />
       )}
+    </div>
+  )
+}
+
+function RoleBadge({ role }: { role: AdminRole }) {
+  const t = useTranslations("admin.team")
+  return (
+    <span
+      className={cn(
+        "inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap",
+        role === "owner"
+          ? "bg-primary/15 text-primary"
+          : "bg-muted text-foreground"
+      )}
+    >
+      {t(`roles.${role}`)}
+    </span>
+  )
+}
+
+function MemberLocations({
+  member,
+  locationNames,
+}: {
+  member: TeamMember
+  locationNames: Map<string, string>
+}) {
+  const t = useTranslations("admin.team")
+  if (member.role === "owner") {
+    return <span className="text-muted-foreground">{t("allLocations")}</span>
+  }
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {member.locationIds.map((id) => (
+        <span
+          key={id}
+          className="rounded-md border border-border px-2 py-0.5 text-xs whitespace-nowrap"
+        >
+          {locationNames.get(id)}
+        </span>
+      ))}
     </div>
   )
 }
