@@ -10,9 +10,11 @@ import {
 } from "react"
 import { createPortal } from "react-dom"
 import Image from "next/image"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
+import { pickLocale } from "@/lib/localized"
+import { useSiteContent } from "@/components/site-content-context"
 import { LedDot } from "@/components/decor/led-dot"
 import { Container } from "./container"
 
@@ -41,6 +43,10 @@ const subscribe = () => () => {}
 
 export function Gallery() {
   const t = useTranslations("gallery")
+  const locale = useLocale() as "he" | "en"
+  // Admin-managed heading; the mosaic tiles stay bundled (the galleryImage
+  // schema carries no intrinsic dimensions for the lightbox layout).
+  const title = pickLocale(useSiteContent()?.home?.galleryTitle, locale)
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const portalTarget = useSyncExternalStore(
     subscribe,
@@ -98,7 +104,7 @@ export function Gallery() {
           {t("eyebrow")}
         </span>
         <h2 className="neon-sign-purple mt-1.5 mb-4 font-heading text-[34px] font-black tracking-[-1px] lg:mb-6 lg:text-[48px]">
-          {t("title")}
+          {title || t("title")}
         </h2>
         <div className="grid [grid-auto-rows:120px] grid-cols-2 gap-3 lg:[grid-auto-rows:180px] lg:grid-cols-[1fr_1fr_1.5fr] lg:gap-4">
           {TILES.map((tile, i) => (

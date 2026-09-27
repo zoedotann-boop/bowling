@@ -121,7 +121,7 @@ async function backfill() {
     const siteValues = {
       contactTitle: L(["contact", "title"]),
       contactIntro: L(["contact", "eyebrow"]),
-      footerNote: L(["footer", "note"]),
+      footerNote: L(["footer", "tagline"]),
     }
     await db
       .insert(schema.siteContent)

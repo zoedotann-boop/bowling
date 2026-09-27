@@ -6,16 +6,18 @@ import { MobileFloatingActions } from "@/components/home/mobile-floating-actions
 import { SiteFooter } from "@/components/home/site-footer"
 import { SiteHeader } from "@/components/home/site-header"
 import { PageTransition } from "@/components/page-transition"
+import { SiteContentProvider } from "@/components/site-content-context"
 import {
   BRANCH_COOKIE,
   BRANCHES,
   branchIds,
+  byBranch,
   type Branch,
   type BranchId,
   DEFAULT_BRANCH,
   isBranchId,
 } from "@/lib/branches"
-import { getSiteLocations } from "@/lib/db/queries/site"
+import { getHomeContent, getSiteLocations } from "@/lib/db/queries/site"
 
 // Merges a DB location's editable fields over the hardcoded branch defaults.
 // Structural bits (logo dimensions, event list, id) stay from the defaults;
@@ -58,27 +60,33 @@ export default async function SiteLayout({
   const branchCookie = cookieStore.get(BRANCH_COOKIE)?.value
   const initialBranch = isBranchId(branchCookie) ? branchCookie : DEFAULT_BRANCH
 
-  // Load DB branch data; fall back to the hardcoded defaults if the DB is
-  // unavailable so the site never breaks.
-  const rows = await getSiteLocations().catch(() => [])
+  // Load DB branch data + editable page content; fall back to the hardcoded
+  // defaults if the DB is unavailable so the site never breaks.
+  const [rows, contentRows] = await Promise.all([
+    getSiteLocations().catch(() => []),
+    getHomeContent().catch(() => []),
+  ])
   const bySlug = new Map(rows.map((row) => [row.slug, row]))
   const branches = Object.fromEntries(
     branchIds.map((id) => [id, mergeBranch(BRANCHES[id], bySlug.get(id))])
   ) as Record<BranchId, Branch>
+  const content = byBranch(contentRows)
 
   return (
     <BranchProvider initial={initialBranch} branches={branches}>
-      <div className="flex min-h-svh flex-col bg-cream">
-        <SiteHeader />
-        <main className="flex-1">
-          <PageTransition>{children}</PageTransition>
-        </main>
-        <SiteFooter />
-        {/* Spacer so the mobile sticky action bar never covers the footer */}
-        <div className="h-[72px] lg:hidden" aria-hidden />
-        <MobileFloatingActions />
-      </div>
-      <BranchNotice />
+      <SiteContentProvider content={content}>
+        <div className="flex min-h-svh flex-col bg-cream">
+          <SiteHeader />
+          <main className="flex-1">
+            <PageTransition>{children}</PageTransition>
+          </main>
+          <SiteFooter />
+          {/* Spacer so the mobile sticky action bar never covers the footer */}
+          <div className="h-[72px] lg:hidden" aria-hidden />
+          <MobileFloatingActions />
+        </div>
+        <BranchNotice />
+      </SiteContentProvider>
     </BranchProvider>
   )
 }

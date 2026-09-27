@@ -2,9 +2,11 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react"
 import { CalendarClock, X } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 
+import { pickLocale } from "@/lib/localized"
 import { useBranch } from "@/components/branch-context"
+import { useSiteContent } from "@/components/site-content-context"
 
 const DISMISS_KEY = "branch-notice-dismissed"
 // sessionStorage isn't reactive, so there's nothing to subscribe to.
@@ -13,7 +15,12 @@ const noSubscribe = () => () => {}
 export function BranchNotice() {
   const t = useTranslations("notice")
   const { branch } = useBranch()
+  const locale = useLocale() as "he" | "en"
+  const content = useSiteContent()
   const [closed, setClosed] = useState(false)
+  // Admin-managed notice copy; fall back to the next-intl strings.
+  const title = pickLocale(content?.noticeTitle, locale) || t("title")
+  const body = pickLocale(content?.noticeBody, locale) || t("body")
 
   // Read the session dismissal without an effect. On the server we treat it as
   // dismissed so nothing renders (avoids any hydration mismatch), then the real
@@ -85,9 +92,9 @@ export function BranchNotice() {
             {t("date")}
           </div>
           <h2 className="mt-1.5 font-heading text-[23px] leading-tight font-black tracking-[-0.5px] text-navy lg:text-[26px]">
-            {t("title")}
+            {title}
           </h2>
-          <p className="mt-3 text-[15px] font-semibold text-mud">{t("body")}</p>
+          <p className="mt-3 text-[15px] font-semibold text-mud">{body}</p>
           <p className="mt-4 font-heading text-[19px] font-black text-secondary">
             {t("footer")}
           </p>

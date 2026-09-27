@@ -90,3 +90,15 @@ export const BRANCH_COOKIE = "BRANCH"
 export function isBranchId(value: unknown): value is BranchId {
   return typeof value === "string" && value in BRANCHES
 }
+
+// Keys DB rows (locations, menus, event locations…) by branch id via their
+// `slug`, so client components can look up the active branch's content.
+export function byBranch<T extends { slug: string }>(
+  rows: T[]
+): Partial<Record<BranchId, T>> {
+  const map: Partial<Record<BranchId, T>> = {}
+  for (const row of rows) {
+    if (isBranchId(row.slug)) map[row.slug] = row
+  }
+  return map
+}
