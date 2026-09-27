@@ -1,6 +1,6 @@
 "use client"
 
-import { useLocale, useTranslations } from "next-intl"
+import { useTranslations } from "next-intl"
 import { useState } from "react"
 
 import {
@@ -9,20 +9,12 @@ import {
   AdminFlag,
   AdminInput,
 } from "@/components/admin/admin-ui"
+import { HoursEditor } from "@/components/admin/hours-editor"
 import { ImageField } from "@/components/admin/image-field"
 import { LocalizedField } from "@/components/admin/localized-field"
 import { SectionForm } from "@/components/admin/section-form"
 import { saveGeneral } from "@/lib/actions/admin/general"
 import type { GeneralDraft } from "@/lib/actions/admin/schemas"
-import type { Locale } from "@/lib/locales"
-
-function weekdayLabel(day: number, locale: Locale): string {
-  const date = new Date(Date.UTC(2024, 0, 7 + day))
-  return new Intl.DateTimeFormat(locale === "he" ? "he-IL" : "en-US", {
-    weekday: "long",
-    timeZone: "UTC",
-  }).format(date)
-}
 
 export function GeneralForm({
   slug,
@@ -32,23 +24,10 @@ export function GeneralForm({
   initial: GeneralDraft
 }) {
   const t = useTranslations("admin.general")
-  const locale = useLocale() as Locale
   const [draft, setDraft] = useState(initial)
 
   function set<K extends keyof GeneralDraft>(key: K, value: GeneralDraft[K]) {
     setDraft((prev) => ({ ...prev, [key]: value }))
-  }
-
-  function setHours(
-    day: number,
-    patch: Partial<GeneralDraft["hours"][number]>
-  ) {
-    setDraft((prev) => ({
-      ...prev,
-      hours: prev.hours.map((entry) =>
-        entry.day === day ? { ...entry, ...patch } : entry
-      ),
-    }))
   }
 
   return (
@@ -150,44 +129,10 @@ export function GeneralForm({
       </AdminCard>
 
       <AdminCard title={t("hours")} description={t("hoursTip")}>
-        <div className="space-y-1.5">
-          {draft.hours.map((entry) => (
-            <div
-              key={entry.day}
-              className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-md border border-border bg-background px-3 py-1.5"
-            >
-              <span className="w-24 text-sm">
-                {weekdayLabel(entry.day, locale)}
-              </span>
-              <AdminFlag
-                label={t("closed")}
-                checked={entry.closed}
-                onCheckedChange={(closed) => setHours(entry.day, { closed })}
-              />
-              {!entry.closed && (
-                <div className="flex w-full items-center gap-2 sm:w-auto">
-                  <AdminInput
-                    type="time"
-                    className="min-w-0 flex-1 sm:w-32 sm:flex-none"
-                    value={entry.open ?? ""}
-                    onChange={(event) =>
-                      setHours(entry.day, { open: event.target.value })
-                    }
-                  />
-                  <span className="text-muted-foreground">–</span>
-                  <AdminInput
-                    type="time"
-                    className="min-w-0 flex-1 sm:w-32 sm:flex-none"
-                    value={entry.close ?? ""}
-                    onChange={(event) =>
-                      setHours(entry.day, { close: event.target.value })
-                    }
-                  />
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+        <HoursEditor
+          value={draft.hours}
+          onChange={(value) => set("hours", value)}
+        />
       </AdminCard>
 
       <AdminCard title={t("notice")}>
