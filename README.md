@@ -20,6 +20,20 @@ To use the components in your app, import them as follows:
 import { Button } from "@/components/ui/button"
 ```
 
+## Code comments
+
+CI runs [commentless](https://github.com/barad-side-hustle/commentless) to stop
+new explanatory comments landing — put the explanation in a test name instead.
+Directives (`eslint-disable`, `@ts-expect-error`, …) are always kept.
+
+```bash
+bun run comments:check    # fails if the count exceeds maxAllowed
+bun run comments:remove   # strip comments in place
+```
+
+`commentless.config.json` baselines `maxAllowed` to today's count. Lower it
+whenever you remove comments so the ceiling only ratchets down.
+
 ## Environment variables
 
 Create a `.env` file (git-ignored). The contact form
