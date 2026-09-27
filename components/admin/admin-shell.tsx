@@ -181,7 +181,7 @@ export function AdminShell({
   const sidebar = (
     <aside
       className={cn(
-        "flex h-full flex-col border-s border-sidebar-border bg-sidebar text-sidebar-foreground transition-[width]",
+        "flex h-full flex-col border-e border-sidebar-border bg-sidebar text-sidebar-foreground transition-[width]",
         collapsed ? "w-14" : "w-60"
       )}
     >
@@ -198,6 +198,16 @@ export function AdminShell({
           className="hidden md:inline-flex"
         >
           {collapsed ? <PanelRightOpen /> : <PanelRightClose />}
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          aria-label={t("close")}
+          onClick={() => setMobileOpen(false)}
+          className="md:hidden"
+        >
+          <X />
         </Button>
       </div>
       {nav}
@@ -246,7 +256,7 @@ export function AdminShell({
               className="absolute inset-0 bg-black/60"
               onClick={() => setMobileOpen(false)}
             />
-            <div className="absolute inset-y-0 end-0 flex">
+            <div className="absolute inset-y-0 start-0 flex">
               <div className="relative">{sidebar}</div>
             </div>
           </div>
@@ -259,9 +269,9 @@ export function AdminShell({
               variant="ghost"
               size="icon-sm"
               aria-label={t("openMenu")}
-              onClick={() => setMobileOpen((prev) => !prev)}
+              onClick={() => setMobileOpen(true)}
             >
-              {mobileOpen ? <X /> : <MenuIcon />}
+              <MenuIcon />
             </Button>
             <span className="text-sm font-semibold">{t("brand")}</span>
           </header>
