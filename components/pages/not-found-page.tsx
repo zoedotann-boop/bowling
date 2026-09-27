@@ -18,8 +18,8 @@ function BowlingBall() {
   )
 }
 
-// Themed 404 (app/not-found.tsx): the rack is still standing because the ball
-// went in the gutter.
+// Themed public 404 body (used by app/not-found.tsx and app/(site)/not-found.tsx):
+// the rack is still standing because the ball went in the gutter.
 export function NotFoundPage() {
   const t = useTranslations("notFoundPage")
 

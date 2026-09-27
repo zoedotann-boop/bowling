@@ -9,9 +9,9 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t("notFound") }
 }
 
-// The single 404 for the whole app: unmatched URLs and every `notFound()` call
-// (public pages and admin access checks). It sits above the (site) layout, so it
-// adds the site chrome itself to keep the header/footer navigation.
+// Unmatched URLs anywhere in the app. It sits above the (site) layout, so it
+// adds the site chrome itself to keep the header/footer navigation. `notFound()`
+// calls are handled closer by app/(site)/ and app/admin/(dashboard)/not-found.
 export default function NotFound() {
   return (
     <SiteChrome>
