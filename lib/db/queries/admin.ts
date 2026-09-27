@@ -81,7 +81,7 @@ export async function listAllLocations() {
 
 export async function listTeam() {
   return db.query.user.findMany({
-    with: { memberships: { with: { location: true } } },
+    with: { memberships: { columns: { locationId: true } } },
     orderBy: (fields, { asc: ascending }) => [ascending(fields.name)],
   })
 }

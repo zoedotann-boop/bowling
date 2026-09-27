@@ -1,69 +1,35 @@
-import { getLocale, getTranslations } from "next-intl/server"
+import { getLocale } from "next-intl/server"
 
-import { AdminCard } from "@/components/admin/admin-ui"
-import { InfoTooltip } from "@/components/admin/info-tooltip"
+import { TeamManager } from "@/components/admin/sections/team-manager"
 import { requireOwnerAccess } from "@/lib/admin/access"
-import { listTeam } from "@/lib/db/queries/admin"
+import { listAllLocations, listTeam } from "@/lib/db/queries/admin"
 import { pickLocale } from "@/lib/localized"
 import type { Locale } from "@/lib/locales"
 
-// Owner-only overview of admin users, their role, and location memberships.
-// Provisioning new users is done via the seed script / Better Auth — there is
-// no public signup. Sign-in is passwordless (a one-time code is emailed).
+// Owner-only: add, edit and remove admin users and their location access.
+// There is no public signup — this page is how people get into the admin.
 export default async function TeamPage() {
-  await requireOwnerAccess()
-  const team = await listTeam()
-  const t = await getTranslations("admin.team")
-  const locale = (await getLocale()) as Locale
+  const owner = await requireOwnerAccess()
+  const [team, locations, locale] = await Promise.all([
+    listTeam(),
+    listAllLocations(),
+    getLocale() as Promise<Locale>,
+  ])
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-lg font-semibold">{t("title")}</h1>
-      <p className="text-sm text-muted-foreground">{t("provisioningNote")}</p>
-      <AdminCard>
-        <table className="w-full border-collapse text-sm">
-          <thead>
-            <tr className="border-b border-border text-start text-xs text-muted-foreground">
-              <th className="py-1.5 pe-2 text-start font-medium">
-                {t("name")}
-              </th>
-              <th className="py-1.5 pe-2 text-start font-medium">
-                {t("email")}
-              </th>
-              <th className="py-1.5 pe-2 text-start font-medium">
-                <span className="inline-flex items-center gap-1">
-                  {t("role")}
-                  <InfoTooltip text={t("roleTip")} />
-                </span>
-              </th>
-              <th className="py-1.5 pe-2 text-start font-medium">
-                <span className="inline-flex items-center gap-1">
-                  {t("locations")}
-                  <InfoTooltip text={t("locationsTip")} />
-                </span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {team.map((member) => (
-              <tr key={member.id} className="border-b border-border/60">
-                <td className="py-1.5 pe-2">{member.name}</td>
-                <td className="py-1.5 pe-2" dir="ltr">
-                  {member.email}
-                </td>
-                <td className="py-1.5 pe-2">{t(`roles.${member.role}`)}</td>
-                <td className="py-1.5 pe-2">
-                  {member.role === "owner"
-                    ? t("allLocations")
-                    : member.memberships
-                        .map((entry) => pickLocale(entry.location.name, locale))
-                        .join(", ") || "—"}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </AdminCard>
-    </div>
+    <TeamManager
+      locations={locations.map((item) => ({
+        id: item.id,
+        name: pickLocale(item.name, locale),
+      }))}
+      members={team.map((member) => ({
+        id: member.id,
+        name: member.name,
+        email: member.email,
+        role: member.role,
+        locationIds: member.memberships.map((entry) => entry.locationId),
+        isSelf: member.id === owner.id,
+      }))}
+    />
   )
 }

@@ -66,7 +66,9 @@ bun run db:seed       # create the owner + the two branches
 `db:seed` creates an owner from `SEED_ADMIN_EMAIL` (default
 `owner@example.com`); there are no passwords. Sign in at `/admin/login` by
 entering that address — Better Auth emails a one-time code. There is no public
-signup: users are provisioned by an owner.
+signup: owners add everyone else under **Team** (`/admin/team`) — name, email,
+role, and (for managers/staff) the locations they may edit. The new user can
+sign in right away with that email.
 
 ### Architecture
 
@@ -82,6 +84,9 @@ signup: users are provisioned by an owner.
 - **Save pattern** each section is `page → Drizzle query → draft → SectionForm
   → one server action` that persists the whole draft via `syncCollection`
   (`lib/actions/admin/*`). `sortOrder` is assigned from array index on save.
+  The owner-only **Team** page is the exception: create / edit / delete apply
+  immediately via `lib/actions/admin/team.ts` (user row + `location_member`
+  rows in one transaction; owners can't demote or delete themselves).
 
 ### Public site reads
 
