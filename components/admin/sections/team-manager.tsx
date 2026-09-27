@@ -23,6 +23,7 @@ import {
   updateTeamMember,
 } from "@/lib/actions/admin/team"
 import { ADMIN_ROLES, type AdminRole } from "@/lib/admin/permissions"
+import { cn } from "@/lib/utils"
 
 interface TeamLocation {
   id: string
@@ -37,6 +38,9 @@ interface TeamMember {
   locationIds: string[]
   isSelf: boolean
 }
+
+const headerCell = "px-4 py-2.5 text-start font-medium"
+const bodyCell = "px-4 py-3 align-middle"
 
 // Server actions return codes; a throw (e.g. a lost connection) maps to the
 // generic save error.
@@ -93,58 +97,92 @@ export function TeamManager({
         </Button>
       </header>
 
-      <AdminCard>
-        <table className="w-full border-collapse text-sm">
+      <AdminCard className="overflow-x-auto p-0">
+        <table className="w-full min-w-xl border-collapse text-sm">
           <thead>
-            <tr className="border-b border-border text-start text-xs text-muted-foreground">
-              <th className="py-1.5 pe-2 text-start font-medium">
-                {t("name")}
-              </th>
-              <th className="py-1.5 pe-2 text-start font-medium">
-                {t("email")}
-              </th>
-              <th className="py-1.5 pe-2 text-start font-medium">
+            <tr className="border-b border-border bg-muted/40 text-xs text-muted-foreground">
+              <th className={cn(headerCell, "w-2/5")}>{t("name")}</th>
+              <th className={headerCell}>
                 <span className="inline-flex items-center gap-1">
                   {t("role")}
                   <InfoTooltip text={t("roleTip")} />
                 </span>
               </th>
-              <th className="py-1.5 pe-2 text-start font-medium">
+              <th className={headerCell}>
                 <span className="inline-flex items-center gap-1">
                   {t("locations")}
                   <InfoTooltip text={t("locationsTip")} />
                 </span>
               </th>
-              <th className="w-px py-1.5">
+              <th className="w-px">
                 <span className="sr-only">{t("actions")}</span>
               </th>
             </tr>
           </thead>
           <tbody>
             {members.map((member) => (
-              <tr key={member.id} className="border-b border-border/60">
-                <td className="py-1.5 pe-2">
-                  {member.name}
-                  {member.isSelf && (
-                    <span className="ms-2 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                      {t("you")}
+              <tr
+                key={member.id}
+                className="border-b border-border/60 transition-colors last:border-0 hover:bg-muted/30"
+              >
+                <td className={bodyCell}>
+                  <div className="flex items-center gap-3">
+                    <span
+                      aria-hidden
+                      className="grid size-8 shrink-0 place-items-center rounded-full bg-muted text-xs font-semibold uppercase"
+                    >
+                      {member.name.trim().charAt(0)}
                     </span>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 font-medium">
+                        <span className="truncate">{member.name}</span>
+                        {member.isSelf && (
+                          <span className="shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs font-normal text-muted-foreground">
+                            {t("you")}
+                          </span>
+                        )}
+                      </div>
+                      <div className="truncate text-xs text-muted-foreground">
+                        {/* LTR run for the address without flipping the
+                            cell's alignment in RTL. */}
+                        <span dir="ltr">{member.email}</span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td className={bodyCell}>
+                  <span
+                    className={cn(
+                      "inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap",
+                      member.role === "owner"
+                        ? "bg-primary/15 text-primary"
+                        : "bg-muted text-foreground"
+                    )}
+                  >
+                    {t(`roles.${member.role}`)}
+                  </span>
+                </td>
+                <td className={bodyCell}>
+                  {member.role === "owner" ? (
+                    <span className="text-muted-foreground">
+                      {t("allLocations")}
+                    </span>
+                  ) : (
+                    <div className="flex flex-wrap gap-1.5">
+                      {member.locationIds.map((id) => (
+                        <span
+                          key={id}
+                          className="rounded-md border border-border px-2 py-0.5 text-xs whitespace-nowrap"
+                        >
+                          {locationNames.get(id)}
+                        </span>
+                      ))}
+                    </div>
                   )}
                 </td>
-                <td className="py-1.5 pe-2" dir="ltr">
-                  {member.email}
-                </td>
-                <td className="py-1.5 pe-2">{t(`roles.${member.role}`)}</td>
-                <td className="py-1.5 pe-2">
-                  {member.role === "owner"
-                    ? t("allLocations")
-                    : member.locationIds
-                        .map((id) => locationNames.get(id))
-                        .filter(Boolean)
-                        .join(", ") || "—"}
-                </td>
-                <td className="py-1.5">
-                  <div className="flex justify-end gap-0.5">
+                <td className="px-3 py-3">
+                  {/* Fixed slots so the edit icon lines up on every row. */}
+                  <div className="flex justify-end gap-1">
                     <Button
                       type="button"
                       variant="ghost"
@@ -154,13 +192,15 @@ export function TeamManager({
                     >
                       <Pencil />
                     </Button>
-                    {!member.isSelf && (
+                    {member.isSelf ? (
+                      <span aria-hidden className="size-7" />
+                    ) : (
                       <Button
                         type="button"
                         variant="ghost"
                         size="icon-sm"
                         aria-label={`${t("delete")}: ${member.name}`}
-                        className="hover:text-destructive"
+                        className="text-muted-foreground hover:text-destructive"
                         onClick={() => setRemoving(member)}
                       >
                         <Trash2 />
