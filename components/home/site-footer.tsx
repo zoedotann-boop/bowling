@@ -9,12 +9,6 @@ import { useBranch } from "@/components/branch-context"
 import { useSiteContent } from "@/components/site-content-context"
 import { Container } from "./container"
 
-const SOCIALS = [
-  { glyph: "f", label: "Facebook", bg: "bg-[#4973c3]" },
-  { glyph: "◎", label: "Instagram", bg: "bg-[#dcb677]" },
-  { glyph: "♪", label: "TikTok", bg: "bg-[#9101ca]" },
-]
-
 const FOOTER_NAV_HREFS = ["/", "/menu", "/events", "/contact"]
 
 function FooterColumn({
@@ -79,21 +73,9 @@ export function SiteFooter() {
               height={branch.logo.height}
               className="mb-3 h-12 w-auto lg:h-14"
             />
-            <p className="mb-3.5 max-w-[320px] text-sm leading-[1.55] font-medium text-mud lg:mb-4 lg:text-[15px]">
+            <p className="max-w-[320px] text-sm leading-[1.55] font-medium text-mud lg:text-[15px]">
               {tagline}
             </p>
-            <div className="flex gap-2.5">
-              {SOCIALS.map(({ glyph, label, bg }) => (
-                <a
-                  key={label}
-                  href="#"
-                  aria-label={label}
-                  className={`flex size-10 items-center justify-center rounded-sm border border-navy text-lg font-black text-foreground lg:size-[42px] ${bg}`}
-                >
-                  {glyph}
-                </a>
-              ))}
-            </div>
           </div>
 
           <div>
