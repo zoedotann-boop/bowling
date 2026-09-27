@@ -1,5 +1,6 @@
 import { z } from "zod"
 
+import { ADMIN_ROLES } from "@/lib/admin/permissions"
 import { FORM_FIELD_TYPES } from "@/lib/events/fields"
 
 import { localizedSchema, rowIdSchema } from "./shared"
@@ -21,6 +22,23 @@ export const locationsSchema = z.object({
   locations: z.array(adminLocationSchema),
 })
 export type LocationsDraft = z.infer<typeof locationsSchema>
+
+// --- Team (owner) ----------------------------------------------------------
+// The editable part of a user. Owners implicitly see every location, so their
+// `locationIds` are ignored; everyone else needs at least one (checked in the
+// action so it can return a specific error code).
+export const teamMemberSchema = z.object({
+  name: z.string().trim().min(1).max(120),
+  role: z.enum(ADMIN_ROLES),
+  locationIds: z.array(z.uuid()),
+})
+export type TeamMemberDraft = z.infer<typeof teamMemberSchema>
+
+// Emails are stored lowercased — Better Auth lowercases the address on sign-in.
+export const newTeamMemberSchema = teamMemberSchema.extend({
+  email: z.string().trim().toLowerCase().pipe(z.email()),
+})
+export type NewTeamMemberDraft = z.infer<typeof newTeamMemberSchema>
 
 // --- General ----------------------------------------------------------------
 const dayHoursSchema = z.object({
