@@ -102,3 +102,30 @@ The public pages render the admin's content live from the database:
   `eventFormField`s when defined, otherwise the built-in fields; `POST
   /api/events/booking` stores answers in `lead.formData` and the signature in
   `lead.signatureUrl`.
+
+### Google reviews pooler
+
+Each branch can pull its Google Maps reviews automatically and choose which
+appear in the home "reviews" section (alongside any manually curated ones).
+
+- **Config** (admin → **Google reviews**): the branch's **Place ID** and a
+  **daily automatic sync** toggle live on the `location` row
+  (`googlePlaceId`, `googleReviewsAutoSync`). Fetched reviews are stored in the
+  `google_review` table, keyed by Google's review id (`external_id`) so re-syncs
+  update in place. An admin's **shown on site** choice is preserved across syncs;
+  only published rows render publicly.
+- **Fetch** `lib/google/serpapi.ts` reads reviews via [SerpApi](https://serpapi.com)
+  (`google_maps_reviews` engine) — Google's own Places API caps reviews at 5 and
+  needs a billed project, whereas SerpApi returns ~8 from one shared key.
+  `lib/google/sync-reviews.ts` upserts them and auto-publishes new reviews rated
+  ≥ 4 when the branch opted in.
+- **Schedule** a nightly [Vercel Cron](https://vercel.com/docs/cron-jobs)
+  (`vercel.json`, `0 3 * * *`) hits `GET /api/cron/google-reviews`, guarded by
+  `Authorization: Bearer <CRON_SECRET>`. The admin **Sync now** button triggers
+  the same sync on demand. When `SERPAPI_API_KEY` is unset a sync reports
+  `missing-key`; when `CRON_SECRET` is unset the cron route returns `401`.
+
+| Variable          | Description                                                              |
+| ----------------- | ------------------------------------------------------------------------ |
+| `SERPAPI_API_KEY` | SerpApi key used to read Google Maps reviews (shared across branches).   |
+| `CRON_SECRET`     | Bearer secret protecting the cron route (`openssl rand -base64 32`). Sent automatically by Vercel Cron. |

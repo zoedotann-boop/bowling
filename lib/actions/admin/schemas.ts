@@ -129,6 +129,32 @@ export const homeSchema = z.object({
 })
 export type HomeDraft = z.infer<typeof homeSchema>
 
+// --- Reviews (Google pooler) -------------------------------------------------
+// The public form curates fetched Google reviews: it only ever sends back which
+// rows to keep and whether each is published (their content comes from Google,
+// not the admin). The place id + auto-sync toggle configure the pooler itself.
+const reviewCurationSchema = z.object({
+  id: z.uuid(),
+  isPublished: z.boolean(),
+})
+export const reviewsSchema = z.object({
+  slug: z.string(),
+  googlePlaceId: z.string(),
+  autoSync: z.boolean(),
+  reviews: z.array(reviewCurationSchema),
+})
+
+// Full display shape held by the form and returned by a manual sync. publishedAt
+// is serialized to YYYY-MM-DD for a stable, locale-free date cell.
+export interface GoogleReviewDraft {
+  id: string
+  authorName: string
+  rating: number
+  text: string
+  publishedAt: string
+  isPublished: boolean
+}
+
 // --- Menu --------------------------------------------------------------------
 const menuItemSchema = z.object({
   id: rowIdSchema,

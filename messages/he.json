@@ -150,6 +150,7 @@
   },
   "reviews": {
     "title": "מה המבלים אומרים עלינו?",
+    "ratingValue": "{rating} כוכבים",
     "items": [
       {
         "name": "תמר יוסף",
@@ -1383,6 +1384,7 @@
       "brand": "ניהול",
       "general": "הגדרות סניף",
       "home": "עמוד הבית",
+      "reviews": "ביקורות Google",
       "menu": "תפריט",
       "events": "אירועים",
       "locations": "סניפים",
@@ -1518,6 +1520,27 @@
       "addSubject": "הוספת נושא",
       "subjectLabel": "נושא",
       "subjectEditTitle": "נושא פנייה"
+    },
+    "reviews": {
+      "title": "ביקורות Google",
+      "description": "שליפה אוטומטית של ביקורות Google Maps ובחירה אילו יופיעו באתר.",
+      "googleTitle": "חיבור ל-Google",
+      "googleDescription": "הזינו את מזהה המקום (Place ID) של הסניף ב-Google Maps, שמרו, ואז סנכרנו כדי לשלוף את הביקורות האחרונות.",
+      "placeId": "מזהה מקום (Place ID)",
+      "placeIdTip": "מזהה המקום של העסק ב-Google Maps. ניתן למצוא אותו דרך כלי Place ID Finder של Google.",
+      "autoSync": "סנכרון יומי אוטומטי",
+      "autoSyncTip": "כשמופעל, משיכה לילית מפרסמת אוטומטית ביקורות חדשות עם דירוג 4 ומעלה.",
+      "sync": "סנכרון עכשיו",
+      "syncing": "מסנכרן…",
+      "syncResult": "הסתיים: {imported} חדשות, {updated} עודכנו.",
+      "syncMissingPlaceId": "יש לשמור מזהה מקום לפני הסנכרון.",
+      "syncMissingKey": "שירות הביקורות אינו מוגדר (חסר מפתח API).",
+      "syncError": "הסנכרון נכשל. נסו שוב.",
+      "listTitle": "ביקורות שנשלפו",
+      "listDescription": "רק ביקורות מסומנות כ״מוצג״ יופיעו באתר. מחיקה תוסר עד הסנכרון הבא.",
+      "published": "מוצג באתר",
+      "empty": "אין ביקורות עדיין. הזינו מזהה מקום וסנכרנו.",
+      "ratingValue": "{rating} כוכבים"
     },
     "menu": {
       "title": "תפריט",

@@ -50,6 +50,14 @@ export const location = pgTable("location", {
   noticeTitle: localized(),
   noticeBody: localized(),
 
+  // Google reviews pooler: the branch's Google Maps place identifier and whether
+  // the nightly cron auto-publishes freshly fetched high-rated reviews. The
+  // SerpApi key that reads them is a shared env var (see lib/google/serpapi.ts).
+  googlePlaceId: text("google_place_id"),
+  googleReviewsAutoSync: boolean("google_reviews_auto_sync")
+    .notNull()
+    .default(false),
+
   hours: jsonb("hours").$type<DayHours[]>(),
 
   seoTitle: localized(),

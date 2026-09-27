@@ -21,6 +21,7 @@ export interface AdminSection {
 export const ADMIN_SECTIONS: AdminSection[] = [
   { key: "general", capability: "settings" },
   { key: "home", capability: "content" },
+  { key: "reviews", capability: "content" },
   { key: "menu", capability: "content" },
   { key: "events", capability: "content" },
 ]

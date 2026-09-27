@@ -4,6 +4,7 @@ import { user } from "./schema/auth"
 import {
   contactSubject,
   galleryImage,
+  googleReview,
   homeContent,
   homeFeature,
   homeReview,
@@ -30,6 +31,7 @@ export const locationRelations = relations(location, ({ one, many }) => ({
   features: many(homeFeature),
   services: many(homeService),
   reviews: many(homeReview),
+  googleReviews: many(googleReview),
   galleryImages: many(galleryImage),
   contactSubjects: many(contactSubject),
   menuCategories: many(menuCategory),
@@ -75,6 +77,13 @@ export const homeServiceRelations = relations(homeService, ({ one }) => ({
 export const homeReviewRelations = relations(homeReview, ({ one }) => ({
   location: one(location, {
     fields: [homeReview.locationId],
+    references: [location.id],
+  }),
+}))
+
+export const googleReviewRelations = relations(googleReview, ({ one }) => ({
+  location: one(location, {
+    fields: [googleReview.locationId],
     references: [location.id],
   }),
 }))

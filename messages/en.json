@@ -150,6 +150,7 @@
   },
   "reviews": {
     "title": "What our guests say about us?",
+    "ratingValue": "{rating} stars",
     "items": [
       {
         "name": "Tamar Yosef",
@@ -1383,6 +1384,7 @@
       "brand": "Admin",
       "general": "Settings",
       "home": "Home page",
+      "reviews": "Google reviews",
       "menu": "Menu",
       "events": "Events",
       "locations": "Locations",
@@ -1518,6 +1520,27 @@
       "addSubject": "Add subject",
       "subjectLabel": "Subject",
       "subjectEditTitle": "Contact subject"
+    },
+    "reviews": {
+      "title": "Google reviews",
+      "description": "Automatically pull Google Maps reviews and choose which appear on the site.",
+      "googleTitle": "Google connection",
+      "googleDescription": "Enter the branch's Google Maps Place ID, save, then sync to pull the latest reviews.",
+      "placeId": "Place ID",
+      "placeIdTip": "The business's Google Maps place identifier. Find it with Google's Place ID Finder tool.",
+      "autoSync": "Daily automatic sync",
+      "autoSyncTip": "When on, a nightly pull auto-publishes new reviews rated 4 stars and up.",
+      "sync": "Sync now",
+      "syncing": "Syncing…",
+      "syncResult": "Done: {imported} new, {updated} updated.",
+      "syncMissingPlaceId": "Save a Place ID before syncing.",
+      "syncMissingKey": "The reviews service is not configured (missing API key).",
+      "syncError": "Sync failed. Please try again.",
+      "listTitle": "Fetched reviews",
+      "listDescription": "Only reviews marked as shown appear on the site. Deleting is undone on the next sync.",
+      "published": "Shown on site",
+      "empty": "No reviews yet. Enter a Place ID and sync.",
+      "ratingValue": "{rating} stars"
     },
     "menu": {
       "title": "Menu",

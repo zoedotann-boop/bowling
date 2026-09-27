@@ -10,6 +10,7 @@ import {
   PanelRightOpen,
   PartyPopper,
   Settings,
+  Star,
   UtensilsCrossed,
   Users,
   X,
@@ -41,6 +42,7 @@ import { cn } from "@/lib/utils"
 const SECTION_ICONS: Record<string, typeof Home> = {
   general: Settings,
   home: Home,
+  reviews: Star,
   menu: UtensilsCrossed,
   events: PartyPopper,
   locations: MapPin,
