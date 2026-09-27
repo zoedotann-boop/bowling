@@ -189,6 +189,7 @@
     "formTitle": "שלחו לנו הודעה",
     "namePlaceholder": "שם מלא",
     "phonePlaceholder": "טלפון · 050-0000000",
+    "emailPlaceholder": "אימייל · name@example.com",
     "topicLabel": "נושא הפנייה",
     "topics": [
       "בירור כללי",

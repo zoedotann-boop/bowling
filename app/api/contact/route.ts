@@ -1,34 +1,60 @@
 import { NextResponse } from "next/server"
 
-import { escapeHtml, resolveInquiriesRecipient, sendMail } from "@/lib/email"
+import {
+  resolveActiveBranch,
+  resolveInquiriesRecipient,
+  sendMail,
+} from "@/lib/email"
+import { BRAND_HE, detailTable, emailShell } from "@/lib/email-template"
+import type { Branch } from "@/lib/branches"
 
 // Payload posted by the public contact form (components/home/contact.tsx).
 interface ContactPayload {
   name?: string
   phone?: string
+  email?: string
   topic?: string
   message?: string
 }
 
-function renderEmail(payload: ContactPayload) {
-  const row = (label: string, value?: string) =>
-    value
-      ? `<tr>
-          <td style="padding:6px 12px;font-weight:700;color:#0f172a;white-space:nowrap;">${label}</td>
-          <td style="padding:6px 12px;color:#334155;">${escapeHtml(value)}</td>
-        </tr>`
-      : ""
+// The submitted details as label/value rows, skipping empty optional fields.
+function detailRows(payload: ContactPayload): [string, string][] {
+  return (
+    [
+      ["שם", payload.name],
+      ["טלפון", payload.phone],
+      ["אימייל", payload.email],
+      ["נושא", payload.topic],
+      ["הודעה", payload.message],
+    ] as const
+  )
+    .filter(([, value]) => value?.trim())
+    .map(([label, value]) => [label, value!.trim()])
+}
 
-  return `
-    <div dir="rtl" style="font-family:Arial,Helvetica,sans-serif;max-width:600px;color:#0f172a;">
-      <h2 style="margin:0 0 12px;">פנייה חדשה מטופס יצירת קשר</h2>
-      <table style="border-collapse:collapse;width:100%;border:1px solid #e2e8f0;">
-        ${row("שם", payload.name)}
-        ${row("טלפון", payload.phone)}
-        ${row("נושא", payload.topic)}
-        ${row("הודעה", payload.message)}
-      </table>
-    </div>`
+// The email the venue team receives for each new inquiry.
+function renderManagerEmail(payload: ContactPayload, branch: Branch): string {
+  return emailShell({
+    branch,
+    preheader: `פנייה חדשה מ${payload.name ?? ""}`,
+    heading: "פנייה חדשה מטופס יצירת קשר",
+    intro: "התקבלה פנייה חדשה דרך טופס יצירת הקשר באתר.",
+    body: detailTable(detailRows(payload)),
+  })
+}
+
+// The confirmation the customer receives after submitting the form.
+function renderCustomerEmail(payload: ContactPayload, branch: Branch): string {
+  const summary = detailRows(payload).filter(([label]) =>
+    ["נושא", "הודעה"].includes(label)
+  )
+  return emailShell({
+    branch,
+    preheader: "קיבלנו את הפנייה שלך ונחזור אליך בהקדם",
+    heading: "תודה שפנית אלינו!",
+    intro: `היי ${payload.name ?? ""}, קיבלנו את הפנייה שלך ואנחנו כבר על זה. נחזור אליך בהקדם בימי הפעילות. בינתיים אפשר גם להתקשר או לכתוב לנו בוואטסאפ.`,
+    body: detailTable(summary),
+  })
 }
 
 export async function POST(request: Request) {
@@ -42,7 +68,7 @@ export async function POST(request: Request) {
     )
   }
 
-  const { name, phone } = payload
+  const { name, phone, email } = payload
   if (!name?.trim() || !phone?.trim()) {
     return NextResponse.json(
       { error: "Missing required fields." },
@@ -50,7 +76,10 @@ export async function POST(request: Request) {
     )
   }
 
-  const to = await resolveInquiriesRecipient()
+  const [to, branch] = await Promise.all([
+    resolveInquiriesRecipient(),
+    resolveActiveBranch(),
+  ])
   if (!to) {
     return NextResponse.json(
       { error: "Email service is not configured." },
@@ -58,15 +87,26 @@ export async function POST(request: Request) {
     )
   }
 
+  // The venue notification is the critical send; its failure fails the request.
   const result = await sendMail({
     to,
+    replyTo: email?.trim() || undefined,
     subject: `פנייה חדשה · ${payload.topic ?? ""} · ${name}`,
-    html: renderEmail(payload),
+    html: renderManagerEmail(payload, branch),
   })
 
   if (!result.ok) {
     const status = result.reason === "not_configured" ? 500 : 502
     return NextResponse.json({ error: "Failed to send email." }, { status })
+  }
+
+  // Best-effort confirmation to the customer; never blocks the response.
+  if (email?.trim()) {
+    await sendMail({
+      to: email.trim(),
+      subject: `קיבלנו את הפנייה שלך · ${BRAND_HE}`,
+      html: renderCustomerEmail(payload, branch),
+    })
   }
 
   return NextResponse.json({ ok: true })

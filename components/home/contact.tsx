@@ -50,6 +50,7 @@ export function Contact() {
   const [topic, setTopic] = useState(topics[0])
   const [name, setName] = useState("")
   const [phone, setPhone] = useState("")
+  const [emailValue, setEmailValue] = useState("")
   const [message, setMessage] = useState("")
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
@@ -65,12 +66,19 @@ export function Contact() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone, topic, message }),
+        body: JSON.stringify({
+          name,
+          phone,
+          email: emailValue,
+          topic,
+          message,
+        }),
       })
       if (!res.ok) throw new Error("request failed")
       setStatus("sent")
       setName("")
       setPhone("")
+      setEmailValue("")
       setMessage("")
       setTopic(topics[0])
     } catch {
@@ -152,6 +160,15 @@ export function Contact() {
               className={inputClass}
             />
           </div>
+          <input
+            type="email"
+            required
+            value={emailValue}
+            onChange={(e) => setEmailValue(e.target.value)}
+            placeholder={t("emailPlaceholder")}
+            autoComplete="email"
+            className={cn(inputClass, "mb-3.5 w-full")}
+          />
           <div className="mb-2 text-sm font-bold text-navy">
             {t("topicLabel")}
           </div>

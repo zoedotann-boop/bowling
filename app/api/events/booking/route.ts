@@ -1,6 +1,19 @@
 import { NextResponse } from "next/server"
 
-import { escapeHtml, resolveInquiriesRecipient, sendMail } from "@/lib/email"
+import {
+  resolveActiveBranch,
+  resolveInquiriesRecipient,
+  sendMail,
+} from "@/lib/email"
+import {
+  BRAND_HE,
+  bulletList,
+  detailTable,
+  emailShell,
+  noteParagraph,
+  sectionHeading,
+} from "@/lib/email-template"
+import type { Branch } from "@/lib/branches"
 
 // Payload posted by the event BookingForm (components/pages/event-detail-page.tsx).
 // The built-in form sends the fixed keys below; an admin-defined dynamic form
@@ -40,40 +53,49 @@ function answers(payload: BookingPayload): [string, string][] {
         typeof value === "string" &&
         value.trim() !== ""
     )
-    .map(([key, value]) => [key, value as string])
+    .map(([key, value]) => [FIELD_LABELS[key] ?? key, value as string])
 }
 
-function renderEmail(payload: BookingPayload) {
-  const rows = answers(payload)
-    .map(
-      ([key, value]) => `<tr>
-          <td style="padding:6px 12px;font-weight:700;color:#0f172a;white-space:nowrap;">${escapeHtml(FIELD_LABELS[key] ?? key)}</td>
-          <td style="padding:6px 12px;color:#334155;">${escapeHtml(value)}</td>
-        </tr>`
-    )
-    .join("")
-
+// Shared body: the answers table, chosen upgrades and an optional signature note.
+function renderBody(payload: BookingPayload, signatureNote: string): string {
   const upgrades = payload.upgrades?.length
-    ? `<ul style="margin:4px 0;padding-inline-start:20px;color:#334155;">${payload.upgrades
-        .map((item) => `<li>${escapeHtml(item)}</li>`)
-        .join("")}</ul>`
-    : "—"
-
-  const signatureNote = payload.signature
-    ? `<h3 style="margin:18px 0 4px;">חתימה</h3>
-       <p style="margin:0;color:#334155;">מצורפת כקובץ signature.png.</p>`
+    ? sectionHeading("שדרוגים שנבחרו") + bulletList(payload.upgrades)
     : ""
+  const signature = payload.signature ? signatureNote : ""
+  return detailTable(answers(payload)) + upgrades + signature
+}
 
-  return `
-    <div dir="rtl" style="font-family:Arial,Helvetica,sans-serif;max-width:600px;color:#0f172a;">
-      <h2 style="margin:0 0 12px;">טופס אישור אירוע חדש</h2>
-      <table style="border-collapse:collapse;width:100%;border:1px solid #e2e8f0;">
-        ${rows}
-      </table>
-      <h3 style="margin:18px 0 4px;">שדרוגים שנבחרו</h3>
-      ${upgrades}
-      ${signatureNote}
-    </div>`
+// The email the venue team receives for each new event submission.
+function renderManagerEmail(payload: BookingPayload, branch: Branch): string {
+  return emailShell({
+    branch,
+    preheader: `טופס אירוע חדש · ${payload.event ?? ""}`,
+    heading: "טופס אישור אירוע חדש",
+    intro: "התקבל טופס אירוע חדש דרך האתר.",
+    body: renderBody(
+      payload,
+      sectionHeading("חתימה") +
+        noteParagraph("החתימה מצורפת כקובץ signature.png.")
+    ),
+  })
+}
+
+// The confirmation the customer receives after submitting the booking form.
+function renderCustomerEmail(
+  payload: BookingPayload,
+  branch: Branch,
+  name: string
+): string {
+  return emailShell({
+    branch,
+    preheader: "קיבלנו את בקשת האירוע שלך ונחזור אליך לתיאום",
+    heading: "הבקשה שלך התקבלה!",
+    intro: `היי ${name}, תודה שבחרת ב${BRAND_HE}! קיבלנו את פרטי האירוע שלך וניצור איתך קשר בהקדם לתיאום הסופי. להלן סיכום הפרטים שנשלחו.`,
+    body: renderBody(
+      payload,
+      sectionHeading("חתימה") + noteParagraph("חתימתך נקלטה בהצלחה.")
+    ),
+  })
 }
 
 export async function POST(request: Request) {
@@ -96,7 +118,10 @@ export async function POST(request: Request) {
     )
   }
 
-  const to = await resolveInquiriesRecipient()
+  const [to, branch] = await Promise.all([
+    resolveInquiriesRecipient(),
+    resolveActiveBranch(),
+  ])
   if (!to) {
     return NextResponse.json(
       { error: "Email service is not configured." },
@@ -120,17 +145,27 @@ export async function POST(request: Request) {
       ]
     : undefined
 
+  // The venue notification is the critical send; its failure fails the request.
   const result = await sendMail({
     to,
     replyTo: email || undefined,
     subject: `טופס אירוע חדש · ${payload.event ?? ""} · ${name || email || ""}`,
-    html: renderEmail(payload),
+    html: renderManagerEmail(payload, branch),
     attachments,
   })
 
   if (!result.ok) {
     const status = result.reason === "not_configured" ? 500 : 502
     return NextResponse.json({ error: "Failed to send email." }, { status })
+  }
+
+  // Best-effort confirmation to the customer; never blocks the response.
+  if (email?.trim()) {
+    await sendMail({
+      to: email.trim(),
+      subject: `קיבלנו את בקשת האירוע שלך · ${BRAND_HE}`,
+      html: renderCustomerEmail(payload, branch, name || email.trim()),
+    })
   }
 
   return NextResponse.json({ ok: true })

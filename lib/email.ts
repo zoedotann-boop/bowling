@@ -4,7 +4,13 @@ import { eq } from "drizzle-orm"
 import { cookies } from "next/headers"
 import { Resend } from "resend"
 
-import { BRANCH_COOKIE } from "@/lib/branches"
+import {
+  BRANCH_COOKIE,
+  BRANCHES,
+  DEFAULT_BRANCH,
+  isBranchId,
+  type Branch,
+} from "@/lib/branches"
 import { db } from "@/lib/db"
 import { location } from "@/lib/db/schema"
 
@@ -39,6 +45,14 @@ export async function resolveInquiriesRecipient(): Promise<string | undefined> {
   }
 
   return process.env.EVENTS_TO_EMAIL?.trim() || undefined
+}
+
+// Resolves the active branch (for email header/footer branding) from the same
+// BRANCH cookie the public site uses, falling back to the default branch.
+export async function resolveActiveBranch(): Promise<Branch> {
+  const cookieStore = await cookies()
+  const slug = cookieStore.get(BRANCH_COOKIE)?.value
+  return BRANCHES[isBranchId(slug) ? slug : DEFAULT_BRANCH]
 }
 
 interface MailAttachment {
