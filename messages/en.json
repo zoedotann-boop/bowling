@@ -6,14 +6,11 @@
   "brand": "Bowling",
   "header": {
     "openMenu": "Open menu",
+    "closeMenu": "Close menu",
     "branch": "Ramat Gan Branch ▾",
     "lang": "EN",
     "whatsapp": "WhatsApp",
-    "nav": [
-      "Home",
-      "Menu",
-      "Events & Birthdays"
-    ]
+    "nav": ["Home", "Menu", "Events & Birthdays"]
   },
   "floating": {
     "openNow": "Open now",
@@ -195,12 +192,7 @@
   "footer": {
     "tagline": "Israel's leading bowling venue. Open every day.",
     "navTitle": "Navigation",
-    "navLinks": [
-      "Home",
-      "Menu",
-      "Birthdays & Events",
-      "Contact us"
-    ],
+    "navLinks": ["Home", "Menu", "Birthdays & Events", "Contact us"],
     "branchTitle": "Ramat Gan Branch",
     "branchDetails": [
       "Aba Hillel Rd 301",
@@ -687,11 +679,7 @@
     "branch": {
       "rishon": {
         "birthdays": {
-          "badges": [
-            "Ages 8+",
-            "Minimum 20 kids",
-            "About two hours of fun"
-          ],
+          "badges": ["Ages 8+", "Minimum 20 kids", "About two hours of fun"],
           "title": "Bowling birthdays with a deal",
           "description": "A bowling game for all the kids, a dedicated host, a birthday table in the restaurant and a cake ceremony.",
           "schedule": {
@@ -856,11 +844,7 @@
     },
     "items": {
       "birthdays": {
-        "badges": [
-          "Ages 8+",
-          "No private room",
-          "Dedicated table included"
-        ],
+        "badges": ["Ages 8+", "No private room", "Dedicated table included"],
         "title": "Birthday at the bowling alley",
         "description": "A free-style celebration - bowling lanes for all the kids, a table with a cloth, pitchers of water and cordial on us at no charge, and a festive cake ceremony. The bowling alley is not closed for the event.",
         "schedule": {
@@ -970,11 +954,7 @@
         }
       },
       "no-room": {
-        "badges": [
-          "Ages 8+",
-          "No private room",
-          "Dedicated table included"
-        ],
+        "badges": ["Ages 8+", "No private room", "Dedicated table included"],
         "title": "Birthday without a private room",
         "description": "A free-style celebration - bowling lanes for all the kids, a table with a cloth, pitchers of water and cordial on us at no charge, and a festive cake ceremony. The bowling alley is not closed for the event.",
         "schedule": {
@@ -1084,11 +1064,7 @@
         }
       },
       "team": {
-        "badges": [
-          "Ages 8+",
-          "Minimum 20 kids",
-          "About two hours of fun"
-        ],
+        "badges": ["Ages 8+", "Minimum 20 kids", "About two hours of fun"],
         "title": "An unforgettable class outing!",
         "lead": "The hosting and refreshments are served right to the bowling lanes - stay in the energy of the game!",
         "description": "A bowling game for all the kids with a dedicated host, rhythmic music and an electric atmosphere. Free games on the video equipment, a fun competition between the kids and an unforgettable bonding experience.",
