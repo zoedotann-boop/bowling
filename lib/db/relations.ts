@@ -8,6 +8,7 @@ import {
   homeFeature,
   homeReview,
   homeService,
+  pricingContent,
   siteContent,
 } from "./schema/content"
 import {
@@ -23,6 +24,7 @@ import { menuCategory, menuContent, menuItem } from "./schema/menu"
 
 export const locationRelations = relations(location, ({ one, many }) => ({
   home: one(homeContent),
+  pricing: one(pricingContent),
   site: one(siteContent),
   menu: one(menuContent),
   features: many(homeFeature),
@@ -38,6 +40,13 @@ export const locationRelations = relations(location, ({ one, many }) => ({
 export const homeContentRelations = relations(homeContent, ({ one }) => ({
   location: one(location, {
     fields: [homeContent.locationId],
+    references: [location.id],
+  }),
+}))
+
+export const pricingContentRelations = relations(pricingContent, ({ one }) => ({
+  location: one(location, {
+    fields: [pricingContent.locationId],
     references: [location.id],
   }),
 }))

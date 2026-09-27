@@ -1,3 +1,4 @@
+import type { PricingDraft } from "@/lib/actions/admin/schemas"
 import type { Localized } from "@/lib/db/schema/_shared"
 import type { DayHours } from "@/lib/db/schema/locations"
 
@@ -5,6 +6,32 @@ import type { DayHours } from "@/lib/db/schema/locations"
 // a Localized value is always `{ he, en }` with strings (never null/undefined).
 export function toLocalized(value: Localized | null | undefined): Localized {
   return { he: value?.he ?? "", en: value?.en ?? "" }
+}
+
+// The pricing row is a set of localized fields; normalize each so the editor
+// always shows controlled `{ he, en }` inputs even before any content is saved.
+type PricingRow = { [K in keyof PricingDraft]?: Localized | null }
+export function toPricingDraft(
+  row: PricingRow | null | undefined
+): PricingDraft {
+  return {
+    eyebrow: toLocalized(row?.eyebrow),
+    title: toLocalized(row?.title),
+    description: toLocalized(row?.description),
+    weekdaysLabel: toLocalized(row?.weekdaysLabel),
+    weekdaysPrice: toLocalized(row?.weekdaysPrice),
+    weekendLabel: toLocalized(row?.weekendLabel),
+    weekendPrice: toLocalized(row?.weekendPrice),
+    thirdGameLabel: toLocalized(row?.thirdGameLabel),
+    thirdGameNote: toLocalized(row?.thirdGameNote),
+    thirdGamePrice: toLocalized(row?.thirdGamePrice),
+    soldierTitle: toLocalized(row?.soldierTitle),
+    soldierNote: toLocalized(row?.soldierNote),
+    birthdayEyebrow: toLocalized(row?.birthdayEyebrow),
+    birthdayTitle: toLocalized(row?.birthdayTitle),
+    birthdayDescription: toLocalized(row?.birthdayDescription),
+    birthdayCtaLabel: toLocalized(row?.birthdayCtaLabel),
+  }
 }
 
 // Normalizes stored opening hours into a full Sun→Sat draft so the editor

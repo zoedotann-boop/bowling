@@ -86,6 +86,28 @@ const contactSubjectSchema = z.object({
   label: localizedSchema,
 })
 
+// Pricing section ("מחירון"). Every field is localized text, including the
+// price values (e.g. "35 ₪"), so the currency placement follows the language.
+const pricingSchema = z.object({
+  eyebrow: localizedSchema,
+  title: localizedSchema,
+  description: localizedSchema,
+  weekdaysLabel: localizedSchema,
+  weekdaysPrice: localizedSchema,
+  weekendLabel: localizedSchema,
+  weekendPrice: localizedSchema,
+  thirdGameLabel: localizedSchema,
+  thirdGameNote: localizedSchema,
+  thirdGamePrice: localizedSchema,
+  soldierTitle: localizedSchema,
+  soldierNote: localizedSchema,
+  birthdayEyebrow: localizedSchema,
+  birthdayTitle: localizedSchema,
+  birthdayDescription: localizedSchema,
+  birthdayCtaLabel: localizedSchema,
+})
+export type PricingDraft = z.infer<typeof pricingSchema>
+
 export const homeSchema = z.object({
   slug: z.string(),
   heroTitle: localizedSchema,
@@ -98,6 +120,7 @@ export const homeSchema = z.object({
   aboutImageUrl: z.string(),
   contactTitle: localizedSchema,
   contactIntro: localizedSchema,
+  pricing: pricingSchema,
   features: z.array(homeFeatureSchema),
   services: z.array(homeServiceSchema),
   reviews: z.array(homeReviewSchema),

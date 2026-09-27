@@ -1,6 +1,6 @@
 import { HomeForm } from "@/components/admin/sections/home-form"
 import { requireLocationAccess } from "@/lib/admin/access"
-import { toLocalized } from "@/lib/admin/drafts"
+import { toLocalized, toPricingDraft } from "@/lib/admin/drafts"
 import type { HomeDraft } from "@/lib/actions/admin/schemas"
 import { getHomeEditor } from "@/lib/db/queries/admin"
 
@@ -25,6 +25,7 @@ export default async function HomePage({
     aboutImageUrl: data?.home?.aboutImageUrl ?? "",
     contactTitle: toLocalized(data?.site?.contactTitle),
     contactIntro: toLocalized(data?.site?.contactIntro),
+    pricing: toPricingDraft(data?.pricing),
     features: (data?.features ?? []).map((row) => ({
       id: row.id,
       icon: row.icon,

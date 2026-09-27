@@ -15,6 +15,13 @@
       "when": 1790516981225,
       "tag": "0001_dusty_earthquake",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790518127680,
+      "tag": "0002_daily_rafael_vega",
+      "breakpoints": true
     }
   ]
 }

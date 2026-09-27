@@ -16,12 +16,13 @@ export async function getSiteLocations() {
 }
 
 // Home page + shared chrome content (hero, features, services, gallery, reviews,
-// contact, footer note) for every location, keyed by slug on the client.
+// contact, footer note, pricing) for every location, keyed by slug on the client.
 export async function getHomeContent() {
   return db.query.location.findMany({
     orderBy: [asc(location.sortOrder)],
     with: {
       home: true,
+      pricing: true,
       site: true,
       features: { orderBy: (f) => [asc(f.sortOrder)] },
       services: { orderBy: (f) => [asc(f.sortOrder)] },

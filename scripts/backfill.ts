@@ -131,6 +131,33 @@ async function backfill() {
         set: siteValues,
       })
 
+    // --- pricing ---
+    const pricingValues = {
+      eyebrow: L(["pricing", "eyebrow"]),
+      title: L(["pricing", "title"]),
+      description: L(["pricing", "description"]),
+      weekdaysLabel: L(["pricing", "weekdays"]),
+      weekdaysPrice: L(["pricing", "weekdaysPrice"]),
+      weekendLabel: L(["pricing", "weekend"]),
+      weekendPrice: L(["pricing", "weekendPrice"]),
+      thirdGameLabel: L(["pricing", "thirdGame"]),
+      thirdGameNote: L(["pricing", "thirdGameNote"]),
+      thirdGamePrice: L(["pricing", "thirdGamePrice"]),
+      soldierTitle: L(["pricing", "soldierTitle"]),
+      soldierNote: L(["pricing", "soldierNote"]),
+      birthdayEyebrow: L(["pricing", "birthdayEyebrow"]),
+      birthdayTitle: L(["pricing", "birthdayTitle"]),
+      birthdayDescription: L(["pricing", "birthdayDescription"]),
+      birthdayCtaLabel: L(["pricing", "birthdayCta"]),
+    }
+    await db
+      .insert(schema.pricingContent)
+      .values({ locationId, ...pricingValues })
+      .onConflictDoUpdate({
+        target: schema.pricingContent.locationId,
+        set: pricingValues,
+      })
+
     // --- features ---
     await db.insert(schema.homeFeature).values(
       arr(["features"]).map((_, i) => ({

@@ -1,6 +1,7 @@
 "use server"
 
 import { eq } from "drizzle-orm"
+import { revalidatePath } from "next/cache"
 
 import { requireLocationAccess } from "@/lib/admin/access"
 import { db } from "@/lib/db"
@@ -11,6 +12,7 @@ import {
   homeFeature,
   homeReview,
   homeService,
+  pricingContent,
   siteContent,
 } from "@/lib/db/schema"
 
@@ -53,6 +55,14 @@ export async function saveHome(input: unknown): Promise<ActionResult> {
     .insert(siteContent)
     .values({ locationId, ...siteValues })
     .onConflictDoUpdate({ target: siteContent.locationId, set: siteValues })
+
+  await db
+    .insert(pricingContent)
+    .values({ locationId, ...data.pricing })
+    .onConflictDoUpdate({
+      target: pricingContent.locationId,
+      set: data.pricing,
+    })
 
   const features = await db.query.homeFeature.findMany({
     where: eq(homeFeature.locationId, locationId),
@@ -207,6 +217,9 @@ export async function saveHome(input: unknown): Promise<ActionResult> {
       await db.delete(contactSubject).where(eq(contactSubject.id, id))
     },
   })
+
+  // The public home page reads this content, so refresh its cache immediately.
+  revalidatePath("/")
 
   return OK
 }

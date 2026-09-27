@@ -2,6 +2,8 @@ import type { Preview } from "@storybook/nextjs-vite"
 import { Rubik, Heebo } from "next/font/google"
 import { NextIntlClientProvider } from "next-intl"
 
+import { BranchProvider } from "../components/branch-context"
+import { DEFAULT_BRANCH } from "../lib/branches"
 import "../app/globals.css"
 import { DEFAULT_BRANCH } from "../lib/branches"
 import { BranchProvider } from "../components/branch-context"

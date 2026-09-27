@@ -20,6 +20,32 @@ export const homeContent = pgTable("home_content", {
   ...timestamps,
 })
 
+// Pricing section ("כמה עולה לשחק?") for a location's home page. One row per
+// location. Price values are localized text (e.g. "35 ₪" / "₪ 35") so the
+// currency placement can follow the language, matching the rest of the site.
+export const pricingContent = pgTable("pricing_content", {
+  locationId: uuid("location_id")
+    .primaryKey()
+    .references(() => location.id, { onDelete: "cascade" }),
+  eyebrow: localized(),
+  title: localized(),
+  description: localized(),
+  weekdaysLabel: localized(),
+  weekdaysPrice: localized(),
+  weekendLabel: localized(),
+  weekendPrice: localized(),
+  thirdGameLabel: localized(),
+  thirdGameNote: localized(),
+  thirdGamePrice: localized(),
+  soldierTitle: localized(),
+  soldierNote: localized(),
+  birthdayEyebrow: localized(),
+  birthdayTitle: localized(),
+  birthdayDescription: localized(),
+  birthdayCtaLabel: localized(),
+  ...timestamps,
+})
+
 // Site-wide chrome copy (footer, contact intro) for a location.
 export const siteContent = pgTable("site_content", {
   locationId: uuid("location_id")
