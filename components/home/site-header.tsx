@@ -36,6 +36,18 @@ export function SiteHeader() {
     <header>
       <div className="border-b border-navy bg-cream-warm">
         <Container className="flex items-center justify-between gap-4 py-3 lg:py-3.5">
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-label={t("header.openMenu")}
+            aria-expanded={open}
+            className="flex size-11 flex-col items-center justify-center gap-1 rounded-sm border border-navy bg-card lg:hidden"
+          >
+            <span className="h-[2.5px] w-5 rounded bg-navy" />
+            <span className="h-[2.5px] w-5 rounded bg-navy" />
+            <span className="h-[2.5px] w-5 rounded bg-navy" />
+          </button>
+
           <Link href="/" className="flex items-center">
             <Image
               src={branch.logo.src}
@@ -75,18 +87,6 @@ export function SiteHeader() {
               {t("header.whatsapp")}
             </a>
           </div>
-
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            aria-label={t("header.openMenu")}
-            aria-expanded={open}
-            className="flex size-11 flex-col items-center justify-center gap-1 rounded-sm border border-navy bg-card lg:hidden"
-          >
-            <span className="h-[2.5px] w-5 rounded bg-navy" />
-            <span className="h-[2.5px] w-5 rounded bg-navy" />
-            <span className="h-[2.5px] w-5 rounded bg-navy" />
-          </button>
         </Container>
       </div>
 
@@ -100,7 +100,7 @@ export function SiteHeader() {
         <button
           type="button"
           tabIndex={open ? 0 : -1}
-          aria-label={t("header.openMenu")}
+          aria-label={t("header.closeMenu")}
           onClick={() => setOpen(false)}
           className={cn(
             "absolute inset-0 bg-navy-deep/80 transition-opacity duration-300",
@@ -109,11 +109,19 @@ export function SiteHeader() {
         />
         <div
           className={cn(
-            "absolute inset-y-0 end-0 flex w-[82%] max-w-xs flex-col overflow-y-auto border-s border-navy bg-[#1a1a1a] px-5 pt-5 pb-8 transition-transform duration-300 ease-out",
-            open ? "translate-x-0" : "translate-x-full rtl:-translate-x-full"
+            "absolute inset-y-0 start-0 flex w-[82%] max-w-xs flex-col overflow-y-auto border-e border-navy bg-[#1a1a1a] px-5 pt-5 pb-8 transition-transform duration-300 ease-out",
+            open ? "translate-x-0" : "-translate-x-full rtl:translate-x-full"
           )}
         >
           <div className="mb-5 flex items-center justify-between">
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label={t("header.closeMenu")}
+              className="flex size-10 items-center justify-center rounded-sm border border-navy bg-card"
+            >
+              <X className="size-5 text-navy" strokeWidth={3} />
+            </button>
             <Image
               src={branch.logo.src}
               alt={t("brand")}
@@ -121,14 +129,6 @@ export function SiteHeader() {
               height={branch.logo.height}
               className="h-10 w-auto"
             />
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              aria-label="Close"
-              className="flex size-10 items-center justify-center rounded-sm border border-navy bg-card"
-            >
-              <X className="size-5 text-navy" strokeWidth={3} />
-            </button>
           </div>
 
           <nav className="flex flex-col gap-2.5">
