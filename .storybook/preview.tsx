@@ -3,6 +3,8 @@ import { Rubik, Heebo } from "next/font/google"
 import { NextIntlClientProvider } from "next-intl"
 
 import "../app/globals.css"
+import { DEFAULT_BRANCH } from "../lib/branches"
+import { BranchProvider } from "../components/branch-context"
 import messages from "../messages/he.json"
 
 const rubik = Rubik({
@@ -26,14 +28,19 @@ const preview: Preview = {
     },
   },
   decorators: [
+    // Provide the same context the site does: branch data (components read it via
+    // useBranch) and messages. Site content falls back to next-intl when absent,
+    // so no SiteContentProvider is needed here.
     (Story) => (
       <NextIntlClientProvider locale="he" messages={messages}>
-        <div
-          dir="rtl"
-          className={`${rubik.variable} ${heebo.variable} font-sans`}
-        >
-          <Story />
-        </div>
+        <BranchProvider initial={DEFAULT_BRANCH}>
+          <div
+            dir="rtl"
+            className={`${rubik.variable} ${heebo.variable} font-sans`}
+          >
+            <Story />
+          </div>
+        </BranchProvider>
       </NextIntlClientProvider>
     ),
   ],

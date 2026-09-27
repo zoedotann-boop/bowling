@@ -12,10 +12,13 @@ import {
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, Check, Eraser, X } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import SignatureCanvas from "react-signature-canvas"
 
 import { cn } from "@/lib/utils"
+import type { BranchId } from "@/lib/branches"
+import type { SiteEventLocation, SiteEventType } from "@/lib/db/queries/site"
+import { formatPrice, pickLocale } from "@/lib/localized"
 import { useBranch } from "@/components/branch-context"
 import {
   BirthdaysIllustration,
@@ -26,6 +29,8 @@ import {
 } from "@/components/illustrations"
 import { Contact } from "@/components/home/contact"
 import { Container } from "@/components/home/container"
+
+type FormField = SiteEventType["formFields"][number]
 
 // Hand-drawn illustration shown in the hero. Birthdays uses a real photo.
 const ILLUSTRATIONS: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
@@ -538,19 +543,120 @@ const EMPTY_FIELDS = {
   date: "",
 }
 
+// Native <input> type for each admin-defined field kind.
+const INPUT_TYPES: Record<FormField["type"], string> = {
+  text: "text",
+  textarea: "textarea",
+  tel: "tel",
+  email: "email",
+  id: "text",
+  date: "date",
+  number: "number",
+  select: "select",
+  checkbox: "checkbox",
+}
+
+// Renders one admin-defined form field. Required/min/max rely on the browser's
+// native validation, so the submit handler only runs once the form is valid.
+function DynamicField({
+  field,
+  value,
+  onChange,
+  locale,
+}: {
+  field: FormField
+  value: string
+  onChange: (value: string) => void
+  locale: "he" | "en"
+}) {
+  const label = pickLocale(field.label, locale)
+  const placeholder = pickLocale(field.placeholder, locale)
+
+  if (field.type === "checkbox") {
+    return (
+      <label className="flex items-center gap-2.5 text-[14px] font-semibold text-foreground sm:col-span-2">
+        <input
+          type="checkbox"
+          checked={value === "true"}
+          onChange={(e) => onChange(e.target.checked ? "true" : "")}
+          required={field.isRequired}
+          className="size-4 shrink-0 accent-primary"
+        />
+        {label}
+      </label>
+    )
+  }
+
+  return (
+    <label className="flex flex-col gap-1.5">
+      <span className="font-heading text-[13px] font-extrabold text-navy">
+        {label}
+      </span>
+      {field.type === "textarea" ? (
+        <textarea
+          className={cn(inputClass, "h-24 resize-none")}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder || undefined}
+          required={field.isRequired}
+        />
+      ) : field.type === "select" ? (
+        <select
+          className={inputClass}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          required={field.isRequired}
+        >
+          <option value="">{placeholder || "—"}</option>
+          {(field.options ?? []).map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {pickLocale(opt.label, locale)}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <input
+          type={INPUT_TYPES[field.type]}
+          className={inputClass}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder || undefined}
+          required={field.isRequired}
+          inputMode={field.type === "id" ? "numeric" : undefined}
+          min={
+            field.type === "number" ? (field.minValue ?? undefined) : undefined
+          }
+          max={
+            field.type === "number" ? (field.maxValue ?? undefined) : undefined
+          }
+        />
+      )}
+    </label>
+  )
+}
+
 // Booking / commitment form. Used by every event (standard + corporate):
 // the visitor acknowledges the terms, picks upgrades and signs before sending.
+// When the event type defines dynamic form fields in the admin, they replace
+// the built-in personal-detail fields; otherwise the built-in set is used.
 function BookingForm({
   event,
   upgrades,
+  formFields,
+  requiresSignature,
 }: {
   event: string
   upgrades?: Extra[]
+  formFields: FormField[]
+  requiresSignature: boolean
 }) {
   const t = useTranslations("eventDetails.form")
+  const locale = useLocale() as "he" | "en"
   const sigRef = useRef<SignatureCanvas>(null)
+  const isDynamic = formFields.length > 0
 
   const [fields, setFields] = useState(EMPTY_FIELDS)
+  const [values, setValues] = useState<Record<string, string>>({})
   const [selectedUpgrades, setSelectedUpgrades] = useState<string[]>([])
   const [agreed, setAgreed] = useState(false)
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
@@ -561,6 +667,9 @@ function BookingForm({
   const update =
     (key: keyof typeof fields) => (e: ChangeEvent<HTMLInputElement>) =>
       setFields((prev) => ({ ...prev, [key]: e.target.value }))
+
+  const setValue = (key: string, value: string) =>
+    setValues((prev) => ({ ...prev, [key]: value }))
 
   const toggleUpgrade = (title: string) =>
     setSelectedUpgrades((prev) =>
@@ -575,10 +684,16 @@ function BookingForm({
       setError(t("errorTerms"))
       return
     }
-    if (sigRef.current?.isEmpty() ?? true) {
+    // Per-field required/min/max are enforced natively, so this only runs when
+    // the fields are valid; the signature pad still needs a manual check.
+    if (requiresSignature && (sigRef.current?.isEmpty() ?? true)) {
       setError(t("errorSignature"))
       return
     }
+
+    const signature = requiresSignature
+      ? sigRef.current?.toDataURL("image/png")
+      : undefined
 
     setStatus("sending")
     try {
@@ -587,14 +702,15 @@ function BookingForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           event,
-          ...fields,
+          ...(isDynamic ? values : fields),
           upgrades: selectedUpgrades,
-          signature: sigRef.current?.toDataURL("image/png"),
+          signature,
         }),
       })
       if (!res.ok) throw new Error("request failed")
       setStatus("sent")
       setFields(EMPTY_FIELDS)
+      setValues({})
       setSelectedUpgrades([])
       setAgreed(false)
       sigRef.current?.clear()
@@ -621,61 +737,75 @@ function BookingForm({
       </label>
 
       <div className="grid gap-3.5 sm:grid-cols-2">
-        <Field
-          label={t("firstNameLabel")}
-          value={fields.firstName}
-          onChange={update("firstName")}
-          placeholder={t("firstNamePlaceholder")}
-          autoComplete="given-name"
-          required
-        />
-        <Field
-          label={t("lastNameLabel")}
-          value={fields.lastName}
-          onChange={update("lastName")}
-          placeholder={t("lastNamePlaceholder")}
-          autoComplete="family-name"
-          required
-        />
-        <Field
-          label={t("idLabel")}
-          value={fields.idNumber}
-          onChange={update("idNumber")}
-          placeholder={t("idPlaceholder")}
-          inputMode="numeric"
-          required
-        />
-        <Field
-          label={t("celebrantsLabel")}
-          value={fields.celebrants}
-          onChange={update("celebrants")}
-          placeholder={t("celebrantsPlaceholder")}
-        />
-        <Field
-          label={t("emailLabel")}
-          type="email"
-          value={fields.email}
-          onChange={update("email")}
-          placeholder={t("emailPlaceholder")}
-          autoComplete="email"
-          required
-        />
-        <Field
-          label={t("phoneLabel")}
-          type="tel"
-          value={fields.phone}
-          onChange={update("phone")}
-          placeholder={t("phonePlaceholder")}
-          autoComplete="tel"
-          required
-        />
-        <Field
-          label={t("dateLabel")}
-          type="date"
-          value={fields.date}
-          onChange={update("date")}
-          required
-        />
+        {isDynamic ? (
+          formFields.map((field) => (
+            <DynamicField
+              key={field.id}
+              field={field}
+              value={values[field.key] ?? ""}
+              onChange={(value) => setValue(field.key, value)}
+              locale={locale}
+            />
+          ))
+        ) : (
+          <>
+            <Field
+              label={t("firstNameLabel")}
+              value={fields.firstName}
+              onChange={update("firstName")}
+              placeholder={t("firstNamePlaceholder")}
+              autoComplete="given-name"
+              required
+            />
+            <Field
+              label={t("lastNameLabel")}
+              value={fields.lastName}
+              onChange={update("lastName")}
+              placeholder={t("lastNamePlaceholder")}
+              autoComplete="family-name"
+              required
+            />
+            <Field
+              label={t("idLabel")}
+              value={fields.idNumber}
+              onChange={update("idNumber")}
+              placeholder={t("idPlaceholder")}
+              inputMode="numeric"
+              required
+            />
+            <Field
+              label={t("celebrantsLabel")}
+              value={fields.celebrants}
+              onChange={update("celebrants")}
+              placeholder={t("celebrantsPlaceholder")}
+            />
+            <Field
+              label={t("emailLabel")}
+              type="email"
+              value={fields.email}
+              onChange={update("email")}
+              placeholder={t("emailPlaceholder")}
+              autoComplete="email"
+              required
+            />
+            <Field
+              label={t("phoneLabel")}
+              type="tel"
+              value={fields.phone}
+              onChange={update("phone")}
+              placeholder={t("phonePlaceholder")}
+              autoComplete="tel"
+              required
+            />
+            <Field
+              label={t("dateLabel")}
+              type="date"
+              value={fields.date}
+              onChange={update("date")}
+              required
+            />
+          </>
+        )}
       </div>
 
       {upgrades?.length ? (
@@ -725,34 +855,36 @@ function BookingForm({
         </fieldset>
       ) : null}
 
-      {/* Digital signature pad. */}
-      <div>
-        <div className="mb-2 flex items-center justify-between gap-3">
-          <div>
-            <div className="font-heading text-[15px] font-black text-navy">
-              {t("signatureTitle")}
+      {/* Digital signature pad (only when the event type requires it). */}
+      {requiresSignature ? (
+        <div>
+          <div className="mb-2 flex items-center justify-between gap-3">
+            <div>
+              <div className="font-heading text-[15px] font-black text-navy">
+                {t("signatureTitle")}
+              </div>
+              <p className="text-[12.5px] font-semibold text-mud">
+                {t("signatureHint")}
+              </p>
             </div>
-            <p className="text-[12.5px] font-semibold text-mud">
-              {t("signatureHint")}
-            </p>
+            <button
+              type="button"
+              onClick={() => sigRef.current?.clear()}
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-sm border border-border bg-background px-3 py-1.5 font-heading text-[12.5px] font-extrabold text-mud transition-colors hover:border-primary hover:text-navy"
+            >
+              <Eraser className="size-3.5" strokeWidth={2.5} />
+              {t("signatureClear")}
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={() => sigRef.current?.clear()}
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-sm border border-border bg-background px-3 py-1.5 font-heading text-[12.5px] font-extrabold text-mud transition-colors hover:border-primary hover:text-navy"
-          >
-            <Eraser className="size-3.5" strokeWidth={2.5} />
-            {t("signatureClear")}
-          </button>
+          <div className="overflow-hidden rounded-sm border border-border bg-white">
+            <SignatureCanvas
+              ref={sigRef}
+              penColor="#0f172a"
+              canvasProps={{ className: "h-40 w-full touch-none lg:h-48" }}
+            />
+          </div>
         </div>
-        <div className="overflow-hidden rounded-sm border border-border bg-white">
-          <SignatureCanvas
-            ref={sigRef}
-            penColor="#0f172a"
-            canvasProps={{ className: "h-40 w-full touch-none lg:h-48" }}
-          />
-        </div>
-      </div>
+      ) : null}
 
       <button
         type="submit"
@@ -783,10 +915,14 @@ function BookingSection({
   event,
   upgrades,
   summary,
+  formFields,
+  requiresSignature,
 }: {
   event: string
   upgrades?: Extra[]
   summary?: FormSummary
+  formFields: FormField[]
+  requiresSignature: boolean
 }) {
   const t = useTranslations("eventDetails.form")
   const te = useTranslations("eventDetails")
@@ -835,7 +971,12 @@ function BookingSection({
           </div>
         ) : null}
 
-        <BookingForm event={event} upgrades={upgrades} />
+        <BookingForm
+          event={event}
+          upgrades={upgrades}
+          formFields={formFields}
+          requiresSignature={requiresSignature}
+        />
       </Container>
     </section>
   )
@@ -845,20 +986,66 @@ function BookingSection({
 // Page
 // ---------------------------------------------------------------------------
 
-export function EventDetailPage({ slug }: { slug: string }) {
+export function EventDetailPage({
+  slug,
+  events,
+}: {
+  slug: string
+  events: Partial<Record<BranchId, SiteEventLocation>>
+}) {
   const t = useTranslations("eventDetails")
   const { branch } = useBranch()
+  const locale = useLocale() as "he" | "en"
   const items = t.raw("items") as Record<string, EventItem>
   const overrides = t.raw("branch") as Record<string, Record<string, EventItem>>
   // Branch-specific content wins over the shared default.
-  const data = overrides?.[branch.id]?.[slug] ?? items[slug]
+  const messageData = overrides?.[branch.id]?.[slug] ?? items[slug]
+
+  // Admin-managed event type for this branch (if any). Its editable fields —
+  // hero copy, schedule steps, package lines, upgrades and the booking-form
+  // fields — override the next-intl content; the richer static bits (badges,
+  // price cards, rules, policy) stay in the message catalog.
+  const dbTypes = events[branch.id]?.eventTypes ?? []
+  const dbType = dbTypes.find((e) => e.slug === slug)
+  const data: EventItem = {
+    ...messageData,
+    title: pickLocale(dbType?.content?.heroTitle, locale) || messageData.title,
+    description:
+      pickLocale(dbType?.content?.heroDescription, locale) ||
+      messageData.description,
+    schedule: messageData.schedule && {
+      ...messageData.schedule,
+      steps: dbType?.steps.length
+        ? dbType.steps.map((s) => ({
+            icon: "",
+            title: pickLocale(s.title, locale),
+            desc: pickLocale(s.description, locale),
+          }))
+        : messageData.schedule.steps,
+    },
+    included: dbType?.packageLines.length
+      ? dbType.packageLines.map((l) => pickLocale(l.label, locale))
+      : messageData.included,
+    extras: dbType?.upgrades.length
+      ? dbType.upgrades.map((u) => ({
+          title: pickLocale(u.label, locale),
+          price: u.amount != null ? formatPrice(u.amount, locale) : "",
+        }))
+      : messageData.extras,
+  }
+
   const isCorporate = slug === "corporate"
   // Corporate and team outings skip the commitment form and use the shared
   // homepage contact form for enquiries instead.
   const usesContactForm = isCorporate || slug === "team"
 
-  // This event isn't offered at the selected branch.
-  if (!branch.events.includes(slug)) {
+  // Availability: when the branch has DB event types, honour that list;
+  // otherwise fall back to the hardcoded branch offering.
+  const available = dbTypes.length
+    ? Boolean(dbType)
+    : branch.events.includes(slug)
+
+  if (!available) {
     return (
       <Container className="py-16 text-center lg:py-24">
         <h1 className="font-heading text-[32px] font-black tracking-[-1px] text-navy lg:text-[44px]">
@@ -975,11 +1162,13 @@ export function EventDetailPage({ slug }: { slug: string }) {
         <div id="book" className="scroll-mt-20">
           <Contact />
         </div>
-      ) : data.form ? (
+      ) : data.form || dbType?.formFields.length ? (
         <BookingSection
           event={data.title}
           upgrades={data.extras}
           summary={data.formSummary}
+          formFields={dbType?.formFields ?? []}
+          requiresSignature={dbType?.content?.requiresSignature ?? true}
         />
       ) : null}
     </>

@@ -5,7 +5,9 @@ import { useLocale, useTranslations } from "next-intl"
 import { cn } from "@/lib/utils"
 import { whatsappUrl } from "@/lib/contact"
 import { useIsOpen } from "@/lib/hours"
+import { pickLocale } from "@/lib/localized"
 import { useBranch } from "@/components/branch-context"
+import { useSiteContent } from "@/components/site-content-context"
 import { NeonSign } from "@/components/decor/neon-sign"
 import { PinsSettle } from "@/components/decor/pins-settle"
 import { Container } from "./container"
@@ -15,6 +17,12 @@ export function Hero() {
   const { branch } = useBranch()
   const locale = useLocale() as "he" | "en"
   const isOpen = useIsOpen() ?? true
+  const home = useSiteContent()?.home
+
+  // Admin-managed copy wins; fall back to the next-intl strings when unset.
+  const title = pickLocale(home?.heroTitle, locale)
+  const subtitle = pickLocale(home?.heroSubtitle, locale)
+  const ctaLabel = pickLocale(home?.heroCtaLabel, locale)
 
   return (
     <section className="relative isolate overflow-hidden bg-background">
@@ -61,13 +69,20 @@ export function Hero() {
         </div>
 
         <h1 className="mt-4 mb-3.5 font-heading text-[42px] leading-[1.03] font-black tracking-[-1.5px] text-navy lg:mt-5 lg:mb-5 lg:text-[64px] lg:leading-[0.98] lg:tracking-[-2px]">
-          {t("titleBefore")}{" "}
-          <span className="text-primary">{t("titleHighlight")}</span>
-          <br className="hidden lg:block" /> {t("titleAfter")}
+          {title ? (
+            title
+          ) : (
+            <>
+              {t("titleBefore")}{" "}
+              <span className="text-primary">{t("titleHighlight")}</span>
+              <br className="hidden lg:block" /> {t("titleAfter")}
+            </>
+          )}
         </h1>
 
         <p className="mb-[18px] text-base leading-[1.55] font-medium text-mud lg:mx-auto lg:mb-8 lg:max-w-[560px] lg:text-[18px]">
-          {t(branch.hasGymboree ? "description" : "descriptionNoGymboree")}
+          {subtitle ||
+            t(branch.hasGymboree ? "description" : "descriptionNoGymboree")}
         </p>
 
         <div className="mt-14 flex flex-col gap-2.5 lg:mt-0 lg:flex-row lg:justify-center">
@@ -86,7 +101,7 @@ export function Hero() {
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center rounded-sm border border-navy/30 bg-transparent px-6 py-[15px] font-heading text-base font-extrabold text-foreground transition-colors hover:border-primary hover:text-primary lg:py-4 lg:text-[17px]"
           >
-            {t("whatsapp")}
+            {ctaLabel || t("whatsapp")}
           </a>
         </div>
 

@@ -6,7 +6,9 @@ import { useLocale, useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
 import { whatsappUrl } from "@/lib/contact"
+import { pickLocale } from "@/lib/localized"
 import { useBranch } from "@/components/branch-context"
+import { useSiteContent } from "@/components/site-content-context"
 import { LedDot } from "@/components/decor/led-dot"
 import { Container } from "./container"
 
@@ -19,24 +21,35 @@ export function Contact() {
   const t = useTranslations("contact")
   const { branch } = useBranch()
   const locale = useLocale() as "he" | "en"
+  const content = useSiteContent()
+  const site = content?.site
+  const email = content?.email?.trim() || "info@bowling.co.il"
   const rawInfo = t.raw("info") as { title: string; value: string }[]
-  // Address (0) and phone (2) come from the active branch.
+  // Address (0), email (1) and phone (2) come from the active branch / DB.
   const info = rawInfo.map((item, i) =>
     i === 0
       ? { ...item, value: branch.addressFull[locale] }
-      : i === 2
-        ? { ...item, value: branch.phone }
-        : item
+      : i === 1
+        ? { ...item, value: email }
+        : i === 2
+          ? { ...item, value: branch.phone }
+          : item
   )
   // Per-card outbound links: Waze, email, phone, and WhatsApp (last card).
   const infoHrefs = [
     branch.wazeUrl,
-    "mailto:info@bowling.co.il",
+    `mailto:${email}`,
     `tel:${branch.phone}`,
     whatsappUrl(branch.whatsapp),
   ]
-  const topics = t.raw("topics") as string[]
+  // Admin-managed contact subjects win; fall back to the next-intl copy.
+  const dbTopics = content?.contactSubjects ?? []
+  const topics = dbTopics.length
+    ? dbTopics.map((s) => pickLocale(s.label, locale))
+    : (t.raw("topics") as string[])
   const [topic, setTopic] = useState(topics[0])
+  const eyebrow = pickLocale(site?.contactIntro, locale) || t("eyebrow")
+  const title = pickLocale(site?.contactTitle, locale) || t("title")
 
   return (
     <section className="mt-6 border-t border-navy py-8 lg:mt-14 lg:py-16">
@@ -44,10 +57,10 @@ export function Contact() {
         <div className="mb-6 text-center lg:mb-9">
           <span className="font-mono text-xs font-bold text-secondary lg:text-sm">
             <LedDot color="secondary" className="me-2 align-middle" />
-            {t("eyebrow")}
+            {eyebrow}
           </span>
           <h2 className="neon-sign-purple mt-1.5 font-heading text-[38px] font-black tracking-[-1px] text-foreground lg:text-[52px]">
-            {t("title")}
+            {title}
           </h2>
           <div className="mx-auto mt-3 h-[7px] w-[70px] rounded-sm bg-primary lg:w-20" />
         </div>
