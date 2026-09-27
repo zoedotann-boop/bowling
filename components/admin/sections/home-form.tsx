@@ -26,6 +26,16 @@ export function HomeForm({
     setDraft((prev) => ({ ...prev, [key]: value }))
   }
 
+  function setPricing<K extends keyof HomeDraft["pricing"]>(
+    key: K,
+    value: HomeDraft["pricing"][K]
+  ) {
+    setDraft((prev) => ({
+      ...prev,
+      pricing: { ...prev.pricing, [key]: value },
+    }))
+  }
+
   return (
     <SectionForm
       slug={slug}
@@ -141,6 +151,95 @@ export function HomeForm({
               />
             </div>
           )}
+        />
+      </AdminCard>
+
+      <AdminCard title={t("pricing")} description={t("pricingHint")}>
+        <LocalizedField
+          label={t("pricingEyebrow")}
+          value={draft.pricing.eyebrow}
+          onChange={(value) => setPricing("eyebrow", value)}
+        />
+        <LocalizedField
+          label={t("pricingTitle")}
+          value={draft.pricing.title}
+          onChange={(value) => setPricing("title", value)}
+        />
+        <LocalizedField
+          label={t("pricingDescription")}
+          multiline
+          value={draft.pricing.description}
+          onChange={(value) => setPricing("description", value)}
+        />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <LocalizedField
+            label={t("pricingWeekdaysLabel")}
+            value={draft.pricing.weekdaysLabel}
+            onChange={(value) => setPricing("weekdaysLabel", value)}
+          />
+          <LocalizedField
+            label={t("pricingWeekdaysPrice")}
+            value={draft.pricing.weekdaysPrice}
+            onChange={(value) => setPricing("weekdaysPrice", value)}
+          />
+          <LocalizedField
+            label={t("pricingWeekendLabel")}
+            value={draft.pricing.weekendLabel}
+            onChange={(value) => setPricing("weekendLabel", value)}
+          />
+          <LocalizedField
+            label={t("pricingWeekendPrice")}
+            value={draft.pricing.weekendPrice}
+            onChange={(value) => setPricing("weekendPrice", value)}
+          />
+          <LocalizedField
+            label={t("pricingThirdGameLabel")}
+            value={draft.pricing.thirdGameLabel}
+            onChange={(value) => setPricing("thirdGameLabel", value)}
+          />
+          <LocalizedField
+            label={t("pricingThirdGamePrice")}
+            value={draft.pricing.thirdGamePrice}
+            onChange={(value) => setPricing("thirdGamePrice", value)}
+          />
+        </div>
+        <LocalizedField
+          label={t("pricingThirdGameNote")}
+          value={draft.pricing.thirdGameNote}
+          onChange={(value) => setPricing("thirdGameNote", value)}
+        />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <LocalizedField
+            label={t("pricingSoldierTitle")}
+            value={draft.pricing.soldierTitle}
+            onChange={(value) => setPricing("soldierTitle", value)}
+          />
+          <LocalizedField
+            label={t("pricingSoldierNote")}
+            value={draft.pricing.soldierNote}
+            onChange={(value) => setPricing("soldierNote", value)}
+          />
+        </div>
+        <LocalizedField
+          label={t("pricingBirthdayEyebrow")}
+          value={draft.pricing.birthdayEyebrow}
+          onChange={(value) => setPricing("birthdayEyebrow", value)}
+        />
+        <LocalizedField
+          label={t("pricingBirthdayTitle")}
+          value={draft.pricing.birthdayTitle}
+          onChange={(value) => setPricing("birthdayTitle", value)}
+        />
+        <LocalizedField
+          label={t("pricingBirthdayDescription")}
+          multiline
+          value={draft.pricing.birthdayDescription}
+          onChange={(value) => setPricing("birthdayDescription", value)}
+        />
+        <LocalizedField
+          label={t("pricingBirthdayCtaLabel")}
+          value={draft.pricing.birthdayCtaLabel}
+          onChange={(value) => setPricing("birthdayCtaLabel", value)}
         />
       </AdminCard>
 

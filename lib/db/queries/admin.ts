@@ -21,6 +21,7 @@ export async function getHomeEditor(locationId: string) {
     where: (fields, { eq }) => eq(fields.id, locationId),
     with: {
       home: true,
+      pricing: true,
       site: true,
       features: { orderBy: (f) => [asc(f.sortOrder)] },
       services: { orderBy: (f) => [asc(f.sortOrder)] },

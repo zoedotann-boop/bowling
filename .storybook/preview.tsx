@@ -2,6 +2,8 @@ import type { Preview } from "@storybook/nextjs-vite"
 import { Rubik, Heebo } from "next/font/google"
 import { NextIntlClientProvider } from "next-intl"
 
+import { BranchProvider } from "../components/branch-context"
+import { DEFAULT_BRANCH } from "../lib/branches"
 import "../app/globals.css"
 import messages from "../messages/he.json"
 
@@ -28,12 +30,14 @@ const preview: Preview = {
   decorators: [
     (Story) => (
       <NextIntlClientProvider locale="he" messages={messages}>
-        <div
-          dir="rtl"
-          className={`${rubik.variable} ${heebo.variable} font-sans`}
-        >
-          <Story />
-        </div>
+        <BranchProvider initial={DEFAULT_BRANCH}>
+          <div
+            dir="rtl"
+            className={`${rubik.variable} ${heebo.variable} font-sans`}
+          >
+            <Story />
+          </div>
+        </BranchProvider>
       </NextIntlClientProvider>
     ),
   ],

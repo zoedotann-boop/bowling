@@ -1,14 +1,26 @@
-import { useTranslations } from "next-intl"
+"use client"
+
+import { useLocale, useTranslations } from "next-intl"
 
 import Link from "next/link"
 
 import { cn } from "@/lib/utils"
+import type { Localized } from "@/lib/db/schema/_shared"
+import { pickLocale } from "@/lib/localized"
 import { LedDot } from "@/components/decor/led-dot"
 import { BirthdayScene } from "@/components/illustrations"
+import { useHomeContent } from "./home-content-context"
 import { Container } from "./container"
 
-function SoldierDiscount({ className }: { className?: string }) {
-  const t = useTranslations("pricing")
+function SoldierDiscount({
+  title,
+  note,
+  className,
+}: {
+  title: string
+  note: string
+  className?: string
+}) {
   return (
     <div
       className={cn(
@@ -18,11 +30,9 @@ function SoldierDiscount({ className }: { className?: string }) {
     >
       <div>
         <div className="font-heading text-sm font-extrabold text-primary">
-          {t("soldierTitle")}
+          {title}
         </div>
-        <div className="text-[11.5px] font-semibold text-secondary">
-          {t("soldierNote")}
-        </div>
+        <div className="text-[11.5px] font-semibold text-secondary">{note}</div>
       </div>
     </div>
   )
@@ -34,6 +44,13 @@ const priceValue = "font-heading text-[26px] font-black lg:text-[30px]"
 
 export function Pricing() {
   const t = useTranslations("pricing")
+  const locale = useLocale() as "he" | "en"
+  const pricing = useHomeContent()?.pricing
+
+  // Prefer the admin-edited value for the active locale; fall back to the
+  // translated default when the field is empty or the branch has no row yet.
+  const val = (value: Localized | null | undefined, key: string) =>
+    pickLocale(value, locale) || t(key)
 
   return (
     <Container className="pt-7 pb-1 lg:pt-14">
@@ -42,68 +59,80 @@ export function Pricing() {
         <div>
           <span className="font-mono text-[13px] font-bold text-secondary lg:text-sm">
             <LedDot color="secondary" className="me-2 align-middle" />
-            {t("eyebrow")}
+            {val(pricing?.eyebrow, "eyebrow")}
           </span>
           <h2 className="neon-sign-purple mt-1.5 mb-3 font-heading text-[38px] leading-none font-black tracking-[-1px] lg:mb-4 lg:text-[52px]">
-            {t("title")}
+            {val(pricing?.title, "title")}
           </h2>
           <p className="mb-4 text-[15px] leading-[1.55] font-semibold text-mud lg:mb-5 lg:max-w-[380px] lg:text-base">
-            {t("description")}
+            {val(pricing?.description, "description")}
           </p>
-          <SoldierDiscount className="hidden lg:inline-flex" />
+          <SoldierDiscount
+            title={val(pricing?.soldierTitle, "soldierTitle")}
+            note={val(pricing?.soldierNote, "soldierNote")}
+            className="hidden lg:inline-flex"
+          />
         </div>
 
         {/* Price table */}
         <div className="hover:glow-cyan overflow-hidden rounded-sm border border-navy bg-paper transition-shadow lg:rounded-sm">
           <div className={cn(priceRow, "border-b border-border bg-card")}>
-            <div className={cn(priceLabel, "text-navy")}>{t("weekdays")}</div>
+            <div className={cn(priceLabel, "text-navy")}>
+              {val(pricing?.weekdaysLabel, "weekdays")}
+            </div>
             <div className={cn(priceValue, "text-navy")}>
-              {t("weekdaysPrice")}
+              {val(pricing?.weekdaysPrice, "weekdaysPrice")}
             </div>
           </div>
           <div className={cn(priceRow, "border-b border-border bg-cream-warm")}>
-            <div className={cn(priceLabel, "text-navy")}>{t("weekend")}</div>
+            <div className={cn(priceLabel, "text-navy")}>
+              {val(pricing?.weekendLabel, "weekend")}
+            </div>
             <div className={cn(priceValue, "text-navy")}>
-              {t("weekendPrice")}
+              {val(pricing?.weekendPrice, "weekendPrice")}
             </div>
           </div>
           <div className={cn(priceRow, "glow-primary bg-primary")}>
             <div>
               <div className={cn(priceLabel, "text-primary-foreground")}>
-                {t("thirdGame")}
+                {val(pricing?.thirdGameLabel, "thirdGame")}
               </div>
               <div className="text-xs font-bold text-navy-deep">
-                {t("thirdGameNote")}
+                {val(pricing?.thirdGameNote, "thirdGameNote")}
               </div>
             </div>
             <div className={cn(priceValue, "text-primary-foreground")}>
-              {t("thirdGamePrice")}
+              {val(pricing?.thirdGamePrice, "thirdGamePrice")}
             </div>
           </div>
         </div>
       </div>
 
       {/* Soldier discount (mobile placement) */}
-      <SoldierDiscount className="mt-4 lg:hidden" />
+      <SoldierDiscount
+        title={val(pricing?.soldierTitle, "soldierTitle")}
+        note={val(pricing?.soldierNote, "soldierNote")}
+        className="mt-4 lg:hidden"
+      />
 
       {/* Birthday CTA */}
       <div className="neon-frame-magenta mt-5 overflow-hidden rounded-sm bg-card lg:mt-12 lg:grid lg:grid-cols-2 lg:items-stretch">
         <div className="p-[26px] lg:p-11">
           <span className="font-mono text-[13px] font-bold text-secondary lg:text-sm">
             <LedDot color="secondary" className="me-2 align-middle" />
-            {t("birthdayEyebrow")}
+            {val(pricing?.birthdayEyebrow, "birthdayEyebrow")}
           </span>
           <h3 className="text-glow-primary mt-2 mb-3 font-heading text-[32px] leading-[1.02] font-black tracking-[-1px] text-foreground lg:mb-3.5 lg:text-[44px]">
-            {t("birthdayTitle")}
+            {val(pricing?.birthdayTitle, "birthdayTitle")}
           </h3>
           <p className="mb-5 text-[15px] leading-[1.55] font-semibold text-muted-foreground lg:mb-6 lg:max-w-[440px] lg:text-[17px]">
-            {t("birthdayDescription")}
+            {val(pricing?.birthdayDescription, "birthdayDescription")}
           </p>
           <Link
             href="/events"
             className="glow-primary hover:glow-cyan inline-block w-full rounded-sm border border-primary bg-primary px-5 py-3.5 text-center font-heading text-[15px] font-extrabold text-primary-foreground transition-colors hover:border-secondary hover:bg-secondary hover:text-secondary-foreground lg:w-auto lg:px-7 lg:py-4 lg:text-base"
           >
-            {t("birthdayCta")}
+            {val(pricing?.birthdayCtaLabel, "birthdayCta")}
           </Link>
         </div>
         <div className="relative min-h-[220px] border-t-2 border-primary bg-navy-deep lg:min-h-full lg:border-s-2 lg:border-t-0 rtl:lg:border-s-0 rtl:lg:border-e-2">
