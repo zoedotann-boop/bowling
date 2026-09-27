@@ -74,7 +74,7 @@ export function SectionForm<T>({
           void handleSave()
         }}
       >
-        <div className="sticky top-0 z-10 -mx-4 mb-4 flex items-center justify-between gap-3 border-b border-border bg-cream/95 px-4 py-3 backdrop-blur md:-mx-6 md:px-6">
+        <div className="sticky top-0 z-10 -mx-4 -mt-4 mb-4 flex items-center justify-between gap-3 border-b border-border bg-cream/95 px-4 py-3 backdrop-blur md:-mx-6 md:px-6">
           <div>
             <h1 className="text-lg font-semibold">{title}</h1>
             {description && (
