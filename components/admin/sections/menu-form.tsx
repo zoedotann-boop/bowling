@@ -37,11 +37,13 @@ export function MenuForm({
       <div className="space-y-4">
         <LocalizedField
           label={t("itemName")}
+          tooltip={t("itemNameTip")}
           value={item.name}
           onChange={(name) => update({ ...item, name })}
         />
         <LocalizedField
           label={t("itemDescription")}
+          tooltip={t("itemDescriptionTip")}
           multiline
           value={item.description}
           onChange={(description) => update({ ...item, description })}
@@ -63,6 +65,7 @@ export function MenuForm({
         </AdminField>
         <AdminFlag
           label={common("visible")}
+          description={common("visibleTip")}
           checked={item.isVisible}
           onCheckedChange={(isVisible) => update({ ...item, isVisible })}
         />
@@ -86,6 +89,7 @@ export function MenuForm({
         />
         <LocalizedField
           label={t("intro")}
+          tooltip={t("introTip")}
           multiline
           value={draft.intro}
           onChange={(intro) => setDraft((prev) => ({ ...prev, intro }))}
@@ -126,6 +130,7 @@ export function MenuForm({
               />
               <AdminFlag
                 label={common("visible")}
+                description={common("visibleTip")}
                 checked={category.isVisible}
                 onCheckedChange={(isVisible) =>
                   update({ ...category, isVisible })

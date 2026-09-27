@@ -67,21 +67,24 @@ export function GeneralForm({
         />
         <LocalizedField
           label={t("addressLine1")}
+          tooltip={t("addressLine1Tip")}
           value={draft.addressLine1}
           onChange={(value) => set("addressLine1", value)}
         />
         <LocalizedField
           label={t("addressLine2")}
+          tooltip={t("addressLine2Tip")}
           value={draft.addressLine2}
           onChange={(value) => set("addressLine2", value)}
         />
         <LocalizedField
           label={t("addressFull")}
+          tooltip={t("addressFullTip")}
           value={draft.addressFull}
           onChange={(value) => set("addressFull", value)}
         />
         <div className="grid gap-4 sm:grid-cols-2">
-          <AdminField label={t("phone")}>
+          <AdminField label={t("phone")} tooltip={t("phoneTip")}>
             <AdminInput
               dir="ltr"
               value={draft.phone}
@@ -114,14 +117,14 @@ export function GeneralForm({
               onChange={(event) => set("inquiriesEmail", event.target.value)}
             />
           </AdminField>
-          <AdminField label={t("wazeUrl")}>
+          <AdminField label={t("wazeUrl")} tooltip={t("wazeUrlTip")}>
             <AdminInput
               dir="ltr"
               value={draft.wazeUrl}
               onChange={(event) => set("wazeUrl", event.target.value)}
             />
           </AdminField>
-          <AdminField label={t("lanes")}>
+          <AdminField label={t("lanes")} tooltip={t("lanesTip")}>
             <AdminInput
               type="number"
               min={0}
@@ -134,11 +137,13 @@ export function GeneralForm({
         </div>
         <LocalizedField
           label={t("laneDesc")}
+          tooltip={t("laneDescTip")}
           value={draft.laneDesc}
           onChange={(value) => set("laneDesc", value)}
         />
         <ImageField
           label={t("logoUrl")}
+          tooltip={t("logoUrlTip")}
           value={draft.logoUrl}
           onChange={(value) => set("logoUrl", value)}
         />
@@ -202,11 +207,13 @@ export function GeneralForm({
           <>
             <LocalizedField
               label={t("noticeTitle")}
+              tooltip={t("noticeTitleTip")}
               value={draft.noticeTitle}
               onChange={(value) => set("noticeTitle", value)}
             />
             <LocalizedField
               label={t("noticeBody")}
+              tooltip={t("noticeBodyTip")}
               multiline
               value={draft.noticeBody}
               onChange={(value) => set("noticeBody", value)}
@@ -218,17 +225,20 @@ export function GeneralForm({
       <AdminCard title={t("siteChrome")}>
         <LocalizedField
           label={t("contactTitle")}
+          tooltip={t("contactTitleTip")}
           value={draft.contactTitle}
           onChange={(value) => set("contactTitle", value)}
         />
         <LocalizedField
           label={t("contactIntro")}
+          tooltip={t("contactIntroTip")}
           multiline
           value={draft.contactIntro}
           onChange={(value) => set("contactIntro", value)}
         />
         <LocalizedField
           label={t("footerNote")}
+          tooltip={t("footerNoteTip")}
           multiline
           value={draft.footerNote}
           onChange={(value) => set("footerNote", value)}
@@ -238,11 +248,13 @@ export function GeneralForm({
       <AdminCard title={t("seo")}>
         <LocalizedField
           label={t("seoTitle")}
+          tooltip={t("seoTitleTip")}
           value={draft.seoTitle}
           onChange={(value) => set("seoTitle", value)}
         />
         <LocalizedField
           label={t("seoDescription")}
+          tooltip={t("seoDescriptionTip")}
           multiline
           value={draft.seoDescription}
           onChange={(value) => set("seoDescription", value)}

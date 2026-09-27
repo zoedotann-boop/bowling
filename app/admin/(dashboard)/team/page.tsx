@@ -1,6 +1,7 @@
 import { getLocale, getTranslations } from "next-intl/server"
 
 import { AdminCard } from "@/components/admin/admin-ui"
+import { InfoTooltip } from "@/components/admin/info-tooltip"
 import { requireOwnerAccess } from "@/lib/admin/access"
 import { listTeam } from "@/lib/db/queries/admin"
 import { pickLocale } from "@/lib/localized"
@@ -30,10 +31,16 @@ export default async function TeamPage() {
                 {t("email")}
               </th>
               <th className="py-1.5 pe-2 text-start font-medium">
-                {t("role")}
+                <span className="inline-flex items-center gap-1">
+                  {t("role")}
+                  <InfoTooltip text={t("roleTip")} />
+                </span>
               </th>
               <th className="py-1.5 pe-2 text-start font-medium">
-                {t("locations")}
+                <span className="inline-flex items-center gap-1">
+                  {t("locations")}
+                  <InfoTooltip text={t("locationsTip")} />
+                </span>
               </th>
             </tr>
           </thead>
