@@ -23,15 +23,11 @@ export function BranchProvider({
   children,
 }: {
   initial: BranchId
-  // DB-backed branch data (merged over the hardcoded defaults by the caller).
-  // Optional so the provider still works without a database (falls back to the
-  // static BRANCHES).
   branches?: Record<BranchId, Branch>
   children: React.ReactNode
 }) {
   const [branchId, setBranchId] = useState<BranchId>(initial)
 
-  // Persist the selection so the server renders the same branch next request.
   useEffect(() => {
     document.cookie = `${BRANCH_COOKIE}=${branchId};path=/;max-age=${60 * 60 * 24 * 365}`
   }, [branchId])

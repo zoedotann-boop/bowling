@@ -2,9 +2,6 @@ import { cn } from "@/lib/utils"
 
 import { PIN_PATH, PIN_VIEWBOX } from "./bowling-pin"
 
-// The one playful bowling moment: a small rack of pins drops and settles into
-// place once on load (staggered), then rests. FLAT — off-white pins with a red
-// stripe (logo red), no shadow/glow. Reduced-motion shows them settled instantly.
 const TILTS = [-6, 4, -5, 6, -4]
 
 export function PinsSettle({ className }: { className?: string }) {

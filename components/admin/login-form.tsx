@@ -9,9 +9,6 @@ import { Button } from "@/components/ui/button"
 import { ADMIN_ROOT } from "@/lib/admin/routes"
 import { authClient } from "@/lib/auth-client"
 
-// Passwordless sign-in: step 1 emails a one-time code to the address, step 2
-// verifies the code. Public sign-up is disabled, so a code is only ever sent to
-// a provisioned admin.
 export function LoginForm() {
   const t = useTranslations("admin.signIn")
   const router = useRouter()

@@ -26,23 +26,18 @@ async function getSessionUser(): Promise<AdminUser | null> {
   return { id, name, email, role: (role as AdminRole) ?? "staff" }
 }
 
-// Every admin page/action funnels through here. Redirects to the login page
-// when there is no session.
 export async function requireAdminUser(): Promise<AdminUser> {
   const user = await getSessionUser()
   if (!user) redirect(ADMIN_LOGIN_PATH)
   return user
 }
 
-// Owner-only top-level pages (locations, team).
 export async function requireOwnerAccess(): Promise<AdminUser> {
   const user = await requireAdminUser()
   if (user.role !== "owner") notFound()
   return user
 }
 
-// Resolves a location slug and asserts the user may act on it with the given
-// capability. Owners bypass membership; managers/staff must be members.
 export async function requireLocationAccess(
   slug: string,
   capability?: AdminCapability
@@ -69,8 +64,6 @@ export async function requireLocationAccess(
   return { user, location: loc }
 }
 
-// The set of locations a user may see in the switcher: all for owners, only
-// their memberships otherwise.
 export async function listAccessibleLocations(user: AdminUser) {
   if (user.role === "owner") {
     return db.query.location.findMany({ orderBy: [asc(location.sortOrder)] })

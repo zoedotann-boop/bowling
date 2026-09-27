@@ -10,14 +10,8 @@ import { fetchPlaceReviews } from "./serpapi"
 export type ReviewSyncResult =
   { ok: true; imported: number; updated: number } | { ok: false; error: string }
 
-// New reviews auto-publish only when they clear this bar (and the branch opted
-// into auto-sync); anything lower waits for a manual publish in the admin.
 const AUTO_PUBLISH_MIN_RATING = 4
 
-// Fetches a branch's Google reviews and upserts them keyed by Google's review id
-// (unique per location). Existing rows are refreshed in place, but their
-// isPublished flag is deliberately left untouched so an admin's publish choice
-// survives every re-sync.
 export async function syncLocationReviews({
   locationId,
   placeId,
@@ -54,7 +48,6 @@ export async function syncLocationReviews({
       })
       .onConflictDoUpdate({
         target: [googleReview.locationId, googleReview.externalId],
-        // isPublished intentionally omitted — the admin's choice wins.
         set: {
           authorName: review.authorName,
           rating: review.rating,

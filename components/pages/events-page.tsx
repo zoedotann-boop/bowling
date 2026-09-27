@@ -27,7 +27,6 @@ const ILLUSTRATIONS: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
   corporate: CorporateIllustration,
 }
 
-// Top-strip accent colors — neon light strips alternating purple/cyan.
 const STRIPS = [
   "bg-primary",
   "bg-secondary",
@@ -52,8 +51,6 @@ export function EventsPage({
   }[]
   const cardById = new Map(allCards.map((c) => [c.id, c]))
 
-  // Admin-managed event types win (already scoped + ordered per branch); fall
-  // back to the next-intl cards filtered to this branch's offered events.
   const cards: { id: string; title: string; desc: string }[] = dbTypes.length
     ? dbTypes.map((et) => ({
         id: et.slug,
@@ -88,7 +85,6 @@ export function EventsPage({
         </p>
       </div>
 
-      {/* Event type cards — styled exactly like the home "Services" cards */}
       <div className="flex flex-col gap-3.5 lg:grid lg:grid-cols-3 lg:gap-5">
         {cards.map((c, i) => {
           const Illustration = ILLUSTRATIONS[c.id] ?? BirthdaysIllustration
@@ -123,7 +119,6 @@ export function EventsPage({
         })}
       </div>
 
-      {/* CTA */}
       <div className="mt-6 overflow-hidden rounded-sm border border-border bg-card p-7 lg:mt-10 lg:flex lg:items-center lg:justify-between lg:gap-8 lg:p-11">
         <div>
           <h2 className="font-heading text-[28px] font-black tracking-[-1px] text-navy lg:text-[38px]">

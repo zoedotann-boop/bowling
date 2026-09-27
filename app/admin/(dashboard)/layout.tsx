@@ -1,8 +1,6 @@
 import { AdminShell } from "@/components/admin/admin-shell"
 import { listAccessibleLocations, requireAdminUser } from "@/lib/admin/access"
 
-// The single auth gate for the whole dashboard. Everything below is protected;
-// login lives outside this group.
 export default async function DashboardLayout({
   children,
 }: {

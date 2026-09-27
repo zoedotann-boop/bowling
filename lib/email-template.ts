@@ -3,15 +3,6 @@ import "server-only"
 import type { Branch } from "@/lib/branches"
 import { escapeHtml } from "@/lib/email"
 
-// ---------------------------------------------------------------------------
-// Branded email layout — mirrors the public site's "urban concrete + LED"
-// look (see app/globals.css): dark concrete surfaces, off-white type, a cyan
-// LED accent and a red pop. Emails are table-based with inline styles for
-// broad mail-client support, and RTL for the Hebrew copy. Web fonts don't
-// load reliably in mail clients, so we fall back to Arial/Helvetica.
-// ---------------------------------------------------------------------------
-
-// Concrete + LED palette, kept in sync with the site tokens.
 const C = {
   bg: "#141517", // page background (concrete)
   card: "#1f2124", // raised concrete card
@@ -32,17 +23,12 @@ export const BRAND_HE = "באולינג"
 
 interface EmailShellInput {
   branch: Branch
-  /** Hidden inbox-preview text shown before the body in most clients. */
   preheader: string
-  /** Main heading rendered in the hero block. */
   heading: string
-  /** Optional lead paragraph under the heading. */
   intro?: string
-  /** Pre-built body HTML (detail tables, lists, notes). */
   body: string
 }
 
-// Wraps body content in the full branded document (header, hero, footer).
 export function emailShell({
   branch,
   preheader,
@@ -108,7 +94,6 @@ export function emailShell({
 </html>`
 }
 
-// A key/value detail table. Labels sit on a darker slab with a cyan edge.
 export function detailTable(rows: [label: string, value: string][]): string {
   if (rows.length === 0) return ""
   const body = rows
@@ -122,12 +107,10 @@ export function detailTable(rows: [label: string, value: string][]): string {
   return `<table role="presentation" dir="rtl" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate;border:1px solid ${C.border};border-radius:2px;overflow:hidden;direction:rtl;">${body}</table>`
 }
 
-// A section sub-heading (e.g. "שדרוגים שנבחרו").
 export function sectionHeading(text: string): string {
   return `<h2 style="margin:26px 0 10px;font-family:${FONT};font-size:15px;font-weight:900;color:${C.text};text-align:right;">${escapeHtml(text)}</h2>`
 }
 
-// A simple bulleted list styled on the concrete palette.
 export function bulletList(items: string[]): string {
   const li = items
     .map((item) => `<li style="margin:0 0 6px;">${escapeHtml(item)}</li>`)
@@ -135,15 +118,12 @@ export function bulletList(items: string[]): string {
   return `<ul dir="rtl" style="margin:0;padding-right:20px;padding-left:0;font-family:${FONT};font-size:14px;line-height:1.6;color:${C.soft};direction:rtl;text-align:right;">${li}</ul>`
 }
 
-// A large, spaced one-time sign-in code on a raised slab with a cyan top edge.
-// Kept LTR since the code is digits.
 export function otpCode(code: string): string {
   return `<table role="presentation" dir="ltr" width="100%" cellpadding="0" cellspacing="0" style="margin:4px 0 8px;border-collapse:separate;">
     <tr><td align="center" style="padding:20px;background:${C.rowAlt};border:1px solid ${C.border};border-top:2px solid ${C.cyan};border-radius:2px;font-family:${FONT};font-size:34px;font-weight:900;letter-spacing:0.4em;color:${C.text};text-align:center;">${escapeHtml(code)}</td></tr>
   </table>`
 }
 
-// A short note paragraph (muted).
 export function noteParagraph(text: string): string {
   return `<p style="margin:8px 0 0;font-family:${FONT};font-size:14px;line-height:1.6;color:${C.muted};text-align:right;">${escapeHtml(text)}</p>`
 }

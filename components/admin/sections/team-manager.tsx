@@ -42,8 +42,6 @@ interface TeamMember {
 const headerCell = "px-4 py-2.5 text-start font-medium"
 const bodyCell = "px-4 py-3 align-middle"
 
-// Server actions return codes; a throw (e.g. a lost connection) maps to the
-// generic save error.
 async function run(action: () => Promise<ActionResult>): Promise<ActionResult> {
   try {
     return await action()
@@ -59,8 +57,6 @@ function useErrorMessage() {
     t.has(`error.${code}`) ? t(`error.${code}`) : common("saveError")
 }
 
-// Owner-only team page. Unlike the draft-based section forms, every change here
-// (create / edit / delete) is applied immediately by its own server action.
 export function TeamManager({
   members,
   locations,
@@ -72,7 +68,6 @@ export function TeamManager({
   const common = useTranslations("admin.common")
   const { toast } = useToast()
   const errorMessage = useErrorMessage()
-  // `"new"` opens the create dialog; a member opens the edit dialog.
   const [editing, setEditing] = useState<TeamMember | "new" | null>(null)
   const [removing, setRemoving] = useState<TeamMember | null>(null)
 
@@ -143,8 +138,6 @@ export function TeamManager({
                         )}
                       </div>
                       <div className="truncate text-xs text-muted-foreground">
-                        {/* LTR run for the address without flipping the
-                            cell's alignment in RTL. */}
                         <span dir="ltr">{member.email}</span>
                       </div>
                     </div>
@@ -181,7 +174,6 @@ export function TeamManager({
                   )}
                 </td>
                 <td className="px-3 py-3">
-                  {/* Fixed slots so the edit icon lines up on every row. */}
                   <div className="flex justify-end gap-1">
                     <Button
                       type="button"
@@ -237,9 +229,6 @@ export function TeamManager({
   )
 }
 
-// Create (member = null) or edit dialog. Mounted only while open, so its state
-// starts fresh each time. Errors render inline: a toast would sit beneath the
-// dialog's top layer.
 function MemberDialog({
   member,
   locations,
@@ -280,7 +269,6 @@ function MemberDialog({
     event.preventDefault()
     setError(null)
     startTransition(async () => {
-      // On update the (fixed) email is stripped by the action's schema.
       const result = await run(() =>
         member ? updateTeamMember(member.id, draft) : createTeamMember(draft)
       )
@@ -326,7 +314,6 @@ function MemberDialog({
             type="email"
             required
             dir="ltr"
-            // The email is the login identity; it's fixed once created.
             disabled={Boolean(member)}
             value={draft.email}
             onChange={(event) =>
@@ -341,7 +328,6 @@ function MemberDialog({
         >
           <AdminSelect
             id={`${id}-role`}
-            // Owners can't demote themselves (see updateTeamMember).
             disabled={member?.isSelf}
             value={draft.role}
             onChange={(event) =>

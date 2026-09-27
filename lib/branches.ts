@@ -1,6 +1,3 @@
-// Branch data for the two locations. The active branch is stored in a cookie
-// and exposed through BranchProvider (components/branch-context.tsx).
-
 export type BranchId = "ramat-gan" | "rishon"
 
 interface Localized {
@@ -15,18 +12,13 @@ export interface Branch {
   addressLine2: Localized
   addressFull: Localized
   phone: string
-  /** Branch WhatsApp lead number (international format, digits only, no "+"). */
   whatsapp: string
   lanes: number
   laneDesc: Localized
   wazeUrl: string
-  /** Branch-specific brand logo (used in the header and footer). */
   logo: { src: string; width: number; height: number }
-  /** Rishon LeZion also has a gymboree + bumper tubes attraction. */
   hasGymboree: boolean
-  /** Shows the branch-specific notice pop-up when true. */
   hasNotice: boolean
-  /** Event slugs offered at this branch, in display order. */
   events: string[]
 }
 
@@ -91,8 +83,6 @@ export function isBranchId(value: unknown): value is BranchId {
   return typeof value === "string" && value in BRANCHES
 }
 
-// Keys DB rows (locations, menus, event locations…) by branch id via their
-// `slug`, so client components can look up the active branch's content.
 export function byBranch<T extends { slug: string }>(
   rows: T[]
 ): Partial<Record<BranchId, T>> {

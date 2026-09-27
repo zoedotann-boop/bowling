@@ -27,12 +27,12 @@ new explanatory comments landing — put the explanation in a test name instead.
 Directives (`eslint-disable`, `@ts-expect-error`, …) are always kept.
 
 ```bash
-bun run comments:check    # fails if the count exceeds maxAllowed
+bun run comments:check    # fails on any removable comment
 bun run comments:remove   # strip comments in place
 ```
 
-`commentless.config.json` baselines `maxAllowed` to today's count. Lower it
-whenever you remove comments so the ceiling only ratchets down.
+`commentless.config.json` sets `maxAllowed` to `0`. For the rare comment that
+must stay, mark it with `// commentless-keep`.
 
 ## Environment variables
 

@@ -9,7 +9,6 @@ import { useBranch } from "@/components/branch-context"
 import { useSiteContent } from "@/components/site-content-context"
 
 const DISMISS_KEY = "branch-notice-dismissed"
-// sessionStorage isn't reactive, so there's nothing to subscribe to.
 const noSubscribe = () => () => {}
 
 export function BranchNotice() {
@@ -18,20 +17,15 @@ export function BranchNotice() {
   const locale = useLocale() as "he" | "en"
   const content = useSiteContent()
   const [closed, setClosed] = useState(false)
-  // Admin-managed notice copy; fall back to the next-intl strings.
   const title = pickLocale(content?.noticeTitle, locale) || t("title")
   const body = pickLocale(content?.noticeBody, locale) || t("body")
 
-  // Read the session dismissal without an effect. On the server we treat it as
-  // dismissed so nothing renders (avoids any hydration mismatch), then the real
-  // value is read on the client after hydration.
   const dismissed = useSyncExternalStore(
     noSubscribe,
     () => sessionStorage.getItem(DISMISS_KEY) === branch.id,
     () => true
   )
 
-  // Show once per session, only for branches that have a notice.
   const open = branch.hasNotice && !dismissed && !closed
 
   useEffect(() => {
@@ -58,7 +52,6 @@ export function BranchNotice() {
       aria-modal="true"
       className="fixed inset-0 z-[90] flex animate-page-in items-center justify-center p-4"
     >
-      {/* Overlay */}
       <button
         type="button"
         aria-label={t("close")}
@@ -66,7 +59,6 @@ export function BranchNotice() {
         className="absolute inset-0 bg-navy-deep/80 backdrop-blur-sm"
       />
 
-      {/* Card */}
       <div className="glow-primary relative w-full max-w-md overflow-hidden rounded-sm border-2 border-navy bg-card">
         <div className="h-2.5 border-b border-navy bg-red" />
 

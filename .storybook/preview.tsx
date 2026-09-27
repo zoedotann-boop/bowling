@@ -28,9 +28,6 @@ const preview: Preview = {
     },
   },
   decorators: [
-    // Provide the same context the site does: branch data (components read it via
-    // useBranch) and messages. Most site content falls back to next-intl when
-    // absent; stories that need DB rows (e.g. Reviews) add a SiteContentProvider.
     (Story) => (
       <NextIntlClientProvider locale="he" messages={messages}>
         <BranchProvider initial={DEFAULT_BRANCH}>

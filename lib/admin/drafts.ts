@@ -2,14 +2,10 @@ import type { PricingDraft } from "@/lib/actions/admin/schemas"
 import type { Localized } from "@/lib/db/schema/_shared"
 import type { DayHours } from "@/lib/db/schema/locations"
 
-// Normalizes server rows into draft shape so admin inputs stay controlled:
-// a Localized value is always `{ he, en }` with strings (never null/undefined).
 export function toLocalized(value: Localized | null | undefined): Localized {
   return { he: value?.he ?? "", en: value?.en ?? "" }
 }
 
-// The pricing row is a set of localized fields; normalize each so the editor
-// always shows controlled `{ he, en }` inputs even before any content is saved.
 type PricingRow = { [K in keyof PricingDraft]?: Localized | null }
 export function toPricingDraft(
   row: PricingRow | null | undefined
@@ -34,8 +30,6 @@ export function toPricingDraft(
   }
 }
 
-// Normalizes stored opening hours into a full Sun→Sat draft so the editor
-// always shows all seven days.
 export function toHoursDraft(value: DayHours[] | null | undefined): DayHours[] {
   return Array.from({ length: 7 }, (_, day) => {
     const existing = value?.find((entry) => entry.day === day)

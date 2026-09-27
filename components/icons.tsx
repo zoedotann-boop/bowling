@@ -1,6 +1,3 @@
-// Page-facing icon names, aliased to the shared vector artwork. Bowling and the
-// "new lanes" feature both use the pins art; the events service uses the party
-// popper. Colour follows the palette tokens baked into the artwork.
 export {
   PinsArt as BowlingIcon,
   PinsArt as LanesIcon,

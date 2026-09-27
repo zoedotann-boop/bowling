@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils"
 
-// A small filled LED dot that flickers like the venue's lights. Flat (no glow).
 export function LedDot({
   className,
   color = "primary",

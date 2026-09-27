@@ -20,7 +20,6 @@ export function Hero() {
   const isOpen = useIsOpen() ?? true
   const home = useSiteContent()?.home
 
-  // Admin-managed copy wins; fall back to the next-intl strings when unset.
   const title = pickLocale(home?.heroTitle, locale)
   const subtitle = pickLocale(home?.heroSubtitle, locale)
   const ctaLabel = pickLocale(home?.heroCtaLabel, locale)
@@ -30,15 +29,12 @@ export function Hero() {
       <LaneLines />
 
       <Container className="pt-10 pb-[170px] lg:flex lg:min-h-[max(620px,52vw)] lg:flex-col lg:items-center lg:justify-center lg:py-20 lg:text-center">
-        {/* One playful moment: a small rack of pins settling in */}
         <PinsSettle className="mb-4 lg:mb-5" />
 
-        {/* The one identity element: the flat "BOWLING" LED sign */}
         <div className="mb-5 flex justify-center lg:mb-7">
           <NeonSign flicker />
         </div>
 
-        {/* Open/closed status — green when open, red when closed */}
         <div className="inline-flex items-center gap-2 border border-border bg-card px-3 py-1 text-[12px] font-semibold text-muted-foreground lg:text-[13px]">
           <span
             className={cn(
@@ -86,7 +82,6 @@ export function Hero() {
           </a>
         </div>
 
-        {/* Branch card */}
         <div className="mt-6 flex items-center justify-between gap-3 rounded-sm border border-border bg-card px-4 py-3.5 lg:mt-9 lg:w-full lg:max-w-[460px] lg:text-start">
           <div>
             <div className="flex items-center gap-2">

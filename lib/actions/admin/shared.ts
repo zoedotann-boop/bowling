@@ -1,13 +1,9 @@
 import { z } from "zod"
 
-// Actions return machine-readable codes, never sentences. The client maps codes
-// to translated toasts (see components/admin/toast.tsx + admin.common.*).
 export type ActionResult = { ok: true } | { ok: false; error: string }
 
 export const OK: ActionResult = { ok: true }
 
-// Reads the `slug` off unvalidated action input so the access gate can run
-// first (full zod validation happens after authentication).
 export function readSlug(input: unknown): string {
   if (
     typeof input === "object" &&
@@ -25,7 +21,6 @@ export const localizedSchema = z.object({
   en: z.string().optional(),
 })
 
-// Presence of the uuid marks an existing row; absence marks an insert.
 export const rowIdSchema = z.uuid().optional()
 
 export interface SyncCollectionArgs<T extends { id?: string }> {
@@ -36,12 +31,6 @@ export interface SyncCollectionArgs<T extends { id?: string }> {
   remove: (id: string) => Promise<void>
 }
 
-// The critical persistence primitive. Diffs an incoming array against the rows
-// currently in the database:
-//   • row with an id            → update
-//   • row without an id         → insert
-//   • existing id not incoming  → delete
-// Callers inject `sortOrder` from array index before calling.
 export async function syncCollection<T extends { id?: string }>({
   existingIds,
   incoming,

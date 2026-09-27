@@ -5,13 +5,8 @@ import { FORM_FIELD_TYPES } from "@/lib/events/fields"
 
 import { localizedSchema, rowIdSchema } from "./shared"
 
-// Zod schemas + inferred draft types for every admin section. Kept in a plain
-// (non-"use server") module so both the server actions and the client forms can
-// import from it — "use server" files may only export async functions.
-
 const optionalMoney = z.number().int().nonnegative().nullable()
 
-// --- Locations (owner) ------------------------------------------------------
 const adminLocationSchema = z.object({
   id: rowIdSchema,
   slug: z.string().min(1),
@@ -23,10 +18,6 @@ export const locationsSchema = z.object({
 })
 export type LocationsDraft = z.infer<typeof locationsSchema>
 
-// --- Team (owner) ----------------------------------------------------------
-// The editable part of a user. Owners implicitly see every location, so their
-// `locationIds` are ignored; everyone else needs at least one (checked in the
-// action so it can return a specific error code).
 export const teamMemberSchema = z.object({
   name: z.string().trim().min(1).max(120),
   role: z.enum(ADMIN_ROLES),
@@ -34,13 +25,11 @@ export const teamMemberSchema = z.object({
 })
 export type TeamMemberDraft = z.infer<typeof teamMemberSchema>
 
-// Emails are stored lowercased — Better Auth lowercases the address on sign-in.
 export const newTeamMemberSchema = teamMemberSchema.extend({
   email: z.string().trim().toLowerCase().pipe(z.email()),
 })
 export type NewTeamMemberDraft = z.infer<typeof newTeamMemberSchema>
 
-// --- General ----------------------------------------------------------------
 const dayHoursSchema = z.object({
   day: z.number().int().min(0).max(6),
   closed: z.boolean(),
@@ -75,7 +64,6 @@ export const generalSchema = z.object({
 })
 export type GeneralDraft = z.infer<typeof generalSchema>
 
-// --- Home --------------------------------------------------------------------
 const homeFeatureSchema = z.object({
   id: rowIdSchema,
   icon: z.string(),
@@ -98,8 +86,6 @@ const contactSubjectSchema = z.object({
   label: localizedSchema,
 })
 
-// Pricing section ("מחירון"). Every field is localized text, including the
-// price values (e.g. "35 ₪"), so the currency placement follows the language.
 const pricingSchema = z.object({
   eyebrow: localizedSchema,
   title: localizedSchema,
@@ -140,10 +126,6 @@ export const homeSchema = z.object({
 })
 export type HomeDraft = z.infer<typeof homeSchema>
 
-// --- Reviews (Google pooler) -------------------------------------------------
-// The public form curates fetched Google reviews: it only ever sends back which
-// rows to keep and whether each is published (their content comes from Google,
-// not the admin). The place id + auto-sync toggle configure the pooler itself.
 const reviewCurationSchema = z.object({
   id: z.uuid(),
   isPublished: z.boolean(),
@@ -155,8 +137,6 @@ export const reviewsSchema = z.object({
   reviews: z.array(reviewCurationSchema),
 })
 
-// Full display shape held by the form and returned by a manual sync. publishedAt
-// is serialized to YYYY-MM-DD for a stable, locale-free date cell.
 export interface GoogleReviewDraft {
   id: string
   authorName: string
@@ -166,7 +146,6 @@ export interface GoogleReviewDraft {
   isPublished: boolean
 }
 
-// --- Menu --------------------------------------------------------------------
 const menuItemSchema = z.object({
   id: rowIdSchema,
   name: localizedSchema,
@@ -189,7 +168,6 @@ export const menuSchema = z.object({
 export type MenuDraft = z.infer<typeof menuSchema>
 export type MenuItemDraft = z.infer<typeof menuItemSchema>
 
-// --- Events ------------------------------------------------------------------
 const formFieldOptionSchema = z.object({
   value: z.string(),
   label: localizedSchema,

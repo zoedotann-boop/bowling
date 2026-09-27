@@ -18,9 +18,6 @@ import { useSiteContent } from "@/components/site-content-context"
 import { LedDot } from "@/components/decor/led-dot"
 import { Container } from "./container"
 
-// Each tile maps to an image in /public/gallery. Intrinsic dimensions let the
-// lightbox size each image to its natural aspect ratio. The third tile spans
-// two rows on desktop to keep the original mosaic layout.
 const TILES = [
   { src: "/gallery/1.png", w: 795, h: 463, cls: "" },
   { src: "/gallery/2.png", w: 782, h: 459, cls: "" },
@@ -34,18 +31,13 @@ const TILES = [
   { src: "/gallery/5.png", w: 862, h: 1252, cls: "" },
 ]
 
-// Minimum horizontal travel (px) that counts as a navigation swipe.
 const SWIPE_THRESHOLD = 50
 
-// The portal target is `null` on the server and `document.body` on the client,
-// read via useSyncExternalStore so no browser global is touched during SSR.
 const subscribe = () => () => {}
 
 export function Gallery() {
   const t = useTranslations("gallery")
   const locale = useLocale() as "he" | "en"
-  // Admin-managed heading; the mosaic tiles stay bundled (the galleryImage
-  // schema carries no intrinsic dimensions for the lightbox layout).
   const title = pickLocale(useSiteContent()?.home?.galleryTitle, locale)
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const portalTarget = useSyncExternalStore(
@@ -63,7 +55,6 @@ export function Gallery() {
     []
   )
 
-  // Track the initial touch so a horizontal drag navigates instead of closing.
   const touchStart = useRef<{ x: number; y: number } | null>(null)
   const onTouchStart = (e: TouchEvent) => {
     const t = e.touches[0]
@@ -130,10 +121,6 @@ export function Gallery() {
         </div>
       </Container>
 
-      {/* Lightbox — portaled to <body> so a transformed ancestor (the
-          .animate-page-in wrapper) can't become the containing block for
-          `position: fixed` and drop the overlay far down the page. portalTarget
-          is null on the server, so the portal only renders on the client. */}
       {portalTarget &&
         openIndex !== null &&
         createPortal(
@@ -168,9 +155,6 @@ export function Gallery() {
               onClick={(e) => e.stopPropagation()}
               onTouchStart={onTouchStart}
               onTouchEnd={onTouchEnd}
-              // The frame matches each image's aspect ratio and grows to the
-              // largest size that still fits within 92vw × 88vh, so `fill`
-              // scales the image up to fill the screen without cropping.
               style={{
                 aspectRatio: `${TILES[openIndex].w} / ${TILES[openIndex].h}`,
                 width: `min(92vw, calc(88vh * ${TILES[openIndex].w} / ${TILES[openIndex].h}))`,

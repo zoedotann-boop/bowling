@@ -1,16 +1,5 @@
 import "server-only"
 
-// Reads a place's Google Maps reviews via SerpApi. We deliberately use SerpApi
-// rather than Google's own Places API: Places caps reviews at 5 and requires a
-// billed Cloud project, whereas SerpApi pages through a place's full review list
-// from a single API key. The key is a shared env var; the per-branch place id
-// lives on the location row.
-//
-// We ask for Google's "most relevant" order: it front-loads written reviews,
-// whereas "newest" is dominated by rating-only reviews (no text to show). The
-// first page is fixed at 8 reviews; each follow-up page returns up to 20 and
-// costs one more SerpApi search, so MAX_PAGES bounds the per-sync cost
-// (2 pages × 2 branches × nightly ≈ 120 searches/month, inside the ~250 free tier).
 const MAX_PAGES = 2
 const PAGE_SIZE = 20
 
@@ -49,8 +38,6 @@ export async function fetchPlaceReviews(
 
   for (let page = 0; page < MAX_PAGES; page++) {
     const result = await fetchPage({ apiKey, placeId, pageToken })
-    // A failed first page fails the sync; a failed follow-up page keeps what
-    // we already have.
     if (!result.ok)
       return page === 0 ? result : { ok: true, reviews: [...reviews.values()] }
     for (const review of result.reviews) reviews.set(review.externalId, review)
@@ -79,7 +66,6 @@ async function fetchPage({
     hl: "he",
     sort_by: "qualityScore",
     api_key: apiKey,
-    // SerpApi rejects `num` on the first page (always 8 results).
     ...(pageToken && { next_page_token: pageToken, num: String(PAGE_SIZE) }),
   })
 

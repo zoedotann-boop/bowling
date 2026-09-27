@@ -8,7 +8,6 @@ import { Reviews } from "@/components/home/reviews"
 import { Services } from "@/components/home/services"
 import { SloganStrip } from "@/components/home/slogan-strip"
 
-// Concrete canvas. Sections are unified but separated by a subtle tonal step.
 export default function Page() {
   return (
     <>

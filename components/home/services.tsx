@@ -25,7 +25,6 @@ export function Services() {
     desc: string
     cta: string
   }[]
-  // Admin-managed cards win; the CTA label stays chrome (matched by index).
   const items = home?.services?.length
     ? home.services.map((s, i) => ({
         title: pickLocale(s.title, locale),

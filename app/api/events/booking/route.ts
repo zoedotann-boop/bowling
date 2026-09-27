@@ -15,9 +15,6 @@ import {
 } from "@/lib/email-template"
 import type { Branch } from "@/lib/branches"
 
-// Payload posted by the event BookingForm (components/pages/event-detail-page.tsx).
-// The built-in form sends the fixed keys below; an admin-defined dynamic form
-// sends its own field keys, captured by the index signature.
 interface BookingPayload {
   event?: string
   firstName?: string
@@ -25,12 +22,10 @@ interface BookingPayload {
   email?: string
   phone?: string
   upgrades?: string[]
-  // A "data:image/png;base64,..." data URL of the hand-drawn signature.
   signature?: string
   [key: string]: unknown
 }
 
-// Hebrew labels for the built-in fields; dynamic fields fall back to their key.
 const FIELD_LABELS: Record<string, string> = {
   event: "אירוע",
   firstName: "שם פרטי",
@@ -44,7 +39,6 @@ const FIELD_LABELS: Record<string, string> = {
 
 const RESERVED_KEYS = new Set(["signature", "upgrades"])
 
-// The textual answers, in payload order (event first), excluding control keys.
 function answers(payload: BookingPayload): [string, string][] {
   return Object.entries(payload)
     .filter(
@@ -56,7 +50,6 @@ function answers(payload: BookingPayload): [string, string][] {
     .map(([key, value]) => [FIELD_LABELS[key] ?? key, value as string])
 }
 
-// Shared body: the answers table, chosen upgrades and an optional signature note.
 function renderBody(payload: BookingPayload, signatureNote: string): string {
   const upgrades = payload.upgrades?.length
     ? sectionHeading("שדרוגים שנבחרו") + bulletList(payload.upgrades)
@@ -65,7 +58,6 @@ function renderBody(payload: BookingPayload, signatureNote: string): string {
   return detailTable(answers(payload)) + upgrades + signature
 }
 
-// The email the venue team receives for each new event submission.
 function renderManagerEmail(payload: BookingPayload, branch: Branch): string {
   return emailShell({
     branch,
@@ -80,7 +72,6 @@ function renderManagerEmail(payload: BookingPayload, branch: Branch): string {
   })
 }
 
-// The confirmation the customer receives after submitting the booking form.
 function renderCustomerEmail(
   payload: BookingPayload,
   branch: Branch,
@@ -109,8 +100,6 @@ export async function POST(request: Request) {
     )
   }
 
-  // The form config (built-in or admin-defined) enforces per-field requirements
-  // in the browser; here we only guard against an empty submission.
   if (answers(payload).length === 0) {
     return NextResponse.json(
       { error: "Missing required fields." },
@@ -132,7 +121,6 @@ export async function POST(request: Request) {
   const { email, firstName, lastName, signature } = payload
   const name = [firstName, lastName].filter(Boolean).join(" ")
 
-  // Attach the signature PNG when one was provided.
   const attachments = signature
     ? [
         {
@@ -145,7 +133,6 @@ export async function POST(request: Request) {
       ]
     : undefined
 
-  // The venue notification is the critical send; its failure fails the request.
   const result = await sendMail({
     to,
     replyTo: email || undefined,
@@ -159,7 +146,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Failed to send email." }, { status })
   }
 
-  // Best-effort confirmation to the customer; never blocks the response.
   if (email?.trim()) {
     await sendMail({
       to: email.trim(),

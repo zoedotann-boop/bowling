@@ -17,7 +17,7 @@ import type { GeneralDraft } from "@/lib/actions/admin/schemas"
 import type { Locale } from "@/lib/locales"
 
 function weekdayLabel(day: number, locale: Locale): string {
-  const date = new Date(Date.UTC(2024, 0, 7 + day)) // 2024-01-07 is a Sunday
+  const date = new Date(Date.UTC(2024, 0, 7 + day))
   return new Intl.DateTimeFormat(locale === "he" ? "he-IL" : "en-US", {
     weekday: "long",
     timeZone: "UTC",

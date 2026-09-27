@@ -18,9 +18,6 @@ interface ToastContextValue {
 
 const ToastContext = createContext<ToastContextValue | null>(null)
 
-// Action results surface as toasts. Field-bound errors and anything raised
-// inside a native <dialog> stay inline instead (a dialog sits in the browser's
-// top layer and would cover a toast).
 export function useToast(): ToastContextValue {
   const context = useContext(ToastContext)
   if (!context) {

@@ -14,7 +14,6 @@ import {
 import { db } from "@/lib/db"
 import { location } from "@/lib/db/schema"
 
-// Escapes user-supplied text before it is interpolated into an HTML email body.
 export const escapeHtml = (value: string) =>
   value.replace(
     /[&<>"']/g,
@@ -28,9 +27,6 @@ export const escapeHtml = (value: string) =>
       })[char] as string
   )
 
-// Resolves where inquiry emails for the active branch should be delivered.
-// Priority: the branch's admin-configured inbox → the EVENTS_TO_EMAIL fallback.
-// The active branch comes from the same cookie the public site uses.
 export async function resolveInquiriesRecipient(): Promise<string | undefined> {
   const cookieStore = await cookies()
   const slug = cookieStore.get(BRANCH_COOKIE)?.value
@@ -47,8 +43,6 @@ export async function resolveInquiriesRecipient(): Promise<string | undefined> {
   return process.env.EVENTS_TO_EMAIL?.trim() || undefined
 }
 
-// Resolves the active branch (for email header/footer branding) from the same
-// BRANCH cookie the public site uses, falling back to the default branch.
 export async function resolveActiveBranch(): Promise<Branch> {
   const cookieStore = await cookies()
   const slug = cookieStore.get(BRANCH_COOKIE)?.value
@@ -71,9 +65,6 @@ export interface SendMailInput {
 export type SendMailResult =
   { ok: true } | { ok: false; reason: "not_configured" | "send_failed" }
 
-// Sends a transactional email through Resend. The sender/API key come from the
-// environment; a missing key or sender is reported as "not_configured" so the
-// caller can return a 500 without throwing.
 export async function sendMail(input: SendMailInput): Promise<SendMailResult> {
   const apiKey = process.env.RESEND_API_KEY
   const from = process.env.CONTACT_FROM_EMAIL

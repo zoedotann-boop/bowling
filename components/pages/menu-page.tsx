@@ -26,7 +26,6 @@ export function MenuPage({
   const { branchId } = useBranch()
   const dbMenu = menus[branchId]
 
-  // Admin-managed menu wins; fall back to the next-intl copy.
   const categories: Category[] = dbMenu?.menuCategories.length
     ? dbMenu.menuCategories.map((c) => ({
         id: c.id,
@@ -59,7 +58,6 @@ export function MenuPage({
       </div>
 
       <div className="flex flex-col gap-6 lg:flex-row lg:gap-10">
-        {/* Category tabs */}
         <aside className="lg:w-52 lg:flex-none">
           <div className="flex gap-2 overflow-x-auto pb-1 lg:sticky lg:top-6 lg:flex-col lg:gap-1.5 lg:overflow-visible lg:pb-0">
             {categories.map((c) => (
@@ -79,7 +77,6 @@ export function MenuPage({
           </div>
         </aside>
 
-        {/* Items */}
         <div className="grid flex-1 grid-cols-1 content-start gap-3 sm:grid-cols-2">
           {current.items.map((d) => (
             <div

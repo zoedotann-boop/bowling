@@ -32,7 +32,6 @@ import { Container } from "@/components/home/container"
 
 type FormField = SiteEventType["formFields"][number]
 
-// Hand-drawn illustration shown in the hero. Birthdays uses a real photo.
 const ILLUSTRATIONS: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
   birthdays: BirthdaysIllustration,
   "no-room": NoRoomIllustration,
@@ -44,7 +43,6 @@ const HERO_PHOTOS: Record<string, string> = {
   birthdays: "/events/birthdays-hero.png",
 }
 
-// Hero badge + Services-style strip accents — neon light strips.
 const BADGE_ACCENTS = [
   "border-primary text-primary",
   "border-secondary text-secondary",
@@ -101,20 +99,14 @@ interface EventItem {
   extrasNote?: string
   policy?: PolicyRow[]
   policyFootnote?: string
-  /** Corporate: private-lane / venue-buyout options, shown as a flat checklist. */
   groupOptions?: string[]
   groupOptionsTitle?: string
   form?: FormConfig
   formSummary?: FormSummary
 }
 
-// Inputs match the homepage Contact form.
 const inputClass =
   "rounded-sm border border-border bg-card px-4 py-3 text-[15px] font-semibold text-foreground placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-primary lg:py-3.5"
-
-// ---------------------------------------------------------------------------
-// Section building blocks
-// ---------------------------------------------------------------------------
 
 function SectionHeading({
   title,
@@ -224,7 +216,6 @@ function Hero({
   )
 }
 
-// "מה הלו״ז?" — minimalist numbered timeline (no cards), cyan step numbers for pop.
 function Schedule({
   data,
   title,
@@ -261,7 +252,6 @@ function Schedule({
   )
 }
 
-// "מחיר" — styled like the homepage Pricing table / birthday CTA.
 function PriceSection({
   cards,
   title,
@@ -316,7 +306,6 @@ function PriceSection({
   )
 }
 
-// "מה כלול" — calm typographic list echoing the terms block, cyan checks for pop.
 function IncludedSection({
   items,
   title,
@@ -358,7 +347,6 @@ function IncludedSection({
   )
 }
 
-// "מותר ואסור" — calm typographic column; cyan accent for allowed, red for forbidden.
 function RuleCard({
   heading,
   items,
@@ -444,7 +432,6 @@ function RulesSection({
   )
 }
 
-// "שדרוגים" — styled like the homepage gift-card perks (dotted cards).
 function ExtrasSection({
   extras,
   title,
@@ -483,7 +470,6 @@ function ExtrasSection({
   )
 }
 
-// Terms & conditions — a single, continuous document-style text block.
 function TermsSection({
   rows,
   title,
@@ -518,7 +504,6 @@ function TermsSection({
   )
 }
 
-// A single labelled input, matching the homepage Contact form styling.
 function Field({
   label,
   ...props
@@ -543,7 +528,6 @@ const EMPTY_FIELDS = {
   date: "",
 }
 
-// Native <input> type for each admin-defined field kind.
 const INPUT_TYPES: Record<FormField["type"], string> = {
   text: "text",
   textarea: "textarea",
@@ -556,8 +540,6 @@ const INPUT_TYPES: Record<FormField["type"], string> = {
   checkbox: "checkbox",
 }
 
-// Renders one admin-defined form field. Required/min/max rely on the browser's
-// native validation, so the submit handler only runs once the form is valid.
 function DynamicField({
   field,
   value,
@@ -601,7 +583,6 @@ function DynamicField({
           required={field.isRequired}
         />
       ) : field.type === "select" ? (
-        // Custom chevron: the native arrow ignores padding and hugs the edge.
         <div className="relative">
           <select
             className={cn(inputClass, "w-full appearance-none pe-11")}
@@ -643,10 +624,6 @@ function DynamicField({
   )
 }
 
-// Booking / commitment form. Used by every event (standard + corporate):
-// the visitor acknowledges the terms, picks upgrades and signs before sending.
-// When the event type defines dynamic form fields in the admin, they replace
-// the built-in personal-detail fields; otherwise the built-in set is used.
 function BookingForm({
   event,
   upgrades,
@@ -692,8 +669,6 @@ function BookingForm({
       setError(t("errorTerms"))
       return
     }
-    // Per-field required/min/max are enforced natively, so this only runs when
-    // the fields are valid; the signature pad still needs a manual check.
     if (requiresSignature && (sigRef.current?.isEmpty() ?? true)) {
       setError(t("errorSignature"))
       return
@@ -733,7 +708,6 @@ function BookingForm({
       onSubmit={handleSubmit}
       className="mx-auto flex max-w-3xl flex-col gap-5 rounded-sm border border-primary bg-card p-[22px] lg:p-8"
     >
-      {/* Mandatory terms acknowledgement, right above the fields. */}
       <label className="flex items-start gap-2.5 rounded-sm border border-primary/40 bg-background p-4 text-[13.5px] leading-relaxed font-bold text-foreground">
         <input
           type="checkbox"
@@ -863,7 +837,6 @@ function BookingForm({
         </fieldset>
       ) : null}
 
-      {/* Digital signature pad (only when the event type requires it). */}
       {requiresSignature ? (
         <div>
           <div className="mb-2 flex items-center justify-between gap-3">
@@ -918,7 +891,6 @@ function BookingForm({
   )
 }
 
-// Booking band for standard events — heading, price summary and the form.
 function BookingSection({
   event,
   upgrades,
@@ -990,10 +962,6 @@ function BookingSection({
   )
 }
 
-// ---------------------------------------------------------------------------
-// Page
-// ---------------------------------------------------------------------------
-
 export function EventDetailPage({
   slug,
   events,
@@ -1006,13 +974,8 @@ export function EventDetailPage({
   const locale = useLocale() as "he" | "en"
   const items = t.raw("items") as Record<string, EventItem>
   const overrides = t.raw("branch") as Record<string, Record<string, EventItem>>
-  // Branch-specific content wins over the shared default.
   const messageData = overrides?.[branch.id]?.[slug] ?? items[slug]
 
-  // Admin-managed event type for this branch (if any). Its editable fields —
-  // hero copy, schedule steps, package lines, upgrades and the booking-form
-  // fields — override the next-intl content; the richer static bits (badges,
-  // price cards, rules, policy) stay in the message catalog.
   const dbTypes = events[branch.id]?.eventTypes ?? []
   const dbType = dbTypes.find((e) => e.slug === slug)
   const data: EventItem = {
@@ -1043,12 +1006,8 @@ export function EventDetailPage({
   }
 
   const isCorporate = slug === "corporate"
-  // Corporate and team outings skip the commitment form and use the shared
-  // homepage contact form for enquiries instead.
   const usesContactForm = isCorporate || slug === "team"
 
-  // Availability: when the branch has DB event types, honour that list;
-  // otherwise fall back to the hardcoded branch offering.
   const available = dbTypes.length
     ? Boolean(dbType)
     : branch.events.includes(slug)
@@ -1085,7 +1044,6 @@ export function EventDetailPage({
       </Container>
 
       {isCorporate ? (
-        /* Corporate — flat, birthdays-style checklists (offerings + group options) */
         <section className="border-t border-border bg-background py-10 lg:py-14">
           <Container className="flex flex-col gap-12 lg:gap-16">
             {data.included ? (
@@ -1105,7 +1063,6 @@ export function EventDetailPage({
         </section>
       ) : (
         <>
-          {/* Schedule — rust band */}
           {data.schedule ? (
             <section className="border-y border-border bg-background py-10 lg:py-14">
               <Container>
@@ -1148,7 +1105,6 @@ export function EventDetailPage({
             ) : null}
           </Container>
 
-          {/* Terms & conditions — continuous document before the booking form */}
           {data.policy ? (
             <section className="border-t border-border bg-background py-10 lg:py-14">
               <Container>
@@ -1164,8 +1120,6 @@ export function EventDetailPage({
         </>
       )}
 
-      {/* Enquiry: corporate/team use the shared contact form; others sign the
-          commitment form. */}
       {usesContactForm ? (
         <div id="book" className="scroll-mt-20">
           <Contact />

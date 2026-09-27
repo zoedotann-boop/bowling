@@ -16,8 +16,6 @@ interface SectionContextValue {
 
 const SectionContext = createContext<SectionContextValue | null>(null)
 
-// Every localized field reads the active editing locale from here, so a single
-// language toggle drives all of them. Throws when used outside a SectionForm.
 export function useSectionContext(): SectionContextValue {
   const context = useContext(SectionContext)
   if (!context) {
@@ -35,10 +33,6 @@ export interface SectionFormProps<T> {
   children: React.ReactNode
 }
 
-// The backbone of every content page. Holds the active editing locale, provides
-// it via context, and owns the single "publish" action. The draft itself is
-// held by the page (useState) and mutated by the fields directly; switching
-// locale never touches the draft — it just renders a different slice.
 export function SectionForm<T>({
   slug,
   title,

@@ -19,9 +19,6 @@ import {
 } from "@/lib/branches"
 import { getHomeContent, getSiteLocations } from "@/lib/db/queries/site"
 
-// Merges a DB location's editable fields over the hardcoded branch defaults.
-// Structural bits (logo dimensions, event list, id) stay from the defaults;
-// everything the admin can edit (name, address, phone, hours flags…) wins.
 function mergeBranch(base: Branch, row: BranchRow | undefined): Branch {
   if (!row) return base
   const loc = (
@@ -49,16 +46,11 @@ function mergeBranch(base: Branch, row: BranchRow | undefined): Branch {
 
 type BranchRow = Awaited<ReturnType<typeof getSiteLocations>>[number]
 
-// The public site chrome: branch context, header/footer, mobile actions. Used
-// by the (site) layout for every public page, and by app/not-found.tsx so the
-// 404 page keeps the header/footer — never by the admin.
 export async function SiteChrome({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies()
   const branchCookie = cookieStore.get(BRANCH_COOKIE)?.value
   const initialBranch = isBranchId(branchCookie) ? branchCookie : DEFAULT_BRANCH
 
-  // Load DB branch data + editable page content; fall back to the hardcoded
-  // defaults if the DB is unavailable so the site never breaks.
   const [rows, contentRows] = await Promise.all([
     getSiteLocations().catch(() => []),
     getHomeContent().catch(() => []),
@@ -78,7 +70,6 @@ export async function SiteChrome({ children }: { children: React.ReactNode }) {
             <PageTransition>{children}</PageTransition>
           </main>
           <SiteFooter />
-          {/* Spacer so the mobile sticky action bar never covers the footer */}
           <div className="h-[72px] lg:hidden" aria-hidden />
           <MobileFloatingActions />
         </div>

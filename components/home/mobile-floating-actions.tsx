@@ -37,7 +37,6 @@ export function MobileFloatingActions() {
 
   return (
     <div className="lg:hidden">
-      {/* Scroll-to-top — fades in after scrolling down the page */}
       <button
         type="button"
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -52,7 +51,6 @@ export function MobileFloatingActions() {
         <ArrowUp className="size-6" strokeWidth={2.75} />
       </button>
 
-      {/* Sticky bottom action bar: open-now status + WhatsApp */}
       <div className="fixed inset-x-3 bottom-3 z-40 flex items-center justify-between gap-2.5">
         <a
           href="tel:03-5700834"

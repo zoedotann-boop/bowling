@@ -11,7 +11,6 @@ import { syncLocationReviews } from "@/lib/google/sync-reviews"
 import { reviewsSchema, type GoogleReviewDraft } from "./schemas"
 import { type ActionResult, OK, readSlug } from "./shared"
 
-// Serializes a stored review row into the form's draft shape.
 function toReviewDraft(row: {
   id: string
   authorName: string
@@ -47,9 +46,6 @@ type SyncResult =
     }
   | { ok: false; error: string }
 
-// "Sync now": fetches the branch's Google reviews immediately and returns the
-// refreshed list so the admin table updates without a reload. Auto-publish
-// follows the branch's own toggle, mirroring the nightly cron.
 export async function syncGoogleReviews(input: unknown): Promise<SyncResult> {
   const { location: loc } = await requireLocationAccess(
     readSlug(input),
@@ -68,8 +64,6 @@ export async function syncGoogleReviews(input: unknown): Promise<SyncResult> {
   return { ...result, reviews: await listReviews(loc.id) }
 }
 
-// Persists the pooler config (place id + auto-sync) and the admin's curation:
-// each row's published flag and order, deleting any rows removed from the list.
 export async function saveGoogleReviews(input: unknown): Promise<ActionResult> {
   const { location: loc } = await requireLocationAccess(
     readSlug(input),

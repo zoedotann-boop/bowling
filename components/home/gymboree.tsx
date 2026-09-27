@@ -15,7 +15,6 @@ export function Gymboree() {
   const t = useTranslations("gymboree")
   const { branch } = useBranch()
 
-  // Only Rishon LeZion offers the gymboree + bumper tubes.
   if (!branch.hasGymboree) return null
 
   const entryRows = t.raw("entry.rows") as Row[]
@@ -36,7 +35,6 @@ export function Gymboree() {
         </div>
 
         <div className="grid gap-3 lg:grid-cols-3 lg:gap-4">
-          {/* Bumper tubes — price highlight */}
           <div className={cardClass}>
             <Zap className="size-5 text-rust" strokeWidth={2.5} />
             <div className="mt-1.5 font-heading text-[17px] font-extrabold text-navy lg:mt-2 lg:text-lg">
@@ -55,7 +53,6 @@ export function Gymboree() {
             </p>
           </div>
 
-          {/* Gymboree entry — pricing rows */}
           <div className={cardClass}>
             <Ticket className="size-5 text-rust" strokeWidth={2.5} />
             <div className="mt-1.5 font-heading text-[17px] font-extrabold text-navy lg:mt-2 lg:text-lg">
@@ -81,7 +78,6 @@ export function Gymboree() {
             </div>
           </div>
 
-          {/* Opening hours */}
           <div className={cardClass}>
             <Clock className="size-5 text-rust" strokeWidth={2.5} />
             <div className="mt-1.5 font-heading text-[17px] font-extrabold text-navy lg:mt-2 lg:text-lg">

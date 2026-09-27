@@ -1,7 +1,5 @@
 import { LedDot } from "./led-dot"
 
-// Four flickering LED dots at a card's corners — used in place of a full border
-// so the card reads as a lit, bracketed panel. Parent must be `relative`.
 export function LedCorners() {
   return (
     <>

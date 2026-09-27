@@ -22,7 +22,6 @@ import type {
 import { FORM_FIELD_TYPES } from "@/lib/events/fields"
 import { emptyLocalized } from "@/lib/localized"
 
-// A whole-number field that maps "" ↔ null.
 function MoneyField({
   label,
   tooltip,

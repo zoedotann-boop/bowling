@@ -5,13 +5,6 @@ import postgres from "postgres"
 
 import * as schema from "@/lib/db/schema"
 
-// One-off seed: creates the owner and the two branches so the admin is usable
-// after `bun run db:migrate`. Run with `bun run db:seed`. Override the owner
-// address with SEED_ADMIN_EMAIL. Sign-in is passwordless (a one-time code is
-// emailed on login), so no password is stored.
-//
-// This builds its own database client (rather than importing lib/db) so it can
-// run outside the Next.js server runtime.
 async function seed() {
   const url = process.env.DATABASE_URL
   if (!url) throw new Error("DATABASE_URL is not set")

@@ -16,19 +16,12 @@ import {
 } from "./schemas"
 import { type ActionResult, OK } from "./shared"
 
-// Owner-only user management. Sign-in is passwordless and public signup is
-// disabled, so creating the user row is all it takes to grant access: the new
-// member requests a one-time code at /admin/login with this email. Every action
-// ends with `refresh()` so the server-rendered team table re-renders.
-
 type Transaction = Parameters<Parameters<typeof db.transaction>[0]>[0]
 
-// Non-owners with no location would have nowhere to land in the dashboard.
 function missingLocations(member: TeamMemberDraft): boolean {
   return member.role !== "owner" && member.locationIds.length === 0
 }
 
-// Replaces a user's location memberships. Owners carry none.
 async function setMemberships(
   tx: Transaction,
   userId: string,
@@ -80,7 +73,6 @@ export async function updateTeamMember(
   const parsed = teamMemberSchema.safeParse(input)
   if (!parsed.success) return { ok: false, error: "invalid" }
   const member = parsed.data
-  // Owners can't demote themselves, so there is always at least one owner.
   if (userId === owner.id && member.role !== "owner") {
     return { ok: false, error: "cannot-demote-self" }
   }
@@ -98,8 +90,6 @@ export async function updateTeamMember(
   return OK
 }
 
-// Sessions, accounts and memberships cascade with the user row, so access is
-// revoked immediately.
 export async function deleteTeamMember(userId: string): Promise<ActionResult> {
   const owner = await requireOwnerAccess()
   if (userId === owner.id) return { ok: false, error: "cannot-delete-self" }
