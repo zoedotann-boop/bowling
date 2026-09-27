@@ -91,24 +91,11 @@ export const homeService = pgTable("home_service", {
   ...timestamps,
 })
 
-// Customer reviews shown on the home page.
-export const homeReview = pgTable("home_review", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  locationId: uuid("location_id")
-    .notNull()
-    .references(() => location.id, { onDelete: "cascade" }),
-  author: localized().notNull(),
-  quote: localized().notNull(),
-  rating: integer("rating").notNull().default(5),
-  sortOrder: integer("sort_order").notNull().default(0),
-  ...timestamps,
-})
-
-// Google reviews pulled from Google Maps by the pooler (lib/google/*). Unlike
-// homeReview these are single-language (the reviewer's own words) and are keyed
-// by Google's stable review id so re-syncs update in place instead of
-// duplicating. Only isPublished rows surface on the public site; the admin's
-// publish choice is preserved across syncs.
+// Google reviews pulled from Google Maps by the pooler (lib/google/*) — the
+// sole source of the home page's reviews section. Single-language (the
+// reviewer's own words) and keyed by Google's stable review id so re-syncs
+// update in place instead of duplicating. Only isPublished rows surface on the
+// public site; the admin's publish choice is preserved across syncs.
 export const googleReview = pgTable(
   "google_review",
   {

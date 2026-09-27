@@ -97,7 +97,8 @@ The public pages render the admin's content live from the database:
   way `BranchProvider` carries branch data; menu and event content is passed to
   the page components as props.
 - **Fallback** every field falls back to its `messages/*` string (and lists to
-  their message array) when the DB value is blank, so the site never breaks if
+  their message array) when the DB value is blank (except reviews, which only
+  ever come from Google — see below), so the site never breaks if
   the database is unavailable or a field is unset. Copy that the admin does not
   manage (UI chrome, pricing/gymboree sections, event badges / price cards /
   rules / policy) stays in `messages/*`.
@@ -108,8 +109,11 @@ The public pages render the admin's content live from the database:
 
 ### Google reviews pooler
 
-Each branch can pull its Google Maps reviews automatically and choose which
-appear in the home "reviews" section (alongside any manually curated ones).
+Each branch pulls its Google Maps reviews automatically and chooses which
+appear in the home "reviews" section. These real reviews are the section's only
+source — there are no hand-written or placeholder testimonials — so the section
+is hidden until a branch has at least one published review. Up to 9 are shown
+(`getHomeContent`), with a link to the branch's full list on Google.
 
 - **Config** (admin → **Google reviews**): the branch's **Place ID** and a
   **daily automatic sync** toggle live on the `location` row
@@ -119,7 +123,12 @@ appear in the home "reviews" section (alongside any manually curated ones).
   only published rows render publicly.
 - **Fetch** `lib/google/serpapi.ts` reads reviews via [SerpApi](https://serpapi.com)
   (`google_maps_reviews` engine) — Google's own Places API caps reviews at 5 and
-  needs a billed project, whereas SerpApi returns ~8 from one shared key.
+  needs a billed project, whereas SerpApi pages through the full list from one
+  shared key. It requests Google's "most relevant" order (`qualityScore`, which
+  front-loads written reviews — "newest" is mostly rating-only ones, which are
+  skipped) and follows `next_page_token` for up to `MAX_PAGES` pages (8 + 20 =
+  28 reviews). Each page is one SerpApi search: 2 pages × 2 branches nightly ≈
+  120 searches/month, inside the free tier.
   `lib/google/sync-reviews.ts` upserts them and auto-publishes new reviews rated
   ≥ 4 when the branch opted in.
 - **Schedule** a nightly [Vercel Cron](https://vercel.com/docs/cron-jobs)

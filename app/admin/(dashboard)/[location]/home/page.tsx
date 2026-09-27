@@ -38,12 +38,6 @@ export default async function HomePage({
       description: toLocalized(row.description),
       imageUrl: row.imageUrl ?? "",
     })),
-    reviews: (data?.reviews ?? []).map((row) => ({
-      id: row.id,
-      author: toLocalized(row.author),
-      quote: toLocalized(row.quote),
-      rating: row.rating,
-    })),
     gallery: (data?.galleryImages ?? []).map((row) => ({
       id: row.id,
       imageUrl: row.imageUrl,

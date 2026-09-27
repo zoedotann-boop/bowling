@@ -29,6 +29,13 @@
       "when": 1790534950999,
       "tag": "0003_mute_talisman",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790536502569,
+      "tag": "0004_bored_trauma",
+      "breakpoints": true
     }
   ]
 }

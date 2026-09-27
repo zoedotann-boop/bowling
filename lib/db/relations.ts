@@ -7,7 +7,6 @@ import {
   googleReview,
   homeContent,
   homeFeature,
-  homeReview,
   homeService,
   pricingContent,
   siteContent,
@@ -30,7 +29,6 @@ export const locationRelations = relations(location, ({ one, many }) => ({
   menu: one(menuContent),
   features: many(homeFeature),
   services: many(homeService),
-  reviews: many(homeReview),
   googleReviews: many(googleReview),
   galleryImages: many(galleryImage),
   contactSubjects: many(contactSubject),
@@ -70,13 +68,6 @@ export const homeFeatureRelations = relations(homeFeature, ({ one }) => ({
 export const homeServiceRelations = relations(homeService, ({ one }) => ({
   location: one(location, {
     fields: [homeService.locationId],
-    references: [location.id],
-  }),
-}))
-
-export const homeReviewRelations = relations(homeReview, ({ one }) => ({
-  location: one(location, {
-    fields: [homeReview.locationId],
     references: [location.id],
   }),
 }))

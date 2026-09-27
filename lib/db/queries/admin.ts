@@ -25,7 +25,6 @@ export async function getHomeEditor(locationId: string) {
       site: true,
       features: { orderBy: (f) => [asc(f.sortOrder)] },
       services: { orderBy: (f) => [asc(f.sortOrder)] },
-      reviews: { orderBy: (f) => [asc(f.sortOrder)] },
       galleryImages: { orderBy: (f) => [asc(f.sortOrder)] },
       contactSubjects: { orderBy: (f) => [asc(f.sortOrder)] },
     },
