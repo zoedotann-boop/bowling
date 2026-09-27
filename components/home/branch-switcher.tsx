@@ -31,7 +31,7 @@ export function BranchSwitcher({ className }: { className?: string }) {
         aria-expanded={open}
         aria-haspopup="listbox"
         className={cn(
-          "inline-flex w-full items-center justify-center gap-1.5 rounded-sm border border-navy bg-card px-3.5 py-[7px] text-[13px] font-extrabold text-navy transition-colors hover:border-secondary hover:text-secondary",
+          "inline-flex w-full items-center justify-center gap-1.5 rounded-sm border border-navy bg-card px-5 py-2.5 font-heading text-sm font-extrabold text-navy transition-colors hover:border-secondary hover:text-secondary",
           className
         )}
       >
