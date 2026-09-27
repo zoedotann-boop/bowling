@@ -265,8 +265,8 @@ export function AdminShell({
             </Button>
             <span className="text-sm font-semibold">{t("brand")}</span>
           </header>
-          <main className="min-w-0 flex-1 overflow-y-auto px-4 py-4 md:px-6">
-            {children}
+          <main className="min-w-0 flex-1 overflow-y-auto">
+            <div className="px-4 py-4 md:px-6">{children}</div>
           </main>
         </div>
       </div>
