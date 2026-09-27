@@ -1,4 +1,8 @@
+import { emailOTPClient } from "better-auth/client/plugins"
 import { createAuthClient } from "better-auth/react"
 
-// Client-side auth helpers (sign in / sign out) for the admin login form.
-export const authClient = createAuthClient()
+// Client-side auth helpers for the passwordless admin login: request a one-time
+// code (`emailOtp.sendVerificationOtp`) then verify it (`signIn.emailOtp`).
+export const authClient = createAuthClient({
+  plugins: [emailOTPClient()],
+})
