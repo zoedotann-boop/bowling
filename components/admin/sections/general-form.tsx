@@ -154,7 +154,7 @@ export function GeneralForm({
           {draft.hours.map((entry) => (
             <div
               key={entry.day}
-              className="flex items-center gap-3 rounded-md border border-border bg-background px-3 py-1.5"
+              className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-md border border-border bg-background px-3 py-1.5"
             >
               <span className="w-24 text-sm">
                 {weekdayLabel(entry.day, locale)}
@@ -165,10 +165,10 @@ export function GeneralForm({
                 onCheckedChange={(closed) => setHours(entry.day, { closed })}
               />
               {!entry.closed && (
-                <div className="flex items-center gap-2">
+                <div className="flex w-full items-center gap-2 sm:w-auto">
                   <AdminInput
                     type="time"
-                    className="w-32"
+                    className="min-w-0 flex-1 sm:w-32 sm:flex-none"
                     value={entry.open ?? ""}
                     onChange={(event) =>
                       setHours(entry.day, { open: event.target.value })
@@ -177,7 +177,7 @@ export function GeneralForm({
                   <span className="text-muted-foreground">–</span>
                   <AdminInput
                     type="time"
-                    className="w-32"
+                    className="min-w-0 flex-1 sm:w-32 sm:flex-none"
                     value={entry.close ?? ""}
                     onChange={(event) =>
                       setHours(entry.day, { close: event.target.value })
