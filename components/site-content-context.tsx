@@ -7,7 +7,7 @@ import type { SiteHomeContent } from "@/lib/db/queries/site"
 import { useBranch } from "@/components/branch-context"
 
 // DB-backed home + chrome content, keyed by branch (location slug). Populated in
-// app/(site)/layout.tsx and swapped client-side when the branch switcher changes
+// components/site-chrome.tsx and swapped client-side when the branch switcher changes
 // the active branch — mirroring how BranchProvider carries branch data.
 export type SiteContentMap = Partial<Record<BranchId, SiteHomeContent>>
 
