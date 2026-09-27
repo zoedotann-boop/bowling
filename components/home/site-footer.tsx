@@ -15,7 +15,7 @@ const SOCIALS = [
   { glyph: "♪", label: "TikTok", bg: "bg-[#9101ca]" },
 ]
 
-const FOOTER_NAV_HREFS = ["/", "/menu", "/events", "/gift-card", "/contact"]
+const FOOTER_NAV_HREFS = ["/", "/menu", "/events", "/contact"]
 
 function FooterColumn({
   title,

@@ -199,7 +199,6 @@
       "Home",
       "Menu",
       "Birthdays & Events",
-      "Digital gift card",
       "Contact us"
     ],
     "branchTitle": "Ramat Gan Branch",
@@ -224,7 +223,6 @@
     "menu": "Our menu · Bowling",
     "events": "Events & Birthdays · Bowling",
     "contact": "Contact us · Bowling",
-    "giftCard": "Digital gift card · Bowling",
     "accessibility": "Accessibility statement · Bowling",
     "notFound": "Page not found · Bowling"
   },
@@ -1328,36 +1326,6 @@
         ]
       }
     }
-  },
-  "giftCardPage": {
-    "eyebrow": "The perfect gift",
-    "title": "Digital gift card",
-    "subtitle": "Not sure what to buy? A digital bowling gift card is always a winning idea — sent straight to email and suitable for any occasion.",
-    "cardName": "Gift card",
-    "cardTagline": "Bowling · Ramat Gan Branch",
-    "amountLabel": "Choose an amount",
-    "amounts": [
-      "₪ 100",
-      "₪ 150",
-      "₪ 200",
-      "₪ 300"
-    ],
-    "cta": "Buy a gift card",
-    "note": "The card is valid for one year from purchase and can be redeemed on any visit.",
-    "perks": [
-      {
-        "title": "Sent instantly",
-        "desc": "The card arrives by email within minutes of purchase."
-      },
-      {
-        "title": "For everyone",
-        "desc": "Games, food and bar — all in one place."
-      },
-      {
-        "title": "Valid for a year",
-        "desc": "Redeem whenever you like, on any visit."
-      }
-    ]
   },
   "notFoundPage": {
     "title": "Gutter ball!",
