@@ -2,7 +2,9 @@
 
 import { useLocale, useTranslations } from "next-intl"
 
+import { pickLocale } from "@/lib/localized"
 import { useBranch } from "@/components/branch-context"
+import { useSiteContent } from "@/components/site-content-context"
 import {
   BarIcon,
   EveryoneIcon,
@@ -20,7 +22,14 @@ export function FeatureStrip() {
   const t = useTranslations()
   const { branch } = useBranch()
   const locale = useLocale() as "he" | "en"
-  const features = t.raw("features") as { title: string; desc: string }[]
+  const dbFeatures = useSiteContent()?.features ?? []
+  // Admin-managed feature cards win; fall back to the next-intl copy.
+  const features = dbFeatures.length
+    ? dbFeatures.map((f) => ({
+        title: pickLocale(f.label, locale),
+        desc: pickLocale(f.description, locale),
+      }))
+    : (t.raw("features") as { title: string; desc: string }[])
 
   return (
     <Container className="pt-6 pb-1 lg:pt-11 lg:pb-5">

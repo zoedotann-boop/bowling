@@ -1,7 +1,11 @@
+"use client"
+
 import Link from "next/link"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
+import { pickLocale } from "@/lib/localized"
+import { useSiteContent } from "@/components/site-content-context"
 import { BowlingIcon, MenuIcon, PartyIcon } from "@/components/icons"
 import { LedDot } from "@/components/decor/led-dot"
 import { Container } from "./container"
@@ -14,17 +18,33 @@ const CONFIG = [
 
 export function Services() {
   const t = useTranslations("services")
-  const items = t.raw("items") as { title: string; desc: string; cta: string }[]
+  const locale = useLocale() as "he" | "en"
+  const home = useSiteContent()
+  const messageItems = t.raw("items") as {
+    title: string
+    desc: string
+    cta: string
+  }[]
+  // Admin-managed cards win; the CTA label stays chrome (matched by index).
+  const items = home?.services?.length
+    ? home.services.map((s, i) => ({
+        title: pickLocale(s.title, locale),
+        desc: pickLocale(s.description, locale),
+        cta: messageItems[i]?.cta ?? "",
+      }))
+    : messageItems
+  const eyebrow = pickLocale(home?.home?.servicesIntro, locale) || t("eyebrow")
+  const title = pickLocale(home?.home?.servicesTitle, locale) || t("title")
 
   return (
     <Container className="pt-7 pb-1 lg:pt-14">
       <div className="mb-4.5 lg:mb-7">
         <span className="font-mono text-[13px] font-bold text-secondary lg:text-sm">
           <LedDot className="me-2 align-middle" />
-          {t("eyebrow")}
+          {eyebrow}
         </span>
         <h2 className="neon-sign-purple mt-1.5 font-heading text-[34px] font-black tracking-[-1px] lg:text-[48px]">
-          {t("title")}
+          {title}
         </h2>
       </div>
       <div className="flex flex-col gap-3.5 lg:grid lg:grid-cols-3 lg:gap-5">

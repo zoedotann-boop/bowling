@@ -5,6 +5,8 @@ import { NextIntlClientProvider } from "next-intl"
 import { BranchProvider } from "../components/branch-context"
 import { DEFAULT_BRANCH } from "../lib/branches"
 import "../app/globals.css"
+import { DEFAULT_BRANCH } from "../lib/branches"
+import { BranchProvider } from "../components/branch-context"
 import messages from "../messages/he.json"
 
 const rubik = Rubik({
@@ -28,6 +30,9 @@ const preview: Preview = {
     },
   },
   decorators: [
+    // Provide the same context the site does: branch data (components read it via
+    // useBranch) and messages. Site content falls back to next-intl when absent,
+    // so no SiteContentProvider is needed here.
     (Story) => (
       <NextIntlClientProvider locale="he" messages={messages}>
         <BranchProvider initial={DEFAULT_BRANCH}>

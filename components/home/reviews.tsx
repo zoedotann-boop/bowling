@@ -1,19 +1,32 @@
-import { useTranslations } from "next-intl"
+"use client"
+
+import { useLocale, useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
+import { pickLocale } from "@/lib/localized"
+import { useSiteContent } from "@/components/site-content-context"
 import { Container } from "./container"
 
 const AVATAR_BG = ["bg-pink", "bg-cyan", "bg-marigold"]
 
 export function Reviews() {
   const t = useTranslations("reviews")
-  const items = t.raw("items") as { name: string; quote: string }[]
+  const locale = useLocale() as "he" | "en"
+  const home = useSiteContent()
+  // Admin-managed reviews win; fall back to the next-intl copy.
+  const items = home?.reviews?.length
+    ? home.reviews.map((r) => ({
+        name: pickLocale(r.author, locale),
+        quote: pickLocale(r.quote, locale),
+      }))
+    : (t.raw("items") as { name: string; quote: string }[])
+  const title = pickLocale(home?.home?.reviewsTitle, locale) || t("title")
 
   return (
     <Container className="pt-7 pb-1 lg:pt-14">
       <div className="mb-4 lg:mb-8">
         <h2 className="neon-sign-purple font-heading text-[28px] font-black tracking-[-1px] lg:text-[44px]">
-          {t("title")}
+          {title}
         </h2>
       </div>
       <div className="flex flex-col gap-3.5 lg:grid lg:grid-cols-3 lg:gap-5">

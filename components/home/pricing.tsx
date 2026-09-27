@@ -9,7 +9,7 @@ import type { Localized } from "@/lib/db/schema/_shared"
 import { pickLocale } from "@/lib/localized"
 import { LedDot } from "@/components/decor/led-dot"
 import { BirthdayScene } from "@/components/illustrations"
-import { useHomeContent } from "./home-content-context"
+import { useSiteContent } from "@/components/site-content-context"
 import { Container } from "./container"
 
 function SoldierDiscount({
@@ -45,7 +45,7 @@ const priceValue = "font-heading text-[26px] font-black lg:text-[30px]"
 export function Pricing() {
   const t = useTranslations("pricing")
   const locale = useLocale() as "he" | "en"
-  const pricing = useHomeContent()?.pricing
+  const pricing = useSiteContent()?.pricing
 
   // Prefer the admin-edited value for the active locale; fall back to the
   // translated default when the field is empty or the branch has no row yet.
