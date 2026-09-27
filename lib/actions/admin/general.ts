@@ -32,6 +32,7 @@ export async function saveGeneral(input: unknown): Promise<ActionResult> {
       phone: data.phone,
       whatsapp: data.whatsapp,
       email: data.email,
+      inquiriesEmail: data.inquiriesEmail,
       wazeUrl: data.wazeUrl,
       logoUrl: data.logoUrl || null,
       lanes: data.lanes,

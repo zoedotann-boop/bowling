@@ -23,7 +23,6 @@ export const ADMIN_SECTIONS: AdminSection[] = [
   { key: "home", capability: "content" },
   { key: "menu", capability: "content" },
   { key: "events", capability: "content" },
-  { key: "leads", capability: "leads" },
 ]
 
 // Owner-only top-level pages (not tied to a single location).

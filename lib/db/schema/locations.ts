@@ -36,7 +36,11 @@ export const location = pgTable("location", {
 
   phone: text("phone").notNull().default(""),
   whatsapp: text("whatsapp").notNull().default(""),
+  // Public contact address shown on the site (footer + contact page mailto).
   email: text("email").notNull().default(""),
+  // Inbox that receives inquiries from the contact form and the event
+  // commitment form. Empty falls back to the EVENTS_TO_EMAIL env var.
+  inquiriesEmail: text("inquiries_email").notNull().default(""),
   wazeUrl: text("waze_url").notNull().default(""),
   logoUrl: text("logo_url"),
   lanes: integer("lanes").notNull().default(0),

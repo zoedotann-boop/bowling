@@ -95,12 +95,23 @@ export function GeneralForm({
               onChange={(event) => set("whatsapp", event.target.value)}
             />
           </AdminField>
-          <AdminField label={t("email")}>
+          <AdminField label={t("email")} tooltip={t("emailTip")}>
             <AdminInput
               dir="ltr"
               type="email"
               value={draft.email}
               onChange={(event) => set("email", event.target.value)}
+            />
+          </AdminField>
+          <AdminField
+            label={t("inquiriesEmail")}
+            tooltip={t("inquiriesEmailTip")}
+          >
+            <AdminInput
+              dir="ltr"
+              type="email"
+              value={draft.inquiriesEmail}
+              onChange={(event) => set("inquiriesEmail", event.target.value)}
             />
           </AdminField>
           <AdminField label={t("wazeUrl")}>

@@ -63,13 +63,6 @@ export async function getEventsEditor(locationId: string) {
   })
 }
 
-export async function getLeads(locationId: string) {
-  return db.query.lead.findMany({
-    where: (fields, { eq }) => eq(fields.locationId, locationId),
-    orderBy: (fields, { desc }) => [desc(fields.createdAt)],
-  })
-}
-
 export async function listAllLocations() {
   return db.query.location.findMany({ orderBy: [asc(location.sortOrder)] })
 }

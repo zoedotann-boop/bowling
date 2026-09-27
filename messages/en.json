@@ -198,7 +198,10 @@
       "Suggestion"
     ],
     "messagePlaceholder": "Tell us what you'd like to know…",
-    "submit": "Send message"
+    "submit": "Send message",
+    "sending": "Sending…",
+    "success": "Message sent! We'll get back to you soon.",
+    "error": "Couldn't send your message. Please try again or call us."
   },
   "footer": {
     "tagline": "Israel's leading bowling venue. Open every day.",
@@ -1381,7 +1384,6 @@
       "home": "Home page",
       "menu": "Menu",
       "events": "Events",
-      "leads": "Leads",
       "locations": "Locations",
       "team": "Team",
       "location": "Location",
@@ -1431,6 +1433,9 @@
       "whatsapp": "WhatsApp",
       "whatsappTip": "International format, digits only, no +.",
       "email": "Email",
+      "emailTip": "The email shown to customers on the site (footer and contact page).",
+      "inquiriesEmail": "Inquiries inbox",
+      "inquiriesEmailTip": "Contact-form and event-commitment submissions are sent to this address.",
       "wazeUrl": "Waze link",
       "lanes": "Number of lanes",
       "laneDesc": "Lanes description",
@@ -1586,14 +1591,6 @@
       "optionValue": "Value",
       "optionLabel": "Label",
       "fieldRequired": "Required field"
-    },
-    "leads": {
-      "title": "Leads",
-      "empty": "No leads yet",
-      "date": "Date",
-      "name": "Name",
-      "contact": "Contact",
-      "total": "Total"
     },
     "locations": {
       "title": "Locations",

@@ -1,6 +1,6 @@
 {
-  "id": "c2151bd5-3787-4d82-9f20-cd5e5acca618",
-  "prevId": "23416183-8b1e-4b43-bf84-3ff3a01f2600",
+  "id": "bbfeebf0-a20e-4ce0-a20a-d3982e9f78bf",
+  "prevId": "c2151bd5-3787-4d82-9f20-cd5e5acca618",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -1037,6 +1037,149 @@
         "home_service_location_id_location_id_fk": {
           "name": "home_service_location_id_location_id_fk",
           "tableFrom": "home_service",
+          "tableTo": "location",
+          "columnsFrom": [
+            "location_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.pricing_content": {
+      "name": "pricing_content",
+      "schema": "",
+      "columns": {
+        "location_id": {
+          "name": "location_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "eyebrow": {
+          "name": "eyebrow",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "title": {
+          "name": "title",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "weekdays_label": {
+          "name": "weekdays_label",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "weekdays_price": {
+          "name": "weekdays_price",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "weekend_label": {
+          "name": "weekend_label",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "weekend_price": {
+          "name": "weekend_price",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "third_game_label": {
+          "name": "third_game_label",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "third_game_note": {
+          "name": "third_game_note",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "third_game_price": {
+          "name": "third_game_price",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "soldier_title": {
+          "name": "soldier_title",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "soldier_note": {
+          "name": "soldier_note",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "birthday_eyebrow": {
+          "name": "birthday_eyebrow",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "birthday_title": {
+          "name": "birthday_title",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "birthday_description": {
+          "name": "birthday_description",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "birthday_cta_label": {
+          "name": "birthday_cta_label",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "pricing_content_location_id_location_id_fk": {
+          "name": "pricing_content_location_id_location_id_fk",
+          "tableFrom": "pricing_content",
           "tableTo": "location",
           "columnsFrom": [
             "location_id"
