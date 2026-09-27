@@ -15,8 +15,6 @@ export interface Branch {
   addressLine2: Localized
   addressFull: Localized
   phone: string
-  /** Public contact email shown on the site (footer + contact page). */
-  email: string
   /** Branch WhatsApp lead number (international format, digits only, no "+"). */
   whatsapp: string
   lanes: number
@@ -49,7 +47,6 @@ export const BRANCHES: Record<BranchId, Branch> = {
       en: "Aba Hillel Rd 301 (Ramat Gan Stadium, Gate 2)",
     },
     phone: "03-5700834",
-    email: "info@bowling.co.il",
     whatsapp: "972549854428",
     lanes: 14,
     laneDesc: {
@@ -72,7 +69,6 @@ export const BRANCHES: Record<BranchId, Branch> = {
       en: "HaYehudim Blvd 24 (Azorion Mall)",
     },
     phone: "03-9550021",
-    email: "info@bowling.co.il",
     whatsapp: "972549629579",
     lanes: 16,
     laneDesc: {
@@ -93,4 +89,16 @@ export const BRANCH_COOKIE = "BRANCH"
 
 export function isBranchId(value: unknown): value is BranchId {
   return typeof value === "string" && value in BRANCHES
+}
+
+// Keys DB rows (locations, menus, event locations…) by branch id via their
+// `slug`, so client components can look up the active branch's content.
+export function byBranch<T extends { slug: string }>(
+  rows: T[]
+): Partial<Record<BranchId, T>> {
+  const map: Partial<Record<BranchId, T>> = {}
+  for (const row of rows) {
+    if (isBranchId(row.slug)) map[row.slug] = row
+  }
+  return map
 }

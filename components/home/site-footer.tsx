@@ -4,7 +4,9 @@ import Image from "next/image"
 import Link from "next/link"
 import { useLocale, useTranslations } from "next-intl"
 
+import { pickLocale } from "@/lib/localized"
 import { useBranch } from "@/components/branch-context"
+import { useSiteContent } from "@/components/site-content-context"
 import { Container } from "./container"
 
 const SOCIALS = [
@@ -52,14 +54,19 @@ export function SiteFooter() {
   const t = useTranslations()
   const { branch } = useBranch()
   const locale = useLocale() as "he" | "en"
+  const content = useSiteContent()
   const navLinks = t.raw("footer.navLinks") as string[]
+  const email = content?.email?.trim() || "info@bowling.co.il"
   const branchDetails = [
     branch.addressLine1[locale],
     branch.addressLine2[locale],
     branch.phone,
-    branch.email,
+    email,
   ]
   const hours = t.raw("footer.hours") as string[]
+  // Admin-managed footer note; fall back to the next-intl tagline.
+  const tagline =
+    pickLocale(content?.site?.footerNote, locale) || t("footer.tagline")
 
   return (
     <footer className="border-t border-navy bg-cream-warm pt-7 pb-5 lg:pt-13 lg:pb-7">
@@ -75,7 +82,7 @@ export function SiteFooter() {
               className="mb-3 h-12 w-auto lg:h-14"
             />
             <p className="mb-3.5 max-w-[320px] text-sm leading-[1.55] font-medium text-mud lg:mb-4 lg:text-[15px]">
-              {t("footer.tagline")}
+              {tagline}
             </p>
             <div className="flex gap-2.5">
               {SOCIALS.map(({ glyph, label, bg }) => (

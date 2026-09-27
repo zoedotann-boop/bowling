@@ -80,6 +80,25 @@ users are provisioned by an owner.
   → one server action` that persists the whole draft via `syncCollection`
   (`lib/actions/admin/*`). `sortOrder` is assigned from array index on save.
 
-> Note: the public site still renders its hardcoded content
-> (`lib/branches.ts`, `messages/*`). Wiring the public pages to read from the
-> admin database is a follow-up.
+### Public site reads
+
+The public pages render the admin's content live from the database:
+
+- **Reads** `lib/db/queries/site.ts` — `getSiteLocations`, `getHomeContent`,
+  `getMenus`, `getEvents`. Each returns every location (children ordered by
+  `sortOrder`, hidden rows filtered out) so the branch switcher can swap content
+  client-side without a reload.
+- **Delivery** the `(site)` layout / page wrappers fetch on the server and key
+  the rows by branch (`byBranch` in `lib/branches.ts`). `SiteContentProvider`
+  (`components/site-content-context.tsx`) carries home + chrome content the same
+  way `BranchProvider` carries branch data; menu and event content is passed to
+  the page components as props.
+- **Fallback** every field falls back to its `messages/*` string (and lists to
+  their message array) when the DB value is blank, so the site never breaks if
+  the database is unavailable or a field is unset. Copy that the admin does not
+  manage (UI chrome, pricing/gymboree sections, event badges / price cards /
+  rules / policy) stays in `messages/*`.
+- **Event booking** the booking form renders the event type's dynamic
+  `eventFormField`s when defined, otherwise the built-in fields; `POST
+  /api/events/booking` stores answers in `lead.formData` and the signature in
+  `lead.signatureUrl`.

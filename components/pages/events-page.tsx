@@ -2,10 +2,13 @@
 
 import type { ComponentType, SVGProps } from "react"
 import Link from "next/link"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
+import type { BranchId } from "@/lib/branches"
 import { whatsappUrl } from "@/lib/contact"
+import type { SiteEventLocation } from "@/lib/db/queries/site"
+import { pickLocale } from "@/lib/localized"
 import { useBranch } from "@/components/branch-context"
 import { Container } from "@/components/home/container"
 import {
@@ -33,9 +36,15 @@ const STRIPS = [
   "bg-primary",
 ]
 
-export function EventsPage() {
+export function EventsPage({
+  events,
+}: {
+  events: Partial<Record<BranchId, SiteEventLocation>>
+}) {
   const t = useTranslations("eventsPage")
   const { branch } = useBranch()
+  const locale = useLocale() as "he" | "en"
+  const dbTypes = events[branch.id]?.eventTypes ?? []
   const allCards = t.raw("cards") as {
     id: string
     title: string
@@ -43,16 +52,27 @@ export function EventsPage() {
   }[]
   const cardById = new Map(allCards.map((c) => [c.id, c]))
 
-  // Only the events this branch offers, in branch order. Rishon's birthday
-  // card uses the "deal" title.
-  const cards = branch.events
-    .map((id) => cardById.get(id))
-    .filter((c): c is { id: string; title: string; desc: string } => Boolean(c))
-    .map((c) =>
-      branch.id === "rishon" && c.id === "birthdays"
-        ? { ...c, title: t("dealTitle") }
-        : c
-    )
+  // Admin-managed event types win (already scoped + ordered per branch); fall
+  // back to the next-intl cards filtered to this branch's offered events.
+  const cards: { id: string; title: string; desc: string }[] = dbTypes.length
+    ? dbTypes.map((et) => ({
+        id: et.slug,
+        title: pickLocale(et.name, locale),
+        desc:
+          pickLocale(et.content?.heroDescription, locale) ||
+          cardById.get(et.slug)?.desc ||
+          "",
+      }))
+    : branch.events
+        .map((id) => cardById.get(id))
+        .filter((c): c is { id: string; title: string; desc: string } =>
+          Boolean(c)
+        )
+        .map((c) =>
+          branch.id === "rishon" && c.id === "birthdays"
+            ? { ...c, title: t("dealTitle") }
+            : c
+        )
 
   return (
     <Container className="py-9 lg:py-16">

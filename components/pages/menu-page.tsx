@@ -1,9 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
+import type { BranchId } from "@/lib/branches"
+import type { SiteMenu } from "@/lib/db/queries/site"
+import { formatPrice, pickLocale } from "@/lib/localized"
+import { useBranch } from "@/components/branch-context"
 import { Container } from "@/components/home/container"
 
 type Category = {
@@ -12,10 +16,32 @@ type Category = {
   items: { name: string; price: string; desc: string }[]
 }
 
-export function MenuPage() {
+export function MenuPage({
+  menus,
+}: {
+  menus: Partial<Record<BranchId, SiteMenu>>
+}) {
   const t = useTranslations("menuPage")
-  const categories = t.raw("categories") as Category[]
-  const [active, setActive] = useState(categories[0].id)
+  const locale = useLocale() as "he" | "en"
+  const { branchId } = useBranch()
+  const dbMenu = menus[branchId]
+
+  // Admin-managed menu wins; fall back to the next-intl copy.
+  const categories: Category[] = dbMenu?.menuCategories.length
+    ? dbMenu.menuCategories.map((c) => ({
+        id: c.id,
+        label: pickLocale(c.label, locale),
+        items: c.items.map((item) => ({
+          name: pickLocale(item.name, locale),
+          price: item.amount != null ? formatPrice(item.amount, locale) : "",
+          desc: pickLocale(item.description, locale),
+        })),
+      }))
+    : (t.raw("categories") as Category[])
+  const heading = pickLocale(dbMenu?.menu?.heading, locale) || t("title")
+  const intro = pickLocale(dbMenu?.menu?.intro, locale) || t("subtitle")
+
+  const [active, setActive] = useState(categories[0]?.id ?? "")
   const current = categories.find((c) => c.id === active) ?? categories[0]
 
   return (
@@ -25,10 +51,10 @@ export function MenuPage() {
           {t("eyebrow")}
         </span>
         <h1 className="neon-sign-purple mt-1.5 font-heading text-[40px] leading-none font-black tracking-[-1.5px] lg:text-[56px]">
-          {t("title")}
+          {heading}
         </h1>
         <p className="mt-3 text-[15px] font-semibold text-mud lg:text-lg">
-          {t("subtitle")}
+          {intro}
         </p>
       </div>
 

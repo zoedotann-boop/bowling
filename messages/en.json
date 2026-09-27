@@ -1388,6 +1388,7 @@
       "team": "Team",
       "location": "Location",
       "collapseSidebar": "Collapse sidebar",
+      "viewSite": "View live site",
       "signOut": "Sign out",
       "close": "Close",
       "openMenu": "Open menu"
