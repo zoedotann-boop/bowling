@@ -237,7 +237,8 @@
     "events": "Events & Birthdays · Bowling",
     "contact": "Contact us · Bowling",
     "giftCard": "Digital gift card · Bowling",
-    "accessibility": "Accessibility statement · Bowling"
+    "accessibility": "Accessibility statement · Bowling",
+    "notFound": "Page not found · Bowling"
   },
   "accessibilityPage": {
     "eyebrow": "Committed to everyone",
@@ -1370,6 +1371,12 @@
       }
     ]
   },
+  "notFoundPage": {
+    "title": "Gutter ball!",
+    "text": "We couldn't find that page — it rolled off the lane. It may have moved, or the link is wrong.",
+    "home": "Back to home",
+    "events": "Events & birthdays"
+  },
   "admin": {
     "signIn": {
       "title": "Admin sign in",
@@ -1699,6 +1706,11 @@
         "manager": "Manager",
         "staff": "Staff"
       }
+    },
+    "notFound": {
+      "title": "Page not found",
+      "text": "This page doesn't exist, or you don't have access to it.",
+      "back": "Back to admin"
     }
   }
 }

@@ -8,6 +8,7 @@ import { useIsOpen } from "@/lib/hours"
 import { pickLocale } from "@/lib/localized"
 import { useBranch } from "@/components/branch-context"
 import { useSiteContent } from "@/components/site-content-context"
+import { LaneLines } from "@/components/decor/lane-lines"
 import { NeonSign } from "@/components/decor/neon-sign"
 import { PinsSettle } from "@/components/decor/pins-settle"
 import { Container } from "./container"
@@ -26,27 +27,7 @@ export function Hero() {
 
   return (
     <section className="relative isolate overflow-hidden bg-background">
-      {/* Flat concrete lane in perspective — LED lines converging, no gradient. */}
-      <div className="absolute inset-0 -z-20 flex justify-center overflow-hidden">
-        <svg
-          viewBox="0 0 800 1000"
-          preserveAspectRatio="xMidYMin slice"
-          className="h-full w-full max-w-[1100px] opacity-[0.22]"
-          aria-hidden="true"
-        >
-          <g fill="none" strokeLinecap="round" strokeWidth="2">
-            <line x1="400" y1="120" x2="40" y2="1000" stroke="#02b2cd" />
-            <line x1="400" y1="120" x2="760" y2="1000" stroke="#02b2cd" />
-            <line x1="400" y1="120" x2="230" y2="1000" stroke="#02b2cd" />
-            <line x1="400" y1="120" x2="570" y2="1000" stroke="#02b2cd" />
-            <line x1="400" y1="120" x2="400" y2="1000" stroke="#e2212a" />
-            {/* lane cross-slats receding */}
-            <line x1="330" y1="300" x2="470" y2="300" stroke="#02b2cd" />
-            <line x1="285" y1="470" x2="515" y2="470" stroke="#02b2cd" />
-            <line x1="235" y1="680" x2="565" y2="680" stroke="#02b2cd" />
-          </g>
-        </svg>
-      </div>
+      <LaneLines />
 
       <Container className="pt-10 pb-[170px] lg:flex lg:min-h-[max(620px,52vw)] lg:flex-col lg:items-center lg:justify-center lg:py-20 lg:text-center">
         {/* One playful moment: a small rack of pins settling in */}
