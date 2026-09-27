@@ -116,20 +116,23 @@ export function AdminSelect({
   )
 }
 
-function AdminToggle({
+export function AdminToggle({
   checked,
   onCheckedChange,
   id,
   disabled,
+  "aria-label": ariaLabel,
 }: {
   checked: boolean
   onCheckedChange: (checked: boolean) => void
   id?: string
   disabled?: boolean
+  "aria-label"?: string
 }) {
   return (
     <Switch.Root
       id={id}
+      aria-label={ariaLabel}
       checked={checked}
       onCheckedChange={(next) => onCheckedChange(next)}
       disabled={disabled}
