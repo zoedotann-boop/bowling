@@ -1,7 +1,8 @@
 {
   "metadata": {
-    "title": "Bowling · Ramat Gan Branch",
-    "description": "The perfect outing for family and friends! Modern bowling lanes, bar & restaurant, gymboree, bumper cars and events of all kinds — Ramat Gan branch."
+    "title": "Bowling · Ramat Gan & Rishon LeZion",
+    "description": "The perfect outing for family and friends! Modern bowling lanes, bar & restaurant, gymboree, bumper cars and events of all kinds — in Ramat Gan and Rishon LeZion.",
+    "branchTitle": "Bowling · {branch}"
   },
   "brand": "Bowling",
   "header": {
@@ -1344,13 +1345,11 @@
     }
   },
   "branchChooser": {
-    "meta": "Choose a branch · Bowling",
     "title": "Which branch are you bowling at?",
     "subtitle": "Pick a branch to see its prices, menu, events and directions. You can always switch branches from the top menu.",
     "lanes": "{count} lanes",
     "gymboree": "Gymboree",
-    "enter": "Enter branch",
-    "enterBranch": "Enter {name}"
+    "enter": "Enter branch"
   },
   "notFoundPage": {
     "title": "Gutter ball!",

@@ -2,7 +2,13 @@ import { describe, expect, test } from "bun:test"
 
 import type { location } from "@/lib/db/schema"
 
-import { BRANCHES, isBranchId, mergeBranch } from "./branches"
+import {
+  BRANCHES,
+  branchPath,
+  isBranchId,
+  mergeBranch,
+  switchBranchPath,
+} from "./branches"
 
 type BranchRow = typeof location.$inferSelect
 
@@ -45,6 +51,34 @@ describe("isBranchId", () => {
     expect(isBranchId("ramat-gan")).toBe(true)
     expect(isBranchId("haifa")).toBe(false)
     expect(isBranchId(undefined)).toBe(false)
+  })
+})
+
+describe("branchPath", () => {
+  test("points at the branch home page by default", () => {
+    expect(branchPath("rishon")).toBe("/rishon")
+    expect(branchPath("rishon", "/")).toBe("/rishon")
+  })
+
+  test("prefixes site paths with the branch", () => {
+    expect(branchPath("ramat-gan", "/menu")).toBe("/ramat-gan/menu")
+    expect(branchPath("rishon", "/events/birthdays")).toBe(
+      "/rishon/events/birthdays"
+    )
+  })
+})
+
+describe("switchBranchPath", () => {
+  test("keeps the current page when switching branch", () => {
+    expect(switchBranchPath("/ramat-gan/menu", "rishon")).toBe("/rishon/menu")
+    expect(switchBranchPath("/rishon/events/gymboree", "ramat-gan")).toBe(
+      "/ramat-gan/events/gymboree"
+    )
+  })
+
+  test("switches between branch home pages", () => {
+    expect(switchBranchPath("/ramat-gan", "rishon")).toBe("/rishon")
+    expect(switchBranchPath("/ramat-gan/", "rishon")).toBe("/rishon")
   })
 })
 

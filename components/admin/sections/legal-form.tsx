@@ -40,7 +40,11 @@ export function LegalForm({
               variant="outline"
               size="sm"
               render={
-                <a href={`/${kind}`} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={`/${slug}/${kind}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <ExternalLink />
                   {t("viewPage")}
                 </a>

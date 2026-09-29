@@ -4,7 +4,9 @@ import Link from "next/link"
 import { useLocale, useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
+import { branchPath } from "@/lib/branches"
 import { pickLocale } from "@/lib/localized"
+import { useBranch } from "@/components/branch-context"
 import { useSiteContent } from "@/components/site-content-context"
 import { BowlingIcon, MenuIcon, PartyIcon } from "@/components/icons"
 import { LedDot } from "@/components/decor/led-dot"
@@ -18,6 +20,7 @@ const CONFIG = [
 
 export function Services() {
   const t = useTranslations("services")
+  const { branchId } = useBranch()
   const locale = useLocale() as "he" | "en"
   const home = useSiteContent()
   const messageItems = t.raw("items") as {
@@ -52,7 +55,7 @@ export function Services() {
           return (
             <Link
               key={s.title}
-              href={href}
+              href={branchPath(branchId, href)}
               className="block overflow-hidden border border-border bg-paper transition-colors hover:border-primary"
             >
               <div className={cn("h-1", strip)} />

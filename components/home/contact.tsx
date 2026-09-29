@@ -64,6 +64,7 @@ export function Contact() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          branch: branch.id,
           name,
           phone,
           email: emailValue,

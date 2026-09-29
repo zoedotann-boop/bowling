@@ -1,11 +1,9 @@
 import "server-only"
 
 import { eq } from "drizzle-orm"
-import { cookies } from "next/headers"
 import { Resend } from "resend"
 
 import {
-  BRANCH_COOKIE,
   BRANCHES,
   DEFAULT_BRANCH,
   isBranchId,
@@ -27,11 +25,10 @@ export const escapeHtml = (value: string) =>
       })[char] as string
   )
 
-export async function resolveInquiriesRecipient(): Promise<string | undefined> {
-  const cookieStore = await cookies()
-  const slug = cookieStore.get(BRANCH_COOKIE)?.value
-
-  if (slug) {
+export async function resolveInquiriesRecipient(
+  slug: unknown
+): Promise<string | undefined> {
+  if (isBranchId(slug)) {
     const loc = await db.query.location.findFirst({
       where: eq(location.slug, slug),
       columns: { inquiriesEmail: true },
@@ -43,9 +40,7 @@ export async function resolveInquiriesRecipient(): Promise<string | undefined> {
   return process.env.EVENTS_TO_EMAIL?.trim() || undefined
 }
 
-export async function resolveActiveBranch(): Promise<Branch> {
-  const cookieStore = await cookies()
-  const slug = cookieStore.get(BRANCH_COOKIE)?.value
+export function resolveBranch(slug: unknown): Branch {
   return BRANCHES[isBranchId(slug) ? slug : DEFAULT_BRANCH]
 }
 

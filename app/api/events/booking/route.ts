@@ -1,10 +1,6 @@
 import { NextResponse } from "next/server"
 
-import {
-  resolveActiveBranch,
-  resolveInquiriesRecipient,
-  sendMail,
-} from "@/lib/email"
+import { resolveBranch, resolveInquiriesRecipient, sendMail } from "@/lib/email"
 import {
   BRAND_HE,
   bulletList,
@@ -16,6 +12,7 @@ import {
 import type { Branch } from "@/lib/branches"
 
 interface BookingPayload {
+  branch?: string
   event?: string
   firstName?: string
   lastName?: string
@@ -37,7 +34,7 @@ const FIELD_LABELS: Record<string, string> = {
   date: "תאריך",
 }
 
-const RESERVED_KEYS = new Set(["signature", "upgrades"])
+const RESERVED_KEYS = new Set(["branch", "signature", "upgrades"])
 
 function answers(payload: BookingPayload): [string, string][] {
   return Object.entries(payload)
@@ -107,10 +104,8 @@ export async function POST(request: Request) {
     )
   }
 
-  const [to, branch] = await Promise.all([
-    resolveInquiriesRecipient(),
-    resolveActiveBranch(),
-  ])
+  const branch = resolveBranch(payload.branch)
+  const to = await resolveInquiriesRecipient(payload.branch)
   if (!to) {
     return NextResponse.json(
       { error: "Email service is not configured." },

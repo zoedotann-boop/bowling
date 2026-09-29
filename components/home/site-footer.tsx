@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useLocale, useTranslations } from "next-intl"
 
+import { branchPath } from "@/lib/branches"
 import { LEGAL_PAGE_KINDS } from "@/lib/legal"
 import { pickLocale } from "@/lib/localized"
 import { useBranch } from "@/components/branch-context"
@@ -84,7 +85,9 @@ export function SiteFooter() {
             <FooterColumn
               title={t("footer.navTitle")}
               items={navLinks}
-              hrefs={FOOTER_NAV_HREFS}
+              hrefs={FOOTER_NAV_HREFS.map((href) =>
+                branchPath(branch.id, href)
+              )}
             />
           </div>
           <div>
@@ -115,7 +118,7 @@ export function SiteFooter() {
               {LEGAL_PAGE_KINDS.map((kind) => (
                 <Link
                   key={kind}
-                  href={`/${kind}`}
+                  href={branchPath(branch.id, `/${kind}`)}
                   className="text-navy underline transition-colors hover:text-secondary"
                 >
                   {t(`footer.${kind}`)}

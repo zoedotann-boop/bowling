@@ -1,5 +1,3 @@
-import { cookies } from "next/headers"
-
 import { BranchProvider } from "@/components/branch-context"
 import { BranchNotice } from "@/components/home/branch-notice"
 import { MobileFloatingActions } from "@/components/home/mobile-floating-actions"
@@ -7,19 +5,16 @@ import { SiteFooter } from "@/components/home/site-footer"
 import { SiteHeader } from "@/components/home/site-header"
 import { PageTransition } from "@/components/page-transition"
 import { SiteContentProvider } from "@/components/site-content-context"
-import {
-  BRANCH_COOKIE,
-  byBranch,
-  DEFAULT_BRANCH,
-  isBranchId,
-} from "@/lib/branches"
+import { byBranch, type BranchId } from "@/lib/branches"
 import { getHomeContent, getSiteBranches } from "@/lib/db/queries/site"
 
-export async function SiteChrome({ children }: { children: React.ReactNode }) {
-  const cookieStore = await cookies()
-  const branchCookie = cookieStore.get(BRANCH_COOKIE)?.value
-  const initialBranch = isBranchId(branchCookie) ? branchCookie : DEFAULT_BRANCH
-
+export async function SiteChrome({
+  branchId,
+  children,
+}: {
+  branchId: BranchId
+  children: React.ReactNode
+}) {
   const [branches, contentRows] = await Promise.all([
     getSiteBranches(),
     getHomeContent().catch(() => []),
@@ -27,7 +22,7 @@ export async function SiteChrome({ children }: { children: React.ReactNode }) {
   const content = byBranch(contentRows)
 
   return (
-    <BranchProvider initial={initialBranch} branches={branches}>
+    <BranchProvider branchId={branchId} branches={branches}>
       <SiteContentProvider content={content}>
         <div className="flex min-h-svh flex-col bg-cream">
           <SiteHeader />

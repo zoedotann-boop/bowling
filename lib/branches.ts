@@ -79,15 +79,18 @@ export const BRANCHES: Record<BranchId, Branch> = {
 
 export const branchIds = Object.keys(BRANCHES) as BranchId[]
 export const DEFAULT_BRANCH: BranchId = "ramat-gan"
-export const BRANCH_COOKIE = "BRANCH"
-const BRANCH_COOKIE_MAX_AGE = 60 * 60 * 24 * 365
-
-export function saveBranchCookie(id: BranchId) {
-  document.cookie = `${BRANCH_COOKIE}=${id};path=/;max-age=${BRANCH_COOKIE_MAX_AGE}`
-}
 
 export function isBranchId(value: unknown): value is BranchId {
   return typeof value === "string" && value in BRANCHES
+}
+
+export function branchPath(id: BranchId, path = "/"): string {
+  return path === "/" ? `/${id}` : `/${id}${path}`
+}
+
+export function switchBranchPath(pathname: string, id: BranchId): string {
+  const [, , ...rest] = pathname.split("/")
+  return branchPath(id, rest.length ? `/${rest.join("/")}` : "/")
 }
 
 export function byBranch<T extends { slug: string }>(
