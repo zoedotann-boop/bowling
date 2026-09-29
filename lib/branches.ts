@@ -1,3 +1,5 @@
+import type { location } from "@/lib/db/schema"
+
 export type BranchId = "ramat-gan" | "rishon"
 
 interface Localized {
@@ -78,6 +80,11 @@ export const BRANCHES: Record<BranchId, Branch> = {
 export const branchIds = Object.keys(BRANCHES) as BranchId[]
 export const DEFAULT_BRANCH: BranchId = "ramat-gan"
 export const BRANCH_COOKIE = "BRANCH"
+const BRANCH_COOKIE_MAX_AGE = 60 * 60 * 24 * 365
+
+export function saveBranchCookie(id: BranchId) {
+  document.cookie = `${BRANCH_COOKIE}=${id};path=/;max-age=${BRANCH_COOKIE_MAX_AGE}`
+}
 
 export function isBranchId(value: unknown): value is BranchId {
   return typeof value === "string" && value in BRANCHES
@@ -91,4 +98,34 @@ export function byBranch<T extends { slug: string }>(
     if (isBranchId(row.slug)) map[row.slug] = row
   }
   return map
+}
+
+type BranchRow = typeof location.$inferSelect
+
+function localizedOr(
+  value: { he?: string; en?: string } | null,
+  fallback: Localized
+): Localized {
+  return {
+    he: value?.he?.trim() || fallback.he,
+    en: value?.en?.trim() || fallback.en,
+  }
+}
+
+export function mergeBranch(base: Branch, row: BranchRow | undefined): Branch {
+  if (!row) return base
+  return {
+    ...base,
+    name: localizedOr(row.name, base.name),
+    addressLine1: localizedOr(row.addressLine1, base.addressLine1),
+    addressLine2: localizedOr(row.addressLine2, base.addressLine2),
+    addressFull: localizedOr(row.addressFull, base.addressFull),
+    laneDesc: localizedOr(row.laneDesc, base.laneDesc),
+    phone: row.phone || base.phone,
+    whatsapp: row.whatsapp || base.whatsapp,
+    wazeUrl: row.wazeUrl || base.wazeUrl,
+    lanes: row.lanes || base.lanes,
+    hasGymboree: row.hasGymboree,
+    hasNotice: row.hasNotice,
+  }
 }

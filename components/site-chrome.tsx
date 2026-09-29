@@ -9,56 +9,21 @@ import { PageTransition } from "@/components/page-transition"
 import { SiteContentProvider } from "@/components/site-content-context"
 import {
   BRANCH_COOKIE,
-  BRANCHES,
-  branchIds,
   byBranch,
-  type Branch,
-  type BranchId,
   DEFAULT_BRANCH,
   isBranchId,
 } from "@/lib/branches"
-import { getHomeContent, getSiteLocations } from "@/lib/db/queries/site"
-
-function mergeBranch(base: Branch, row: BranchRow | undefined): Branch {
-  if (!row) return base
-  const loc = (
-    value: { he?: string; en?: string } | null,
-    fallback: { he: string; en: string }
-  ) => ({
-    he: value?.he?.trim() || fallback.he,
-    en: value?.en?.trim() || fallback.en,
-  })
-  return {
-    ...base,
-    name: loc(row.name, base.name),
-    addressLine1: loc(row.addressLine1, base.addressLine1),
-    addressLine2: loc(row.addressLine2, base.addressLine2),
-    addressFull: loc(row.addressFull, base.addressFull),
-    laneDesc: loc(row.laneDesc, base.laneDesc),
-    phone: row.phone || base.phone,
-    whatsapp: row.whatsapp || base.whatsapp,
-    wazeUrl: row.wazeUrl || base.wazeUrl,
-    lanes: row.lanes || base.lanes,
-    hasGymboree: row.hasGymboree,
-    hasNotice: row.hasNotice,
-  }
-}
-
-type BranchRow = Awaited<ReturnType<typeof getSiteLocations>>[number]
+import { getHomeContent, getSiteBranches } from "@/lib/db/queries/site"
 
 export async function SiteChrome({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies()
   const branchCookie = cookieStore.get(BRANCH_COOKIE)?.value
   const initialBranch = isBranchId(branchCookie) ? branchCookie : DEFAULT_BRANCH
 
-  const [rows, contentRows] = await Promise.all([
-    getSiteLocations().catch(() => []),
+  const [branches, contentRows] = await Promise.all([
+    getSiteBranches(),
     getHomeContent().catch(() => []),
   ])
-  const bySlug = new Map(rows.map((row) => [row.slug, row]))
-  const branches = Object.fromEntries(
-    branchIds.map((id) => [id, mergeBranch(BRANCHES[id], bySlug.get(id))])
-  ) as Record<BranchId, Branch>
   const content = byBranch(contentRows)
 
   return (

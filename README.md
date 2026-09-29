@@ -105,11 +105,20 @@ sign in right away with that email.
   immediately via `lib/actions/admin/team.ts` (user row + `location_member`
   rows in one transaction; owners can't demote or delete themselves).
 
+### Branch chooser
+
+The visitor's branch lives in the `BRANCH` cookie (`lib/branches.ts`). Until a
+branch is chosen, `proxy.ts` rewrites `/` to `/branches` — a full-screen page
+with one card per branch (logo, lane count, gymboree tag, address). Picking a
+card saves the cookie and loads that branch's home page at `/`; after that the
+header's branch switcher changes it. Deep links (`/menu`, `/events`, …) never
+show the chooser and fall back to the default branch without saving it.
+
 ### Public site reads
 
 The public pages render the admin's content live from the database:
 
-- **Reads** `lib/db/queries/site.ts` — `getSiteLocations`, `getHomeContent`,
+- **Reads** `lib/db/queries/site.ts` — `getSiteBranches`, `getHomeContent`,
   `getMenus`, `getEvents`. Each returns every location (children ordered by
   `sortOrder`, hidden rows filtered out) so the branch switcher can swap content
   client-side without a reload.
