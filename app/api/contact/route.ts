@@ -1,14 +1,11 @@
 import { NextResponse } from "next/server"
 
-import {
-  resolveActiveBranch,
-  resolveInquiriesRecipient,
-  sendMail,
-} from "@/lib/email"
+import { resolveBranch, resolveInquiriesRecipient, sendMail } from "@/lib/email"
 import { BRAND_HE, detailTable, emailShell } from "@/lib/email-template"
 import type { Branch } from "@/lib/branches"
 
 interface ContactPayload {
+  branch?: string
   name?: string
   phone?: string
   email?: string
@@ -72,10 +69,8 @@ export async function POST(request: Request) {
     )
   }
 
-  const [to, branch] = await Promise.all([
-    resolveInquiriesRecipient(),
-    resolveActiveBranch(),
-  ])
+  const branch = resolveBranch(payload.branch)
+  const to = await resolveInquiriesRecipient(payload.branch)
   if (!to) {
     return NextResponse.json(
       { error: "Email service is not configured." },

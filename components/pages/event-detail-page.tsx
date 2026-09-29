@@ -16,7 +16,7 @@ import { useLocale, useTranslations } from "next-intl"
 import SignatureCanvas from "react-signature-canvas"
 
 import { cn } from "@/lib/utils"
-import type { BranchId } from "@/lib/branches"
+import { branchPath, type BranchId } from "@/lib/branches"
 import type { SiteEventLocation, SiteEventType } from "@/lib/db/queries/site"
 import { formatPrice, pickLocale } from "@/lib/localized"
 import { useBranch } from "@/components/branch-context"
@@ -152,6 +152,7 @@ function Hero({
   backLabel: string
   bookLabel: string
 }) {
+  const { branchId } = useBranch()
   const photo = HERO_PHOTOS[slug]
   const Illustration = ILLUSTRATIONS[slug] ?? BirthdaysIllustration
 
@@ -159,7 +160,7 @@ function Hero({
     <div className="lg:grid lg:grid-cols-2 lg:items-center lg:gap-12">
       <div className="order-1">
         <Link
-          href="/events"
+          href={branchPath(branchId, "/events")}
           className="inline-flex items-center gap-1.5 font-heading text-[13px] font-extrabold text-mud transition-colors hover:text-navy"
         >
           <ArrowLeft className="size-3.5 rtl:rotate-180" strokeWidth={3} />
@@ -636,6 +637,7 @@ function BookingForm({
   requiresSignature: boolean
 }) {
   const t = useTranslations("eventDetails.form")
+  const { branchId } = useBranch()
   const locale = useLocale() as "he" | "en"
   const sigRef = useRef<SignatureCanvas>(null)
   const isDynamic = formFields.length > 0
@@ -686,6 +688,7 @@ function BookingForm({
         body: JSON.stringify({
           event,
           ...(isDynamic ? values : fields),
+          branch: branchId,
           upgrades: selectedUpgrades,
           signature,
         }),
@@ -1022,7 +1025,7 @@ export function EventDetailPage({
           {t("notAvailable.body")}
         </p>
         <Link
-          href="/events"
+          href={branchPath(branch.id, "/events")}
           className="glow-primary mt-6 inline-flex items-center gap-2 rounded-sm border border-primary bg-primary px-6 py-3.5 font-heading text-[15px] font-extrabold text-primary-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground"
         >
           {t("notAvailable.cta")}

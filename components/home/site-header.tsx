@@ -8,12 +8,13 @@ import { X } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
+import { branchPath } from "@/lib/branches"
 import { whatsappUrl } from "@/lib/contact"
 import { useBranch } from "@/components/branch-context"
 import { Container } from "./container"
 import { BranchSwitcher } from "./branch-switcher"
 
-const NAV_HREFS = ["/", "/menu", "/events"]
+const NAV_PATHS = ["/", "/menu", "/events"]
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
@@ -21,9 +22,11 @@ export function SiteHeader() {
   const t = useTranslations()
   const { branch } = useBranch()
   const navItems = t.raw("header.nav") as string[]
+  const home = branchPath(branch.id)
+  const navHrefs = NAV_PATHS.map((path) => branchPath(branch.id, path))
 
   const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href)
+    href === home ? pathname === home : pathname.startsWith(href)
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : ""
@@ -48,7 +51,7 @@ export function SiteHeader() {
             <span className="h-[2.5px] w-5 rounded bg-navy" />
           </button>
 
-          <Link href="/" className="flex items-center">
+          <Link href={home} className="flex items-center">
             <Image
               src={branch.logo.src}
               alt={t("brand")}
@@ -63,10 +66,10 @@ export function SiteHeader() {
             {navItems.map((label, i) => (
               <Link
                 key={label}
-                href={NAV_HREFS[i]}
+                href={navHrefs[i]}
                 className={cn(
                   "rounded-sm px-[18px] py-2 font-heading text-sm font-extrabold transition-colors",
-                  isActive(NAV_HREFS[i])
+                  isActive(navHrefs[i])
                     ? "glow-primary bg-primary text-primary-foreground"
                     : "text-navy hover:bg-card hover:text-secondary"
                 )}
@@ -135,11 +138,11 @@ export function SiteHeader() {
             {navItems.map((label, i) => (
               <Link
                 key={label}
-                href={NAV_HREFS[i]}
+                href={navHrefs[i]}
                 onClick={() => setOpen(false)}
                 className={cn(
                   "rounded-sm border px-4 py-3 font-heading text-base font-extrabold transition-colors",
-                  isActive(NAV_HREFS[i])
+                  isActive(navHrefs[i])
                     ? "glow-primary border-primary bg-primary text-primary-foreground"
                     : "border-border text-navy hover:border-secondary hover:text-secondary"
                 )}

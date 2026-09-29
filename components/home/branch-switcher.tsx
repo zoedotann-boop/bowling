@@ -1,15 +1,18 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { usePathname, useRouter } from "next/navigation"
 import { Check, ChevronDown } from "lucide-react"
 import { useLocale } from "next-intl"
 
 import { cn } from "@/lib/utils"
-import { BRANCHES, branchIds } from "@/lib/branches"
+import { BRANCHES, branchIds, switchBranchPath } from "@/lib/branches"
 import { useBranch } from "@/components/branch-context"
 
 export function BranchSwitcher({ className }: { className?: string }) {
-  const { branchId, setBranch } = useBranch()
+  const { branchId } = useBranch()
+  const router = useRouter()
+  const pathname = usePathname()
   const locale = useLocale() as "he" | "en"
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -56,8 +59,8 @@ export function BranchSwitcher({ className }: { className?: string }) {
                 role="option"
                 aria-selected={active}
                 onClick={() => {
-                  setBranch(id)
                   setOpen(false)
+                  if (!active) router.push(switchBranchPath(pathname, id))
                 }}
                 className={cn(
                   "flex w-full items-center justify-between gap-2 px-4 py-3 text-start font-heading text-sm font-extrabold transition-colors",

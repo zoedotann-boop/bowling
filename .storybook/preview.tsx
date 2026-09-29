@@ -30,7 +30,7 @@ const preview: Preview = {
   decorators: [
     (Story) => (
       <NextIntlClientProvider locale="he" messages={messages}>
-        <BranchProvider initial={DEFAULT_BRANCH}>
+        <BranchProvider branchId={DEFAULT_BRANCH}>
           <div
             dir="rtl"
             className={`${rubik.variable} ${heebo.variable} font-sans`}

@@ -1,6 +1,10 @@
+"use client"
+
 import Link from "next/link"
 import { useTranslations } from "next-intl"
 
+import { branchPath } from "@/lib/branches"
+import { useBranch } from "@/components/branch-context"
 import { Container } from "@/components/home/container"
 import { LaneLines } from "@/components/decor/lane-lines"
 import { PinsSettle } from "@/components/decor/pins-settle"
@@ -18,6 +22,7 @@ function BowlingBall() {
 
 export function NotFoundPage() {
   const t = useTranslations("notFoundPage")
+  const { branchId } = useBranch()
 
   return (
     <section className="relative isolate overflow-hidden">
@@ -43,13 +48,13 @@ export function NotFoundPage() {
 
         <div className="mt-8 flex w-full flex-col gap-2.5 sm:w-auto sm:flex-row">
           <Link
-            href="/"
+            href={branchPath(branchId)}
             className="inline-flex items-center justify-center rounded-sm bg-primary px-6 py-[15px] font-heading text-base font-extrabold text-primary-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground lg:py-4 lg:text-[17px]"
           >
             {t("home")}
           </Link>
           <Link
-            href="/events"
+            href={branchPath(branchId, "/events")}
             className="inline-flex items-center justify-center rounded-sm border border-navy/30 px-6 py-[15px] font-heading text-base font-extrabold text-foreground transition-colors hover:border-primary hover:text-primary lg:py-4 lg:text-[17px]"
           >
             {t("events")}

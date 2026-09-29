@@ -1,43 +1,29 @@
 "use client"
 
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext } from "react"
 
-import {
-  BRANCH_COOKIE,
-  BRANCHES,
-  type Branch,
-  type BranchId,
-} from "@/lib/branches"
+import { BRANCHES, type Branch, type BranchId } from "@/lib/branches"
 
 interface BranchContextValue {
   branch: Branch
   branchId: BranchId
-  setBranch: (id: BranchId) => void
 }
 
 const BranchContext = createContext<BranchContextValue | null>(null)
 
 export function BranchProvider({
-  initial,
+  branchId,
   branches,
   children,
 }: {
-  initial: BranchId
+  branchId: BranchId
   branches?: Record<BranchId, Branch>
   children: React.ReactNode
 }) {
-  const [branchId, setBranchId] = useState<BranchId>(initial)
-
-  useEffect(() => {
-    document.cookie = `${BRANCH_COOKIE}=${branchId};path=/;max-age=${60 * 60 * 24 * 365}`
-  }, [branchId])
-
   const branch = branches?.[branchId] ?? BRANCHES[branchId]
 
   return (
-    <BranchContext.Provider
-      value={{ branch, branchId, setBranch: setBranchId }}
-    >
+    <BranchContext.Provider value={{ branch, branchId }}>
       {children}
     </BranchContext.Provider>
   )

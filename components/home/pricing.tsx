@@ -5,10 +5,12 @@ import { useLocale, useTranslations } from "next-intl"
 import Link from "next/link"
 
 import { cn } from "@/lib/utils"
+import { branchPath } from "@/lib/branches"
 import type { Localized } from "@/lib/db/schema/_shared"
 import { pickLocale } from "@/lib/localized"
 import { LedDot } from "@/components/decor/led-dot"
 import { BirthdayScene } from "@/components/illustrations"
+import { useBranch } from "@/components/branch-context"
 import { useSiteContent } from "@/components/site-content-context"
 import { Container } from "./container"
 
@@ -44,6 +46,7 @@ const priceValue = "font-heading text-[26px] font-black lg:text-[30px]"
 
 export function Pricing() {
   const t = useTranslations("pricing")
+  const { branchId } = useBranch()
   const locale = useLocale() as "he" | "en"
   const pricing = useSiteContent()?.pricing
 
@@ -123,7 +126,7 @@ export function Pricing() {
             {val(pricing?.birthdayDescription, "birthdayDescription")}
           </p>
           <Link
-            href="/events"
+            href={branchPath(branchId, "/events")}
             className="glow-primary hover:glow-cyan inline-block w-full rounded-sm border border-primary bg-primary px-5 py-3.5 text-center font-heading text-[15px] font-extrabold text-primary-foreground transition-colors hover:border-secondary hover:bg-secondary hover:text-secondary-foreground lg:w-auto lg:px-7 lg:py-4 lg:text-base"
           >
             {val(pricing?.birthdayCtaLabel, "birthdayCta")}

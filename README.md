@@ -105,15 +105,27 @@ sign in right away with that email.
   immediately via `lib/actions/admin/team.ts` (user row + `location_member`
   rows in one transaction; owners can't demote or delete themselves).
 
+### Branch routing
+
+`/` is the landing page: a full-screen branch chooser with one card per branch
+(logo, lane count, gymboree tag, address). Every public page lives under its
+branch — `/ramat-gan`, `/rishon/menu`, `/rishon/events/birthdays`, … — in
+`app/[branch]/`, whose layout validates the slug (`generateStaticParams` +
+`dynamicParams = false`, unknown slugs 404) and passes it to `SiteChrome` /
+`BranchProvider`. Build links with `branchPath(id, path)`; the header branch
+switcher keeps the current page via `switchBranchPath`. The contact and booking
+forms send `branch` in the request body so emails go to that branch.
+Pre-branch URLs (`/menu`, `/events/*`, `/contact`, `/terms`, `/accessibility`)
+redirect permanently to the default branch (`next.config.ts`).
+
 ### Public site reads
 
 The public pages render the admin's content live from the database:
 
-- **Reads** `lib/db/queries/site.ts` — `getSiteLocations`, `getHomeContent`,
+- **Reads** `lib/db/queries/site.ts` — `getSiteBranches`, `getHomeContent`,
   `getMenus`, `getEvents`. Each returns every location (children ordered by
-  `sortOrder`, hidden rows filtered out) so the branch switcher can swap content
-  client-side without a reload.
-- **Delivery** the `(site)` layout / page wrappers fetch on the server and key
+  `sortOrder`, hidden rows filtered out).
+- **Delivery** the `[branch]` layout / page wrappers fetch on the server and key
   the rows by branch (`byBranch` in `lib/branches.ts`). `SiteContentProvider`
   (`components/site-content-context.tsx`) carries home + chrome content the same
   way `BranchProvider` carries branch data; menu and event content is passed to

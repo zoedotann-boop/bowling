@@ -5,7 +5,7 @@ import Link from "next/link"
 import { useLocale, useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
-import type { BranchId } from "@/lib/branches"
+import { branchPath, type BranchId } from "@/lib/branches"
 import { whatsappUrl } from "@/lib/contact"
 import type { SiteEventLocation } from "@/lib/db/queries/site"
 import { pickLocale } from "@/lib/localized"
@@ -91,7 +91,7 @@ export function EventsPage({
           return (
             <Link
               key={c.id}
-              href={`/events/${c.id}`}
+              href={branchPath(branch.id, `/events/${c.id}`)}
               className="hover:glow-primary block overflow-hidden rounded-sm border border-border bg-card transition-all hover:-translate-y-0.5 hover:border-primary"
             >
               <div

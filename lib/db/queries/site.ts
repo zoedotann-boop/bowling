@@ -2,12 +2,25 @@ import "server-only"
 
 import { asc, desc, eq } from "drizzle-orm"
 
+import {
+  BRANCHES,
+  branchIds,
+  mergeBranch,
+  type Branch,
+  type BranchId,
+} from "@/lib/branches"
 import { db } from "@/lib/db"
 import { legalPage, location } from "@/lib/db/schema"
 import type { LegalPageKind } from "@/lib/legal"
 
-export async function getSiteLocations() {
-  return db.query.location.findMany({ orderBy: [asc(location.sortOrder)] })
+export async function getSiteBranches(): Promise<Record<BranchId, Branch>> {
+  const rows = await db.query.location
+    .findMany({ orderBy: [asc(location.sortOrder)] })
+    .catch(() => [])
+  const bySlug = new Map(rows.map((row) => [row.slug, row]))
+  return Object.fromEntries(
+    branchIds.map((id) => [id, mergeBranch(BRANCHES[id], bySlug.get(id))])
+  ) as Record<BranchId, Branch>
 }
 
 const MAX_HOME_REVIEWS = 9

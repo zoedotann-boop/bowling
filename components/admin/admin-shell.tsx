@@ -223,7 +223,11 @@ export function AdminShell({
           title={collapsed ? t("viewSite") : undefined}
           className="w-full justify-start"
           render={
-            <a href="/" target="_blank" rel="noopener noreferrer">
+            <a
+              href={`/${activeSlug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <ExternalLink />
               {!collapsed && t("viewSite")}
             </a>
