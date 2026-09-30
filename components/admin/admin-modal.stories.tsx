@@ -16,7 +16,10 @@ function EditorExample() {
         title="עריכת קטגוריה"
         closeLabel="סגירה"
       >
-        <AdminField label="שם הקטגוריה">
+        <AdminField
+          label="שם הקטגוריה"
+          tooltip="שם מקטע התפריט שמקבץ את הפריטים שתחתיו (למשל מנות ראשונות, שתייה)."
+        >
           <AdminInput defaultValue="מנות ראשונות" />
         </AdminField>
       </AdminModal>
