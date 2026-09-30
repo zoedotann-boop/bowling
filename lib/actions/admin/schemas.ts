@@ -1,6 +1,7 @@
 import { z } from "zod"
 
 import { ADMIN_ROLES } from "@/lib/admin/permissions"
+import { PRICE_SUMMARY_MODES } from "@/lib/events/details"
 import { FORM_FIELD_TYPES } from "@/lib/events/fields"
 
 import { localizedSchema, rowIdSchema } from "./shared"
@@ -210,15 +211,28 @@ const eventPolicyItemSchema = z.object({
   title: localizedSchema,
   description: localizedSchema,
 })
+const eventPriceOptionSchema = z.object({
+  label: localizedSchema,
+  days: localizedSchema,
+  badge: localizedSchema,
+  amount: optionalMoney,
+  childrenCount: z.number().int().nonnegative().nullable(),
+  extraChildAmount: optionalMoney,
+})
+const eventSummaryRowSchema = z.object({
+  label: localizedSchema,
+  value: localizedSchema,
+})
 const eventTypeContentSchema = z.object({
   heroTitle: localizedSchema,
   heroDescription: localizedSchema,
   heroImageUrl: imageUrlSchema,
-  packageAmount: optionalMoney,
-  packageChildrenCount: z.number().int().nonnegative().nullable(),
-  extraChildAmount: optionalMoney,
   depositAmount: optionalMoney,
   scheduleTitle: localizedSchema,
+  priceNote: localizedSchema,
+  priceOptions: z.array(eventPriceOptionSchema),
+  priceSummaryMode: z.enum(PRICE_SUMMARY_MODES),
+  priceSummaryRows: z.array(eventSummaryRowSchema),
   allowedItems: z.array(localizedSchema),
   forbiddenItems: z.array(localizedSchema),
   rulesNote: localizedSchema,
@@ -248,4 +262,5 @@ export const eventsSchema = z.object({
 })
 export type EventsDraft = z.infer<typeof eventsSchema>
 export type EventTypeDraft = z.infer<typeof eventTypeSchema>
+export type EventPriceOptionDraft = z.infer<typeof eventPriceOptionSchema>
 export type EventFormFieldDraft = z.infer<typeof eventFormFieldSchema>

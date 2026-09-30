@@ -26,11 +26,12 @@ function eventTypeDraft(
       heroTitle: text(`${slug} title`),
       heroDescription: text(""),
       heroImageUrl: "",
-      packageAmount: null,
-      packageChildrenCount: null,
-      extraChildAmount: null,
       depositAmount: null,
       scheduleTitle: text(""),
+      priceNote: text(""),
+      priceOptions: [],
+      priceSummaryMode: "auto",
+      priceSummaryRows: [],
       allowedItems: [],
       forbiddenItems: [],
       rulesNote: text(""),
@@ -124,6 +125,132 @@ describe("saveEvents", () => {
     expect(birthdays.content?.upgradesTitle).toEqual(text("רוצים להוסיף?"))
     expect(birthdays.content?.upgradesNote).toEqual(text("הפקידה תחזור אליכם"))
     expect(birthdays.upgrades.map((u) => u.label.he)).toEqual(["בלונים"])
+  })
+
+  test("stores several price options in order with the price note", async () => {
+    const draft = eventTypeDraft("birthdays")
+    const weekend = {
+      label: text("סופ״ש / חול המועד"),
+      days: text("שי׳–שב׳"),
+      badge: text("סופ״ש וחגים"),
+      amount: 1280,
+      childrenCount: 20,
+      extraChildAmount: 64,
+    }
+    const midweek = {
+      label: text("אמצע שבוע"),
+      days: text("א׳–ה׳"),
+      badge: text(""),
+      amount: 1180,
+      childrenCount: 20,
+      extraChildAmount: 59,
+    }
+    await save({
+      eventTypes: [
+        {
+          ...draft,
+          content: {
+            ...draft.content,
+            priceNote: text("מינימום 20 משתתפים"),
+            priceOptions: [weekend, midweek],
+            depositAmount: 200,
+          },
+        },
+      ],
+    })
+    const [saved] = await load(access.location.id)
+    expect(saved.content?.priceNote).toEqual(text("מינימום 20 משתתפים"))
+    expect(saved.content?.priceOptions).toEqual([weekend, midweek])
+    expect(saved.content?.depositAmount).toBe(200)
+
+    await save({
+      eventTypes: [
+        {
+          ...draft,
+          id: saved.id,
+          content: { ...draft.content, priceOptions: [midweek] },
+        },
+      ],
+    })
+    const [updated] = await load(access.location.id)
+    expect(updated.content?.priceOptions).toEqual([midweek])
+  })
+
+  test("keeps an emptied price list empty so the section stays hidden", async () => {
+    const draft = eventTypeDraft("birthdays")
+    await save({ eventTypes: [draft] })
+    const [saved] = await load(access.location.id)
+    expect(saved.content?.priceOptions).toEqual([])
+  })
+
+  test("stores the price summary mode and hand-written rows", async () => {
+    const draft = eventTypeDraft("birthdays")
+    const rows = [
+      { label: text("אמצע שבוע · 20 ילדים"), value: text("1,180 ₪") },
+      { label: text("סופ״ש / חגים · 20 ילדים"), value: text("1,280 ₪") },
+    ]
+    await save({
+      eventTypes: [
+        {
+          ...draft,
+          content: {
+            ...draft.content,
+            priceSummaryMode: "manual",
+            priceSummaryRows: rows,
+          },
+        },
+      ],
+    })
+    const [saved] = await load(access.location.id)
+    expect(saved.content?.priceSummaryMode).toBe("manual")
+    expect(saved.content?.priceSummaryRows).toEqual(rows)
+
+    await save({
+      eventTypes: [
+        {
+          ...draft,
+          id: saved.id,
+          content: { ...draft.content, priceSummaryMode: "hidden" },
+        },
+      ],
+    })
+    const [hidden] = await load(access.location.id)
+    expect(hidden.content?.priceSummaryMode).toBe("hidden")
+  })
+
+  test("rejects an unknown price summary mode", async () => {
+    const draft = eventTypeDraft("birthdays")
+    const result = await saveEvents({
+      slug: access.location.slug,
+      eventTypes: [
+        {
+          ...draft,
+          content: { ...draft.content, priceSummaryMode: "sometimes" },
+        },
+      ],
+    })
+    expect(result).toEqual({ ok: false, error: "invalid" })
+  })
+
+  test("rejects a negative or fractional price", async () => {
+    const draft = eventTypeDraft("birthdays")
+    const option = {
+      label: text("אמצע שבוע"),
+      days: text(""),
+      badge: text(""),
+      amount: -5,
+      childrenCount: null,
+      extraChildAmount: null,
+    }
+    for (const bad of [option, { ...option, amount: 10.5 }]) {
+      const result = await save({
+        eventTypes: [
+          { ...draft, content: { ...draft.content, priceOptions: [bad] } },
+        ],
+      })
+      expect(result).toEqual({ ok: false, error: "invalid" })
+    }
+    expect(await load(access.location.id)).toHaveLength(0)
   })
 
   test("stores the hero image URL and clears it back to the default", async () => {

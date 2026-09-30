@@ -6,8 +6,19 @@ import type { BookingFormField } from "@/lib/events/fields"
 import en from "@/messages/en.json"
 import he from "@/messages/he.json"
 
+interface MessagePriceOption {
+  badge?: string
+  days?: string
+  label: string
+  amount: number
+  childrenCount?: number
+  extraChildAmount?: number
+}
+
 interface MessageEvent {
   scheduleTitle?: string
+  price?: { note?: string; options: MessagePriceOption[] }
+  showPriceSummary?: boolean
   allowed?: string[]
   forbidden?: string[]
   rulesFootnote?: string
@@ -44,6 +55,23 @@ export function eventDetailDefaults(
       he: heEvent.scheduleTitle ?? he.eventDetails.scheduleTitle,
       en: enEvent.scheduleTitle ?? en.eventDetails.scheduleTitle,
     },
+    priceNote: {
+      he: heEvent.price?.note ?? "",
+      en: enEvent.price?.note ?? "",
+    },
+    priceOptions: (heEvent.price?.options ?? []).map((option, index) => {
+      const enOption = enEvent.price?.options[index]
+      return {
+        label: { he: option.label, en: enOption?.label ?? "" },
+        days: { he: option.days ?? "", en: enOption?.days ?? "" },
+        badge: { he: option.badge ?? "", en: enOption?.badge ?? "" },
+        amount: option.amount,
+        childrenCount: option.childrenCount ?? null,
+        extraChildAmount: option.extraChildAmount ?? null,
+      }
+    }),
+    priceSummaryMode: heEvent.showPriceSummary ? "auto" : "hidden",
+    priceSummaryRows: [],
     allowedItems: list(heEvent.allowed, enEvent.allowed),
     forbiddenItems: list(heEvent.forbidden, enEvent.forbidden),
     rulesNote: {

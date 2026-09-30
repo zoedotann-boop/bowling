@@ -29,9 +29,6 @@ export default async function EventsPage({
         heroTitle: toLocalized(type.content?.heroTitle),
         heroDescription: toLocalized(type.content?.heroDescription),
         heroImageUrl: type.content?.heroImageUrl ?? "",
-        packageAmount: type.content?.packageAmount ?? null,
-        packageChildrenCount: type.content?.packageChildrenCount ?? null,
-        extraChildAmount: type.content?.extraChildAmount ?? null,
         depositAmount: type.content?.depositAmount ?? null,
         ...withEventDetailDefaults(
           type.content,

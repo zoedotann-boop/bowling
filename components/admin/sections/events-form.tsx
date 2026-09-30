@@ -22,12 +22,18 @@ import { Button } from "@/components/ui/button"
 import { saveEvents } from "@/lib/actions/admin/events"
 import type {
   EventFormFieldDraft,
+  EventPriceOptionDraft,
   EventsDraft,
   EventTypeDraft,
 } from "@/lib/actions/admin/schemas"
 import { parseWholeNumber } from "@/lib/admin/drafts"
 import { nextFreeSlug, toSlug } from "@/lib/admin/slug"
 import type { Localized } from "@/lib/db/schema/_shared"
+import {
+  PRICE_SUMMARY_MODES,
+  summaryRowsFromPrices,
+  type PriceSummaryMode,
+} from "@/lib/events/details"
 import { FORM_FIELD_TYPES, isCoreField, newFieldKey } from "@/lib/events/fields"
 import { usesContactForm } from "@/lib/events/slugs"
 import { emptyLocalized, formatPrice } from "@/lib/localized"
@@ -44,11 +50,12 @@ function newEventType(slug: string): EventTypeDraft {
       heroTitle: emptyLocalized(),
       heroDescription: emptyLocalized(),
       heroImageUrl: "",
-      packageAmount: null,
-      packageChildrenCount: null,
-      extraChildAmount: null,
       depositAmount: null,
       scheduleTitle: emptyLocalized(),
+      priceNote: emptyLocalized(),
+      priceOptions: [],
+      priceSummaryMode: "auto",
+      priceSummaryRows: [],
       allowedItems: [],
       forbiddenItems: [],
       rulesNote: emptyLocalized(),
@@ -65,6 +72,17 @@ function newEventType(slug: string): EventTypeDraft {
     packageLines: [],
     upgrades: [],
     formFields: [],
+  }
+}
+
+function newPriceOption(): EventPriceOptionDraft {
+  return {
+    label: emptyLocalized(),
+    days: emptyLocalized(),
+    badge: emptyLocalized(),
+    amount: null,
+    childrenCount: null,
+    extraChildAmount: null,
   }
 }
 
@@ -226,6 +244,15 @@ function EventTypeEditor({
   const setContent = (patch: Partial<EventTypeDraft["content"]>) =>
     update({ ...type, content: { ...type.content, ...patch } })
 
+  const setSummaryMode = (priceSummaryMode: PriceSummaryMode) =>
+    setContent({
+      priceSummaryMode,
+      priceSummaryRows:
+        priceSummaryMode === "manual" && !type.content.priceSummaryRows.length
+          ? summaryRowsFromPrices(type.content.priceOptions)
+          : type.content.priceSummaryRows,
+    })
+
   const pageTab = (
     <>
       <AdminSubsection title={t("basics")}>
@@ -324,35 +351,109 @@ function EventTypeEditor({
   const packageTab = (
     <>
       <AdminSubsection title={t("price")} description={t("priceHint")}>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <NumberField
-            label={t("packageAmount")}
-            tooltip={t("packageAmountTip")}
-            value={type.content.packageAmount}
-            onChange={(packageAmount) => setContent({ packageAmount })}
-          />
-          <NumberField
-            label={t("packageChildrenCount")}
-            tooltip={t("packageChildrenCountTip")}
-            value={type.content.packageChildrenCount}
-            onChange={(packageChildrenCount) =>
-              setContent({ packageChildrenCount })
-            }
-          />
-          <NumberField
-            label={t("extraChildAmount")}
-            tooltip={t("extraChildAmountTip")}
-            value={type.content.extraChildAmount}
-            onChange={(extraChildAmount) => setContent({ extraChildAmount })}
-          />
-          <NumberField
-            label={t("depositAmount")}
-            tooltip={t("depositAmountTip")}
-            value={type.content.depositAmount}
-            onChange={(depositAmount) => setContent({ depositAmount })}
-          />
-        </div>
+        <LocalizedField
+          label={t("priceNote")}
+          tooltip={t("priceNoteTip")}
+          multiline
+          value={type.content.priceNote}
+          onChange={(priceNote) => setContent({ priceNote })}
+        />
+        <RowTable
+          items={type.content.priceOptions}
+          onChange={(priceOptions) => setContent({ priceOptions })}
+          createItem={newPriceOption}
+          addLabel={t("addPriceOption")}
+          columns={[
+            {
+              header: t("priceOptionLabel"),
+              cell: (item) => item.label.he || "—",
+            },
+            {
+              header: t("priceOptionAmount"),
+              cell: (item) =>
+                item.amount === null ? "—" : formatPrice(item.amount, locale),
+              className: "w-24",
+            },
+          ]}
+          renderRow={(option, updateOption) => (
+            <PriceOptionEditor option={option} update={updateOption} />
+          )}
+        />
+        <NumberField
+          label={t("depositAmount")}
+          tooltip={t("depositAmountTip")}
+          value={type.content.depositAmount}
+          onChange={(depositAmount) => setContent({ depositAmount })}
+        />
       </AdminSubsection>
+
+      {!usesContactForm(type.slug) && (
+        <AdminSubsection
+          title={t("priceSummary")}
+          description={t("priceSummaryTip")}
+        >
+          <AdminField
+            label={t("priceSummaryMode")}
+            tooltip={t("priceSummaryModeTip")}
+          >
+            <AdminSelect
+              value={type.content.priceSummaryMode}
+              onChange={(event) =>
+                setSummaryMode(event.target.value as PriceSummaryMode)
+              }
+            >
+              {PRICE_SUMMARY_MODES.map((mode) => (
+                <option key={mode} value={mode}>
+                  {t(`priceSummaryModeOption.${mode}`)}
+                </option>
+              ))}
+            </AdminSelect>
+          </AdminField>
+          {type.content.priceSummaryMode === "auto" && (
+            <p className="rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground">
+              {t("priceSummaryAutoHint")}
+            </p>
+          )}
+          {type.content.priceSummaryMode === "manual" && (
+            <RowTable
+              items={type.content.priceSummaryRows}
+              onChange={(priceSummaryRows) => setContent({ priceSummaryRows })}
+              createItem={() => ({
+                label: emptyLocalized(),
+                value: emptyLocalized(),
+              })}
+              addLabel={t("addSummaryRow")}
+              columns={[
+                {
+                  header: t("summaryRowLabel"),
+                  cell: (item) => item.label.he || "—",
+                },
+                {
+                  header: t("summaryRowValue"),
+                  cell: (item) => item.value.he || "—",
+                  className: "w-24",
+                },
+              ]}
+              renderRow={(row, updateRow) => (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <LocalizedField
+                    label={t("summaryRowLabel")}
+                    tooltip={t("summaryRowLabelTip")}
+                    value={row.label}
+                    onChange={(label) => updateRow({ ...row, label })}
+                  />
+                  <LocalizedField
+                    label={t("summaryRowValue")}
+                    tooltip={t("summaryRowValueTip")}
+                    value={row.value}
+                    onChange={(value) => updateRow({ ...row, value })}
+                  />
+                </div>
+              )}
+            />
+          )}
+        </AdminSubsection>
+      )}
 
       <AdminSubsection
         title={t("packageLines")}
@@ -599,6 +700,63 @@ function EventTypeEditor({
         { value: "form", label: t("tabForm"), content: formTab },
       ]}
     />
+  )
+}
+
+function PriceOptionEditor({
+  option,
+  update,
+}: {
+  option: EventPriceOptionDraft
+  update: (option: EventPriceOptionDraft) => void
+}) {
+  const t = useTranslations("admin.events")
+
+  return (
+    <>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <LocalizedField
+          label={t("priceOptionLabel")}
+          tooltip={t("priceOptionLabelTip")}
+          value={option.label}
+          onChange={(label) => update({ ...option, label })}
+        />
+        <LocalizedField
+          label={t("priceOptionDays")}
+          tooltip={t("priceOptionDaysTip")}
+          value={option.days}
+          onChange={(days) => update({ ...option, days })}
+        />
+      </div>
+      <LocalizedField
+        label={t("priceOptionBadge")}
+        tooltip={t("priceOptionBadgeTip")}
+        value={option.badge}
+        onChange={(badge) => update({ ...option, badge })}
+      />
+      <div className="grid gap-4 sm:grid-cols-3">
+        <NumberField
+          label={t("priceOptionAmount")}
+          tooltip={t("priceOptionAmountTip")}
+          value={option.amount}
+          onChange={(amount) => update({ ...option, amount })}
+        />
+        <NumberField
+          label={t("priceOptionChildren")}
+          tooltip={t("priceOptionChildrenTip")}
+          value={option.childrenCount}
+          onChange={(childrenCount) => update({ ...option, childrenCount })}
+        />
+        <NumberField
+          label={t("priceOptionExtraChild")}
+          tooltip={t("priceOptionExtraChildTip")}
+          value={option.extraChildAmount}
+          onChange={(extraChildAmount) =>
+            update({ ...option, extraChildAmount })
+          }
+        />
+      </div>
+    </>
   )
 }
 
