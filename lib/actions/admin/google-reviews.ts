@@ -64,7 +64,7 @@ export async function syncGoogleReviews(input: unknown): Promise<SyncResult> {
 }
 
 export async function saveGoogleReviews(input: unknown): Promise<ActionResult> {
-  const { location: loc } = await requireLocationAccess(
+  const { user, location: loc } = await requireLocationAccess(
     readSlug(input),
     "content"
   )
@@ -80,7 +80,9 @@ export async function saveGoogleReviews(input: unknown): Promise<ActionResult> {
     await tx
       .update(location)
       .set({
-        googlePlaceId: data.googlePlaceId.trim() || null,
+        ...(user.role === "owner" && {
+          googlePlaceId: data.googlePlaceId.trim() || null,
+        }),
         googleReviewsAutoSync: data.autoSync,
       })
       .where(eq(location.id, loc.id))

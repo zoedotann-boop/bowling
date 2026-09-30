@@ -2,9 +2,9 @@
 
 import { Pencil, Plus, Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
-import { useId, useState, useTransition } from "react"
+import { Fragment, useId, useState, useTransition } from "react"
 
-import { AdminModal, ConfirmModal } from "@/components/admin/admin-modal"
+import { ConfirmModal } from "@/components/admin/admin-modal"
 import {
   AdminCard,
   AdminField,
@@ -69,7 +69,7 @@ export function TeamManager({
   const common = useTranslations("admin.common")
   const { toast } = useToast()
   const errorMessage = useErrorMessage()
-  const [editing, setEditing] = useState<TeamMember | "new" | null>(null)
+  const [editing, setEditing] = useState<string | null>(null)
   const [removing, setRemoving] = useState<TeamMember | null>(null)
 
   const locationNames = new Map(locations.map((item) => [item.id, item.name]))
@@ -87,11 +87,25 @@ export function TeamManager({
           <h1 className="text-lg font-semibold">{t("title")}</h1>
           <p className="text-sm text-muted-foreground">{t("description")}</p>
         </div>
-        <Button type="button" onClick={() => setEditing("new")}>
+        <Button
+          type="button"
+          disabled={editing === "new"}
+          onClick={() => setEditing("new")}
+        >
           <Plus />
           {t("add")}
         </Button>
       </header>
+
+      {editing === "new" && (
+        <AdminCard title={t("add")}>
+          <MemberForm
+            member={null}
+            locations={locations}
+            onClose={() => setEditing(null)}
+          />
+        </AdminCard>
+      )}
 
       <AdminCard className="relative overflow-x-auto p-0">
         <table className="w-full border-collapse text-sm sm:min-w-xl">
@@ -117,89 +131,99 @@ export function TeamManager({
           </thead>
           <tbody>
             {members.map((member) => (
-              <tr
-                key={member.id}
-                className="border-b border-border/60 transition-colors last:border-0 hover:bg-muted/30"
-              >
-                <td className={bodyCell}>
-                  <div className="flex items-center gap-3">
-                    <span
-                      aria-hidden
-                      className="grid size-8 shrink-0 place-items-center rounded-full bg-muted text-xs font-semibold uppercase"
-                    >
-                      {member.name.trim().charAt(0)}
-                    </span>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2 font-medium">
-                        <span className="truncate">{member.name}</span>
-                        {member.isSelf && (
-                          <span className="shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs font-normal text-muted-foreground">
-                            {t("you")}
-                          </span>
-                        )}
-                      </div>
-                      <div className="truncate text-xs text-muted-foreground">
-                        <span dir="ltr">{member.email}</span>
-                      </div>
-                      <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-xs sm:hidden">
-                        <RoleBadge role={member.role} />
-                        <MemberLocations
-                          member={member}
-                          locationNames={locationNames}
-                        />
+              <Fragment key={member.id}>
+                <tr
+                  className={cn(
+                    "border-b border-border/60 transition-colors last:border-0 hover:bg-muted/30",
+                    editing === member.id && "bg-muted/40"
+                  )}
+                >
+                  <td className={bodyCell}>
+                    <div className="flex items-center gap-3">
+                      <span
+                        aria-hidden
+                        className="grid size-8 shrink-0 place-items-center rounded-full bg-muted text-xs font-semibold uppercase"
+                      >
+                        {member.name.trim().charAt(0)}
+                      </span>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2 font-medium">
+                          <span className="truncate">{member.name}</span>
+                          {member.isSelf && (
+                            <span className="shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs font-normal text-muted-foreground">
+                              {t("you")}
+                            </span>
+                          )}
+                        </div>
+                        <div className="truncate text-xs text-muted-foreground">
+                          <span dir="ltr">{member.email}</span>
+                        </div>
+                        <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-xs sm:hidden">
+                          <RoleBadge role={member.role} />
+                          <MemberLocations
+                            member={member}
+                            locationNames={locationNames}
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </td>
-                <td className={cn(bodyCell, wideOnly)}>
-                  <RoleBadge role={member.role} />
-                </td>
-                <td className={cn(bodyCell, wideOnly)}>
-                  <MemberLocations
-                    member={member}
-                    locationNames={locationNames}
-                  />
-                </td>
-                <td className="px-3 py-3">
-                  <div className="flex justify-end gap-1">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon-sm"
-                      aria-label={`${common("edit")}: ${member.name}`}
-                      onClick={() => setEditing(member)}
-                    >
-                      <Pencil />
-                    </Button>
-                    {member.isSelf ? (
-                      <span aria-hidden className="size-7" />
-                    ) : (
+                  </td>
+                  <td className={cn(bodyCell, wideOnly)}>
+                    <RoleBadge role={member.role} />
+                  </td>
+                  <td className={cn(bodyCell, wideOnly)}>
+                    <MemberLocations
+                      member={member}
+                      locationNames={locationNames}
+                    />
+                  </td>
+                  <td className="px-3 py-3">
+                    <div className="flex justify-end gap-1">
                       <Button
                         type="button"
                         variant="ghost"
                         size="icon-sm"
-                        aria-label={`${t("delete")}: ${member.name}`}
-                        className="text-muted-foreground hover:text-destructive"
-                        onClick={() => setRemoving(member)}
+                        aria-label={`${common("edit")}: ${member.name}`}
+                        aria-expanded={editing === member.id}
+                        onClick={() =>
+                          setEditing(editing === member.id ? null : member.id)
+                        }
                       >
-                        <Trash2 />
+                        <Pencil />
                       </Button>
-                    )}
-                  </div>
-                </td>
-              </tr>
+                      {member.isSelf ? (
+                        <span aria-hidden className="size-7" />
+                      ) : (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon-sm"
+                          aria-label={`${t("delete")}: ${member.name}`}
+                          className="text-muted-foreground hover:text-destructive"
+                          onClick={() => setRemoving(member)}
+                        >
+                          <Trash2 />
+                        </Button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+                {editing === member.id && (
+                  <tr className="border-b border-border/60 bg-muted/40 last:border-0">
+                    <td colSpan={4} className="p-4">
+                      <MemberForm
+                        member={member}
+                        locations={locations}
+                        onClose={() => setEditing(null)}
+                      />
+                    </td>
+                  </tr>
+                )}
+              </Fragment>
             ))}
           </tbody>
         </table>
       </AdminCard>
-
-      {editing && (
-        <MemberDialog
-          member={editing === "new" ? null : editing}
-          locations={locations}
-          onClose={() => setEditing(null)}
-        />
-      )}
 
       {removing && (
         <ConfirmModal
@@ -257,7 +281,7 @@ function MemberLocations({
   )
 }
 
-function MemberDialog({
+function MemberForm({
   member,
   locations,
   onClose,
@@ -310,103 +334,95 @@ function MemberDialog({
   }
 
   return (
-    <AdminModal
-      open
-      onClose={onClose}
-      title={member ? member.name : t("add")}
-      closeLabel={common("close")}
-      className="max-w-lg"
-    >
-      <form onSubmit={submit} className="space-y-4">
-        <AdminField
-          label={t("name")}
-          tooltip={t("nameTip")}
-          htmlFor={`${id}-name`}
+    <form onSubmit={submit} className="max-w-lg space-y-4">
+      <AdminField
+        label={t("name")}
+        tooltip={t("nameTip")}
+        htmlFor={`${id}-name`}
+      >
+        <AdminInput
+          id={`${id}-name`}
+          required
+          value={draft.name}
+          onChange={(event) =>
+            setDraft((prev) => ({ ...prev, name: event.target.value }))
+          }
+        />
+      </AdminField>
+      <AdminField
+        label={t("email")}
+        tooltip={t("emailTip")}
+        htmlFor={`${id}-email`}
+      >
+        <AdminInput
+          id={`${id}-email`}
+          type="email"
+          required
+          dir="ltr"
+          disabled={Boolean(member)}
+          value={draft.email}
+          onChange={(event) =>
+            setDraft((prev) => ({ ...prev, email: event.target.value }))
+          }
+        />
+      </AdminField>
+      <AdminField
+        label={t("role")}
+        tooltip={t("roleTip")}
+        htmlFor={`${id}-role`}
+      >
+        <AdminSelect
+          id={`${id}-role`}
+          disabled={member?.isSelf}
+          value={draft.role}
+          onChange={(event) =>
+            setDraft((prev) => ({
+              ...prev,
+              role: event.target.value as AdminRole,
+            }))
+          }
         >
-          <AdminInput
-            id={`${id}-name`}
-            required
-            value={draft.name}
-            onChange={(event) =>
-              setDraft((prev) => ({ ...prev, name: event.target.value }))
-            }
-          />
-        </AdminField>
-        <AdminField
-          label={t("email")}
-          tooltip={t("emailTip")}
-          htmlFor={`${id}-email`}
-        >
-          <AdminInput
-            id={`${id}-email`}
-            type="email"
-            required
-            dir="ltr"
-            disabled={Boolean(member)}
-            value={draft.email}
-            onChange={(event) =>
-              setDraft((prev) => ({ ...prev, email: event.target.value }))
-            }
-          />
-        </AdminField>
-        <AdminField
-          label={t("role")}
-          tooltip={t("roleTip")}
-          htmlFor={`${id}-role`}
-        >
-          <AdminSelect
-            id={`${id}-role`}
-            disabled={member?.isSelf}
-            value={draft.role}
-            onChange={(event) =>
-              setDraft((prev) => ({
-                ...prev,
-                role: event.target.value as AdminRole,
-              }))
-            }
-          >
-            {ADMIN_ROLES.map((role) => (
-              <option key={role} value={role}>
-                {t(`roles.${role}`)}
-              </option>
+          {ADMIN_ROLES.map((role) => (
+            <option key={role} value={role}>
+              {t(`roles.${role}`)}
+            </option>
+          ))}
+        </AdminSelect>
+      </AdminField>
+      {draft.role === "owner" ? (
+        <p className="text-sm text-muted-foreground">{t("ownerAccess")}</p>
+      ) : (
+        <AdminField label={t("locations")} tooltip={t("locationsTip")}>
+          <div className="space-y-2">
+            {locations.map((location) => (
+              <AdminFlag
+                key={location.id}
+                id={`${id}-location-${location.id}`}
+                label={location.name}
+                checked={draft.locationIds.includes(location.id)}
+                onCheckedChange={(checked) =>
+                  toggleLocation(location.id, checked)
+                }
+              />
             ))}
-          </AdminSelect>
+          </div>
         </AdminField>
-        {draft.role === "owner" ? (
-          <p className="text-sm text-muted-foreground">{t("ownerAccess")}</p>
-        ) : (
-          <AdminField label={t("locations")} tooltip={t("locationsTip")}>
-            <div className="space-y-2">
-              {locations.map((location) => (
-                <AdminFlag
-                  key={location.id}
-                  id={`${id}-location-${location.id}`}
-                  label={location.name}
-                  checked={draft.locationIds.includes(location.id)}
-                  onCheckedChange={(checked) =>
-                    toggleLocation(location.id, checked)
-                  }
-                />
-              ))}
-            </div>
-          </AdminField>
-        )}
+      )}
 
-        {error && (
-          <p role="alert" className="text-sm text-destructive">
-            {error}
-          </p>
-        )}
+      {error && (
+        <p role="alert" className="text-sm text-destructive">
+          {error}
+        </p>
+      )}
 
-        <div className="flex justify-end gap-2">
-          <Button type="button" variant="ghost" onClick={onClose}>
-            {common("cancel")}
-          </Button>
-          <Button type="submit" disabled={pending}>
-            {pending ? common("saving") : member ? common("save") : t("create")}
-          </Button>
-        </div>
-      </form>
-    </AdminModal>
+      <div className="flex justify-end gap-2">
+        <Button type="button" variant="ghost" onClick={onClose}>
+          {common("cancel")}
+        </Button>
+        <Button type="submit" disabled={pending}>
+          {pending ? common("saving") : member ? common("save") : t("create")}
+        </Button>
+      </div>
+    </form>
   )
 }

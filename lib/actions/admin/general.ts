@@ -12,7 +12,7 @@ import { type ActionResult, OK, readSlug } from "./shared"
 import { upsert } from "./sync"
 
 export async function saveGeneral(input: unknown): Promise<ActionResult> {
-  const { location: loc } = await requireLocationAccess(
+  const { user, location: loc } = await requireLocationAccess(
     readSlug(input),
     "settings"
   )
@@ -41,8 +41,10 @@ export async function saveGeneral(input: unknown): Promise<ActionResult> {
         noticeTitle: data.noticeTitle,
         noticeBody: data.noticeBody,
         hours: data.hours,
-        seoTitle: data.seoTitle,
-        seoDescription: data.seoDescription,
+        ...(user.role === "owner" && {
+          seoTitle: data.seoTitle,
+          seoDescription: data.seoDescription,
+        }),
       })
       .where(eq(location.id, loc.id))
 

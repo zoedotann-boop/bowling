@@ -100,9 +100,19 @@ sign in right away with that email.
 - **Access** `lib/admin/{access,permissions,routes}.ts` — a single gate.
   Every page/action calls `requireLocationAccess(slug, capability)`.
 - **Shared UI** `components/admin/*` — `AdminShell`, `SectionForm` (holds the
-  draft + language toggle + single publish action), `RowTable` (reorderable
-  lists, modal editor at top level / inline when nested), and the `admin-ui`
-  primitives.
+  draft + language toggle + single publish action), `AdminTabs` (splits a long
+  section into tabs), `CollectionEditor` (side list + detail panel for
+  top-level collections such as menu categories and event types), `RowTable`
+  (reorderable rows that expand in place to edit), and the `admin-ui`
+  primitives. Editing never opens a pop-up; only irreversible Team deletions
+  ask for confirmation in a dialog.
+- **Non-technical by design** — the admin is used by branch managers and
+  staff, so internal identifiers stay out of the UI: an event type's or
+  location's page address is only asked for when it is created (pre-filled
+  for event types), booking-form fields get an auto-generated key (the inquiry
+  email shows the field's label), and dropdown option values follow their
+  Hebrew label. SEO texts and the Google Place ID are owner-only (in the UI and
+  in the save actions).
 - **Save pattern** each section is `page → Drizzle query → draft → SectionForm
   → one server action` that persists the whole draft via `syncCollection`
   (`lib/actions/admin/*`). `sortOrder` is assigned from array index on save.
@@ -163,7 +173,8 @@ source — there are no hand-written or placeholder testimonials — so the sect
 is hidden until a branch has at least one published review. Up to 9 are shown
 (`getHomeContent`), with a link to the branch's full list on Google.
 
-- **Config** (admin → **Google reviews**): the branch's **Place ID** and a
+- **Config** (admin → **Google reviews**): the branch's **Place ID** (owners
+  only, under the collapsed connection settings) and a
   **daily automatic sync** toggle live on the `location` row
   (`googlePlaceId`, `googleReviewsAutoSync`). Fetched reviews are stored in the
   `google_review` table, keyed by Google's review id (`external_id`) so re-syncs

@@ -22,8 +22,7 @@ function Example() {
       createItem={() => ({ label: "" })}
       addLabel="הוספת קטגוריה"
       columns={[{ header: "שם", cell: (item) => item.label || "—" }]}
-      editTitle={(item) => item.label || "קטגוריה"}
-      renderRow={(item, index, update) => (
+      renderRow={(item, update) => (
         <AdminField label="שם הקטגוריה">
           <AdminInput
             value={item.label}
