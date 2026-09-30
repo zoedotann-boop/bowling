@@ -16,6 +16,7 @@ export interface Branch {
   addressFull: Localized
   phone: string
   whatsapp: string
+  email: string
   lanes: number
   laneDesc: Localized
   wazeUrl: string
@@ -57,6 +58,7 @@ export const BRANCHES: Record<BranchId, Branch> = {
     },
     phone: "03-5700834",
     whatsapp: "972549854428",
+    email: "info@rgbowling.com",
     lanes: 14,
     laneDesc: {
       he: "14 מסלולים עם ציוד מקצועי ותאורת LED",
@@ -81,6 +83,7 @@ export const BRANCHES: Record<BranchId, Branch> = {
     },
     phone: "03-9550021",
     whatsapp: "972549629579",
+    email: "info@rzbowling.com",
     lanes: 16,
     laneDesc: {
       he: "16 מסלולים עם ציוד מקצועי ותאורת LED",
@@ -144,6 +147,7 @@ export function mergeBranch(base: Branch, row: BranchRow | undefined): Branch {
     addressFull: localizedOr(row.addressFull, base.addressFull),
     phone: row.phone || base.phone,
     whatsapp: row.whatsapp || base.whatsapp,
+    email: row.email.trim() || base.email,
     wazeUrl: row.wazeUrl || base.wazeUrl,
     lanes: row.lanes || base.lanes,
     hasGymboree: row.hasGymboree,

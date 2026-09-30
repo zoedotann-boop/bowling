@@ -23,20 +23,19 @@ export function Contact() {
   const locale = useLocale() as "he" | "en"
   const content = useSiteContent()
   const site = content?.site
-  const email = content?.email?.trim() || "info@bowling.co.il"
   const rawInfo = t.raw("info") as { title: string; value: string }[]
   const info = rawInfo.map((item, i) =>
     i === 0
       ? { ...item, value: branch.addressFull[locale] }
       : i === 1
-        ? { ...item, value: email }
+        ? { ...item, value: branch.email }
         : i === 2
           ? { ...item, value: branch.phone }
           : item
   )
   const infoHrefs = [
     branch.wazeUrl,
-    `mailto:${email}`,
+    `mailto:${branch.email}`,
     `tel:${branch.phone}`,
     whatsappUrl(branch.whatsapp),
   ]

@@ -55,12 +55,11 @@ export function SiteFooter() {
   const locale = useLocale() as "he" | "en"
   const content = useSiteContent()
   const navLinks = t.raw("footer.navLinks") as string[]
-  const email = content?.email?.trim() || "info@bowling.co.il"
   const branchDetails = [
     branch.addressLine1[locale],
     branch.addressLine2[locale],
     branch.phone,
-    email,
+    branch.email,
   ]
   const hours = formatHours(
     branch.hours,
