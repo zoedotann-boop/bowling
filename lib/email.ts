@@ -1,5 +1,7 @@
 import "server-only"
 
+import { isIP } from "node:net"
+
 import { eq } from "drizzle-orm"
 import { Resend } from "resend"
 
@@ -44,12 +46,21 @@ export function resolveBranch(slug: unknown): Branch {
   return BRANCHES[isBranchId(slug) ? slug : DEFAULT_BRANCH]
 }
 
+const FALLBACK_SENDER_HOST = "bowlingil.com"
+
+export function noReplySender(baseUrl: string | undefined): string {
+  const host = URL.parse(baseUrl ?? "")?.hostname.replace(/^www\./, "")
+  const isPublic = host?.includes(".") && !isIP(host)
+  return `no-reply@${isPublic ? host : FALLBACK_SENDER_HOST}`
+}
+
 interface MailAttachment {
   filename: string
   content: Buffer
 }
 
 export interface SendMailInput {
+  from?: string
   to: string
   subject: string
   html: string
@@ -62,10 +73,10 @@ export type SendMailResult =
 
 export async function sendMail(input: SendMailInput): Promise<SendMailResult> {
   const apiKey = process.env.RESEND_API_KEY
-  const from = process.env.CONTACT_FROM_EMAIL
+  const from = input.from || process.env.CONTACT_FROM_EMAIL
   if (!apiKey || !from) return { ok: false, reason: "not_configured" }
 
   const resend = new Resend(apiKey)
-  const { error } = await resend.emails.send({ from, ...input })
+  const { error } = await resend.emails.send({ ...input, from })
   return error ? { ok: false, reason: "send_failed" } : { ok: true }
 }
