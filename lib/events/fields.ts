@@ -27,3 +27,13 @@ export interface BookingFormField {
   maxValue: number | null
   isRequired: boolean
 }
+
+const CORE_FIELD_KEYS = ["firstName", "lastName", "email"]
+
+export function isCoreField(key: string): boolean {
+  return CORE_FIELD_KEYS.includes(key)
+}
+
+export function newFieldKey(): string {
+  return `field_${crypto.randomUUID().replaceAll("-", "").slice(0, 12)}`
+}

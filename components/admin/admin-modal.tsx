@@ -1,28 +1,9 @@
 "use client"
 
-import { X } from "lucide-react"
-import {
-  createContext,
-  type RefObject,
-  useContext,
-  useEffect,
-  useRef,
-} from "react"
+import { useEffect, useRef } from "react"
 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-
-const DialogContext = createContext<RefObject<HTMLDialogElement | null> | null>(
-  null
-)
-
-export function useInDialog(): boolean {
-  return useContext(DialogContext) !== null
-}
-
-export function useDialogContainer() {
-  return useContext(DialogContext)
-}
 
 function useDialogElement(open: boolean, onClose: () => void) {
   const ref = useRef<HTMLDialogElement>(null)
@@ -45,60 +26,8 @@ function useDialogElement(open: boolean, onClose: () => void) {
   return ref
 }
 
-function swallowEnter(event: React.KeyboardEvent) {
-  const target = event.target as HTMLElement
-  if (event.key === "Enter" && target.tagName === "INPUT") {
-    event.preventDefault()
-  }
-}
-
 const dialogClass =
   "m-auto w-[calc(100%-2rem)] rounded-lg border border-border bg-card p-0 text-card-foreground backdrop:bg-black/70"
-
-export function AdminModal({
-  open,
-  onClose,
-  title,
-  closeLabel,
-  className,
-  children,
-}: {
-  open: boolean
-  onClose: () => void
-  title: string
-  closeLabel: string
-  className?: string
-  children: React.ReactNode
-}) {
-  const ref = useDialogElement(open, onClose)
-
-  return (
-    <dialog
-      ref={ref}
-      onKeyDown={swallowEnter}
-      onClick={(event) => {
-        if (event.target === ref.current) onClose()
-      }}
-      className={cn(dialogClass, "max-w-2xl", className)}
-    >
-      <DialogContext.Provider value={ref}>
-        <header className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
-          <h2 className="text-base font-semibold">{title}</h2>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            aria-label={closeLabel}
-            onClick={onClose}
-          >
-            <X />
-          </Button>
-        </header>
-        <div className="max-h-[70vh] overflow-y-auto p-4">{children}</div>
-      </DialogContext.Provider>
-    </dialog>
-  )
-}
 
 export function ConfirmModal({
   open,

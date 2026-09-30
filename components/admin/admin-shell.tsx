@@ -223,6 +223,7 @@ export function AdminShell({
           size="sm"
           title={collapsed ? t("viewSite") : undefined}
           className="w-full justify-start"
+          nativeButton={false}
           render={
             <a
               href={`/${activeSlug}`}

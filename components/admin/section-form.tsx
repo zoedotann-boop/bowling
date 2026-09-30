@@ -103,14 +103,15 @@ export function SectionForm<T>({
                   key={code}
                   type="button"
                   onClick={() => setLocale(code)}
+                  aria-pressed={locale === code}
                   className={cn(
-                    "px-2.5 py-1 text-xs font-medium uppercase outline-none",
+                    "px-2.5 py-1 text-xs font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
                     locale === code
                       ? "bg-primary text-primary-foreground"
                       : "text-muted-foreground hover:bg-muted"
                   )}
                 >
-                  {code}
+                  {t(`locales.${code}`)}
                 </button>
               ))}
             </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import { RefreshCw, Trash2 } from "lucide-react"
+import { ChevronDown, RefreshCw, Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useTransition } from "react"
 
@@ -28,9 +28,11 @@ interface ReviewsDraft {
 
 export function ReviewsForm({
   slug,
+  canConnect,
   initial,
 }: {
   slug: string
+  canConnect: boolean
   initial: ReviewsDraft
 }) {
   const t = useTranslations("admin.reviews")
@@ -88,30 +90,10 @@ export function ReviewsForm({
         })
       }
     >
-      <AdminCard title={t("googleTitle")} description={t("googleDescription")}>
-        <AdminField label={t("placeId")} tooltip={t("placeIdTip")}>
-          <AdminInput
-            dir="ltr"
-            value={draft.googlePlaceId}
-            onChange={(event) =>
-              setDraft((prev) => ({
-                ...prev,
-                googlePlaceId: event.target.value,
-              }))
-            }
-          />
-        </AdminField>
-
-        <AdminFlag
-          label={t("autoSync")}
-          description={t("autoSyncTip")}
-          checked={draft.autoSync}
-          onCheckedChange={(autoSync) =>
-            setDraft((prev) => ({ ...prev, autoSync }))
-          }
-        />
-
-        <div className="flex flex-wrap items-center gap-3">
+      <AdminCard
+        title={t("listTitle")}
+        description={t("listDescription")}
+        actions={
           <Button
             type="button"
             variant="outline"
@@ -122,15 +104,21 @@ export function ReviewsForm({
             <RefreshCw />
             {syncing ? t("syncing") : t("sync")}
           </Button>
-          {!hasPlaceId && (
-            <span className="text-sm text-muted-foreground">
-              {t("syncMissingPlaceId")}
-            </span>
-          )}
-        </div>
-      </AdminCard>
-
-      <AdminCard title={t("listTitle")} description={t("listDescription")}>
+        }
+      >
+        {!hasPlaceId && (
+          <p className="rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground">
+            {canConnect ? t("syncMissingPlaceId") : t("notConnected")}
+          </p>
+        )}
+        <AdminFlag
+          label={t("autoSync")}
+          description={t("autoSyncTip")}
+          checked={draft.autoSync}
+          onCheckedChange={(autoSync) =>
+            setDraft((prev) => ({ ...prev, autoSync }))
+          }
+        />
         {draft.reviews.length === 0 ? (
           <p className="py-6 text-center text-sm text-muted-foreground">
             {t("empty")}
@@ -188,6 +176,38 @@ export function ReviewsForm({
           </ul>
         )}
       </AdminCard>
+      {canConnect && (
+        <details
+          open={!hasPlaceId}
+          className="group rounded-lg border border-border bg-card text-card-foreground"
+        >
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4 outline-none focus-visible:ring-2 focus-visible:ring-ring/50">
+            <span>
+              <span className="block text-base font-semibold">
+                {t("googleTitle")}
+              </span>
+              <span className="mt-0.5 block text-sm text-muted-foreground">
+                {t("googleDescription")}
+              </span>
+            </span>
+            <ChevronDown className="size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" />
+          </summary>
+          <div className="px-4 pb-4">
+            <AdminField label={t("placeId")} tooltip={t("placeIdTip")}>
+              <AdminInput
+                dir="ltr"
+                value={draft.googlePlaceId}
+                onChange={(event) =>
+                  setDraft((prev) => ({
+                    ...prev,
+                    googlePlaceId: event.target.value,
+                  }))
+                }
+              />
+            </AdminField>
+          </div>
+        </details>
+      )}
     </SectionForm>
   )
 }

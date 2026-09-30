@@ -10,7 +10,7 @@ export default async function GeneralPage({
   params: Promise<{ location: string }>
 }) {
   const { location: slug } = await params
-  const { location: loc } = await requireLocationAccess(slug, "settings")
+  const { user, location: loc } = await requireLocationAccess(slug, "settings")
   const data = await getGeneralEditor(loc.id)
 
   const draft: GeneralDraft = {
@@ -36,5 +36,11 @@ export default async function GeneralPage({
     footerNote: toLocalized(data?.site?.footerNote),
   }
 
-  return <GeneralForm slug={slug} initial={draft} />
+  return (
+    <GeneralForm
+      slug={slug}
+      canEditSeo={user.role === "owner"}
+      initial={draft}
+    />
+  )
 }

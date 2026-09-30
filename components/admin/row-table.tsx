@@ -1,36 +1,21 @@
 "use client"
 
-import {
-  closestCenter,
-  DndContext,
-  type DragEndEvent,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core"
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers"
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable"
-import { CSS } from "@dnd-kit/utilities"
-import { GripVertical, Pencil, Plus, Trash2 } from "lucide-react"
+import { arrayMove } from "@dnd-kit/sortable"
+import { Pencil, Plus, Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
-import { useId, useState } from "react"
+import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
+import { followMove, followRemove } from "@/lib/admin/reorder"
 import { cn } from "@/lib/utils"
 
-import { AdminModal, ConfirmModal, useInDialog } from "./admin-modal"
+import { InlineConfirm } from "./inline-confirm"
 import { InfoTooltip } from "./info-tooltip"
+import { DragHandle, SortableArea, useSortableRow } from "./sortable"
 
 interface RowColumn<T> {
   header: string
-  cell: (item: T, index: number) => React.ReactNode
+  cell: (item: T) => React.ReactNode
   className?: string
   tooltip?: string
 }
@@ -38,16 +23,12 @@ interface RowColumn<T> {
 interface RowTableProps<T> {
   items: T[]
   onChange: (items: T[]) => void
-  createItem: () => T
+  createItem: () => NoInfer<T>
   addLabel: string
   emptyLabel?: string
   columns: RowColumn<T>[]
-  editTitle: (item: T, index: number) => string
-  renderRow: (
-    item: T,
-    index: number,
-    update: (item: T) => void
-  ) => React.ReactNode
+  canRemove?: (item: T) => boolean
+  renderRow: (item: T, update: (item: T) => void) => React.ReactNode
 }
 
 export function RowTable<T>({
@@ -57,43 +38,34 @@ export function RowTable<T>({
   addLabel,
   emptyLabel,
   columns,
-  editTitle,
+  canRemove,
   renderRow,
 }: RowTableProps<T>) {
   const t = useTranslations("admin.common")
-  const inDialog = useInDialog()
-  const dndId = useId()
-
-  const itemIds = items.map((_, index) => index)
-
   const [editing, setEditing] = useState<number | null>(null)
   const [confirming, setConfirming] = useState<number | null>(null)
 
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-  )
-
-  function updateItem(index: number, next: T) {
-    onChange(items.map((item, i) => (i === index ? next : item)))
-  }
-
   function addItem() {
+    setConfirming(null)
     setEditing(items.length)
     onChange([...items, createItem()])
   }
 
   function removeItem(index: number) {
-    setEditing(null)
     setConfirming(null)
+    setEditing((current) =>
+      current === null || current === index
+        ? null
+        : followRemove(current, index)
+    )
     onChange(items.filter((_, i) => i !== index))
   }
 
-  function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event
-    if (!over || active.id === over.id) return
-    const from = Number(active.id)
-    const to = Number(over.id)
+  function moveItem(from: number, to: number) {
+    setEditing((current) =>
+      current === null ? null : followMove(current, from, to)
+    )
+    setConfirming(null)
     onChange(arrayMove(items, from, to))
   }
 
@@ -101,24 +73,7 @@ export function RowTable<T>({
 
   return (
     <div className="space-y-2">
-      <DndContext
-        id={dndId}
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        modifiers={[restrictToVerticalAxis]}
-        onDragEnd={handleDragEnd}
-        accessibility={{
-          announcements: {
-            onDragStart: ({ active }) =>
-              t("reorderStarted", { position: Number(active.id) + 1 }),
-            onDragOver: ({ over }) =>
-              over ? t("reorderMoved", { position: Number(over.id) + 1 }) : "",
-            onDragEnd: ({ over }) =>
-              over ? t("reorderEnded", { position: Number(over.id) + 1 }) : "",
-            onDragCancel: () => t("reorderCancelled"),
-          },
-        }}
-      >
+      <SortableArea count={items.length} onMove={moveItem}>
         <table className="w-full border-collapse text-sm">
           <thead>
             <tr className="border-b border-border text-start text-xs text-muted-foreground">
@@ -140,210 +95,159 @@ export function RowTable<T>({
               <th className="w-20" aria-hidden />
             </tr>
           </thead>
-          <SortableContext
-            items={itemIds}
-            strategy={verticalListSortingStrategy}
-          >
-            <tbody>
-              {items.length === 0 && (
-                <tr>
+          <tbody>
+            {items.length === 0 && (
+              <tr>
+                <td
+                  colSpan={columnCount}
+                  className="py-6 text-center text-sm text-muted-foreground"
+                >
+                  {emptyLabel ?? t("empty")}
+                </td>
+              </tr>
+            )}
+            {items.map((item, index) => (
+              <SortableRow
+                key={index}
+                id={index}
+                columnCount={columnCount}
+                expanded={editing === index}
+                onToggle={() => {
+                  setConfirming(null)
+                  setEditing(editing === index ? null : index)
+                }}
+                cells={columns.map((column) => (
                   <td
-                    colSpan={columnCount}
-                    className="py-6 text-center text-sm text-muted-foreground"
+                    key={column.header}
+                    className={cn(
+                      "cursor-pointer py-2 pe-2 align-middle",
+                      column.className
+                    )}
                   >
-                    {emptyLabel ?? t("empty")}
+                    {column.cell(item)}
                   </td>
-                </tr>
-              )}
-              {items.map((item, index) => (
-                <SortableRow
-                  key={index}
-                  id={index}
-                  item={item}
-                  index={index}
-                  columns={columns}
-                  reorderLabel={t("reorder")}
-                  editLabel={t("edit")}
-                  removeLabel={t("remove")}
-                  onEdit={() => setEditing(editing === index ? null : index)}
-                  onRemove={() => setConfirming(index)}
-                  expanded={inDialog && editing === index}
-                  confirming={inDialog && confirming === index}
-                  columnCount={columnCount}
-                  removeMessage={t("removeRowMessage")}
-                  cancelLabel={t("cancel")}
-                  confirmLabel={t("remove")}
-                  onConfirmRemove={() => removeItem(index)}
-                  onCancelRemove={() => setConfirming(null)}
-                  editContent={renderRow(item, index, (next) =>
-                    updateItem(index, next)
-                  )}
-                />
-              ))}
-            </tbody>
-          </SortableContext>
+                ))}
+                removable={canRemove?.(item) ?? true}
+                onRemove={() => setConfirming(index)}
+                confirm={
+                  confirming === index && (
+                    <InlineConfirm
+                      message={t("removeRowMessage")}
+                      confirmLabel={t("remove")}
+                      onConfirm={() => removeItem(index)}
+                      onCancel={() => setConfirming(null)}
+                    />
+                  )
+                }
+              >
+                {renderRow(item, (next) =>
+                  onChange(items.map((row, i) => (i === index ? next : row)))
+                )}
+              </SortableRow>
+            ))}
+          </tbody>
         </table>
-      </DndContext>
+      </SortableArea>
 
       <Button type="button" variant="outline" size="sm" onClick={addItem}>
         <Plus />
         {addLabel}
       </Button>
-
-      {!inDialog && editing !== null && items[editing] !== undefined && (
-        <AdminModal
-          open
-          onClose={() => setEditing(null)}
-          title={editTitle(items[editing], editing)}
-          closeLabel={t("close")}
-        >
-          {renderRow(items[editing], editing, (next) =>
-            updateItem(editing, next)
-          )}
-        </AdminModal>
-      )}
-      {!inDialog && confirming !== null && (
-        <ConfirmModal
-          open
-          onClose={() => setConfirming(null)}
-          onConfirm={() => removeItem(confirming)}
-          title={t("remove")}
-          message={t("removeRowMessage")}
-          confirmLabel={t("remove")}
-          cancelLabel={t("cancel")}
-        />
-      )}
     </div>
   )
 }
 
-function SortableRow<T>({
+function SortableRow({
   id,
-  item,
-  index,
-  columns,
-  reorderLabel,
-  editLabel,
-  removeLabel,
-  onEdit,
-  onRemove,
-  expanded,
-  confirming,
   columnCount,
-  removeMessage,
-  cancelLabel,
-  confirmLabel,
-  onConfirmRemove,
-  onCancelRemove,
-  editContent,
+  expanded,
+  onToggle,
+  cells,
+  removable,
+  onRemove,
+  confirm,
+  children,
 }: {
   id: number
-  item: T
-  index: number
-  columns: RowColumn<T>[]
-  reorderLabel: string
-  editLabel: string
-  removeLabel: string
-  onEdit: () => void
-  onRemove: () => void
-  expanded: boolean
-  confirming: boolean
   columnCount: number
-  removeMessage: string
-  cancelLabel: string
-  confirmLabel: string
-  onConfirmRemove: () => void
-  onCancelRemove: () => void
-  editContent: React.ReactNode
+  expanded: boolean
+  onToggle: () => void
+  cells: React.ReactNode
+  removable: boolean
+  onRemove: () => void
+  confirm: React.ReactNode
+  children: React.ReactNode
 }) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id })
+  const t = useTranslations("admin.common")
+  const { setNodeRef, isDragging, style, handleProps } = useSortableRow(id)
 
   return (
     <>
       <tr
         ref={setNodeRef}
-        style={{ transform: CSS.Transform.toString(transform), transition }}
+        style={style}
+        onClick={(event) => {
+          if ((event.target as HTMLElement).closest("button")) return
+          onToggle()
+        }}
         className={cn(
-          "border-b border-border/60",
+          "border-b border-border/60 hover:bg-muted/30",
+          expanded && "bg-muted/40",
           isDragging && "relative z-10 bg-muted"
         )}
       >
-        <td className="w-8 py-1.5 align-middle">
-          <button
-            type="button"
-            className="flex size-6 items-center justify-center rounded text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50"
-            aria-label={reorderLabel}
-            {...attributes}
-            {...listeners}
-          >
-            <GripVertical className="size-4" />
-          </button>
+        <td className="w-8 py-2 align-middle">
+          <DragHandle {...handleProps} />
         </td>
-        {columns.map((column) => (
-          <td key={column.header} className="py-1.5 pe-2 align-middle">
-            {column.cell(item, index)}
-          </td>
-        ))}
-        <td className="w-20 py-1.5 align-middle">
+        {cells}
+        <td className="w-20 py-2 align-middle">
           <div className="flex justify-end gap-1">
             <Button
               type="button"
               variant="ghost"
               size="icon-sm"
-              aria-label={editLabel}
+              aria-label={t("edit")}
               aria-expanded={expanded}
-              onClick={onEdit}
+              onClick={onToggle}
             >
               <Pencil />
             </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon-sm"
-              aria-label={removeLabel}
-              onClick={onRemove}
-            >
-              <Trash2 />
-            </Button>
+            {removable && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                aria-label={t("remove")}
+                className="text-muted-foreground hover:text-destructive"
+                onClick={onRemove}
+              >
+                <Trash2 />
+              </Button>
+            )}
           </div>
         </td>
       </tr>
 
-      {expanded && (
+      {confirm && (
         <tr className="border-b border-border/60 bg-muted/40">
           <td colSpan={columnCount} className="p-3">
-            {editContent}
+            {confirm}
           </td>
         </tr>
       )}
-      {confirming && (
+      {expanded && (
         <tr className="border-b border-border/60 bg-muted/40">
           <td colSpan={columnCount} className="p-3">
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-sm text-muted-foreground">{removeMessage}</p>
-              <div className="flex gap-2">
+            <div className="space-y-4">
+              {children}
+              <div className="flex justify-end">
                 <Button
                   type="button"
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
-                  onClick={onCancelRemove}
+                  onClick={onToggle}
                 >
-                  {cancelLabel}
-                </Button>
-                <Button
-                  type="button"
-                  variant="destructive"
-                  size="sm"
-                  onClick={onConfirmRemove}
-                >
-                  {confirmLabel}
+                  {t("done")}
                 </Button>
               </div>
             </div>

@@ -3,6 +3,7 @@
 import { ExternalLink } from "lucide-react"
 import { useTranslations } from "next-intl"
 
+import { AdminTabs } from "@/components/admin/admin-tabs"
 import { AdminCard } from "@/components/admin/admin-ui"
 import { LocalizedField } from "@/components/admin/localized-field"
 import { SectionForm, useSectionDraft } from "@/components/admin/section-form"
@@ -29,40 +30,46 @@ export function LegalForm({
       draft={draft}
       onSave={(value) => saveLegal(value)}
     >
-      {LEGAL_PAGE_KINDS.map((kind) => (
-        <AdminCard
-          key={kind}
-          title={t(kind)}
-          description={t("defaultHint")}
-          actions={
-            <Button
-              variant="outline"
-              size="sm"
-              render={
-                <a
-                  href={`/${slug}/${kind}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <ExternalLink />
-                  {t("viewPage")}
-                </a>
+      <AdminTabs
+        tabs={LEGAL_PAGE_KINDS.map((kind) => ({
+          value: kind,
+          label: t(kind),
+          content: (
+            <AdminCard
+              title={t(kind)}
+              description={t("defaultHint")}
+              actions={
+                <Button
+                  variant="outline"
+                  size="sm"
+                  nativeButton={false}
+                  render={
+                    <a
+                      href={`/${slug}/${kind}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <ExternalLink />
+                      {t("viewPage")}
+                    </a>
+                  }
+                />
               }
-            />
-          }
-        >
-          <LocalizedField
-            label={t("body")}
-            tooltip={t("bodyTip")}
-            multiline
-            rows={18}
-            value={draft[kind]}
-            onChange={(value) =>
-              setDraft((prev) => ({ ...prev, [kind]: value }))
-            }
-          />
-        </AdminCard>
-      ))}
+            >
+              <LocalizedField
+                label={t("body")}
+                tooltip={t("bodyTip")}
+                multiline
+                rows={18}
+                value={draft[kind]}
+                onChange={(value) =>
+                  setDraft((prev) => ({ ...prev, [kind]: value }))
+                }
+              />
+            </AdminCard>
+          ),
+        }))}
+      />
     </SectionForm>
   )
 }

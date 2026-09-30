@@ -51,6 +51,36 @@ export function AdminCard({
   )
 }
 
+export function AdminSubsection({
+  title,
+  description,
+  children,
+}: {
+  title: string
+  description?: string
+  children: React.ReactNode
+}) {
+  return (
+    <section className="space-y-3 border-t border-border pt-4 first:border-t-0 first:pt-0">
+      <header>
+        <h3 className="text-sm font-semibold">{title}</h3>
+        {description && (
+          <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>
+        )}
+      </header>
+      {children}
+    </section>
+  )
+}
+
+export function AdminBadge({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="ms-2 inline-flex shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs font-normal text-muted-foreground">
+      {children}
+    </span>
+  )
+}
+
 export function AdminField({
   label,
   tooltip,

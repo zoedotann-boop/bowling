@@ -2,15 +2,24 @@
 
 import { useTranslations } from "next-intl"
 
+import { AdminTabs } from "@/components/admin/admin-tabs"
 import { AdminCard, AdminField, AdminSelect } from "@/components/admin/admin-ui"
 import { ImageField } from "@/components/admin/image-field"
 import { LocalizedField } from "@/components/admin/localized-field"
 import { RowTable } from "@/components/admin/row-table"
 import { SectionForm, useSectionDraft } from "@/components/admin/section-form"
 import { saveHome } from "@/lib/actions/admin/home"
-import type { HomeDraft } from "@/lib/actions/admin/schemas"
+import type { HomeDraft, PricingDraft } from "@/lib/actions/admin/schemas"
 import { FEATURE_ICONS } from "@/lib/home"
 import { emptyLocalized } from "@/lib/localized"
+
+type PricingKey = keyof PricingDraft
+
+const PRICE_ROWS: { label: PricingKey; price: PricingKey }[] = [
+  { label: "weekdaysLabel", price: "weekdaysPrice" },
+  { label: "weekendLabel", price: "weekendPrice" },
+  { label: "thirdGameLabel", price: "thirdGamePrice" },
+]
 
 export function HomeForm({
   slug,
@@ -26,23 +35,27 @@ export function HomeForm({
     setDraft((prev) => ({ ...prev, [key]: value }))
   }
 
-  function setPricing<K extends keyof HomeDraft["pricing"]>(
-    key: K,
-    value: HomeDraft["pricing"][K]
-  ) {
-    setDraft((prev) => ({
-      ...prev,
-      pricing: { ...prev.pricing, [key]: value },
-    }))
+  function pricingField(key: PricingKey, multiline = false) {
+    const name = `pricing${key[0].toUpperCase()}${key.slice(1)}`
+    return (
+      <LocalizedField
+        key={key}
+        label={t(name)}
+        tooltip={t(`${name}Tip`)}
+        multiline={multiline}
+        value={draft.pricing[key]}
+        onChange={(value) =>
+          setDraft((prev) => ({
+            ...prev,
+            pricing: { ...prev.pricing, [key]: value },
+          }))
+        }
+      />
+    )
   }
 
-  return (
-    <SectionForm
-      slug={slug}
-      title={t("title")}
-      draft={draft}
-      onSave={(value) => saveHome(value)}
-    >
+  const hero = (
+    <>
       <AdminCard title={t("hero")}>
         <LocalizedField
           label={t("heroTitle")}
@@ -78,9 +91,8 @@ export function HomeForm({
           columns={[
             { header: t("featureLabel"), cell: (item) => item.label.he || "—" },
           ]}
-          editTitle={() => t("featureTitle")}
-          renderRow={(item, index, update) => (
-            <div className="space-y-4">
+          renderRow={(item, update) => (
+            <>
               <AdminField
                 label={t("featureIcon")}
                 tooltip={t("featureIconTip")}
@@ -112,169 +124,99 @@ export function HomeForm({
                 value={item.description}
                 onChange={(description) => update({ ...item, description })}
               />
-            </div>
+            </>
           )}
         />
       </AdminCard>
+    </>
+  )
 
-      <AdminCard title={t("services")} description={t("servicesTip")}>
-        <LocalizedField
-          label={t("servicesTitle")}
-          tooltip={t("servicesTitleTip")}
-          value={draft.servicesTitle}
-          onChange={(value) => set("servicesTitle", value)}
-        />
-        <LocalizedField
-          label={t("servicesIntro")}
-          tooltip={t("servicesIntroTip")}
-          multiline
-          value={draft.servicesIntro}
-          onChange={(value) => set("servicesIntro", value)}
-        />
-        <RowTable
-          items={draft.services}
-          onChange={(items) => set("services", items)}
-          createItem={() => ({
-            title: emptyLocalized(),
-            description: emptyLocalized(),
-            imageUrl: "",
-          })}
-          addLabel={t("addService")}
-          columns={[
-            { header: t("serviceTitle"), cell: (item) => item.title.he || "—" },
-          ]}
-          editTitle={() => t("serviceEditTitle")}
-          renderRow={(item, index, update) => (
-            <div className="space-y-4">
-              <LocalizedField
-                label={t("serviceTitle")}
-                tooltip={t("serviceTitleTip")}
-                value={item.title}
-                onChange={(title) => update({ ...item, title })}
-              />
-              <LocalizedField
-                label={t("serviceDescription")}
-                tooltip={t("serviceDescriptionTip")}
-                multiline
-                value={item.description}
-                onChange={(description) => update({ ...item, description })}
-              />
-              <ImageField
-                label={t("serviceImage")}
-                tooltip={t("serviceImageTip")}
-                value={item.imageUrl}
-                onChange={(imageUrl) => update({ ...item, imageUrl })}
-              />
-            </div>
-          )}
-        />
+  const services = (
+    <AdminCard title={t("services")} description={t("servicesTip")}>
+      <LocalizedField
+        label={t("servicesTitle")}
+        tooltip={t("servicesTitleTip")}
+        value={draft.servicesTitle}
+        onChange={(value) => set("servicesTitle", value)}
+      />
+      <LocalizedField
+        label={t("servicesIntro")}
+        tooltip={t("servicesIntroTip")}
+        value={draft.servicesIntro}
+        onChange={(value) => set("servicesIntro", value)}
+      />
+      <RowTable
+        items={draft.services}
+        onChange={(items) => set("services", items)}
+        createItem={() => ({
+          title: emptyLocalized(),
+          description: emptyLocalized(),
+          imageUrl: "",
+        })}
+        addLabel={t("addService")}
+        columns={[
+          { header: t("serviceTitle"), cell: (item) => item.title.he || "—" },
+        ]}
+        renderRow={(item, update) => (
+          <>
+            <LocalizedField
+              label={t("serviceTitle")}
+              tooltip={t("serviceTitleTip")}
+              value={item.title}
+              onChange={(title) => update({ ...item, title })}
+            />
+            <LocalizedField
+              label={t("serviceDescription")}
+              tooltip={t("serviceDescriptionTip")}
+              multiline
+              value={item.description}
+              onChange={(description) => update({ ...item, description })}
+            />
+            <ImageField
+              label={t("serviceImage")}
+              tooltip={t("serviceImageTip")}
+              value={item.imageUrl}
+              onChange={(imageUrl) => update({ ...item, imageUrl })}
+            />
+          </>
+        )}
+      />
+    </AdminCard>
+  )
+
+  const pricing = (
+    <>
+      <AdminCard title={t("pricingHeader")} description={t("pricingHint")}>
+        {pricingField("eyebrow")}
+        {pricingField("title")}
+        {pricingField("description", true)}
       </AdminCard>
 
-      <AdminCard title={t("pricing")} description={t("pricingHint")}>
-        <LocalizedField
-          label={t("pricingEyebrow")}
-          tooltip={t("pricingEyebrowTip")}
-          value={draft.pricing.eyebrow}
-          onChange={(value) => setPricing("eyebrow", value)}
-        />
-        <LocalizedField
-          label={t("pricingTitle")}
-          tooltip={t("pricingTitleTip")}
-          value={draft.pricing.title}
-          onChange={(value) => setPricing("title", value)}
-        />
-        <LocalizedField
-          label={t("pricingDescription")}
-          tooltip={t("pricingDescriptionTip")}
-          multiline
-          value={draft.pricing.description}
-          onChange={(value) => setPricing("description", value)}
-        />
+      <AdminCard title={t("pricingPrices")}>
+        {PRICE_ROWS.map((row) => (
+          <div key={row.label} className="grid gap-4 sm:grid-cols-2">
+            {pricingField(row.label)}
+            {pricingField(row.price)}
+          </div>
+        ))}
+        {pricingField("thirdGameNote")}
         <div className="grid gap-4 sm:grid-cols-2">
-          <LocalizedField
-            label={t("pricingWeekdaysLabel")}
-            tooltip={t("pricingWeekdaysLabelTip")}
-            value={draft.pricing.weekdaysLabel}
-            onChange={(value) => setPricing("weekdaysLabel", value)}
-          />
-          <LocalizedField
-            label={t("pricingWeekdaysPrice")}
-            tooltip={t("pricingWeekdaysPriceTip")}
-            value={draft.pricing.weekdaysPrice}
-            onChange={(value) => setPricing("weekdaysPrice", value)}
-          />
-          <LocalizedField
-            label={t("pricingWeekendLabel")}
-            tooltip={t("pricingWeekendLabelTip")}
-            value={draft.pricing.weekendLabel}
-            onChange={(value) => setPricing("weekendLabel", value)}
-          />
-          <LocalizedField
-            label={t("pricingWeekendPrice")}
-            tooltip={t("pricingWeekendPriceTip")}
-            value={draft.pricing.weekendPrice}
-            onChange={(value) => setPricing("weekendPrice", value)}
-          />
-          <LocalizedField
-            label={t("pricingThirdGameLabel")}
-            tooltip={t("pricingThirdGameLabelTip")}
-            value={draft.pricing.thirdGameLabel}
-            onChange={(value) => setPricing("thirdGameLabel", value)}
-          />
-          <LocalizedField
-            label={t("pricingThirdGamePrice")}
-            tooltip={t("pricingThirdGamePriceTip")}
-            value={draft.pricing.thirdGamePrice}
-            onChange={(value) => setPricing("thirdGamePrice", value)}
-          />
+          {pricingField("soldierTitle")}
+          {pricingField("soldierNote")}
         </div>
-        <LocalizedField
-          label={t("pricingThirdGameNote")}
-          tooltip={t("pricingThirdGameNoteTip")}
-          value={draft.pricing.thirdGameNote}
-          onChange={(value) => setPricing("thirdGameNote", value)}
-        />
-        <div className="grid gap-4 sm:grid-cols-2">
-          <LocalizedField
-            label={t("pricingSoldierTitle")}
-            tooltip={t("pricingSoldierTitleTip")}
-            value={draft.pricing.soldierTitle}
-            onChange={(value) => setPricing("soldierTitle", value)}
-          />
-          <LocalizedField
-            label={t("pricingSoldierNote")}
-            tooltip={t("pricingSoldierNoteTip")}
-            value={draft.pricing.soldierNote}
-            onChange={(value) => setPricing("soldierNote", value)}
-          />
-        </div>
-        <LocalizedField
-          label={t("pricingBirthdayEyebrow")}
-          tooltip={t("pricingBirthdayEyebrowTip")}
-          value={draft.pricing.birthdayEyebrow}
-          onChange={(value) => setPricing("birthdayEyebrow", value)}
-        />
-        <LocalizedField
-          label={t("pricingBirthdayTitle")}
-          tooltip={t("pricingBirthdayTitleTip")}
-          value={draft.pricing.birthdayTitle}
-          onChange={(value) => setPricing("birthdayTitle", value)}
-        />
-        <LocalizedField
-          label={t("pricingBirthdayDescription")}
-          tooltip={t("pricingBirthdayDescriptionTip")}
-          multiline
-          value={draft.pricing.birthdayDescription}
-          onChange={(value) => setPricing("birthdayDescription", value)}
-        />
-        <LocalizedField
-          label={t("pricingBirthdayCtaLabel")}
-          tooltip={t("pricingBirthdayCtaLabelTip")}
-          value={draft.pricing.birthdayCtaLabel}
-          onChange={(value) => setPricing("birthdayCtaLabel", value)}
-        />
       </AdminCard>
 
+      <AdminCard title={t("pricingBirthday")}>
+        {pricingField("birthdayEyebrow")}
+        {pricingField("birthdayTitle")}
+        {pricingField("birthdayDescription", true)}
+        {pricingField("birthdayCtaLabel")}
+      </AdminCard>
+    </>
+  )
+
+  const galleryAndReviews = (
+    <>
       <AdminCard title={t("gallery")}>
         <LocalizedField
           label={t("galleryTitle")}
@@ -290,13 +232,13 @@ export function HomeForm({
           columns={[
             {
               header: t("imageUrl"),
-              cell: (item) => item.imageUrl || "—",
-              className: "font-mono text-xs",
+              cell: (item) => <Thumbnail url={item.imageUrl} />,
+              className: "w-20",
             },
+            { header: t("imageAlt"), cell: (item) => item.alt.he || "—" },
           ]}
-          editTitle={() => t("imageEditTitle")}
-          renderRow={(item, index, update) => (
-            <div className="space-y-4">
+          renderRow={(item, update) => (
+            <>
               <ImageField
                 label={t("imageUrl")}
                 tooltip={t("imageUrlTip")}
@@ -309,11 +251,10 @@ export function HomeForm({
                 value={item.alt}
                 onChange={(alt) => update({ ...item, alt })}
               />
-            </div>
+            </>
           )}
         />
       </AdminCard>
-
       <AdminCard title={t("reviews")} description={t("reviewsDescription")}>
         <LocalizedField
           label={t("reviewsTitle")}
@@ -322,21 +263,25 @@ export function HomeForm({
           onChange={(value) => set("reviewsTitle", value)}
         />
       </AdminCard>
+    </>
+  )
 
-      <AdminCard title={t("contact")}>
-        <LocalizedField
-          label={t("contactTitle")}
-          tooltip={t("contactTitleTip")}
-          value={draft.contactTitle}
-          onChange={(value) => set("contactTitle", value)}
-        />
-        <LocalizedField
-          label={t("contactIntro")}
-          tooltip={t("contactIntroTip")}
-          multiline
-          value={draft.contactIntro}
-          onChange={(value) => set("contactIntro", value)}
-        />
+  const contact = (
+    <AdminCard title={t("contact")}>
+      <LocalizedField
+        label={t("contactTitle")}
+        tooltip={t("contactTitleTip")}
+        value={draft.contactTitle}
+        onChange={(value) => set("contactTitle", value)}
+      />
+      <LocalizedField
+        label={t("contactIntro")}
+        tooltip={t("contactIntroTip")}
+        value={draft.contactIntro}
+        onChange={(value) => set("contactIntro", value)}
+      />
+      <div>
+        <h3 className="mb-2 text-sm font-medium">{t("subjects")}</h3>
         <RowTable
           items={draft.contactSubjects}
           onChange={(items) => set("contactSubjects", items)}
@@ -345,8 +290,7 @@ export function HomeForm({
           columns={[
             { header: t("subjectLabel"), cell: (item) => item.label.he || "—" },
           ]}
-          editTitle={() => t("subjectEditTitle")}
-          renderRow={(item, index, update) => (
+          renderRow={(item, update) => (
             <LocalizedField
               label={t("subjectLabel")}
               tooltip={t("subjectLabelTip")}
@@ -355,7 +299,42 @@ export function HomeForm({
             />
           )}
         />
-      </AdminCard>
+      </div>
+    </AdminCard>
+  )
+
+  return (
+    <SectionForm
+      slug={slug}
+      title={t("title")}
+      description={t("description")}
+      draft={draft}
+      onSave={(value) => saveHome(value)}
+    >
+      <AdminTabs
+        tabs={[
+          { value: "hero", label: t("tabHero"), content: hero },
+          { value: "services", label: t("tabServices"), content: services },
+          { value: "pricing", label: t("tabPricing"), content: pricing },
+          {
+            value: "gallery",
+            label: t("tabGallery"),
+            content: galleryAndReviews,
+          },
+          { value: "contact", label: t("tabContact"), content: contact },
+        ]}
+      />
     </SectionForm>
+  )
+}
+
+function Thumbnail({ url }: { url: string }) {
+  if (!url) return <span className="text-muted-foreground">—</span>
+  return (
+    <span
+      aria-hidden
+      className="block h-10 w-14 rounded border border-border bg-cover bg-center"
+      style={{ backgroundImage: `url(${JSON.stringify(url)})` }}
+    />
   )
 }

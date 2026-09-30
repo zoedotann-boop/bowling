@@ -10,6 +10,7 @@ import {
   sectionHeading,
 } from "@/lib/email-template"
 import type { Branch } from "@/lib/branches"
+import { bookingAnswers } from "@/lib/events/booking-answers"
 
 interface BookingPayload {
   branch?: string
@@ -23,36 +24,12 @@ interface BookingPayload {
   [key: string]: unknown
 }
 
-const FIELD_LABELS: Record<string, string> = {
-  event: "אירוע",
-  firstName: "שם פרטי",
-  lastName: "שם משפחה",
-  idNumber: "ת.ז",
-  celebrants: "שמות החוגגים",
-  email: "אימייל",
-  phone: "טלפון",
-  date: "תאריך",
-}
-
-const RESERVED_KEYS = new Set(["branch", "signature", "upgrades"])
-
-function answers(payload: BookingPayload): [string, string][] {
-  return Object.entries(payload)
-    .filter(
-      ([key, value]) =>
-        !RESERVED_KEYS.has(key) &&
-        typeof value === "string" &&
-        value.trim() !== ""
-    )
-    .map(([key, value]) => [FIELD_LABELS[key] ?? key, value as string])
-}
-
 function renderBody(payload: BookingPayload, signatureNote: string): string {
   const upgrades = payload.upgrades?.length
     ? sectionHeading("שדרוגים שנבחרו") + bulletList(payload.upgrades)
     : ""
   const signature = payload.signature ? signatureNote : ""
-  return detailTable(answers(payload)) + upgrades + signature
+  return detailTable(bookingAnswers(payload)) + upgrades + signature
 }
 
 function renderManagerEmail(payload: BookingPayload, branch: Branch): string {
@@ -97,7 +74,7 @@ export async function POST(request: Request) {
     )
   }
 
-  if (answers(payload).length === 0) {
+  if (bookingAnswers(payload).length === 0) {
     return NextResponse.json(
       { error: "Missing required fields." },
       { status: 400 }

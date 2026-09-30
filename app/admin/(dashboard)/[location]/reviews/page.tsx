@@ -8,12 +8,13 @@ export default async function ReviewsPage({
   params: Promise<{ location: string }>
 }) {
   const { location: slug } = await params
-  const { location: loc } = await requireLocationAccess(slug, "content")
+  const { user, location: loc } = await requireLocationAccess(slug, "content")
   const data = await getReviewsEditor(loc.id)
 
   return (
     <ReviewsForm
       slug={slug}
+      canConnect={user.role === "owner"}
       initial={{
         slug,
         googlePlaceId: data?.googlePlaceId ?? "",

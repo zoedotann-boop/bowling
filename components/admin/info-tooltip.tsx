@@ -3,11 +3,7 @@
 import { Popover } from "@base-ui/react/popover"
 import { Info } from "lucide-react"
 
-import { useDialogContainer } from "./admin-modal"
-
 export function InfoTooltip({ text }: { text: string }) {
-  const dialog = useDialogContainer()
-
   return (
     <Popover.Root>
       <Popover.Trigger
@@ -18,7 +14,7 @@ export function InfoTooltip({ text }: { text: string }) {
       >
         <Info className="size-3.5" />
       </Popover.Trigger>
-      <Popover.Portal container={dialog ?? undefined}>
+      <Popover.Portal>
         <Popover.Positioner
           side="top"
           sideOffset={6}

@@ -685,6 +685,12 @@ function BookingForm({
         body: JSON.stringify({
           event,
           ...values,
+          labels: Object.fromEntries(
+            formFields.map((field) => [
+              field.key,
+              pickLocale(field.label, "he"),
+            ])
+          ),
           branch: branchId,
           upgrades: selectedUpgrades,
           signature,
