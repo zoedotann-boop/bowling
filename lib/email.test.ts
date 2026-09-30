@@ -102,7 +102,7 @@ describe("noReplySender", () => {
     ["localhost", "http://localhost:3000"],
     ["an IPv4 address", "http://127.0.0.1:3000"],
     ["an IPv6 address", "http://[::1]:3000"],
-  ])("returns undefined when the URL is %s", (_, url) => {
-    expect(noReplySender(url)).toBeUndefined()
+  ])("falls back to bowlingil.com when the URL is %s", (_, url) => {
+    expect(noReplySender(url)).toBe("no-reply@bowlingil.com")
   })
 })

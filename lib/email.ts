@@ -46,10 +46,12 @@ export function resolveBranch(slug: unknown): Branch {
   return BRANCHES[isBranchId(slug) ? slug : DEFAULT_BRANCH]
 }
 
-export function noReplySender(baseUrl: string | undefined): string | undefined {
+const FALLBACK_SENDER_HOST = "bowlingil.com"
+
+export function noReplySender(baseUrl: string | undefined): string {
   const host = URL.parse(baseUrl ?? "")?.hostname.replace(/^www\./, "")
-  if (!host?.includes(".") || isIP(host)) return undefined
-  return `no-reply@${host}`
+  const isPublic = host?.includes(".") && !isIP(host)
+  return `no-reply@${isPublic ? host : FALLBACK_SENDER_HOST}`
 }
 
 interface MailAttachment {

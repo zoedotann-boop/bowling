@@ -56,9 +56,9 @@ The admin lives under `/admin` (login at `/admin/login`) and manages per-locatio
 content: settings, home page, menu, events (multiple event types), the
 **Terms & accessibility** pages, plus owner-only Locations and Team. It uses **Drizzle ORM + PostgreSQL** and
 **Better Auth**, passwordless: sign-in emails a one-time code (via the
-`emailOTP` plugin, so `RESEND_API_KEY`/`CONTACT_FROM_EMAIL` are required to log
-in; the code is sent from `no-reply@<BETTER_AUTH_URL host>`, so verify that
-domain in Resend — on localhost it falls back to `CONTACT_FROM_EMAIL`) and public signup is disabled.
+`emailOTP` plugin, so `RESEND_API_KEY` is required to log in; the code is sent
+from `no-reply@<BETTER_AUTH_URL host>`, or `no-reply@bowlingil.com` on
+localhost, so verify that domain in Resend) and public signup is disabled.
 
 ### Setup
 
@@ -69,7 +69,7 @@ Add these to `.env` (already scaffolded):
 | `DATABASE_URL`        | PostgreSQL connection string (Neon, Supabase, or local). |
 | `DATABASE_URL_UNPOOLED` | Optional direct (non-pooler) connection string. `db:migrate` uses it when set, and hides Postgres `NOTICE` output. On Neon, drop `-pooler` from the host. |
 | `BETTER_AUTH_SECRET`  | Random signing secret, min 32 chars (`openssl rand -base64 32`). |
-| `BETTER_AUTH_URL`     | Public base URL, no trailing slash (dev: `http://localhost:3000`). Its host (minus `www.`) is also the login-code sender domain: `no-reply@<host>`. |
+| `BETTER_AUTH_URL`     | Public base URL, no trailing slash (dev: `http://localhost:3000`). Its host (minus `www.`) is also the login-code sender domain: `no-reply@<host>` (`no-reply@bowlingil.com` on localhost). |
 
 Then:
 
