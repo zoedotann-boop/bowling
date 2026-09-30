@@ -1,7 +1,7 @@
 "use server"
 
 import { and, eq } from "drizzle-orm"
-import { revalidatePath } from "next/cache"
+import { refresh } from "next/cache"
 
 import { requireLocationAccess } from "@/lib/admin/access"
 import { db } from "@/lib/db"
@@ -55,7 +55,7 @@ export async function saveLegal(input: unknown): Promise<ActionResult> {
     }
   })
 
-  for (const kind of LEGAL_PAGE_KINDS) revalidatePath(`/${kind}`)
+  refresh()
 
   return OK
 }

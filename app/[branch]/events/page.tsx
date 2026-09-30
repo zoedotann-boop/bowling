@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server"
 
 import { EventsPage } from "@/components/pages/events-page"
 import { byBranch } from "@/lib/branches"
-import { getEvents } from "@/lib/db/queries/site"
+import { getEvents, logError } from "@/lib/db/queries/site"
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("pageMeta")
@@ -11,6 +11,6 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  const events = byBranch(await getEvents().catch(() => []))
+  const events = byBranch(await getEvents().catch(logError("getEvents", [])))
   return <EventsPage events={events} />
 }

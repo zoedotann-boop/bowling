@@ -1,7 +1,6 @@
 "use client"
 
 import { useTranslations } from "next-intl"
-import { useState } from "react"
 
 import {
   AdminCard,
@@ -12,7 +11,7 @@ import {
 } from "@/components/admin/admin-ui"
 import { LocalizedField } from "@/components/admin/localized-field"
 import { RowTable } from "@/components/admin/row-table"
-import { SectionForm } from "@/components/admin/section-form"
+import { SectionForm, useSectionDraft } from "@/components/admin/section-form"
 import { saveEvents } from "@/lib/actions/admin/events"
 import type {
   EventFormFieldDraft,
@@ -21,6 +20,8 @@ import type {
 } from "@/lib/actions/admin/schemas"
 import type { Localized } from "@/lib/db/schema/_shared"
 import { FORM_FIELD_TYPES } from "@/lib/events/fields"
+import { usesContactForm } from "@/lib/events/slugs"
+import { parseWholeNumber } from "@/lib/admin/drafts"
 import { emptyLocalized } from "@/lib/localized"
 
 function MoneyField({
@@ -41,11 +42,7 @@ function MoneyField({
         min={0}
         dir="ltr"
         value={value ?? ""}
-        onChange={(event) =>
-          onChange(
-            event.target.value === "" ? null : Number(event.target.value)
-          )
-        }
+        onChange={(event) => onChange(parseWholeNumber(event.target.value))}
       />
     </AdminField>
   )
@@ -95,7 +92,7 @@ export function EventsForm({
 }) {
   const t = useTranslations("admin.events")
   const common = useTranslations("admin.common")
-  const [draft, setDraft] = useState(initial)
+  const [draft, setDraft] = useSectionDraft(initial)
 
   function formFieldEditor(
     field: EventFormFieldDraft,
@@ -149,10 +146,7 @@ export function EventsForm({
                 onChange={(event) =>
                   update({
                     ...field,
-                    minValue:
-                      event.target.value === ""
-                        ? null
-                        : Number(event.target.value),
+                    minValue: parseWholeNumber(event.target.value),
                   })
                 }
               />
@@ -165,10 +159,7 @@ export function EventsForm({
                 onChange={(event) =>
                   update({
                     ...field,
-                    maxValue:
-                      event.target.value === ""
-                        ? null
-                        : Number(event.target.value),
+                    maxValue: parseWholeNumber(event.target.value),
                   })
                 }
               />
@@ -304,7 +295,13 @@ export function EventsForm({
           </div>
         </AdminCard>
 
-        <AdminCard title={t("steps")}>
+        <AdminCard title={t("steps")} description={t("stepsTip")}>
+          <LocalizedField
+            label={t("scheduleTitle")}
+            tooltip={t("scheduleTitleTip")}
+            value={type.content.scheduleTitle}
+            onChange={(scheduleTitle) => setContent({ scheduleTitle })}
+          />
           <RowTable
             items={type.steps}
             onChange={(steps) => update({ ...type, steps })}
@@ -339,7 +336,7 @@ export function EventsForm({
           />
         </AdminCard>
 
-        <AdminCard title={t("packageLines")}>
+        <AdminCard title={t("packageLines")} description={t("packageLinesTip")}>
           <RowTable
             items={type.packageLines}
             onChange={(packageLines) => update({ ...type, packageLines })}
@@ -360,7 +357,7 @@ export function EventsForm({
           />
         </AdminCard>
 
-        <AdminCard title={t("upgrades")}>
+        <AdminCard title={t("upgrades")} description={t("upgradesTip")}>
           <RowTable
             items={type.upgrades}
             onChange={(upgrades) => update({ ...type, upgrades })}
@@ -459,72 +456,84 @@ export function EventsForm({
           />
         </AdminCard>
 
-        <AdminCard title={t("bookingForm")} description={t("bookingFormTip")}>
-          <LocalizedField
-            label={t("formIntro")}
-            tooltip={t("formIntroTip")}
-            multiline
-            value={type.content.formIntro}
-            onChange={(formIntro) => setContent({ formIntro })}
+        {usesContactForm(type.slug) ? (
+          <AdminCard
+            title={t("bookingForm")}
+            description={t("contactFormTip")}
           />
-          <LocalizedField
-            label={t("formTerms")}
-            tooltip={t("formTermsTip")}
-            multiline
-            value={type.content.formTerms}
-            onChange={(formTerms) => setContent({ formTerms })}
-          />
-          <LocalizedField
-            label={t("formFootnote")}
-            tooltip={t("formFootnoteTip")}
-            multiline
-            value={type.content.formFootnote}
-            onChange={(formFootnote) => setContent({ formFootnote })}
-          />
-          <AdminFlag
-            label={t("requiresSignature")}
-            description={t("requiresSignatureTip")}
-            checked={type.content.requiresSignature}
-            onCheckedChange={(requiresSignature) =>
-              setContent({ requiresSignature })
-            }
-          />
-        </AdminCard>
+        ) : (
+          <>
+            <AdminCard
+              title={t("bookingForm")}
+              description={t("bookingFormTip")}
+            >
+              <LocalizedField
+                label={t("formIntro")}
+                tooltip={t("formIntroTip")}
+                multiline
+                value={type.content.formIntro}
+                onChange={(formIntro) => setContent({ formIntro })}
+              />
+              <LocalizedField
+                label={t("formTerms")}
+                tooltip={t("formTermsTip")}
+                multiline
+                value={type.content.formTerms}
+                onChange={(formTerms) => setContent({ formTerms })}
+              />
+              <LocalizedField
+                label={t("formFootnote")}
+                tooltip={t("formFootnoteTip")}
+                multiline
+                value={type.content.formFootnote}
+                onChange={(formFootnote) => setContent({ formFootnote })}
+              />
+              <AdminFlag
+                label={t("requiresSignature")}
+                description={t("requiresSignatureTip")}
+                checked={type.content.requiresSignature}
+                onCheckedChange={(requiresSignature) =>
+                  setContent({ requiresSignature })
+                }
+              />
+            </AdminCard>
 
-        <AdminCard title={t("formFields")} description={t("formFieldsTip")}>
-          <RowTable
-            items={type.formFields}
-            onChange={(formFields) => update({ ...type, formFields })}
-            createItem={(): EventFormFieldDraft => ({
-              key: "",
-              label: emptyLocalized(),
-              placeholder: emptyLocalized(),
-              type: "text",
-              options: [],
-              minValue: null,
-              maxValue: null,
-              isRequired: false,
-              isVisible: true,
-            })}
-            addLabel={t("addField")}
-            columns={[
-              {
-                header: t("fieldKey"),
-                cell: (item) => item.key || "—",
-                className: "font-mono text-xs",
-              },
-              {
-                header: t("fieldType"),
-                cell: (item) => item.type,
-                className: "w-24",
-              },
-            ]}
-            editTitle={(item) => item.key || t("fieldKey")}
-            renderRow={(field, index, updateField) =>
-              formFieldEditor(field, updateField)
-            }
-          />
-        </AdminCard>
+            <AdminCard title={t("formFields")} description={t("formFieldsTip")}>
+              <RowTable
+                items={type.formFields}
+                onChange={(formFields) => update({ ...type, formFields })}
+                createItem={(): EventFormFieldDraft => ({
+                  key: "",
+                  label: emptyLocalized(),
+                  placeholder: emptyLocalized(),
+                  type: "text",
+                  options: [],
+                  minValue: null,
+                  maxValue: null,
+                  isRequired: false,
+                  isVisible: true,
+                })}
+                addLabel={t("addField")}
+                columns={[
+                  {
+                    header: t("fieldKey"),
+                    cell: (item) => item.key || "—",
+                    className: "font-mono text-xs",
+                  },
+                  {
+                    header: t("fieldType"),
+                    cell: (item) => item.type,
+                    className: "w-24",
+                  },
+                ]}
+                editTitle={(item) => item.key || t("fieldKey")}
+                renderRow={(field, index, updateField) =>
+                  formFieldEditor(field, updateField)
+                }
+              />
+            </AdminCard>
+          </>
+        )}
       </div>
     )
   }
@@ -554,6 +563,7 @@ export function EventsForm({
               packageChildrenCount: null,
               extraChildAmount: null,
               depositAmount: null,
+              scheduleTitle: emptyLocalized(),
               allowedItems: [],
               forbiddenItems: [],
               rulesNote: emptyLocalized(),

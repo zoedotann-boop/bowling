@@ -3,5 +3,9 @@ import { getSiteBranches } from "@/lib/db/queries/site"
 
 export default async function Page() {
   const branches = await getSiteBranches()
-  return <BranchChooser branches={Object.values(branches)} />
+  return (
+    <BranchChooser
+      branches={Object.values(branches).filter((branch) => branch.isVisible)}
+    />
+  )
 }

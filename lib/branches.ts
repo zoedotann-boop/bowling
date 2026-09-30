@@ -1,4 +1,5 @@
 import type { location } from "@/lib/db/schema"
+import type { DayHours } from "@/lib/db/schema/locations"
 
 export type BranchId = "ramat-gan" | "rishon"
 
@@ -21,8 +22,22 @@ export interface Branch {
   logo: { src: string; width: number; height: number }
   hasGymboree: boolean
   hasNotice: boolean
+  isVisible: boolean
+  hours: DayHours[]
+  seoTitle?: Localized
+  seoDescription?: Localized
   events: string[]
 }
+
+export const DEFAULT_HOURS: DayHours[] = Array.from(
+  { length: 7 },
+  (_, day) => ({
+    day,
+    closed: false,
+    open: "10:00",
+    close: "03:00",
+  })
+)
 
 const waze = (query: string) =>
   `https://waze.com/ul?q=${encodeURIComponent(query)}&navigate=yes`
@@ -51,6 +66,8 @@ export const BRANCHES: Record<BranchId, Branch> = {
     logo: { src: "/logo-ramat-gan.png", width: 604, height: 374 },
     hasGymboree: false,
     hasNotice: true,
+    isVisible: true,
+    hours: DEFAULT_HOURS,
     events: ["birthdays", "team", "corporate"],
   },
   rishon: {
@@ -73,6 +90,8 @@ export const BRANCHES: Record<BranchId, Branch> = {
     logo: { src: "/logo-rishon.png", width: 370, height: 233 },
     hasGymboree: true,
     hasNotice: false,
+    isVisible: true,
+    hours: DEFAULT_HOURS,
     events: ["birthdays", "gymboree", "no-room", "team", "corporate"],
   },
 }
@@ -123,12 +142,16 @@ export function mergeBranch(base: Branch, row: BranchRow | undefined): Branch {
     addressLine1: localizedOr(row.addressLine1, base.addressLine1),
     addressLine2: localizedOr(row.addressLine2, base.addressLine2),
     addressFull: localizedOr(row.addressFull, base.addressFull),
-    laneDesc: localizedOr(row.laneDesc, base.laneDesc),
     phone: row.phone || base.phone,
     whatsapp: row.whatsapp || base.whatsapp,
     wazeUrl: row.wazeUrl || base.wazeUrl,
     lanes: row.lanes || base.lanes,
     hasGymboree: row.hasGymboree,
     hasNotice: row.hasNotice,
+    isVisible: row.isVisible,
+    hours: row.hours?.length ? row.hours : base.hours,
+    logo: row.logoUrl ? { ...base.logo, src: row.logoUrl } : base.logo,
+    seoTitle: localizedOr(row.seoTitle, { he: "", en: "" }),
+    seoDescription: localizedOr(row.seoDescription, { he: "", en: "" }),
   }
 }

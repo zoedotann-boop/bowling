@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server"
 
 import { LegalPage } from "@/components/pages/legal-page"
 import { byBranch } from "@/lib/branches"
-import { getLegalPages } from "@/lib/db/queries/site"
+import { getLegalPages, logError } from "@/lib/db/queries/site"
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("pageMeta")
@@ -11,6 +11,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  const pages = byBranch(await getLegalPages("terms").catch(() => []))
+  const pages = byBranch(
+    await getLegalPages("terms").catch(logError("getLegalPages", []))
+  )
   return <LegalPage kind="terms" pages={pages} />
 }

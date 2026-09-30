@@ -50,7 +50,6 @@ async function backfill() {
       addressLine1: branch.addressLine1,
       addressLine2: branch.addressLine2,
       addressFull: branch.addressFull,
-      laneDesc: branch.laneDesc,
       phone: branch.phone,
       whatsapp: branch.whatsapp,
       wazeUrl: branch.wazeUrl,
@@ -150,7 +149,7 @@ async function backfill() {
         locationId,
         icon: "",
         label: L(["features", i, "title"]),
-        description: L(["features", i, "desc"]),
+        description: i === 0 ? branch.laneDesc : L(["features", i, "desc"]),
         sortOrder: i,
       }))
     )

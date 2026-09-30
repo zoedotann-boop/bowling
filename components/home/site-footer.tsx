@@ -5,8 +5,10 @@ import Link from "next/link"
 import { useLocale, useTranslations } from "next-intl"
 
 import { branchPath } from "@/lib/branches"
+import { formatHours } from "@/lib/hours"
 import { LEGAL_PAGE_KINDS } from "@/lib/legal"
 import { pickLocale } from "@/lib/localized"
+import { isRemoteImage } from "@/lib/utils"
 import { useBranch } from "@/components/branch-context"
 import { useSiteContent } from "@/components/site-content-context"
 import { Container } from "./container"
@@ -60,7 +62,11 @@ export function SiteFooter() {
     branch.phone,
     email,
   ]
-  const hours = t.raw("footer.hours") as string[]
+  const hours = formatHours(
+    branch.hours,
+    t.raw("footer.days") as string[],
+    t("footer.closed")
+  )
   const tagline =
     pickLocale(content?.site?.footerNote, locale) || t("footer.tagline")
 
@@ -74,6 +80,7 @@ export function SiteFooter() {
               alt={t("brand")}
               width={branch.logo.width}
               height={branch.logo.height}
+              unoptimized={isRemoteImage(branch.logo.src)}
               className="mb-3 h-12 w-auto lg:h-14"
             />
             <p className="max-w-[320px] text-sm leading-[1.55] font-medium text-mud lg:text-[15px]">

@@ -6,8 +6,8 @@ import { useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
 import { whatsappUrl } from "@/lib/contact"
-import { useIsOpen } from "@/lib/hours"
 import { useBranch } from "@/components/branch-context"
+import { useIsOpen } from "@/hooks/use-is-open"
 
 function WhatsAppGlyph() {
   return (
@@ -26,7 +26,7 @@ export function MobileFloatingActions() {
   const t = useTranslations("floating")
   const { branch } = useBranch()
   const [showTop, setShowTop] = useState(false)
-  const isOpen = useIsOpen() ?? true
+  const isOpen = useIsOpen(branch.hours) ?? true
 
   useEffect(() => {
     const onScroll = () => setShowTop(window.scrollY > 400)
@@ -53,7 +53,7 @@ export function MobileFloatingActions() {
 
       <div className="fixed inset-x-3 bottom-3 z-40 flex items-center justify-between gap-2.5">
         <a
-          href="tel:03-5700834"
+          href={`tel:${branch.phone}`}
           className="glow-primary flex items-center justify-center gap-2 rounded-sm border border-primary bg-card px-4 py-3 font-heading text-[15px] font-extrabold text-primary"
         >
           <span

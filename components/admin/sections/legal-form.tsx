@@ -2,11 +2,10 @@
 
 import { ExternalLink } from "lucide-react"
 import { useTranslations } from "next-intl"
-import { useState } from "react"
 
 import { AdminCard } from "@/components/admin/admin-ui"
 import { LocalizedField } from "@/components/admin/localized-field"
-import { SectionForm } from "@/components/admin/section-form"
+import { SectionForm, useSectionDraft } from "@/components/admin/section-form"
 import { Button } from "@/components/ui/button"
 import { saveLegal } from "@/lib/actions/admin/legal"
 import type { LegalDraft } from "@/lib/actions/admin/schemas"
@@ -20,7 +19,7 @@ export function LegalForm({
   initial: LegalDraft
 }) {
   const t = useTranslations("admin.legal")
-  const [draft, setDraft] = useState(initial)
+  const [draft, setDraft] = useSectionDraft(initial)
 
   return (
     <SectionForm

@@ -12,24 +12,29 @@ import { createPortal } from "react-dom"
 import Image from "next/image"
 import { useLocale, useTranslations } from "next-intl"
 
-import { cn } from "@/lib/utils"
+import { cn, isRemoteImage } from "@/lib/utils"
 import { pickLocale } from "@/lib/localized"
 import { useSiteContent } from "@/components/site-content-context"
 import { LedDot } from "@/components/decor/led-dot"
 import { Container } from "./container"
 
-const TILES = [
-  { src: "/gallery/1.png", w: 795, h: 463, cls: "" },
-  { src: "/gallery/2.png", w: 782, h: 459, cls: "" },
-  {
-    src: "/gallery/3.png",
-    w: 756,
-    h: 461,
-    cls: "col-span-2 lg:col-span-1 lg:col-start-3 lg:row-start-1 lg:row-span-2",
-  },
-  { src: "/gallery/4.png", w: 757, h: 461, cls: "" },
-  { src: "/gallery/5.png", w: 862, h: 1252, cls: "" },
+interface Tile {
+  src: string
+  alt?: string
+  ratio?: number
+}
+
+const TILES: Tile[] = [
+  { src: "/gallery/1.png", ratio: 795 / 463 },
+  { src: "/gallery/2.png", ratio: 782 / 459 },
+  { src: "/gallery/3.png", ratio: 756 / 461 },
+  { src: "/gallery/4.png", ratio: 757 / 461 },
+  { src: "/gallery/5.png", ratio: 862 / 1252 },
 ]
+const TILE_CLASSES: Partial<Record<number, string>> = {
+  2: "col-span-2 lg:col-span-1 lg:col-start-3 lg:row-start-1 lg:row-span-2",
+}
+const DEFAULT_RATIO = 4 / 3
 
 const SWIPE_THRESHOLD = 50
 
@@ -38,7 +43,17 @@ const subscribe = () => () => {}
 export function Gallery() {
   const t = useTranslations("gallery")
   const locale = useLocale() as "he" | "en"
-  const title = pickLocale(useSiteContent()?.home?.galleryTitle, locale)
+  const content = useSiteContent()
+  const title = pickLocale(content?.home?.galleryTitle, locale)
+  const images = (content?.galleryImages ?? []).filter((image) =>
+    image.imageUrl.trim()
+  )
+  const tiles: Tile[] = images.length
+    ? images.map((image) => ({
+        src: image.imageUrl,
+        alt: pickLocale(image.alt, locale),
+      }))
+    : TILES
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const portalTarget = useSyncExternalStore(
     subscribe,
@@ -46,13 +61,18 @@ export function Gallery() {
     () => null
   )
 
+  const openRatio =
+    openIndex === null
+      ? DEFAULT_RATIO
+      : (tiles[openIndex].ratio ?? DEFAULT_RATIO)
+
   const close = useCallback(() => setOpenIndex(null), [])
   const show = useCallback(
     (delta: number) =>
       setOpenIndex((i) =>
-        i === null ? i : (i + delta + TILES.length) % TILES.length
+        i === null ? i : (i + delta + tiles.length) % tiles.length
       ),
-    []
+    [tiles.length]
   )
 
   const touchStart = useRef<{ x: number; y: number } | null>(null)
@@ -98,7 +118,7 @@ export function Gallery() {
           {title || t("title")}
         </h2>
         <div className="grid [grid-auto-rows:120px] grid-cols-2 gap-3 lg:[grid-auto-rows:180px] lg:grid-cols-[1fr_1fr_1.5fr] lg:gap-4">
-          {TILES.map((tile, i) => (
+          {tiles.map((tile, i) => (
             <button
               key={i}
               type="button"
@@ -106,12 +126,13 @@ export function Gallery() {
               aria-label={t("imageLabel", { n: i + 1 })}
               className={cn(
                 "group glow-primary hover:glow-cyan relative overflow-hidden rounded-sm border border-navy transition-shadow",
-                tile.cls
+                TILE_CLASSES[i]
               )}
             >
               <Image
                 src={tile.src}
-                alt={t("imageLabel", { n: i + 1 })}
+                alt={tile.alt || t("imageLabel", { n: i + 1 })}
+                unoptimized={isRemoteImage(tile.src)}
                 fill
                 sizes="(max-width: 1024px) 50vw, 33vw"
                 className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -156,17 +177,22 @@ export function Gallery() {
               onTouchStart={onTouchStart}
               onTouchEnd={onTouchEnd}
               style={{
-                aspectRatio: `${TILES[openIndex].w} / ${TILES[openIndex].h}`,
-                width: `min(92vw, calc(88vh * ${TILES[openIndex].w} / ${TILES[openIndex].h}))`,
+                aspectRatio: openRatio,
+                width: `min(92vw, calc(88vh * ${openRatio}))`,
               }}
               className="glow-primary relative overflow-hidden rounded-sm border border-primary"
             >
               <Image
-                src={TILES[openIndex].src}
-                alt={t("imageLabel", { n: openIndex + 1 })}
+                src={tiles[openIndex].src}
+                alt={
+                  tiles[openIndex].alt || t("imageLabel", { n: openIndex + 1 })
+                }
+                unoptimized={isRemoteImage(tiles[openIndex].src)}
                 fill
                 sizes="92vw"
-                className="object-cover"
+                className={
+                  tiles[openIndex].ratio ? "object-cover" : "object-contain"
+                }
                 priority
               />
             </div>

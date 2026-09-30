@@ -22,7 +22,6 @@ export default async function HomePage({
     servicesIntro: toLocalized(data?.home?.servicesIntro),
     galleryTitle: toLocalized(data?.home?.galleryTitle),
     reviewsTitle: toLocalized(data?.home?.reviewsTitle),
-    aboutImageUrl: data?.home?.aboutImageUrl ?? "",
     contactTitle: toLocalized(data?.site?.contactTitle),
     contactIntro: toLocalized(data?.site?.contactIntro),
     pricing: toPricingDraft(data?.pricing),

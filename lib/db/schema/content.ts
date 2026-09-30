@@ -26,7 +26,6 @@ export const homeContent = pgTable("home_content", {
   servicesIntro: localized(),
   galleryTitle: localized(),
   reviewsTitle: localized(),
-  aboutImageUrl: text("about_image_url"),
   ...timestamps,
 })
 

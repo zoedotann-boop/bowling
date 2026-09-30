@@ -50,6 +50,20 @@
       "when": 1790767134124,
       "tag": "0006_legal_mother_askani",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1790771428392,
+      "tag": "0007_light_master_chief",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1790771432741,
+      "tag": "0008_cold_mindworm",
+      "breakpoints": true
     }
   ]
 }

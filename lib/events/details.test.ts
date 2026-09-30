@@ -10,6 +10,7 @@ const { defaultBookingFields, defaultFormFields, eventDetailDefaults } =
   await import("./detail-defaults")
 
 const DEFAULTS: EventDetailTexts = {
+  scheduleTitle: { he: "מה הלו״ז?", en: "What's the schedule?" },
   allowedItems: [{ he: "עוגה", en: "Cake" }],
   forbiddenItems: [{ he: "זיקוקים", en: "Fireworks" }],
   rulesNote: { he: "הערת כללים", en: "Rules note" },
@@ -45,6 +46,7 @@ describe("withEventDetailDefaults", () => {
 
   test("stored values replace the defaults", () => {
     const stored: EventDetailTexts = {
+      scheduleTitle: { he: "איך זה עובד?", en: "How it works" },
       allowedItems: [{ he: "בלונים", en: "Balloons" }],
       forbiddenItems: [{ he: "אלכוהול", en: "Alcohol" }],
       rulesNote: { he: "א", en: "a" },
@@ -153,6 +155,17 @@ describe("eventDetailDefaults", () => {
     const defaults = eventDetailDefaults("ramat-gan", "corporate")
     expect(defaults.allowedItems).toEqual([])
     expect(defaults.policyItems).toEqual([])
+  })
+
+  test("titles the steps section per event type, else the shared heading", () => {
+    expect(eventDetailDefaults("rishon", "corporate").scheduleTitle).toEqual({
+      he: "איך זה עובד?",
+      en: "How it works",
+    })
+    expect(eventDetailDefaults("rishon", "birthdays").scheduleTitle).toEqual({
+      he: he.eventDetails.scheduleTitle,
+      en: en.eventDetails.scheduleTitle,
+    })
   })
 })
 

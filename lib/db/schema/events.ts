@@ -38,6 +38,7 @@ export const eventTypeContent = pgTable("event_type_content", {
   packageChildrenCount: integer("package_children_count"),
   extraChildAmount: integer("extra_child_amount"),
   depositAmount: integer("deposit_amount"),
+  scheduleTitle: localized(),
   allowedItems: jsonb().$type<Localized[]>(),
   forbiddenItems: jsonb().$type<Localized[]>(),
   rulesNote: localized(),

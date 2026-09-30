@@ -28,7 +28,6 @@ export const location = pgTable("location", {
   addressLine1: localized().notNull(),
   addressLine2: localized(),
   addressFull: localized().notNull(),
-  laneDesc: localized(),
 
   phone: text("phone").notNull().default(""),
   whatsapp: text("whatsapp").notNull().default(""),

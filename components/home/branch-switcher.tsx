@@ -6,11 +6,11 @@ import { Check, ChevronDown } from "lucide-react"
 import { useLocale } from "next-intl"
 
 import { cn } from "@/lib/utils"
-import { BRANCHES, branchIds, switchBranchPath } from "@/lib/branches"
+import { switchBranchPath } from "@/lib/branches"
 import { useBranch } from "@/components/branch-context"
 
 export function BranchSwitcher({ className }: { className?: string }) {
-  const { branchId } = useBranch()
+  const { branch, branchId, visibleBranches } = useBranch()
   const router = useRouter()
   const pathname = usePathname()
   const locale = useLocale() as "he" | "en"
@@ -38,7 +38,7 @@ export function BranchSwitcher({ className }: { className?: string }) {
           className
         )}
       >
-        {BRANCHES[branchId].name[locale]}
+        {branch.name[locale]}
         <ChevronDown
           className={cn("size-3.5 transition-transform", open && "rotate-180")}
           strokeWidth={3}
@@ -50,7 +50,7 @@ export function BranchSwitcher({ className }: { className?: string }) {
           role="listbox"
           className="absolute end-0 z-50 mt-2 w-56 overflow-hidden rounded-sm border border-navy bg-card"
         >
-          {branchIds.map((id) => {
+          {visibleBranches.map(({ id, name }) => {
             const active = id === branchId
             return (
               <button
@@ -69,7 +69,7 @@ export function BranchSwitcher({ className }: { className?: string }) {
                     : "text-navy hover:bg-cream-warm hover:text-secondary"
                 )}
               >
-                {BRANCHES[id].name[locale]}
+                {name[locale]}
                 {active && (
                   <Check className="size-4 flex-none" strokeWidth={3} />
                 )}

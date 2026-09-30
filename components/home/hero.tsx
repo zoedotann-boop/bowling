@@ -4,9 +4,9 @@ import { useLocale, useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
 import { whatsappUrl } from "@/lib/contact"
-import { useIsOpen } from "@/lib/hours"
 import { pickLocale } from "@/lib/localized"
 import { useBranch } from "@/components/branch-context"
+import { useIsOpen } from "@/hooks/use-is-open"
 import { useSiteContent } from "@/components/site-content-context"
 import { LaneLines } from "@/components/decor/lane-lines"
 import { NeonSign } from "@/components/decor/neon-sign"
@@ -17,7 +17,7 @@ export function Hero() {
   const t = useTranslations("hero")
   const { branch } = useBranch()
   const locale = useLocale() as "he" | "en"
-  const isOpen = useIsOpen() ?? true
+  const isOpen = useIsOpen(branch.hours) ?? true
   const home = useSiteContent()?.home
 
   const title = pickLocale(home?.heroTitle, locale)

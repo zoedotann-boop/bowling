@@ -23,7 +23,6 @@ const row = (overrides: Partial<BranchRow> = {}): BranchRow => ({
   addressLine1: { he: "", en: "" },
   addressLine2: null,
   addressFull: { he: "", en: "" },
-  laneDesc: null,
   phone: "",
   whatsapp: "",
   email: "",
@@ -88,7 +87,29 @@ describe("mergeBranch", () => {
   })
 
   test("falls back to built-in values for blank database fields", () => {
-    expect(mergeBranch(base, row())).toEqual(base)
+    const empty = { he: "", en: "" }
+    expect(mergeBranch(base, row())).toEqual({
+      ...base,
+      seoTitle: empty,
+      seoDescription: empty,
+    })
+  })
+
+  test("uses the admin's hours, logo, visibility and SEO texts", () => {
+    const hours = [{ day: 5, closed: true }]
+    const merged = mergeBranch(
+      base,
+      row({
+        hours,
+        logoUrl: "https://cdn.example.com/logo.png",
+        isVisible: false,
+        seoTitle: { he: "באולינג ראשון", en: "" },
+      })
+    )
+    expect(merged.hours).toEqual(hours)
+    expect(merged.logo.src).toBe("https://cdn.example.com/logo.png")
+    expect(merged.isVisible).toBe(false)
+    expect(merged.seoTitle).toEqual({ he: "באולינג ראשון", en: "" })
   })
 
   test("prefers trimmed database values per language", () => {

@@ -1,10 +1,12 @@
 import "server-only"
 
 import { asc, desc, eq } from "drizzle-orm"
+import { cache } from "react"
 
 import {
   BRANCHES,
   branchIds,
+  isBranchId,
   mergeBranch,
   type Branch,
   type BranchId,
@@ -13,15 +15,27 @@ import { db } from "@/lib/db"
 import { legalPage, location } from "@/lib/db/schema"
 import type { LegalPageKind } from "@/lib/legal"
 
-export async function getSiteBranches(): Promise<Record<BranchId, Branch>> {
-  const rows = await db.query.location
-    .findMany({ orderBy: [asc(location.sortOrder)] })
-    .catch(() => [])
-  const bySlug = new Map(rows.map((row) => [row.slug, row]))
-  return Object.fromEntries(
-    branchIds.map((id) => [id, mergeBranch(BRANCHES[id], bySlug.get(id))])
-  ) as Record<BranchId, Branch>
+export function logError<T>(query: string, fallback: T) {
+  return (error: unknown): T => {
+    console.error(`[site] ${query} failed; showing built-in content`, error)
+    return fallback
+  }
 }
+
+export const getSiteBranches = cache(
+  async (): Promise<Record<BranchId, Branch>> => {
+    const rows = await db.query.location
+      .findMany({ orderBy: [asc(location.sortOrder)] })
+      .catch(logError("getSiteBranches", []))
+    const bySlug = new Map(rows.map((row) => [row.slug, row]))
+    const ordered = [
+      ...new Set([...rows.map((row) => row.slug), ...branchIds]),
+    ].filter(isBranchId)
+    return Object.fromEntries(
+      ordered.map((id) => [id, mergeBranch(BRANCHES[id], bySlug.get(id))])
+    ) as Record<BranchId, Branch>
+  }
+)
 
 const MAX_HOME_REVIEWS = 9
 
@@ -64,8 +78,8 @@ export async function getMenus() {
   })
 }
 
-export async function getEvents() {
-  return db.query.location.findMany({
+export const getEvents = cache(async () =>
+  db.query.location.findMany({
     orderBy: [asc(location.sortOrder)],
     with: {
       eventTypes: {
@@ -84,7 +98,7 @@ export async function getEvents() {
       },
     },
   })
-}
+)
 
 export async function getLegalPages(kind: LegalPageKind) {
   return db
