@@ -1,13 +1,14 @@
-import { describe, expect, mock, test } from "bun:test"
+import { describe, expect, test } from "bun:test"
 
 import en from "@/messages/en.json"
 import he from "@/messages/he.json"
 
+import {
+  defaultBookingFields,
+  defaultFormFields,
+  eventDetailDefaults,
+} from "./detail-defaults"
 import { withEventDetailDefaults, type EventDetailTexts } from "./details"
-
-mock.module("server-only", () => ({}))
-const { defaultBookingFields, defaultFormFields, eventDetailDefaults } =
-  await import("./detail-defaults")
 
 const DEFAULTS: EventDetailTexts = {
   scheduleTitle: { he: "מה הלו״ז?", en: "What's the schedule?" },

@@ -6,6 +6,8 @@ import { eq } from "drizzle-orm"
 import { refresh } from "next/cache"
 
 import { requireOwnerAccess } from "@/lib/admin/access"
+import { setPasswordPath } from "@/lib/admin/routes"
+import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { locationMember, user } from "@/lib/db/schema"
 
@@ -59,6 +61,10 @@ export async function createTeamMember(input: unknown): Promise<ActionResult> {
     return true
   })
   if (!created) return { ok: false, error: "email-taken" }
+
+  await auth.api.requestPasswordReset({
+    body: { email, redirectTo: setPasswordPath(email) },
+  })
 
   refresh()
   return OK

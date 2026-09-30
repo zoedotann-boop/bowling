@@ -137,3 +137,13 @@ export function noteParagraph(text: string): string {
 export function inlineImage(contentId: string, alt: string): string {
   return `<img src="cid:${escapeHtml(contentId)}" alt="${escapeHtml(alt)}" width="320" style="display:block;margin-top:10px;max-width:100%;height:auto;background:#ffffff;border:1px solid ${C.border};border-radius:2px;" />`
 }
+
+export function actionButton(href: string, label: string): string {
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:4px 0 8px;">
+    <tr><td align="center"><a href="${escapeHtml(href)}" style="display:inline-block;padding:14px 28px;background:${C.cyan};border-radius:2px;font-family:${FONT};font-size:16px;font-weight:900;color:${C.deep};text-decoration:none;">${escapeHtml(label)}</a></td></tr>
+  </table>`
+}
+
+export function linkFallback(intro: string, href: string): string {
+  return `<p style="margin:16px 0 0;font-family:${FONT};font-size:12px;line-height:1.6;color:${C.faint};text-align:right;">${escapeHtml(intro)}<br /><a href="${escapeHtml(href)}" dir="ltr" style="color:${C.cyan};word-break:break-all;">${escapeHtml(href)}</a></p>`
+}

@@ -4,8 +4,6 @@ const send = mock<
   (payload: Record<string, unknown>) => Promise<{ error: unknown }>
 >(async () => ({ error: null }))
 
-mock.module("server-only", () => ({}))
-mock.module("@/lib/db", () => ({ db: {} }))
 mock.module("resend", () => ({
   Resend: class {
     emails = { send }

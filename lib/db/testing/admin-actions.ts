@@ -2,14 +2,12 @@ import { mock } from "bun:test"
 
 import { location } from "@/lib/db/schema"
 
-import { createTestDb } from "./pglite"
+import { testDb as db } from "./preload"
 
-export const db = await createTestDb()
+export { db }
 export const access = { location: { id: "", slug: "" } }
 
-mock.module("server-only", () => ({}))
 mock.module("next/cache", () => ({ refresh: () => {} }))
-mock.module("@/lib/db", () => ({ db }))
 mock.module("@/lib/admin/access", () => ({
   requireLocationAccess: async () => access,
   requireOwnerAccess: async () => undefined,
