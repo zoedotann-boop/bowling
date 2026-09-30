@@ -48,10 +48,10 @@ export function resolveBranch(slug: unknown): Branch {
 
 const FALLBACK_SENDER_HOST = "bowlingil.com"
 
-export function noReplySender(baseUrl: string | undefined): string {
+export function loginSender(baseUrl: string | undefined): string {
   const host = URL.parse(baseUrl ?? "")?.hostname.replace(/^www\./, "")
   const isPublic = host?.includes(".") && !isIP(host)
-  return `no-reply@${isPublic ? host : FALLBACK_SENDER_HOST}`
+  return `login@${isPublic ? host : FALLBACK_SENDER_HOST}`
 }
 
 interface MailAttachment {

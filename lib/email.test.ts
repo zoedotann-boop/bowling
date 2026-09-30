@@ -12,7 +12,7 @@ mock.module("resend", () => ({
   },
 }))
 
-const { noReplySender, sendMail } = await import("./email")
+const { loginSender, sendMail } = await import("./email")
 
 const input = { to: "guest@example.com", subject: "Hi", html: "<p>Hi</p>" }
 const env = { ...process.env }
@@ -37,8 +37,8 @@ describe("sendMail", () => {
   })
 
   test("an explicit sender overrides CONTACT_FROM_EMAIL", async () => {
-    await sendMail({ ...input, from: "no-reply@otp.example.com" })
-    expect(send.mock.calls[0][0].from).toBe("no-reply@otp.example.com")
+    await sendMail({ ...input, from: "login@otp.example.com" })
+    expect(send.mock.calls[0][0].from).toBe("login@otp.example.com")
   })
 
   test("an empty sender falls back to CONTACT_FROM_EMAIL", async () => {
@@ -65,9 +65,9 @@ describe("sendMail", () => {
 
   test("uses an explicit sender even when CONTACT_FROM_EMAIL is unset", async () => {
     delete process.env.CONTACT_FROM_EMAIL
-    expect(
-      await sendMail({ ...input, from: "no-reply@otp.example.com" })
-    ).toEqual({ ok: true })
+    expect(await sendMail({ ...input, from: "login@otp.example.com" })).toEqual(
+      { ok: true }
+    )
   })
 
   test("reports send_failed when Resend returns an error", async () => {
@@ -76,23 +76,21 @@ describe("sendMail", () => {
   })
 })
 
-describe("noReplySender", () => {
+describe("loginSender", () => {
   test("uses the BETTER_AUTH_URL host", () => {
-    expect(noReplySender("https://bowling.example.com")).toBe(
-      "no-reply@bowling.example.com"
+    expect(loginSender("https://bowling.example.com")).toBe(
+      "login@bowling.example.com"
     )
   })
 
   test("ignores port, path and trailing slash", () => {
-    expect(noReplySender("https://example.com:8443/app/")).toBe(
-      "no-reply@example.com"
+    expect(loginSender("https://example.com:8443/app/")).toBe(
+      "login@example.com"
     )
   })
 
   test("drops a leading www.", () => {
-    expect(noReplySender("https://www.example.com")).toBe(
-      "no-reply@example.com"
-    )
+    expect(loginSender("https://www.example.com")).toBe("login@example.com")
   })
 
   test.each([
@@ -103,6 +101,6 @@ describe("noReplySender", () => {
     ["an IPv4 address", "http://127.0.0.1:3000"],
     ["an IPv6 address", "http://[::1]:3000"],
   ])("falls back to bowlingil.com when the URL is %s", (_, url) => {
-    expect(noReplySender(url)).toBe("no-reply@bowlingil.com")
+    expect(loginSender(url)).toBe("login@bowlingil.com")
   })
 })
