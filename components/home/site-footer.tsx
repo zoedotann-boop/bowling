@@ -100,7 +100,7 @@ export function SiteFooter() {
 
         <div className="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 border-t border-border pt-[18px] text-center text-[12.5px] font-medium lg:mt-8 lg:justify-between lg:pt-5 lg:text-[13px]">
           <span className="whitespace-nowrap text-mud">
-            {t("footer.copyright")}
+            {t("footer.copyright", { branch: branch.name[locale] })}
           </span>
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
             <span className="whitespace-nowrap text-mud">
