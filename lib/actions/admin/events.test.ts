@@ -25,6 +25,7 @@ function eventTypeDraft(
     content: {
       heroTitle: text(`${slug} title`),
       heroDescription: text(""),
+      heroImageUrl: "",
       packageAmount: null,
       packageChildrenCount: null,
       extraChildAmount: null,
@@ -100,6 +101,40 @@ describe("saveEvents", () => {
     ])
     expect(corporate.packageLines).toHaveLength(1)
     expect(corporate.upgrades[0]).toMatchObject({ amount: 100 })
+  })
+
+  test("stores the hero image URL and clears it back to the default", async () => {
+    const draft = eventTypeDraft("corporate")
+    const imageUrl =
+      "https://abc.public.blob.vercel-storage.com/admin/hero-x1.jpg"
+    await save({
+      eventTypes: [
+        { ...draft, content: { ...draft.content, heroImageUrl: imageUrl } },
+      ],
+    })
+    const [saved] = await load(access.location.id)
+    expect(saved.content?.heroImageUrl).toBe(imageUrl)
+
+    await save({ eventTypes: [{ ...draft, id: saved.id }] })
+    const [cleared] = await load(access.location.id)
+    expect(cleared.content?.heroImageUrl).toBeNull()
+  })
+
+  test("rejects an insecure hero image URL", async () => {
+    const draft = eventTypeDraft("corporate")
+    const result = await save({
+      eventTypes: [
+        {
+          ...draft,
+          content: {
+            ...draft.content,
+            heroImageUrl: "http://example.com/hero.jpg",
+          },
+        },
+      ],
+    })
+    expect(result).toEqual({ ok: false, error: "invalid" })
+    expect(await load(access.location.id)).toHaveLength(0)
   })
 
   test("updates, reorders, adds and removes rows on a later save", async () => {

@@ -6,6 +6,11 @@ import { FORM_FIELD_TYPES } from "@/lib/events/fields"
 import { localizedSchema, rowIdSchema } from "./shared"
 
 const optionalMoney = z.number().int().nonnegative().nullable()
+export const imageUrlSchema = z.union([
+  z.literal(""),
+  z.string().regex(/^\/(?!\/)/),
+  z.url({ protocol: /^https$/ }),
+])
 
 const adminLocationSchema = z.object({
   id: rowIdSchema,
@@ -208,6 +213,7 @@ const eventPolicyItemSchema = z.object({
 const eventTypeContentSchema = z.object({
   heroTitle: localizedSchema,
   heroDescription: localizedSchema,
+  heroImageUrl: imageUrlSchema,
   packageAmount: optionalMoney,
   packageChildrenCount: z.number().int().nonnegative().nullable(),
   extraChildAmount: optionalMoney,

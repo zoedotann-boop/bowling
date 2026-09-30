@@ -1,0 +1,1 @@
+ALTER TABLE "event_type_content" ADD COLUMN IF NOT EXISTS "hero_image_url" text;

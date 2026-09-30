@@ -34,6 +34,7 @@ export const eventTypeContent = pgTable("event_type_content", {
     .references(() => eventType.id, { onDelete: "cascade" }),
   heroTitle: localized(),
   heroDescription: localized(),
+  heroImageUrl: text("hero_image_url"),
   packageAmount: integer("package_amount"),
   packageChildrenCount: integer("package_children_count"),
   extraChildAmount: integer("extra_child_amount"),
