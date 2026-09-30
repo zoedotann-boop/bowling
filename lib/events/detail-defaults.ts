@@ -67,6 +67,14 @@ export function eventDetailDefaults(
       he: he.eventDetails.form.footnote,
       en: en.eventDetails.form.footnote,
     },
+    upgradesTitle: {
+      he: he.eventDetails.form.upgradesTitle,
+      en: en.eventDetails.form.upgradesTitle,
+    },
+    upgradesNote: {
+      he: he.eventDetails.form.upgradesNote,
+      en: en.eventDetails.form.upgradesNote,
+    },
   }
 }
 

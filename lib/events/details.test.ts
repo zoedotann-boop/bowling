@@ -24,6 +24,8 @@ const DEFAULTS: EventDetailTexts = {
   formIntro: { he: "פתיחה", en: "Intro" },
   formTerms: { he: "אני מאשר", en: "I agree" },
   formFootnote: { he: "הערת טופס", en: "Form note" },
+  upgradesTitle: { he: "שדרוגים", en: "Upgrades" },
+  upgradesNote: { he: "הפקידה תחזור אליכם", en: "The clerk will call" },
 }
 
 describe("withEventDetailDefaults", () => {
@@ -60,6 +62,8 @@ describe("withEventDetailDefaults", () => {
       formIntro: { he: "ג", en: "c" },
       formTerms: { he: "ד", en: "d" },
       formFootnote: { he: "ה", en: "e" },
+      upgradesTitle: { he: "ו", en: "f" },
+      upgradesNote: { he: "ז", en: "g" },
     }
     expect(withEventDetailDefaults(stored, DEFAULTS)).toEqual(stored)
   })
@@ -106,6 +110,14 @@ describe("eventDetailDefaults", () => {
     )
     expect(defaults.rulesNote).toEqual({ he: "", en: "" })
     expect(defaults.policyNote).toEqual({ he: "", en: "" })
+    expect(defaults.upgradesTitle).toEqual({
+      he: he.eventDetails.form.upgradesTitle,
+      en: en.eventDetails.form.upgradesTitle,
+    })
+    expect(defaults.upgradesNote).toEqual({
+      he: he.eventDetails.form.upgradesNote,
+      en: en.eventDetails.form.upgradesNote,
+    })
   })
 
   test("prefers the branch-specific override when one exists", () => {

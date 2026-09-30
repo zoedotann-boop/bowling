@@ -44,7 +44,7 @@ Create a `.env` file (git-ignored). The contact form
 | -------------------- | --------------------------------------------------------------------------- |
 | `RESEND_API_KEY`     | Resend API key (Resend dashboard → API Keys).                               |
 | `CONTACT_FROM_EMAIL` | Sender address on a **domain verified in Resend** (e.g. `events@yourdomain.com`). Unverified domains are rejected. |
-| `EVENTS_TO_EMAIL`    | Fallback inbox for inquiries when a location has no **Inquiries inbox** set in the admin (the event form attaches the signature as `signature.png`). |
+| `EVENTS_TO_EMAIL`    | Fallback inbox for inquiries when a location has no **Inquiries inbox** set in the admin (the event form email includes the event's rules, booking policy and the confirmed terms, with the signature shown inline and attached as `signature.png`). |
 
 Each location's **Inquiries inbox** (admin → Settings) takes priority over
 `EVENTS_TO_EMAIL`; if neither is set, or `RESEND_API_KEY`/`CONTACT_FROM_EMAIL`
@@ -54,7 +54,8 @@ is missing, the route responds with `500 { error: "Email service is not configur
 
 The admin lives under `/admin` (login at `/admin/login`) and manages per-location
 content: settings, home page, menu, events (multiple event types, each with
-its own page image, "what to bring" lists, booking policy and confirmation-form
+its own page image, upgrades (plus the booking form's upgrades-box title and
+explanation), "what to bring" lists, booking policy and confirmation-form
 texts — unsaved ones show the `messages/*` defaults), the
 **Terms & accessibility** pages, plus owner-only Locations and Team. It uses **Drizzle ORM + PostgreSQL** and
 **Better Auth**, passwordless: sign-in emails a one-time code (via the

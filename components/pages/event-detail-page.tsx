@@ -81,6 +81,8 @@ interface BookingTexts {
   intro: string
   terms: string
   footnote: string
+  upgradesTitle: string
+  upgradesNote: string
 }
 interface FormSummary {
   rows: { label: string; value: string }[]
@@ -112,7 +114,7 @@ interface EventItem {
 }
 
 const inputClass =
-  "rounded-sm border border-border bg-card px-4 py-3 text-[15px] font-semibold text-foreground placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-primary lg:py-3.5"
+  "w-full min-w-0 rounded-sm border border-border bg-card px-3.5 py-2.5 text-[15px] font-semibold text-foreground placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-primary"
 
 function SectionHeading({
   title,
@@ -541,6 +543,12 @@ const INPUT_TYPES: Record<BookingFormField["type"], string> = {
   checkbox: "checkbox",
 }
 
+const FIELD_SPAN: Partial<Record<BookingFormField["type"], string>> = {
+  email: "col-span-2 lg:col-span-1",
+  select: "col-span-2 lg:col-span-1",
+  textarea: "col-span-full",
+}
+
 function BookingFieldInput({
   field,
   value,
@@ -557,7 +565,7 @@ function BookingFieldInput({
 
   if (field.type === "checkbox") {
     return (
-      <label className="flex items-center gap-2.5 text-[14px] font-semibold text-foreground sm:col-span-2">
+      <label className="col-span-full flex items-center gap-2.5 text-[14px] font-semibold text-foreground">
         <input
           type="checkbox"
           checked={value === "true"}
@@ -571,13 +579,15 @@ function BookingFieldInput({
   }
 
   return (
-    <label className="flex flex-col gap-1.5">
+    <label
+      className={cn("flex min-w-0 flex-col gap-1", FIELD_SPAN[field.type])}
+    >
       <span className="font-heading text-[13px] font-extrabold text-navy">
         {label}
       </span>
       {field.type === "textarea" ? (
         <textarea
-          className={cn(inputClass, "h-24 resize-none")}
+          className={cn(inputClass, "h-20 resize-none")}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder || undefined}
@@ -586,7 +596,7 @@ function BookingFieldInput({
       ) : field.type === "select" ? (
         <div className="relative">
           <select
-            className={cn(inputClass, "w-full appearance-none pe-11")}
+            className={cn(inputClass, "appearance-none pe-11")}
             value={value}
             onChange={(e) => onChange(e.target.value)}
             required={field.isRequired}
@@ -628,12 +638,14 @@ function BookingFieldInput({
 
 function BookingForm({
   event,
+  slug,
   texts,
   upgrades,
   formFields,
   requiresSignature,
 }: {
   event: string
+  slug: string
   texts: BookingTexts
   upgrades?: Extra[]
   formFields: BookingFormField[]
@@ -645,7 +657,6 @@ function BookingForm({
   const sigRef = useRef<SignatureCanvas>(null)
 
   const [values, setValues] = useState<Record<string, string>>({})
-  const [selectedUpgrades, setSelectedUpgrades] = useState<string[]>([])
   const [agreed, setAgreed] = useState(false)
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
@@ -654,11 +665,6 @@ function BookingForm({
 
   const setValue = (key: string, value: string) =>
     setValues((prev) => ({ ...prev, [key]: value }))
-
-  const toggleUpgrade = (title: string) =>
-    setSelectedUpgrades((prev) =>
-      prev.includes(title) ? prev.filter((u) => u !== title) : [...prev, title]
-    )
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -684,6 +690,7 @@ function BookingForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           event,
+          slug,
           ...values,
           labels: Object.fromEntries(
             formFields.map((field) => [
@@ -692,14 +699,12 @@ function BookingForm({
             ])
           ),
           branch: branchId,
-          upgrades: selectedUpgrades,
           signature,
         }),
       })
       if (!res.ok) throw new Error("request failed")
       setStatus("sent")
       setValues({})
-      setSelectedUpgrades([])
       setAgreed(false)
       sigRef.current?.clear()
     } catch {
@@ -711,9 +716,9 @@ function BookingForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="mx-auto flex max-w-3xl flex-col gap-5 rounded-sm border border-primary bg-card p-[22px] lg:p-8"
+      className="mx-auto flex max-w-3xl flex-col gap-4 rounded-sm border border-primary bg-card p-4 lg:p-6"
     >
-      <label className="flex items-start gap-2.5 rounded-sm border border-primary/40 bg-background p-4 text-[13.5px] leading-relaxed font-bold text-foreground">
+      <label className="flex items-start gap-2.5 rounded-sm border border-primary/40 bg-background p-3 text-[13px] leading-relaxed font-bold text-foreground">
         <input
           type="checkbox"
           checked={agreed}
@@ -723,7 +728,7 @@ function BookingForm({
         {texts.terms}
       </label>
 
-      <div className="grid gap-3.5 sm:grid-cols-2">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
         {formFields.map((field) => (
           <BookingFieldInput
             key={field.key}
@@ -736,60 +741,45 @@ function BookingForm({
       </div>
 
       {upgrades?.length ? (
-        <fieldset>
-          <legend className="font-heading text-[15px] font-black text-navy">
-            {t("upgradesTitle")}
-          </legend>
-          <p className="mt-0.5 mb-2.5 text-[12.5px] font-semibold text-mud">
-            {t("upgradesNote")}
+        <section
+          aria-labelledby="booking-upgrades"
+          className="rounded-sm border border-primary/40 bg-background p-3"
+        >
+          <h3
+            id="booking-upgrades"
+            className="font-heading text-[14px] font-black text-navy"
+          >
+            {texts.upgradesTitle}
+          </h3>
+          <p className="mt-0.5 text-[12.5px] leading-snug font-semibold text-mud">
+            {texts.upgradesNote}
           </p>
-          <div className="grid gap-2.5 sm:grid-cols-2">
-            {upgrades.map((u) => {
-              const checked = selectedUpgrades.includes(u.title)
-              return (
-                <label
-                  key={u.title}
-                  className={cn(
-                    "flex cursor-pointer items-center gap-3 rounded-sm border p-3 transition-colors",
-                    checked
-                      ? "glow-primary border-primary bg-primary/5"
-                      : "border-border bg-background hover:border-primary/50"
-                  )}
-                >
-                  <input
-                    type="checkbox"
-                    checked={checked}
-                    onChange={() => toggleUpgrade(u.title)}
-                    className="size-4 shrink-0 accent-primary"
-                  />
-                  <span className="flex-1">
-                    <span className="block font-heading text-[14px] font-extrabold text-navy">
-                      {u.title}
-                    </span>
-                    {u.desc ? (
-                      <span className="block text-[12px] font-semibold text-mud">
-                        {u.desc}
-                      </span>
-                    ) : null}
-                  </span>
-                  <span className="font-heading text-[14px] font-black whitespace-nowrap text-rust">
+          <ul className="mt-2 flex flex-wrap gap-1.5">
+            {upgrades.map((u) => (
+              <li
+                key={u.title}
+                className="rounded-sm border border-border bg-card px-2.5 py-1 text-[12.5px] font-bold text-foreground"
+              >
+                {u.title}
+                {u.price ? (
+                  <span className="ms-1.5 font-heading font-black whitespace-nowrap text-rust">
                     {u.price}
                   </span>
-                </label>
-              )
-            })}
-          </div>
-        </fieldset>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </section>
       ) : null}
 
       {requiresSignature ? (
         <div>
-          <div className="mb-2 flex items-center justify-between gap-3">
+          <div className="mb-1.5 flex items-center justify-between gap-3">
             <div>
-              <div className="font-heading text-[15px] font-black text-navy">
+              <div className="font-heading text-[14px] font-black text-navy">
                 {t("signatureTitle")}
               </div>
-              <p className="text-[12.5px] font-semibold text-mud">
+              <p className="text-[12px] font-semibold text-mud">
                 {t("signatureHint")}
               </p>
             </div>
@@ -806,7 +796,7 @@ function BookingForm({
             <SignatureCanvas
               ref={sigRef}
               penColor="#0f172a"
-              canvasProps={{ className: "h-40 w-full touch-none lg:h-48" }}
+              canvasProps={{ className: "h-32 w-full touch-none lg:h-36" }}
             />
           </div>
         </div>
@@ -815,7 +805,7 @@ function BookingForm({
       <button
         type="submit"
         disabled={!agreed || status === "sending"}
-        className="glow-primary mt-1 w-full rounded-sm border border-primary bg-primary px-5 py-3.5 font-heading text-[17px] font-black text-primary-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground disabled:cursor-not-allowed disabled:opacity-50 lg:py-4 lg:text-lg"
+        className="glow-primary w-full rounded-sm border border-primary bg-primary px-5 py-3 font-heading text-[16px] font-black text-primary-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground disabled:cursor-not-allowed disabled:opacity-50 lg:text-[17px]"
       >
         {status === "sending" ? t("sending") : t("submit")}
       </button>
@@ -840,6 +830,7 @@ function BookingForm({
 
 function BookingSection({
   event,
+  slug,
   texts,
   upgrades,
   summary,
@@ -847,6 +838,7 @@ function BookingSection({
   requiresSignature,
 }: {
   event: string
+  slug: string
   texts: BookingTexts
   upgrades?: Extra[]
   summary?: FormSummary
@@ -859,23 +851,23 @@ function BookingSection({
   return (
     <section
       id="book"
-      className="mt-10 border-t border-border bg-background py-8 lg:mt-16 lg:py-16"
+      className="mt-10 border-t border-border bg-background py-8 lg:mt-16 lg:py-12"
     >
       <Container>
-        <div className="mb-6 text-center lg:mb-9">
-          <h2 className="font-heading text-[32px] font-black tracking-[-1px] text-navy lg:text-[46px]">
+        <div className="mb-5 text-center lg:mb-7">
+          <h2 className="font-heading text-[26px] font-black tracking-[-1px] text-navy lg:text-[38px]">
             {t("title")}
           </h2>
-          <div className="glow-primary mx-auto mt-3 h-[7px] w-[70px] rounded-full bg-primary lg:w-20" />
+          <div className="glow-primary mx-auto mt-2.5 h-[6px] w-[60px] rounded-full bg-primary lg:w-20" />
           {texts.intro ? (
-            <p className="mx-auto mt-3 max-w-[520px] text-[14px] leading-[1.55] font-semibold text-muted-foreground lg:text-[16px]">
+            <p className="mx-auto mt-2.5 max-w-[520px] text-[14px] leading-[1.5] font-semibold text-muted-foreground lg:text-[15px]">
               {texts.intro}
             </p>
           ) : null}
         </div>
 
         {summary ? (
-          <div className="mx-auto mb-4 max-w-3xl rounded-sm border border-border bg-card p-5 lg:p-6">
+          <div className="mx-auto mb-4 max-w-3xl rounded-sm border border-border bg-card p-4 lg:p-5">
             <div className="font-heading text-[15px] font-black text-navy">
               {te("summaryTitle")}
             </div>
@@ -904,6 +896,7 @@ function BookingSection({
 
         <BookingForm
           event={event}
+          slug={slug}
           texts={texts}
           upgrades={upgrades}
           formFields={formFields}
@@ -1018,6 +1011,10 @@ export function EventDetailPage({
     intro: pickOr(content?.formIntro, t("form.desc")),
     terms: pickLocale(content?.formTerms, locale) || t("form.termsConfirm"),
     footnote: pickOr(content?.formFootnote, t("form.footnote")),
+    upgradesTitle:
+      pickLocale(content?.upgradesTitle, locale) || t("form.upgradesTitle"),
+    upgradesNote:
+      pickLocale(content?.upgradesNote, locale) || t("form.upgradesNote"),
   }
 
   const available = dbTypes.length
@@ -1131,6 +1128,7 @@ export function EventDetailPage({
       ) : data.form || dbType?.formFields.length ? (
         <BookingSection
           event={data.title}
+          slug={slug}
           texts={bookingTexts}
           upgrades={data.extras}
           summary={data.formSummary}

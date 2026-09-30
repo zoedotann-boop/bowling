@@ -1,6 +1,6 @@
 import "server-only"
 
-import { asc, desc, eq } from "drizzle-orm"
+import { and, asc, desc, eq } from "drizzle-orm"
 import { cache } from "react"
 
 import {
@@ -12,7 +12,12 @@ import {
   type BranchId,
 } from "@/lib/branches"
 import { db } from "@/lib/db"
-import { legalPage, location } from "@/lib/db/schema"
+import {
+  eventType,
+  eventTypeContent,
+  legalPage,
+  location,
+} from "@/lib/db/schema"
 import type { LegalPageKind } from "@/lib/legal"
 
 export function logError<T>(query: string, fallback: T) {
@@ -99,6 +104,24 @@ export const getEvents = cache(async () =>
     },
   })
 )
+
+export async function getEventContent(branchId: BranchId, slug: string) {
+  const [row] = await db
+    .select({ content: eventTypeContent })
+    .from(eventTypeContent)
+    .innerJoin(eventType, eq(eventTypeContent.eventTypeId, eventType.id))
+    .innerJoin(location, eq(eventType.locationId, location.id))
+    .where(
+      and(
+        eq(location.slug, branchId),
+        eq(eventType.slug, slug),
+        eq(eventType.isVisible, true)
+      )
+    )
+    .orderBy(asc(eventType.sortOrder))
+    .limit(1)
+  return row?.content ?? null
+}
 
 export async function getLegalPages(kind: LegalPageKind) {
   return db

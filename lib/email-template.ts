@@ -133,3 +133,7 @@ export function otpCode(code: string): string {
 export function noteParagraph(text: string): string {
   return `<p style="margin:8px 0 0;font-family:${FONT};font-size:14px;line-height:1.6;color:${C.muted};text-align:right;">${escapeHtml(text)}</p>`
 }
+
+export function inlineImage(contentId: string, alt: string): string {
+  return `<img src="cid:${escapeHtml(contentId)}" alt="${escapeHtml(alt)}" width="320" style="display:block;margin-top:10px;max-width:100%;height:auto;background:#ffffff;border:1px solid ${C.border};border-radius:2px;" />`
+}

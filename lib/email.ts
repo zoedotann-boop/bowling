@@ -57,6 +57,7 @@ export function loginSender(baseUrl: string | undefined): string {
 interface MailAttachment {
   filename: string
   content: Buffer
+  contentId?: string
 }
 
 export interface SendMailInput {

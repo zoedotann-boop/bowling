@@ -36,8 +36,8 @@ describe("bookingAnswers", () => {
     expect(
       bookingAnswers({
         branch: "rishon",
+        slug: "birthdays",
         signature: "data:image/png;base64,xx",
-        upgrades: ["DJ"],
         labels: {},
         email: "  ",
         agreed: true,
