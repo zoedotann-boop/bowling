@@ -67,7 +67,7 @@ export function LocationsForm({ initial }: { initial: LocationsDraft }) {
               />
               <AdminFlag
                 label={common("visible")}
-                description={common("visibleTip")}
+                description={t("visibleTip")}
                 checked={item.isVisible}
                 onCheckedChange={(isVisible) => update({ ...item, isVisible })}
               />

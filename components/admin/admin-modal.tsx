@@ -1,15 +1,27 @@
 "use client"
 
 import { X } from "lucide-react"
-import { createContext, useContext, useEffect, useRef } from "react"
+import {
+  createContext,
+  type RefObject,
+  useContext,
+  useEffect,
+  useRef,
+} from "react"
 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
-const InDialogContext = createContext(false)
+const DialogContext = createContext<RefObject<HTMLDialogElement | null> | null>(
+  null
+)
 
 export function useInDialog(): boolean {
-  return useContext(InDialogContext)
+  return useContext(DialogContext) !== null
+}
+
+export function useDialogContainer() {
+  return useContext(DialogContext)
 }
 
 function useDialogElement(open: boolean, onClose: () => void) {
@@ -69,7 +81,7 @@ export function AdminModal({
       }}
       className={cn(dialogClass, "max-w-2xl", className)}
     >
-      <InDialogContext.Provider value={true}>
+      <DialogContext.Provider value={ref}>
         <header className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
           <h2 className="text-base font-semibold">{title}</h2>
           <Button
@@ -83,7 +95,7 @@ export function AdminModal({
           </Button>
         </header>
         <div className="max-h-[70vh] overflow-y-auto p-4">{children}</div>
-      </InDialogContext.Provider>
+      </DialogContext.Provider>
     </dialog>
   )
 }
