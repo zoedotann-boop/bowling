@@ -32,7 +32,8 @@ const DEFAULT_FIELDS = [
   field("date", "date", "תאריך"),
 ]
 
-interface PackagePricing {
+interface HeroAndPricing {
+  heroImageUrl: string | null
   packageAmount: number | null
   packageChildrenCount: number | null
   extraChildAmount: number | null
@@ -40,7 +41,7 @@ interface PackagePricing {
 }
 
 function birthdaysWith(
-  texts: Partial<EventDetailTexts & PackagePricing>
+  texts: Partial<EventDetailTexts & HeroAndPricing>
 ): Partial<Record<typeof DEFAULT_BRANCH, SiteEventLocation>> {
   const type = {
     slug: "birthdays",
@@ -52,6 +53,7 @@ function birthdaysWith(
     content: {
       heroTitle: null,
       heroDescription: null,
+      heroImageUrl: null,
       packageAmount: null,
       packageChildrenCount: null,
       extraChildAmount: null,
@@ -127,5 +129,11 @@ export const SectionsHidden: Story = {
       formIntro: blank,
       formFootnote: blank,
     }),
+  },
+}
+
+export const CustomHeroImage: Story = {
+  args: {
+    events: birthdaysWith({ heroImageUrl: "/gallery/2.png" }),
   },
 }

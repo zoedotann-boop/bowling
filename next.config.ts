@@ -2,6 +2,7 @@ import type { NextConfig } from "next"
 import createNextIntlPlugin from "next-intl/plugin"
 
 import { DEFAULT_BRANCH } from "./lib/branches"
+import { BLOB_HOST } from "./lib/images"
 
 const LEGACY_SITE_PATHS = [
   "/menu",
@@ -23,6 +24,7 @@ const nextConfig: NextConfig = {
     }))
   },
   images: {
+    remotePatterns: [{ protocol: "https", hostname: `*.${BLOB_HOST}` }],
     dangerouslyAllowSVG: true,
     contentDispositionType: "attachment",
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",

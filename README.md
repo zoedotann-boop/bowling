@@ -54,8 +54,8 @@ is missing, the route responds with `500 { error: "Email service is not configur
 
 The admin lives under `/admin` (login at `/admin/login`) and manages per-location
 content: settings, home page, menu, events (multiple event types, each with
-its own "what to bring" lists, booking policy and confirmation-form texts —
-unsaved ones show the `messages/*` defaults), the
+its own page image, "what to bring" lists, booking policy and confirmation-form
+texts — unsaved ones show the `messages/*` defaults), the
 **Terms & accessibility** pages, plus owner-only Locations and Team. It uses **Drizzle ORM + PostgreSQL** and
 **Better Auth**, passwordless: sign-in emails a one-time code (via the
 `emailOTP` plugin, so `RESEND_API_KEY` is required to log in; the code is sent
@@ -73,6 +73,7 @@ Add these to `.env` (already scaffolded):
 | `DATABASE_URL_UNPOOLED` | Optional direct (non-pooler) connection string. `db:migrate` uses it when set, and hides Postgres `NOTICE` output. On Neon, drop `-pooler` from the host. |
 | `BETTER_AUTH_SECRET`  | Random signing secret, min 32 chars (`openssl rand -base64 32`). |
 | `BETTER_AUTH_URL`     | Public base URL, no trailing slash (dev: `http://localhost:3000`). Its host (minus `www.`) is also the login-code sender domain: `login@<host>` (`login@bowlingil.com` on localhost). |
+| `BLOB_READ_WRITE_TOKEN` | [Vercel Blob](https://vercel.com/docs/vercel-blob) token for admin image uploads (the "Upload" button next to image fields; files go straight from the browser to the public `bowling-images` store via `app/api/admin/upload`). Set automatically on Vercel; locally run `vercel env pull .env.local`. |
 
 Then:
 

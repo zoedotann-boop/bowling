@@ -19,7 +19,7 @@ export interface AdminUser {
   role: AdminRole
 }
 
-async function getSessionUser(): Promise<AdminUser | null> {
+export async function getSessionUser(): Promise<AdminUser | null> {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) return null
   const { id, name, email, role } = session.user

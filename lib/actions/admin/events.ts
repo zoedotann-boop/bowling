@@ -68,7 +68,11 @@ export async function saveEvents(input: unknown): Promise<ActionResult> {
       tx,
       eventTypeContent,
       eventTypeContent.eventTypeId,
-      types.map((type) => ({ eventTypeId: type.id, ...type.content }))
+      types.map((type) => ({
+        eventTypeId: type.id,
+        ...type.content,
+        heroImageUrl: type.content.heroImageUrl || null,
+      }))
     )
 
     await syncRows(

@@ -18,6 +18,7 @@ import { branchPath, type BranchId } from "@/lib/branches"
 import type { SiteEventLocation } from "@/lib/db/queries/site"
 import type { Localized } from "@/lib/db/schema/_shared"
 import type { BookingFormField } from "@/lib/events/fields"
+import { isOptimizableImage } from "@/lib/images"
 import { usesContactForm } from "@/lib/events/slugs"
 import { formatPrice, pickLocale } from "@/lib/localized"
 import { useBranch } from "@/components/branch-context"
@@ -148,17 +149,19 @@ function SectionHeading({
 
 function Hero({
   slug,
+  image,
   data,
   backLabel,
   bookLabel,
 }: {
   slug: string
+  image?: string | null
   data: EventItem
   backLabel: string
   bookLabel: string
 }) {
   const { branchId } = useBranch()
-  const photo = HERO_PHOTOS[slug]
+  const photo = image || HERO_PHOTOS[slug]
   const Illustration = ILLUSTRATIONS[slug] ?? BirthdaysIllustration
 
   return (
@@ -212,6 +215,7 @@ function Hero({
             fill
             sizes="(max-width: 1024px) 100vw, 50vw"
             className="object-cover"
+            unoptimized={!isOptimizableImage(photo)}
             priority
           />
         ) : (
@@ -1039,6 +1043,7 @@ export function EventDetailPage({
       <Container className="pt-9 pb-10 lg:pt-14 lg:pb-14">
         <Hero
           slug={slug}
+          image={content?.heroImageUrl}
           data={data}
           backLabel={t("backToEvents")}
           bookLabel={t("bookCta")}

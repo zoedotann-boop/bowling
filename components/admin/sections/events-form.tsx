@@ -9,6 +9,7 @@ import {
   AdminInput,
   AdminSelect,
 } from "@/components/admin/admin-ui"
+import { ImageField } from "@/components/admin/image-field"
 import { LocalizedField } from "@/components/admin/localized-field"
 import { RowTable } from "@/components/admin/row-table"
 import { SectionForm, useSectionDraft } from "@/components/admin/section-form"
@@ -264,6 +265,12 @@ export function EventsForm({
             multiline
             value={type.content.heroDescription}
             onChange={(heroDescription) => setContent({ heroDescription })}
+          />
+          <ImageField
+            label={t("heroImage")}
+            tooltip={t("heroImageTip")}
+            value={type.content.heroImageUrl}
+            onChange={(heroImageUrl) => setContent({ heroImageUrl })}
           />
           <div className="grid gap-4 sm:grid-cols-2">
             <MoneyField
@@ -559,6 +566,7 @@ export function EventsForm({
             content: {
               heroTitle: emptyLocalized(),
               heroDescription: emptyLocalized(),
+              heroImageUrl: "",
               packageAmount: null,
               packageChildrenCount: null,
               extraChildAmount: null,
