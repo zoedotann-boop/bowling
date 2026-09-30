@@ -15,6 +15,8 @@ export interface EventDetailTexts {
   formIntro: Localized
   formTerms: Localized
   formFootnote: Localized
+  upgradesTitle: Localized
+  upgradesNote: Localized
 }
 
 type StoredEventDetailTexts = {
@@ -35,5 +37,7 @@ export function withEventDetailDefaults(
     formIntro: stored?.formIntro ?? defaults.formIntro,
     formTerms: stored?.formTerms ?? defaults.formTerms,
     formFootnote: stored?.formFootnote ?? defaults.formFootnote,
+    upgradesTitle: stored?.upgradesTitle ?? defaults.upgradesTitle,
+    upgradesNote: stored?.upgradesNote ?? defaults.upgradesNote,
   }
 }

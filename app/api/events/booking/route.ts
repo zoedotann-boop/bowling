@@ -3,7 +3,6 @@ import { NextResponse } from "next/server"
 import { resolveBranch, resolveInquiriesRecipient, sendMail } from "@/lib/email"
 import {
   BRAND_HE,
-  bulletList,
   detailTable,
   emailShell,
   noteParagraph,
@@ -11,38 +10,38 @@ import {
 } from "@/lib/email-template"
 import type { Branch } from "@/lib/branches"
 import { bookingAnswers } from "@/lib/events/booking-answers"
+import {
+  loadAgreement,
+  renderAgreement,
+  SIGNATURE_CID,
+} from "@/lib/events/booking-agreement"
+import type { EventDetailTexts } from "@/lib/events/details"
 
 interface BookingPayload {
   branch?: string
   event?: string
+  slug?: string
   firstName?: string
   lastName?: string
   email?: string
   phone?: string
-  upgrades?: string[]
   signature?: string
   [key: string]: unknown
 }
 
-function renderBody(payload: BookingPayload, signatureNote: string): string {
-  const upgrades = payload.upgrades?.length
-    ? sectionHeading("שדרוגים שנבחרו") + bulletList(payload.upgrades)
-    : ""
-  const signature = payload.signature ? signatureNote : ""
-  return detailTable(bookingAnswers(payload)) + upgrades + signature
-}
-
-function renderManagerEmail(payload: BookingPayload, branch: Branch): string {
+function renderManagerEmail(
+  payload: BookingPayload,
+  branch: Branch,
+  agreement: EventDetailTexts
+): string {
   return emailShell({
     branch,
     preheader: `טופס אירוע חדש · ${payload.event ?? ""}`,
     heading: "טופס אישור אירוע חדש",
     intro: "התקבל טופס אירוע חדש דרך האתר.",
-    body: renderBody(
-      payload,
-      sectionHeading("חתימה") +
-        noteParagraph("החתימה מצורפת כקובץ signature.png.")
-    ),
+    body:
+      detailTable(bookingAnswers(payload)) +
+      renderAgreement(agreement, Boolean(payload.signature)),
   })
 }
 
@@ -56,10 +55,11 @@ function renderCustomerEmail(
     preheader: "קיבלנו את בקשת האירוע שלך ונחזור אליך לתיאום",
     heading: "הבקשה שלך התקבלה!",
     intro: `היי ${name}, תודה שבחרת ב${BRAND_HE}! קיבלנו את פרטי האירוע שלך וניצור איתך קשר בהקדם לתיאום הסופי. להלן סיכום הפרטים שנשלחו.`,
-    body: renderBody(
-      payload,
-      sectionHeading("חתימה") + noteParagraph("חתימתך נקלטה בהצלחה.")
-    ),
+    body:
+      detailTable(bookingAnswers(payload)) +
+      (payload.signature
+        ? sectionHeading("חתימה") + noteParagraph("חתימתך נקלטה בהצלחה.")
+        : ""),
   })
 }
 
@@ -90,13 +90,18 @@ export async function POST(request: Request) {
     )
   }
 
-  const { email, firstName, lastName, signature } = payload
+  const { email, firstName, lastName, signature, slug } = payload
   const name = [firstName, lastName].filter(Boolean).join(" ")
+  const agreement = await loadAgreement(
+    branch.id,
+    typeof slug === "string" ? slug : ""
+  )
 
   const attachments = signature
     ? [
         {
           filename: "signature.png",
+          contentId: SIGNATURE_CID,
           content: Buffer.from(
             signature.replace(/^data:image\/png;base64,/, ""),
             "base64"
@@ -109,7 +114,7 @@ export async function POST(request: Request) {
     to,
     replyTo: email || undefined,
     subject: `טופס אירוע חדש · ${payload.event ?? ""} · ${name || email || ""}`,
-    html: renderManagerEmail(payload, branch),
+    html: renderManagerEmail(payload, branch, agreement),
     attachments,
   })
 

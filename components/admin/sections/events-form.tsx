@@ -57,6 +57,8 @@ function newEventType(slug: string): EventTypeDraft {
       formIntro: emptyLocalized(),
       formTerms: emptyLocalized(),
       formFootnote: emptyLocalized(),
+      upgradesTitle: emptyLocalized(),
+      upgradesNote: emptyLocalized(),
       requiresSignature: false,
     },
     steps: [],
@@ -374,7 +376,11 @@ function EventTypeEditor({
           )}
         />
       </AdminSubsection>
+    </>
+  )
 
+  const upgradesTab = (
+    <>
       <AdminSubsection title={t("upgrades")} description={t("upgradesTip")}>
         <RowTable
           items={type.upgrades}
@@ -408,6 +414,27 @@ function EventTypeEditor({
           )}
         />
       </AdminSubsection>
+
+      {!usesContactForm(type.slug) && (
+        <AdminSubsection
+          title={t("upgradesBox")}
+          description={t("upgradesBoxTip")}
+        >
+          <LocalizedField
+            label={t("upgradesTitle")}
+            tooltip={t("upgradesTitleTip")}
+            value={type.content.upgradesTitle}
+            onChange={(upgradesTitle) => setContent({ upgradesTitle })}
+          />
+          <LocalizedField
+            label={t("upgradesNote")}
+            tooltip={t("upgradesNoteTip")}
+            multiline
+            value={type.content.upgradesNote}
+            onChange={(upgradesNote) => setContent({ upgradesNote })}
+          />
+        </AdminSubsection>
+      )}
     </>
   )
 
@@ -567,6 +594,7 @@ function EventTypeEditor({
       tabs={[
         { value: "page", label: t("tabPage"), content: pageTab },
         { value: "package", label: t("tabPackage"), content: packageTab },
+        { value: "upgrades", label: t("tabUpgrades"), content: upgradesTab },
         { value: "rules", label: t("tabRules"), content: rulesTab },
         { value: "form", label: t("tabForm"), content: formTab },
       ]}

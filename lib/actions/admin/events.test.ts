@@ -39,6 +39,8 @@ function eventTypeDraft(
       formIntro: text(""),
       formTerms: text(""),
       formFootnote: text(""),
+      upgradesTitle: text(""),
+      upgradesNote: text(""),
       requiresSignature: false,
     },
     steps: [],
@@ -101,6 +103,27 @@ describe("saveEvents", () => {
     ])
     expect(corporate.packageLines).toHaveLength(1)
     expect(corporate.upgrades[0]).toMatchObject({ amount: 100 })
+  })
+
+  test("stores the upgrades box title and explanation", async () => {
+    const draft = eventTypeDraft("birthdays")
+    await save({
+      eventTypes: [
+        {
+          ...draft,
+          content: {
+            ...draft.content,
+            upgradesTitle: text("רוצים להוסיף?"),
+            upgradesNote: text("הפקידה תחזור אליכם"),
+          },
+          upgrades: [{ label: text("בלונים"), amount: 100 }],
+        },
+      ],
+    })
+    const [birthdays] = await load(access.location.id)
+    expect(birthdays.content?.upgradesTitle).toEqual(text("רוצים להוסיף?"))
+    expect(birthdays.content?.upgradesNote).toEqual(text("הפקידה תחזור אליכם"))
+    expect(birthdays.upgrades.map((u) => u.label.he)).toEqual(["בלונים"])
   })
 
   test("stores the hero image URL and clears it back to the default", async () => {
