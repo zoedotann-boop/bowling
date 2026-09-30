@@ -31,6 +31,7 @@ import {
 import {
   ADMIN_LOGIN_PATH,
   ADMIN_SECTIONS,
+  DEFAULT_ADMIN_SECTION,
   locationSectionPath,
   OWNER_SECTIONS,
 } from "@/lib/admin/routes"
@@ -103,7 +104,7 @@ export function AdminShell({
     locations.find((item) => item.slug === slugFromPath)?.slug ??
     locations[0]?.slug ??
     ""
-  const currentSection = segments[3] ?? "general"
+  const currentSection = segments[3] ?? DEFAULT_ADMIN_SECTION
 
   function onSwitchLocation(slug: string) {
     router.push(locationSectionPath(slug, currentSection))
