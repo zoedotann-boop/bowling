@@ -5,6 +5,7 @@ import type {
 import type { Localized } from "@/lib/db/schema/_shared"
 import type { DayHours } from "@/lib/db/schema/locations"
 import type { BookingFormField } from "@/lib/events/fields"
+import { DEFAULT_HOURS } from "@/lib/branches"
 
 export function toLocalized(value: Localized | null | undefined): Localized {
   return { he: value?.he ?? "", en: value?.en ?? "" }
@@ -35,10 +36,9 @@ export function toPricingDraft(
 }
 
 export function toHoursDraft(value: DayHours[] | null | undefined): DayHours[] {
-  return Array.from({ length: 7 }, (_, day) => {
-    const existing = value?.find((entry) => entry.day === day)
-    return existing ?? { day, closed: false, open: "10:00", close: "22:00" }
-  })
+  return DEFAULT_HOURS.map(
+    (fallback) => value?.find((entry) => entry.day === fallback.day) ?? fallback
+  )
 }
 
 export function toFormFieldDraft(
@@ -59,4 +59,10 @@ export function toFormFieldDraft(
     isRequired: field.isRequired,
     isVisible: field.isVisible ?? true,
   }
+}
+
+export function parseWholeNumber(value: string): number | null {
+  if (value.trim() === "") return null
+  const number = Math.round(Number(value))
+  return Number.isFinite(number) ? number : null
 }

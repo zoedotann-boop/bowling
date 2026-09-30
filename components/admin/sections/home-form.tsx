@@ -1,15 +1,15 @@
 "use client"
 
 import { useTranslations } from "next-intl"
-import { useState } from "react"
 
-import { AdminCard, AdminField, AdminInput } from "@/components/admin/admin-ui"
+import { AdminCard, AdminField, AdminSelect } from "@/components/admin/admin-ui"
 import { ImageField } from "@/components/admin/image-field"
 import { LocalizedField } from "@/components/admin/localized-field"
 import { RowTable } from "@/components/admin/row-table"
-import { SectionForm } from "@/components/admin/section-form"
+import { SectionForm, useSectionDraft } from "@/components/admin/section-form"
 import { saveHome } from "@/lib/actions/admin/home"
 import type { HomeDraft } from "@/lib/actions/admin/schemas"
+import { FEATURE_ICONS } from "@/lib/home"
 import { emptyLocalized } from "@/lib/localized"
 
 export function HomeForm({
@@ -20,7 +20,7 @@ export function HomeForm({
   initial: HomeDraft
 }) {
   const t = useTranslations("admin.home")
-  const [draft, setDraft] = useState(initial)
+  const [draft, setDraft] = useSectionDraft(initial)
 
   function set<K extends keyof HomeDraft>(key: K, value: HomeDraft[K]) {
     setDraft((prev) => ({ ...prev, [key]: value }))
@@ -65,7 +65,7 @@ export function HomeForm({
         />
       </AdminCard>
 
-      <AdminCard title={t("features")}>
+      <AdminCard title={t("features")} description={t("featuresTip")}>
         <RowTable
           items={draft.features}
           onChange={(items) => set("features", items)}
@@ -85,13 +85,19 @@ export function HomeForm({
                 label={t("featureIcon")}
                 tooltip={t("featureIconTip")}
               >
-                <AdminInput
-                  dir="ltr"
+                <AdminSelect
                   value={item.icon}
                   onChange={(event) =>
                     update({ ...item, icon: event.target.value })
                   }
-                />
+                >
+                  <option value="">{t("featureIconOption.auto")}</option>
+                  {FEATURE_ICONS.map((icon) => (
+                    <option key={icon} value={icon}>
+                      {t(`featureIconOption.${icon}`)}
+                    </option>
+                  ))}
+                </AdminSelect>
               </AdminField>
               <LocalizedField
                 label={t("featureLabel")}
@@ -111,7 +117,7 @@ export function HomeForm({
         />
       </AdminCard>
 
-      <AdminCard title={t("services")}>
+      <AdminCard title={t("services")} description={t("servicesTip")}>
         <LocalizedField
           label={t("servicesTitle")}
           tooltip={t("servicesTitleTip")}

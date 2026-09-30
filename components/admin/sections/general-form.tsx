@@ -1,7 +1,6 @@
 "use client"
 
 import { useTranslations } from "next-intl"
-import { useState } from "react"
 
 import {
   AdminCard,
@@ -12,9 +11,10 @@ import {
 import { HoursEditor } from "@/components/admin/hours-editor"
 import { ImageField } from "@/components/admin/image-field"
 import { LocalizedField } from "@/components/admin/localized-field"
-import { SectionForm } from "@/components/admin/section-form"
+import { SectionForm, useSectionDraft } from "@/components/admin/section-form"
 import { saveGeneral } from "@/lib/actions/admin/general"
 import type { GeneralDraft } from "@/lib/actions/admin/schemas"
+import { parseWholeNumber } from "@/lib/admin/drafts"
 
 export function GeneralForm({
   slug,
@@ -24,7 +24,7 @@ export function GeneralForm({
   initial: GeneralDraft
 }) {
   const t = useTranslations("admin.general")
-  const [draft, setDraft] = useState(initial)
+  const [draft, setDraft] = useSectionDraft(initial)
 
   function set<K extends keyof GeneralDraft>(key: K, value: GeneralDraft[K]) {
     setDraft((prev) => ({ ...prev, [key]: value }))
@@ -109,17 +109,14 @@ export function GeneralForm({
               min={0}
               value={draft.lanes}
               onChange={(event) =>
-                set("lanes", Number(event.target.value) || 0)
+                set(
+                  "lanes",
+                  Math.max(0, parseWholeNumber(event.target.value) ?? 0)
+                )
               }
             />
           </AdminField>
         </div>
-        <LocalizedField
-          label={t("laneDesc")}
-          tooltip={t("laneDescTip")}
-          value={draft.laneDesc}
-          onChange={(value) => set("laneDesc", value)}
-        />
         <ImageField
           label={t("logoUrl")}
           tooltip={t("logoUrlTip")}
@@ -168,19 +165,6 @@ export function GeneralForm({
       </AdminCard>
 
       <AdminCard title={t("siteChrome")}>
-        <LocalizedField
-          label={t("contactTitle")}
-          tooltip={t("contactTitleTip")}
-          value={draft.contactTitle}
-          onChange={(value) => set("contactTitle", value)}
-        />
-        <LocalizedField
-          label={t("contactIntro")}
-          tooltip={t("contactIntroTip")}
-          multiline
-          value={draft.contactIntro}
-          onChange={(value) => set("contactIntro", value)}
-        />
         <LocalizedField
           label={t("footerNote")}
           tooltip={t("footerNoteTip")}

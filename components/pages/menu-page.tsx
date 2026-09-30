@@ -26,16 +26,18 @@ export function MenuPage({
   const { branchId } = useBranch()
   const dbMenu = menus[branchId]
 
-  const categories: Category[] = dbMenu?.menuCategories.length
-    ? dbMenu.menuCategories.map((c) => ({
-        id: c.id,
-        label: pickLocale(c.label, locale),
-        items: c.items.map((item) => ({
-          name: pickLocale(item.name, locale),
-          price: item.amount != null ? formatPrice(item.amount, locale) : "",
-          desc: pickLocale(item.description, locale),
-        })),
-      }))
+  const categories: Category[] = dbMenu
+    ? dbMenu.menuCategories
+        .filter((c) => c.items.length > 0)
+        .map((c) => ({
+          id: c.id,
+          label: pickLocale(c.label, locale),
+          items: c.items.map((item) => ({
+            name: pickLocale(item.name, locale),
+            price: item.amount != null ? formatPrice(item.amount, locale) : "",
+            desc: pickLocale(item.description, locale),
+          })),
+        }))
     : (t.raw("categories") as Category[])
   const heading = pickLocale(dbMenu?.menu?.heading, locale) || t("title")
   const intro = pickLocale(dbMenu?.menu?.intro, locale) || t("subtitle")
@@ -78,9 +80,9 @@ export function MenuPage({
         </aside>
 
         <div className="grid flex-1 grid-cols-1 content-start gap-3 sm:grid-cols-2">
-          {current.items.map((d) => (
+          {(current?.items ?? []).map((d, i) => (
             <div
-              key={d.name}
+              key={i}
               className="rounded-sm border border-border bg-card p-4 transition-colors hover:border-primary"
             >
               <div className="flex items-start justify-between gap-3">

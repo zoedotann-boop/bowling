@@ -19,7 +19,6 @@ export default async function GeneralPage({
     addressLine1: toLocalized(data?.addressLine1),
     addressLine2: toLocalized(data?.addressLine2),
     addressFull: toLocalized(data?.addressFull),
-    laneDesc: toLocalized(data?.laneDesc),
     phone: data?.phone ?? "",
     whatsapp: data?.whatsapp ?? "",
     email: data?.email ?? "",
@@ -34,8 +33,6 @@ export default async function GeneralPage({
     hours: toHoursDraft(data?.hours),
     seoTitle: toLocalized(data?.seoTitle),
     seoDescription: toLocalized(data?.seoDescription),
-    contactTitle: toLocalized(data?.site?.contactTitle),
-    contactIntro: toLocalized(data?.site?.contactIntro),
     footerNote: toLocalized(data?.site?.footerNote),
   }
 

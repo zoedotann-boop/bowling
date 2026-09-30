@@ -7,6 +7,7 @@ import en from "@/messages/en.json"
 import he from "@/messages/he.json"
 
 interface MessageEvent {
+  scheduleTitle?: string
   allowed?: string[]
   forbidden?: string[]
   rulesFootnote?: string
@@ -39,6 +40,10 @@ export function eventDetailDefaults(
   const enEvent = messageEvent(en.eventDetails, branchId, slug)
 
   return {
+    scheduleTitle: {
+      he: heEvent.scheduleTitle ?? he.eventDetails.scheduleTitle,
+      en: enEvent.scheduleTitle ?? en.eventDetails.scheduleTitle,
+    },
     allowedItems: list(heEvent.allowed, enEvent.allowed),
     forbiddenItems: list(heEvent.forbidden, enEvent.forbidden),
     rulesNote: {

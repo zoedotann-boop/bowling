@@ -1,7 +1,7 @@
 "use server"
 
-import { and, asc, desc, eq, inArray } from "drizzle-orm"
-import { revalidatePath } from "next/cache"
+import { and, asc, desc, eq, notInArray } from "drizzle-orm"
+import { refresh } from "next/cache"
 
 import { requireLocationAccess } from "@/lib/admin/access"
 import { db } from "@/lib/db"
@@ -60,7 +60,6 @@ export async function syncGoogleReviews(input: unknown): Promise<SyncResult> {
   })
   if (!result.ok) return result
 
-  revalidatePath("/")
   return { ...result, reviews: await listReviews(loc.id) }
 }
 
@@ -74,35 +73,34 @@ export async function saveGoogleReviews(input: unknown): Promise<ActionResult> {
   if (!parsed.success) return { ok: false, error: "invalid" }
   const data = parsed.data
 
-  await db
-    .update(location)
-    .set({
-      googlePlaceId: data.googlePlaceId.trim() || null,
-      googleReviewsAutoSync: data.autoSync,
-    })
-    .where(eq(location.id, loc.id))
+  const scope = eq(googleReview.locationId, loc.id)
+  const keepIds = data.reviews.map((row) => row.id)
 
-  const existing = await db.query.googleReview.findMany({
-    where: eq(googleReview.locationId, loc.id),
-    columns: { id: true },
-  })
-  const keepIds = new Set(data.reviews.map((row) => row.id))
-  const toDelete = existing
-    .map((row) => row.id)
-    .filter((id) => !keepIds.has(id))
-  if (toDelete.length > 0) {
-    await db.delete(googleReview).where(inArray(googleReview.id, toDelete))
-  }
+  await db.transaction(async (tx) => {
+    await tx
+      .update(location)
+      .set({
+        googlePlaceId: data.googlePlaceId.trim() || null,
+        googleReviewsAutoSync: data.autoSync,
+      })
+      .where(eq(location.id, loc.id))
 
-  for (const [sortOrder, row] of data.reviews.entries()) {
-    await db
-      .update(googleReview)
-      .set({ isPublished: row.isPublished, sortOrder })
+    await tx
+      .delete(googleReview)
       .where(
-        and(eq(googleReview.id, row.id), eq(googleReview.locationId, loc.id))
+        keepIds.length
+          ? and(scope, notInArray(googleReview.id, keepIds))
+          : scope
       )
-  }
 
-  revalidatePath("/")
+    for (const [sortOrder, row] of data.reviews.entries()) {
+      await tx
+        .update(googleReview)
+        .set({ isPublished: row.isPublished, sortOrder })
+        .where(and(eq(googleReview.id, row.id), scope))
+    }
+  })
+
+  refresh()
   return OK
 }

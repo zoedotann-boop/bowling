@@ -18,6 +18,7 @@ import { branchPath, type BranchId } from "@/lib/branches"
 import type { SiteEventLocation } from "@/lib/db/queries/site"
 import type { Localized } from "@/lib/db/schema/_shared"
 import type { BookingFormField } from "@/lib/events/fields"
+import { usesContactForm } from "@/lib/events/slugs"
 import { formatPrice, pickLocale } from "@/lib/localized"
 import { useBranch } from "@/components/branch-context"
 import {
@@ -90,6 +91,7 @@ interface EventItem {
   lead?: string
   description: string
   schedule?: { note: string; footnote: string; steps: Step[] }
+  scheduleTitle?: string
   price?: { note?: string; cards: PriceCard[] }
   included?: string[]
   includedTitle?: string
@@ -232,7 +234,7 @@ function Schedule({
       <SectionHeading title={title} note={data.note || undefined} onDark />
       <div className="grid grid-cols-2 gap-x-6 gap-y-6 lg:grid-cols-4 lg:gap-x-8">
         {data.steps.map((step, i) => (
-          <div key={step.title} className="border-t-2 border-primary/40 pt-3">
+          <div key={i} className="border-t-2 border-primary/40 pt-3">
             <div className="flex items-baseline gap-2">
               <span className="font-heading text-[13px] font-black text-primary">
                 {String(i + 1).padStart(2, "0")}
@@ -269,9 +271,9 @@ function PriceSection({
     <div>
       <SectionHeading title={title} note={note} />
       <div className="grid gap-x-8 gap-y-8 sm:grid-cols-2">
-        {cards.map((card) => (
+        {cards.map((card, i) => (
           <div
-            key={card.label}
+            key={i}
             className={cn(
               "border-t-2 pt-4",
               card.tag ? "border-primary" : "border-border"
@@ -327,9 +329,9 @@ function IncludedSection({
     <div>
       <SectionHeading title={title} />
       <ul className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
-        {items.map((item) => (
+        {items.map((item, i) => (
           <li
-            key={item}
+            key={i}
             className="flex items-start gap-3 border-b border-border/60 pb-3"
           >
             <Check
@@ -389,8 +391,8 @@ function RuleCard({
         </span>
       </div>
       <ul className="mt-3.5 flex flex-col gap-2.5">
-        {items.map((item) => (
-          <li key={item} className="flex items-start gap-2.5">
+        {items.map((item, i) => (
+          <li key={i} className="flex items-start gap-2.5">
             {ok ? (
               <Check
                 className="mt-0.5 size-4 flex-none text-primary"
@@ -457,9 +459,9 @@ function ExtrasSection({
     <div>
       <SectionHeading title={title} note={note} />
       <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
-        {extras.map((extra) => (
+        {extras.map((extra, i) => (
           <div
-            key={extra.title}
+            key={i}
             className="flex items-start justify-between gap-3 rounded-sm border border-border bg-card p-5 transition-colors hover:border-primary"
           >
             <div>
@@ -497,8 +499,8 @@ function TermsSection({
     <div className="mx-auto max-w-3xl">
       <SectionHeading title={title} note={note} />
       <div className="space-y-4 text-[14px] leading-[1.8] font-semibold text-mud lg:text-[15px]">
-        {rows.map((row) => (
-          <p key={row.title}>
+        {rows.map((row, i) => (
+          <p key={i}>
             <strong className="font-heading font-black text-navy">
               {row.title}
             </strong>
@@ -916,7 +918,8 @@ export function EventDetailPage({
   const locale = useLocale() as "he" | "en"
   const items = t.raw("items") as Record<string, EventItem>
   const overrides = t.raw("branch") as Record<string, Record<string, EventItem>>
-  const messageData = overrides?.[branch.id]?.[slug] ?? items[slug]
+  const messageData: EventItem = overrides?.[branch.id]?.[slug] ??
+    items[slug] ?? { badges: [], title: "", description: "" }
 
   const dbTypes = events[branch.id]?.eventTypes ?? []
   const dbType = dbTypes.find((e) => e.slug === slug)
@@ -958,30 +961,37 @@ export function EventDetailPage({
           ],
         }
       : undefined
+  const steps: Step[] = dbType
+    ? dbType.steps.map((s) => ({
+        icon: "",
+        title: pick(s.title),
+        desc: pickLocale(s.description, locale),
+      }))
+    : (messageData.schedule?.steps ?? [])
   const data: EventItem = {
     ...messageData,
-    title: pickLocale(dbType?.content?.heroTitle, locale) || messageData.title,
+    title:
+      pickLocale(dbType?.content?.heroTitle, locale) ||
+      messageData.title ||
+      pickLocale(dbType?.name, locale),
     description:
       pickLocale(dbType?.content?.heroDescription, locale) ||
       messageData.description,
-    schedule: messageData.schedule && {
-      ...messageData.schedule,
-      steps: dbType?.steps.length
-        ? dbType.steps.map((s) => ({
-            icon: "",
-            title: pickLocale(s.title, locale),
-            desc: pickLocale(s.description, locale),
-          }))
-        : messageData.schedule.steps,
-    },
+    schedule: steps.length
+      ? {
+          note: messageData.schedule?.note ?? "",
+          footnote: messageData.schedule?.footnote ?? "",
+          steps,
+        }
+      : undefined,
     price: packagePrice ?? messageData.price,
-    included: dbType?.packageLines.length
-      ? dbType.packageLines.map((l) => pickLocale(l.label, locale))
+    included: dbType
+      ? dbType.packageLines.map((l) => pick(l.label))
       : messageData.included,
-    extras: dbType?.upgrades.length
+    extras: dbType
       ? dbType.upgrades.map((u) => ({
-          title: pickLocale(u.label, locale),
-          price: u.amount != null ? formatPrice(u.amount, locale) : "",
+          title: pick(u.label),
+          price: u.amount != null ? money(u.amount) : "",
         }))
       : messageData.extras,
     allowed: content?.allowedItems?.map(pick) ?? messageData.allowed,
@@ -999,9 +1009,6 @@ export function EventDetailPage({
     terms: pickLocale(content?.formTerms, locale) || t("form.termsConfirm"),
     footnote: pickOr(content?.formFootnote, t("form.footnote")),
   }
-
-  const isCorporate = slug === "corporate"
-  const usesContactForm = isCorporate || slug === "team"
 
   const available = dbTypes.length
     ? Boolean(dbType)
@@ -1038,84 +1045,75 @@ export function EventDetailPage({
         />
       </Container>
 
-      {isCorporate ? (
-        <section className="border-t border-border bg-background py-10 lg:py-14">
-          <Container className="flex flex-col gap-12 lg:gap-16">
-            {data.included ? (
-              <IncludedSection
-                items={data.included}
-                title={data.includedTitle ?? t("includedTitle")}
-                notes={data.includedNotes}
-              />
-            ) : null}
-            {data.groupOptions ? (
-              <IncludedSection
-                items={data.groupOptions}
-                title={data.groupOptionsTitle ?? t("includedTitle")}
-              />
-            ) : null}
+      {data.schedule ? (
+        <section className="border-y border-border bg-background py-10 lg:py-14">
+          <Container>
+            <Schedule
+              data={data.schedule}
+              title={
+                pickLocale(content?.scheduleTitle, locale) ||
+                messageData.scheduleTitle ||
+                t("scheduleTitle")
+              }
+            />
           </Container>
         </section>
-      ) : (
-        <>
-          {data.schedule ? (
-            <section className="border-y border-border bg-background py-10 lg:py-14">
-              <Container>
-                <Schedule data={data.schedule} title={t("scheduleTitle")} />
-              </Container>
-            </section>
-          ) : null}
+      ) : null}
 
-          <Container className="flex flex-col gap-12 py-10 lg:gap-16 lg:py-14">
-            {data.price ? (
-              <PriceSection
-                cards={data.price.cards}
-                title={t("priceTitle")}
-                note={data.price.note}
-              />
-            ) : null}
-            {data.included ? (
-              <IncludedSection
-                items={data.included}
-                title={data.includedTitle ?? t("includedTitle")}
-                notes={data.includedNotes}
-              />
-            ) : null}
-            {data.allowed?.length || data.forbidden?.length ? (
-              <RulesSection
-                allowed={data.allowed ?? []}
-                forbidden={data.forbidden ?? []}
-                title={t("rulesTitle")}
-                allowedTitle={t("allowedTitle")}
-                forbiddenTitle={t("forbiddenTitle")}
-                footnote={data.rulesFootnote}
-              />
-            ) : null}
-            {data.extras ? (
-              <ExtrasSection
-                extras={data.extras}
-                title={data.extrasTitle ?? t("extrasTitle")}
-                note={data.extrasNote ?? t("extrasNote")}
-              />
-            ) : null}
+      <Container className="flex flex-col gap-12 py-10 lg:gap-16 lg:py-14">
+        {data.price ? (
+          <PriceSection
+            cards={data.price.cards}
+            title={t("priceTitle")}
+            note={data.price.note}
+          />
+        ) : null}
+        {data.included?.length ? (
+          <IncludedSection
+            items={data.included}
+            title={data.includedTitle ?? t("includedTitle")}
+            notes={data.includedNotes}
+          />
+        ) : null}
+        {data.groupOptions?.length ? (
+          <IncludedSection
+            items={data.groupOptions}
+            title={data.groupOptionsTitle ?? t("includedTitle")}
+          />
+        ) : null}
+        {data.allowed?.length || data.forbidden?.length ? (
+          <RulesSection
+            allowed={data.allowed ?? []}
+            forbidden={data.forbidden ?? []}
+            title={t("rulesTitle")}
+            allowedTitle={t("allowedTitle")}
+            forbiddenTitle={t("forbiddenTitle")}
+            footnote={data.rulesFootnote}
+          />
+        ) : null}
+        {data.extras?.length ? (
+          <ExtrasSection
+            extras={data.extras}
+            title={data.extrasTitle ?? t("extrasTitle")}
+            note={data.extrasNote ?? t("extrasNote")}
+          />
+        ) : null}
+      </Container>
+
+      {data.policy?.length ? (
+        <section className="border-t border-border bg-background py-10 lg:py-14">
+          <Container>
+            <TermsSection
+              rows={data.policy}
+              title={t("policyTitle")}
+              note={t("policyNote")}
+              footnote={data.policyFootnote}
+            />
           </Container>
+        </section>
+      ) : null}
 
-          {data.policy?.length ? (
-            <section className="border-t border-border bg-background py-10 lg:py-14">
-              <Container>
-                <TermsSection
-                  rows={data.policy}
-                  title={t("policyTitle")}
-                  note={t("policyNote")}
-                  footnote={data.policyFootnote}
-                />
-              </Container>
-            </section>
-          ) : null}
-        </>
-      )}
-
-      {usesContactForm ? (
+      {usesContactForm(slug) ? (
         <div id="book" className="scroll-mt-20">
           <Contact />
         </div>

@@ -1,7 +1,6 @@
 "use client"
 
 import { useLocale, useTranslations } from "next-intl"
-import { useState } from "react"
 
 import {
   AdminCard,
@@ -11,9 +10,10 @@ import {
 } from "@/components/admin/admin-ui"
 import { LocalizedField } from "@/components/admin/localized-field"
 import { RowTable } from "@/components/admin/row-table"
-import { SectionForm } from "@/components/admin/section-form"
+import { SectionForm, useSectionDraft } from "@/components/admin/section-form"
 import { saveMenu } from "@/lib/actions/admin/menu"
 import type { MenuDraft, MenuItemDraft } from "@/lib/actions/admin/schemas"
+import { parseWholeNumber } from "@/lib/admin/drafts"
 import { emptyLocalized, formatPrice } from "@/lib/localized"
 import type { Locale } from "@/lib/locales"
 
@@ -27,7 +27,7 @@ export function MenuForm({
   const t = useTranslations("admin.menu")
   const common = useTranslations("admin.common")
   const locale = useLocale() as Locale
-  const [draft, setDraft] = useState(initial)
+  const [draft, setDraft] = useSectionDraft(initial)
 
   function itemEditor(
     item: MenuItemDraft,
@@ -52,14 +52,11 @@ export function MenuForm({
           <AdminInput
             type="number"
             min={0}
+            step={1}
             dir="ltr"
             value={item.amount ?? ""}
             onChange={(event) =>
-              update({
-                ...item,
-                amount:
-                  event.target.value === "" ? null : Number(event.target.value),
-              })
+              update({ ...item, amount: parseWholeNumber(event.target.value) })
             }
           />
         </AdminField>

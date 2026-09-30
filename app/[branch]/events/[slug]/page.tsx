@@ -1,16 +1,30 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { getTranslations } from "next-intl/server"
+import { getLocale, getTranslations } from "next-intl/server"
 
 import { EventDetailPage } from "@/components/pages/event-detail-page"
 import { byBranch } from "@/lib/branches"
-import { getEvents } from "@/lib/db/queries/site"
+import { getEvents, logError } from "@/lib/db/queries/site"
 import { defaultBookingFields } from "@/lib/events/detail-defaults"
-
-const SLUGS = ["birthdays", "no-room", "team", "gymboree", "corporate"] as const
+import { BUILT_IN_EVENTS } from "@/lib/events/slugs"
+import { pickLocale } from "@/lib/localized"
+import type { Locale } from "@/lib/locales"
 
 export function generateStaticParams() {
-  return SLUGS.map((slug) => ({ slug }))
+  return BUILT_IN_EVENTS.map((slug) => ({ slug }))
+}
+
+async function loadEvents() {
+  return getEvents().catch(logError("getEvents", []))
+}
+
+function findEventType(
+  events: Awaited<ReturnType<typeof loadEvents>>,
+  slug: string
+) {
+  return events
+    .flatMap((branch) => branch.eventTypes)
+    .find((type) => type.slug === slug)
 }
 
 export async function generateMetadata({
@@ -19,10 +33,16 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  if (!SLUGS.includes(slug as (typeof SLUGS)[number])) return {}
-  const t = await getTranslations("eventDetails")
-  const brand = await getTranslations()
-  return { title: `${t(`items.${slug}.title`)} · ${brand("brand")}` }
+  const [t, brand, locale, events] = await Promise.all([
+    getTranslations("eventDetails"),
+    getTranslations(),
+    getLocale(),
+    loadEvents(),
+  ])
+  const title = t.has(`items.${slug}.title`)
+    ? t(`items.${slug}.title`)
+    : pickLocale(findEventType(events, slug)?.name, locale as Locale)
+  return title ? { title: `${title} · ${brand("brand")}` } : {}
 }
 
 export default async function Page({
@@ -31,12 +51,13 @@ export default async function Page({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  if (!SLUGS.includes(slug as (typeof SLUGS)[number])) notFound()
-  const events = byBranch(await getEvents().catch(() => []))
+  const events = await loadEvents()
+  const builtIn = (BUILT_IN_EVENTS as readonly string[]).includes(slug)
+  if (!builtIn && !findEventType(events, slug)) notFound()
   return (
     <EventDetailPage
       slug={slug}
-      events={events}
+      events={byBranch(events)}
       defaultFormFields={defaultBookingFields()}
     />
   )

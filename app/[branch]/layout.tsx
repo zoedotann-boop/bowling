@@ -3,7 +3,8 @@ import { notFound } from "next/navigation"
 import { getLocale, getTranslations } from "next-intl/server"
 
 import { SiteChrome } from "@/components/site-chrome"
-import { branchIds, BRANCHES, isBranchId } from "@/lib/branches"
+import { branchIds, isBranchId } from "@/lib/branches"
+import { getSiteBranches } from "@/lib/db/queries/site"
 import type { Locale } from "@/lib/locales"
 
 export const dynamicParams = false
@@ -19,14 +20,16 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { branch } = await params
   if (!isBranchId(branch)) return {}
-  const [t, locale] = await Promise.all([
+  const [t, locale, branches] = await Promise.all([
     getTranslations("metadata"),
     getLocale(),
+    getSiteBranches(),
   ])
+  const { name, seoTitle, seoDescription } = branches[branch]
+  const lang = locale as Locale
   return {
-    title: t("branchTitle", {
-      branch: BRANCHES[branch].name[locale as Locale],
-    }),
+    title: seoTitle?.[lang] || t("branchTitle", { branch: name[lang] }),
+    description: seoDescription?.[lang] || undefined,
   }
 }
 
@@ -39,5 +42,7 @@ export default async function BranchLayout({
 }) {
   const { branch } = await params
   if (!isBranchId(branch)) notFound()
+  const branches = await getSiteBranches()
+  if (!branches[branch].isVisible) notFound()
   return <SiteChrome branchId={branch}>{children}</SiteChrome>
 }

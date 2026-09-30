@@ -2,7 +2,7 @@
 
 import { RefreshCw, Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
-import { useState, useTransition } from "react"
+import { useTransition } from "react"
 
 import {
   AdminCard,
@@ -10,7 +10,7 @@ import {
   AdminFlag,
   AdminInput,
 } from "@/components/admin/admin-ui"
-import { SectionForm } from "@/components/admin/section-form"
+import { SectionForm, useSectionDraft } from "@/components/admin/section-form"
 import { useToast } from "@/components/admin/toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -36,7 +36,7 @@ export function ReviewsForm({
   const t = useTranslations("admin.reviews")
   const common = useTranslations("admin.common")
   const { toast } = useToast()
-  const [draft, setDraft] = useState(initial)
+  const [draft, setDraft] = useSectionDraft(initial)
   const [syncing, startSync] = useTransition()
 
   const hasPlaceId = Boolean(initial.googlePlaceId.trim())

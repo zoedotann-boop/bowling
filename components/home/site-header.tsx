@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation"
 import { X } from "lucide-react"
 import { useTranslations } from "next-intl"
 
-import { cn } from "@/lib/utils"
+import { cn, isRemoteImage } from "@/lib/utils"
 import { branchPath } from "@/lib/branches"
 import { whatsappUrl } from "@/lib/contact"
 import { useBranch } from "@/components/branch-context"
@@ -57,6 +57,7 @@ export function SiteHeader() {
               alt={t("brand")}
               width={branch.logo.width}
               height={branch.logo.height}
+              unoptimized={isRemoteImage(branch.logo.src)}
               priority
               className="h-11 w-auto lg:h-14"
             />
@@ -130,6 +131,7 @@ export function SiteHeader() {
               alt={t("brand")}
               width={branch.logo.width}
               height={branch.logo.height}
+              unoptimized={isRemoteImage(branch.logo.src)}
               className="h-10 w-auto"
             />
           </div>

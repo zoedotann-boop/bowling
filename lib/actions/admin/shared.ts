@@ -22,32 +22,3 @@ export const localizedSchema = z.object({
 })
 
 export const rowIdSchema = z.uuid().optional()
-
-export interface SyncCollectionArgs<T extends { id?: string }> {
-  existingIds: string[]
-  incoming: T[]
-  insert: (row: T) => Promise<void>
-  update: (id: string, row: T) => Promise<void>
-  remove: (id: string) => Promise<void>
-}
-
-export async function syncCollection<T extends { id?: string }>({
-  existingIds,
-  incoming,
-  insert,
-  update,
-  remove,
-}: SyncCollectionArgs<T>): Promise<void> {
-  const incomingIds = new Set(
-    incoming.map((row) => row.id).filter((id): id is string => Boolean(id))
-  )
-
-  for (const id of existingIds) {
-    if (!incomingIds.has(id)) await remove(id)
-  }
-
-  for (const row of incoming) {
-    if (row.id) await update(row.id, row)
-    else await insert(row)
-  }
-}

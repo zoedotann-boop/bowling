@@ -19,7 +19,7 @@ export function AdminCard({
   description?: string
   actions?: React.ReactNode
   className?: string
-  children: React.ReactNode
+  children?: React.ReactNode
 }) {
   return (
     <section
@@ -29,7 +29,12 @@ export function AdminCard({
       )}
     >
       {(title || actions) && (
-        <header className="mb-3 flex items-start justify-between gap-3">
+        <header
+          className={cn(
+            "flex items-start justify-between gap-3",
+            children && "mb-3"
+          )}
+        >
           <div>
             {title && <h2 className="text-base font-semibold">{title}</h2>}
             {description && (
@@ -41,7 +46,7 @@ export function AdminCard({
           {actions}
         </header>
       )}
-      <div className="space-y-4">{children}</div>
+      {children && <div className="space-y-4">{children}</div>}
     </section>
   )
 }

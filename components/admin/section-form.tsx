@@ -24,6 +24,16 @@ export function useSectionContext(): SectionContextValue {
   return context
 }
 
+export function useSectionDraft<T>(initial: T) {
+  const [draft, setDraft] = useState(initial)
+  const [synced, setSynced] = useState(initial)
+  if (initial !== synced) {
+    setSynced(initial)
+    setDraft(initial)
+  }
+  return [draft, setDraft] as const
+}
+
 export interface SectionFormProps<T> {
   slug: string
   title: string
@@ -69,6 +79,7 @@ export function SectionForm<T>({
   return (
     <SectionContext.Provider value={{ slug, locale }}>
       <form
+        noValidate
         onSubmit={(event) => {
           event.preventDefault()
           void handleSave()

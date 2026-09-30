@@ -1,7 +1,7 @@
 "use server"
 
 import { eq } from "drizzle-orm"
-import { revalidatePath } from "next/cache"
+import { refresh } from "next/cache"
 
 import { requireLocationAccess } from "@/lib/admin/access"
 import { db } from "@/lib/db"
@@ -16,7 +16,8 @@ import {
 } from "@/lib/db/schema"
 
 import { homeSchema } from "./schemas"
-import { type ActionResult, OK, readSlug, syncCollection } from "./shared"
+import { type ActionResult, OK, readSlug } from "./shared"
+import { syncRows, upsert, withIds } from "./sync"
 
 export async function saveHome(input: unknown): Promise<ActionResult> {
   const { location: loc } = await requireLocationAccess(
@@ -37,153 +38,53 @@ export async function saveHome(input: unknown): Promise<ActionResult> {
     servicesIntro: data.servicesIntro,
     galleryTitle: data.galleryTitle,
     reviewsTitle: data.reviewsTitle,
-    aboutImageUrl: data.aboutImageUrl || null,
   }
-  await db
-    .insert(homeContent)
-    .values({ locationId, ...homeValues })
-    .onConflictDoUpdate({ target: homeContent.locationId, set: homeValues })
 
-  const siteValues = {
-    contactTitle: data.contactTitle,
-    contactIntro: data.contactIntro,
-  }
-  await db
-    .insert(siteContent)
-    .values({ locationId, ...siteValues })
-    .onConflictDoUpdate({ target: siteContent.locationId, set: siteValues })
-
-  await db
-    .insert(pricingContent)
-    .values({ locationId, ...data.pricing })
-    .onConflictDoUpdate({
-      target: pricingContent.locationId,
-      set: data.pricing,
-    })
-
-  const features = await db.query.homeFeature.findMany({
-    where: eq(homeFeature.locationId, locationId),
-    columns: { id: true },
-  })
-  await syncCollection({
-    existingIds: features.map((row) => row.id),
-    incoming: data.features.map((row, sortOrder) => ({ ...row, sortOrder })),
-    insert: async (row) => {
-      await db.insert(homeFeature).values({
+  await db.transaction(async (tx) => {
+    await upsert(tx, homeContent, homeContent.locationId, [
+      { locationId, ...homeValues },
+    ])
+    await upsert(tx, siteContent, siteContent.locationId, [
+      {
         locationId,
-        icon: row.icon,
-        label: row.label,
-        description: row.description,
-        sortOrder: row.sortOrder,
-      })
-    },
-    update: async (id, row) => {
-      await db
-        .update(homeFeature)
-        .set({
-          icon: row.icon,
-          label: row.label,
-          description: row.description,
-          sortOrder: row.sortOrder,
-        })
-        .where(eq(homeFeature.id, id))
-    },
-    remove: async (id) => {
-      await db.delete(homeFeature).where(eq(homeFeature.id, id))
-    },
-  })
+        contactTitle: data.contactTitle,
+        contactIntro: data.contactIntro,
+      },
+    ])
+    await upsert(tx, pricingContent, pricingContent.locationId, [
+      { locationId, ...data.pricing },
+    ])
 
-  const services = await db.query.homeService.findMany({
-    where: eq(homeService.locationId, locationId),
-    columns: { id: true },
-  })
-  await syncCollection({
-    existingIds: services.map((row) => row.id),
-    incoming: data.services.map((row, sortOrder) => ({ ...row, sortOrder })),
-    insert: async (row) => {
-      await db.insert(homeService).values({
+    await syncRows(
+      tx,
+      homeFeature,
+      eq(homeFeature.locationId, locationId),
+      withIds(data.features).map((row) => ({ ...row, locationId }))
+    )
+    await syncRows(
+      tx,
+      homeService,
+      eq(homeService.locationId, locationId),
+      withIds(data.services).map((row) => ({
+        ...row,
         locationId,
-        title: row.title,
-        description: row.description,
         imageUrl: row.imageUrl || null,
-        sortOrder: row.sortOrder,
-      })
-    },
-    update: async (id, row) => {
-      await db
-        .update(homeService)
-        .set({
-          title: row.title,
-          description: row.description,
-          imageUrl: row.imageUrl || null,
-          sortOrder: row.sortOrder,
-        })
-        .where(eq(homeService.id, id))
-    },
-    remove: async (id) => {
-      await db.delete(homeService).where(eq(homeService.id, id))
-    },
+      }))
+    )
+    await syncRows(
+      tx,
+      galleryImage,
+      eq(galleryImage.locationId, locationId),
+      withIds(data.gallery).map((row) => ({ ...row, locationId }))
+    )
+    await syncRows(
+      tx,
+      contactSubject,
+      eq(contactSubject.locationId, locationId),
+      withIds(data.contactSubjects).map((row) => ({ ...row, locationId }))
+    )
   })
 
-  const gallery = await db.query.galleryImage.findMany({
-    where: eq(galleryImage.locationId, locationId),
-    columns: { id: true },
-  })
-  await syncCollection({
-    existingIds: gallery.map((row) => row.id),
-    incoming: data.gallery.map((row, sortOrder) => ({ ...row, sortOrder })),
-    insert: async (row) => {
-      await db.insert(galleryImage).values({
-        locationId,
-        imageUrl: row.imageUrl,
-        alt: row.alt,
-        sortOrder: row.sortOrder,
-      })
-    },
-    update: async (id, row) => {
-      await db
-        .update(galleryImage)
-        .set({
-          imageUrl: row.imageUrl,
-          alt: row.alt,
-          sortOrder: row.sortOrder,
-        })
-        .where(eq(galleryImage.id, id))
-    },
-    remove: async (id) => {
-      await db.delete(galleryImage).where(eq(galleryImage.id, id))
-    },
-  })
-
-  const subjects = await db.query.contactSubject.findMany({
-    where: eq(contactSubject.locationId, locationId),
-    columns: { id: true },
-  })
-  await syncCollection({
-    existingIds: subjects.map((row) => row.id),
-    incoming: data.contactSubjects.map((row, sortOrder) => ({
-      ...row,
-      sortOrder,
-    })),
-    insert: async (row) => {
-      await db.insert(contactSubject).values({
-        locationId,
-        label: row.label,
-        sortOrder: row.sortOrder,
-      })
-    },
-    update: async (id, row) => {
-      await db
-        .update(contactSubject)
-        .set({ label: row.label, sortOrder: row.sortOrder })
-        .where(eq(contactSubject.id, id))
-    },
-    remove: async (id) => {
-      await db.delete(contactSubject).where(eq(contactSubject.id, id))
-    },
-  })
-
-  revalidatePath("/")
-
+  refresh()
   return OK
 }

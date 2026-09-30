@@ -20,9 +20,10 @@ export function BranchNotice() {
   const title = pickLocale(content?.noticeTitle, locale) || t("title")
   const body = pickLocale(content?.noticeBody, locale) || t("body")
 
+  const dismissKey = `${branch.id}:${title}:${body}`
   const dismissed = useSyncExternalStore(
     noSubscribe,
-    () => sessionStorage.getItem(DISMISS_KEY) === branch.id,
+    () => sessionStorage.getItem(DISMISS_KEY) === dismissKey,
     () => true
   )
 
@@ -39,7 +40,7 @@ export function BranchNotice() {
 
   const close = () => {
     try {
-      sessionStorage.setItem(DISMISS_KEY, branch.id)
+      sessionStorage.setItem(DISMISS_KEY, dismissKey)
     } catch {
       // Ignore storage failures (e.g. private mode).
     }
@@ -80,10 +81,7 @@ export function BranchNotice() {
             <CalendarClock className="size-7 text-rust" strokeWidth={2.25} />
           </div>
 
-          <div className="mt-4 font-heading text-[15px] font-extrabold text-rust">
-            {t("date")}
-          </div>
-          <h2 className="mt-1.5 font-heading text-[23px] leading-tight font-black tracking-[-0.5px] text-navy lg:text-[26px]">
+          <h2 className="mt-4 font-heading text-[23px] leading-tight font-black tracking-[-0.5px] text-navy lg:text-[26px]">
             {title}
           </h2>
           <p className="mt-3 text-[15px] font-semibold text-mud">{body}</p>

@@ -6,6 +6,7 @@ export interface EventPolicyItem {
 }
 
 export interface EventDetailTexts {
+  scheduleTitle: Localized
   allowedItems: Localized[]
   forbiddenItems: Localized[]
   rulesNote: Localized
@@ -25,6 +26,7 @@ export function withEventDetailDefaults(
   defaults: EventDetailTexts
 ): EventDetailTexts {
   return {
+    scheduleTitle: stored?.scheduleTitle ?? defaults.scheduleTitle,
     allowedItems: stored?.allowedItems ?? defaults.allowedItems,
     forbiddenItems: stored?.forbiddenItems ?? defaults.forbiddenItems,
     rulesNote: stored?.rulesNote ?? defaults.rulesNote,

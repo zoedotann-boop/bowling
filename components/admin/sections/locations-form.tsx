@@ -1,7 +1,6 @@
 "use client"
 
 import { useTranslations } from "next-intl"
-import { useState } from "react"
 
 import {
   AdminCard,
@@ -11,7 +10,7 @@ import {
 } from "@/components/admin/admin-ui"
 import { LocalizedField } from "@/components/admin/localized-field"
 import { RowTable } from "@/components/admin/row-table"
-import { SectionForm } from "@/components/admin/section-form"
+import { SectionForm, useSectionDraft } from "@/components/admin/section-form"
 import { saveLocations } from "@/lib/actions/admin/locations"
 import type { LocationsDraft } from "@/lib/actions/admin/schemas"
 import { emptyLocalized } from "@/lib/localized"
@@ -19,7 +18,7 @@ import { emptyLocalized } from "@/lib/localized"
 export function LocationsForm({ initial }: { initial: LocationsDraft }) {
   const t = useTranslations("admin.locations")
   const common = useTranslations("admin.common")
-  const [draft, setDraft] = useState(initial)
+  const [draft, setDraft] = useSectionDraft(initial)
 
   return (
     <SectionForm
@@ -33,7 +32,7 @@ export function LocationsForm({ initial }: { initial: LocationsDraft }) {
         <RowTable
           items={draft.locations}
           onChange={(locations) => setDraft({ locations })}
-          createItem={() => ({
+          createItem={(): LocationsDraft["locations"][number] => ({
             slug: "",
             name: emptyLocalized(),
             isVisible: true,
@@ -53,6 +52,7 @@ export function LocationsForm({ initial }: { initial: LocationsDraft }) {
               <AdminField label={t("slug")} tooltip={t("slugTip")}>
                 <AdminInput
                   dir="ltr"
+                  disabled={Boolean(item.id)}
                   value={item.slug}
                   onChange={(event) =>
                     update({ ...item, slug: event.target.value })

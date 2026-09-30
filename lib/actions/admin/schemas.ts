@@ -43,7 +43,6 @@ export const generalSchema = z.object({
   addressLine1: localizedSchema,
   addressLine2: localizedSchema,
   addressFull: localizedSchema,
-  laneDesc: localizedSchema,
   phone: z.string(),
   whatsapp: z.string(),
   email: z.string(),
@@ -58,8 +57,6 @@ export const generalSchema = z.object({
   hours: z.array(dayHoursSchema),
   seoTitle: localizedSchema,
   seoDescription: localizedSchema,
-  contactTitle: localizedSchema,
-  contactIntro: localizedSchema,
   footerNote: localizedSchema,
 })
 export type GeneralDraft = z.infer<typeof generalSchema>
@@ -122,7 +119,6 @@ export const homeSchema = z.object({
   servicesIntro: localizedSchema,
   galleryTitle: localizedSchema,
   reviewsTitle: localizedSchema,
-  aboutImageUrl: z.string(),
   contactTitle: localizedSchema,
   contactIntro: localizedSchema,
   pricing: pricingSchema,
@@ -216,6 +212,7 @@ const eventTypeContentSchema = z.object({
   packageChildrenCount: z.number().int().nonnegative().nullable(),
   extraChildAmount: optionalMoney,
   depositAmount: optionalMoney,
+  scheduleTitle: localizedSchema,
   allowedItems: z.array(localizedSchema),
   forbiddenItems: z.array(localizedSchema),
   rulesNote: localizedSchema,

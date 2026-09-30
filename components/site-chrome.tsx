@@ -6,7 +6,11 @@ import { SiteHeader } from "@/components/home/site-header"
 import { PageTransition } from "@/components/page-transition"
 import { SiteContentProvider } from "@/components/site-content-context"
 import { byBranch, type BranchId } from "@/lib/branches"
-import { getHomeContent, getSiteBranches } from "@/lib/db/queries/site"
+import {
+  getHomeContent,
+  getSiteBranches,
+  logError,
+} from "@/lib/db/queries/site"
 
 export async function SiteChrome({
   branchId,
@@ -17,7 +21,7 @@ export async function SiteChrome({
 }) {
   const [branches, contentRows] = await Promise.all([
     getSiteBranches(),
-    getHomeContent().catch(() => []),
+    getHomeContent().catch(logError("getHomeContent", [])),
   ])
   const content = byBranch(contentRows)
 

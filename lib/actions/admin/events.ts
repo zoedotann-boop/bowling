@@ -1,6 +1,7 @@
 "use server"
 
-import { eq } from "drizzle-orm"
+import { eq, inArray } from "drizzle-orm"
+import { refresh } from "next/cache"
 
 import { requireLocationAccess } from "@/lib/admin/access"
 import { db } from "@/lib/db"
@@ -13,8 +14,9 @@ import {
   eventUpgrade,
 } from "@/lib/db/schema"
 
-import { eventsSchema, type EventTypeDraft } from "./schemas"
-import { type ActionResult, OK, readSlug, syncCollection } from "./shared"
+import { eventsSchema } from "./schemas"
+import { type ActionResult, OK, readSlug } from "./shared"
+import { ownedIds, syncRows, upsert, withIds } from "./sync"
 
 export async function saveEvents(input: unknown): Promise<ActionResult> {
   const { location: loc } = await requireLocationAccess(
@@ -38,192 +40,63 @@ export async function saveEvents(input: unknown): Promise<ActionResult> {
     }
   }
 
-  const existing = await db.query.eventType.findMany({
-    where: eq(eventType.locationId, locationId),
-    columns: { id: true },
+  await db.transaction(async (tx) => {
+    const scope = eq(eventType.locationId, locationId)
+    const types = withIds(data.eventTypes, await ownedIds(tx, eventType, scope))
+    const typeIds = types.map((type) => type.id)
+    const children = <T extends { id?: string }>(
+      pick: (type: (typeof types)[number]) => T[]
+    ) =>
+      types.flatMap((type) =>
+        withIds(pick(type)).map((row) => ({ ...row, eventTypeId: type.id }))
+      )
+
+    await syncRows(
+      tx,
+      eventType,
+      scope,
+      types.map(({ id, slug, name, isVisible, sortOrder }) => ({
+        id,
+        locationId,
+        slug,
+        name,
+        isVisible,
+        sortOrder,
+      }))
+    )
+    await upsert(
+      tx,
+      eventTypeContent,
+      eventTypeContent.eventTypeId,
+      types.map((type) => ({ eventTypeId: type.id, ...type.content }))
+    )
+
+    await syncRows(
+      tx,
+      eventStep,
+      inArray(eventStep.eventTypeId, typeIds),
+      children((type) => type.steps)
+    )
+    await syncRows(
+      tx,
+      eventPackageLine,
+      inArray(eventPackageLine.eventTypeId, typeIds),
+      children((type) => type.packageLines)
+    )
+    await syncRows(
+      tx,
+      eventUpgrade,
+      inArray(eventUpgrade.eventTypeId, typeIds),
+      children((type) => type.upgrades)
+    )
+    await syncRows(
+      tx,
+      eventFormField,
+      inArray(eventFormField.eventTypeId, typeIds),
+      children((type) => type.formFields)
+    )
   })
-  const keptIds = new Set(
-    data.eventTypes.map((type) => type.id).filter(Boolean)
-  )
-  for (const type of existing) {
-    if (!keptIds.has(type.id)) {
-      await db.delete(eventType).where(eq(eventType.id, type.id))
-    }
-  }
 
-  for (const [sortOrder, type] of data.eventTypes.entries()) {
-    let eventTypeId: string
-    if (type.id) {
-      await db
-        .update(eventType)
-        .set({
-          slug: type.slug,
-          name: type.name,
-          isVisible: type.isVisible,
-          sortOrder,
-        })
-        .where(eq(eventType.id, type.id))
-      eventTypeId = type.id
-    } else {
-      const [inserted] = await db
-        .insert(eventType)
-        .values({
-          locationId,
-          slug: type.slug,
-          name: type.name,
-          isVisible: type.isVisible,
-          sortOrder,
-        })
-        .returning({ id: eventType.id })
-      eventTypeId = inserted.id
-    }
-
-    await saveEventTypeChildren(eventTypeId, type)
-  }
-
+  refresh()
   return OK
-}
-
-async function saveEventTypeChildren(
-  eventTypeId: string,
-  type: EventTypeDraft
-): Promise<void> {
-  await db
-    .insert(eventTypeContent)
-    .values({ eventTypeId, ...type.content })
-    .onConflictDoUpdate({
-      target: eventTypeContent.eventTypeId,
-      set: type.content,
-    })
-
-  const steps = await db.query.eventStep.findMany({
-    where: eq(eventStep.eventTypeId, eventTypeId),
-    columns: { id: true },
-  })
-  await syncCollection({
-    existingIds: steps.map((row) => row.id),
-    incoming: type.steps.map((row, order) => ({ ...row, sortOrder: order })),
-    insert: async (row) => {
-      await db.insert(eventStep).values({
-        eventTypeId,
-        title: row.title,
-        description: row.description,
-        sortOrder: row.sortOrder,
-      })
-    },
-    update: async (id, row) => {
-      await db
-        .update(eventStep)
-        .set({
-          title: row.title,
-          description: row.description,
-          sortOrder: row.sortOrder,
-        })
-        .where(eq(eventStep.id, id))
-    },
-    remove: async (id) => {
-      await db.delete(eventStep).where(eq(eventStep.id, id))
-    },
-  })
-
-  const lines = await db.query.eventPackageLine.findMany({
-    where: eq(eventPackageLine.eventTypeId, eventTypeId),
-    columns: { id: true },
-  })
-  await syncCollection({
-    existingIds: lines.map((row) => row.id),
-    incoming: type.packageLines.map((row, order) => ({
-      ...row,
-      sortOrder: order,
-    })),
-    insert: async (row) => {
-      await db.insert(eventPackageLine).values({
-        eventTypeId,
-        label: row.label,
-        sortOrder: row.sortOrder,
-      })
-    },
-    update: async (id, row) => {
-      await db
-        .update(eventPackageLine)
-        .set({ label: row.label, sortOrder: row.sortOrder })
-        .where(eq(eventPackageLine.id, id))
-    },
-    remove: async (id) => {
-      await db.delete(eventPackageLine).where(eq(eventPackageLine.id, id))
-    },
-  })
-
-  const upgrades = await db.query.eventUpgrade.findMany({
-    where: eq(eventUpgrade.eventTypeId, eventTypeId),
-    columns: { id: true },
-  })
-  await syncCollection({
-    existingIds: upgrades.map((row) => row.id),
-    incoming: type.upgrades.map((row, order) => ({ ...row, sortOrder: order })),
-    insert: async (row) => {
-      await db.insert(eventUpgrade).values({
-        eventTypeId,
-        label: row.label,
-        amount: row.amount,
-        sortOrder: row.sortOrder,
-      })
-    },
-    update: async (id, row) => {
-      await db
-        .update(eventUpgrade)
-        .set({ label: row.label, amount: row.amount, sortOrder: row.sortOrder })
-        .where(eq(eventUpgrade.id, id))
-    },
-    remove: async (id) => {
-      await db.delete(eventUpgrade).where(eq(eventUpgrade.id, id))
-    },
-  })
-
-  const fields = await db.query.eventFormField.findMany({
-    where: eq(eventFormField.eventTypeId, eventTypeId),
-    columns: { id: true },
-  })
-  await syncCollection({
-    existingIds: fields.map((row) => row.id),
-    incoming: type.formFields.map((row, order) => ({
-      ...row,
-      sortOrder: order,
-    })),
-    insert: async (row) => {
-      await db.insert(eventFormField).values({
-        eventTypeId,
-        key: row.key,
-        label: row.label,
-        placeholder: row.placeholder,
-        type: row.type,
-        options: row.options,
-        minValue: row.minValue,
-        maxValue: row.maxValue,
-        isRequired: row.isRequired,
-        isVisible: row.isVisible,
-        sortOrder: row.sortOrder,
-      })
-    },
-    update: async (id, row) => {
-      await db
-        .update(eventFormField)
-        .set({
-          key: row.key,
-          label: row.label,
-          placeholder: row.placeholder,
-          type: row.type,
-          options: row.options,
-          minValue: row.minValue,
-          maxValue: row.maxValue,
-          isRequired: row.isRequired,
-          isVisible: row.isVisible,
-          sortOrder: row.sortOrder,
-        })
-        .where(eq(eventFormField.id, id))
-    },
-    remove: async (id) => {
-      await db.delete(eventFormField).where(eq(eventFormField.id, id))
-    },
-  })
 }

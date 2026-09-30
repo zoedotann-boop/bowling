@@ -4,6 +4,7 @@ import { ChevronLeft } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import { branchPath, type Branch } from "@/lib/branches"
+import { isRemoteImage } from "@/lib/utils"
 import { LaneLines } from "@/components/decor/lane-lines"
 import { NeonSign } from "@/components/decor/neon-sign"
 import { PinsSettle } from "@/components/decor/pins-settle"
@@ -46,6 +47,7 @@ export function BranchChooser({ branches }: { branches: Branch[] }) {
                     alt=""
                     width={branch.logo.width}
                     height={branch.logo.height}
+                    unoptimized={isRemoteImage(branch.logo.src)}
                     priority
                     className="h-full max-h-32 w-auto object-contain"
                   />
