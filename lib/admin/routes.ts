@@ -2,6 +2,7 @@ import type { AdminCapability } from "./permissions"
 
 export const ADMIN_ROOT = "/admin"
 export const ADMIN_LOGIN_PATH = "/admin/login"
+export const DEFAULT_ADMIN_SECTION = "home"
 
 export function locationSectionPath(slug: string, section: string): string {
   return `${ADMIN_ROOT}/${slug}/${section}`
