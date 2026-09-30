@@ -20,7 +20,7 @@ import {
 import { CSS } from "@dnd-kit/utilities"
 import { GripVertical, Pencil, Plus, Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
-import { useState } from "react"
+import { useId, useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -62,6 +62,7 @@ export function RowTable<T>({
 }: RowTableProps<T>) {
   const t = useTranslations("admin.common")
   const inDialog = useInDialog()
+  const dndId = useId()
 
   const itemIds = items.map((_, index) => index)
 
@@ -101,6 +102,7 @@ export function RowTable<T>({
   return (
     <div className="space-y-2">
       <DndContext
+        id={dndId}
         sensors={sensors}
         collisionDetection={closestCenter}
         modifiers={[restrictToVerticalAxis]}

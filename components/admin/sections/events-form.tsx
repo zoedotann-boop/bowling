@@ -19,6 +19,7 @@ import type {
   EventsDraft,
   EventTypeDraft,
 } from "@/lib/actions/admin/schemas"
+import type { Localized } from "@/lib/db/schema/_shared"
 import { FORM_FIELD_TYPES } from "@/lib/events/fields"
 import { emptyLocalized } from "@/lib/localized"
 
@@ -47,6 +48,41 @@ function MoneyField({
         }
       />
     </AdminField>
+  )
+}
+
+function TextListField({
+  title,
+  addLabel,
+  items,
+  onChange,
+}: {
+  title: string
+  addLabel: string
+  items: Localized[]
+  onChange: (items: Localized[]) => void
+}) {
+  const t = useTranslations("admin.events")
+  return (
+    <div>
+      <h4 className="mb-2 text-sm font-medium">{title}</h4>
+      <RowTable
+        items={items}
+        onChange={onChange}
+        createItem={emptyLocalized}
+        addLabel={addLabel}
+        columns={[{ header: t("ruleText"), cell: (item) => item.he || "—" }]}
+        editTitle={() => t("ruleText")}
+        renderRow={(item, index, update) => (
+          <LocalizedField
+            label={t("ruleText")}
+            tooltip={t("ruleTextTip")}
+            value={item}
+            onChange={update}
+          />
+        )}
+      />
+    </div>
   )
 }
 
@@ -266,28 +302,6 @@ export function EventsForm({
               onChange={(depositAmount) => setContent({ depositAmount })}
             />
           </div>
-          <LocalizedField
-            label={t("formIntro")}
-            tooltip={t("formIntroTip")}
-            multiline
-            value={type.content.formIntro}
-            onChange={(formIntro) => setContent({ formIntro })}
-          />
-          <LocalizedField
-            label={t("formTerms")}
-            tooltip={t("formTermsTip")}
-            multiline
-            value={type.content.formTerms}
-            onChange={(formTerms) => setContent({ formTerms })}
-          />
-          <AdminFlag
-            label={t("requiresSignature")}
-            description={t("requiresSignatureTip")}
-            checked={type.content.requiresSignature}
-            onCheckedChange={(requiresSignature) =>
-              setContent({ requiresSignature })
-            }
-          />
         </AdminCard>
 
         <AdminCard title={t("steps")}>
@@ -378,6 +392,105 @@ export function EventsForm({
           />
         </AdminCard>
 
+        <AdminCard title={t("rules")} description={t("rulesTip")}>
+          <TextListField
+            title={t("allowedItems")}
+            addLabel={t("addAllowedItem")}
+            items={type.content.allowedItems}
+            onChange={(allowedItems) => setContent({ allowedItems })}
+          />
+          <TextListField
+            title={t("forbiddenItems")}
+            addLabel={t("addForbiddenItem")}
+            items={type.content.forbiddenItems}
+            onChange={(forbiddenItems) => setContent({ forbiddenItems })}
+          />
+          <LocalizedField
+            label={t("rulesNote")}
+            tooltip={t("rulesNoteTip")}
+            multiline
+            value={type.content.rulesNote}
+            onChange={(rulesNote) => setContent({ rulesNote })}
+          />
+        </AdminCard>
+
+        <AdminCard title={t("policy")} description={t("policyTip")}>
+          <RowTable
+            items={type.content.policyItems}
+            onChange={(policyItems) => setContent({ policyItems })}
+            createItem={() => ({
+              title: emptyLocalized(),
+              description: emptyLocalized(),
+            })}
+            addLabel={t("addPolicyItem")}
+            columns={[
+              {
+                header: t("policyItemTitle"),
+                cell: (item) => item.title.he || "—",
+              },
+            ]}
+            editTitle={(item) => item.title.he || t("policyItemTitle")}
+            renderRow={(item, index, updateItem) => (
+              <div className="space-y-4">
+                <LocalizedField
+                  label={t("policyItemTitle")}
+                  tooltip={t("policyItemTitleTip")}
+                  value={item.title}
+                  onChange={(title) => updateItem({ ...item, title })}
+                />
+                <LocalizedField
+                  label={t("policyItemDescription")}
+                  tooltip={t("policyItemDescriptionTip")}
+                  multiline
+                  value={item.description}
+                  onChange={(description) =>
+                    updateItem({ ...item, description })
+                  }
+                />
+              </div>
+            )}
+          />
+          <LocalizedField
+            label={t("policyNote")}
+            tooltip={t("policyNoteTip")}
+            multiline
+            value={type.content.policyNote}
+            onChange={(policyNote) => setContent({ policyNote })}
+          />
+        </AdminCard>
+
+        <AdminCard title={t("bookingForm")} description={t("bookingFormTip")}>
+          <LocalizedField
+            label={t("formIntro")}
+            tooltip={t("formIntroTip")}
+            multiline
+            value={type.content.formIntro}
+            onChange={(formIntro) => setContent({ formIntro })}
+          />
+          <LocalizedField
+            label={t("formTerms")}
+            tooltip={t("formTermsTip")}
+            multiline
+            value={type.content.formTerms}
+            onChange={(formTerms) => setContent({ formTerms })}
+          />
+          <LocalizedField
+            label={t("formFootnote")}
+            tooltip={t("formFootnoteTip")}
+            multiline
+            value={type.content.formFootnote}
+            onChange={(formFootnote) => setContent({ formFootnote })}
+          />
+          <AdminFlag
+            label={t("requiresSignature")}
+            description={t("requiresSignatureTip")}
+            checked={type.content.requiresSignature}
+            onCheckedChange={(requiresSignature) =>
+              setContent({ requiresSignature })
+            }
+          />
+        </AdminCard>
+
         <AdminCard title={t("formFields")} description={t("formFieldsTip")}>
           <RowTable
             items={type.formFields}
@@ -441,8 +554,14 @@ export function EventsForm({
               packageChildrenCount: null,
               extraChildAmount: null,
               depositAmount: null,
+              allowedItems: [],
+              forbiddenItems: [],
+              rulesNote: emptyLocalized(),
+              policyItems: [],
+              policyNote: emptyLocalized(),
               formIntro: emptyLocalized(),
               formTerms: emptyLocalized(),
+              formFootnote: emptyLocalized(),
               requiresSignature: false,
             },
             steps: [],

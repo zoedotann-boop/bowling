@@ -88,23 +88,12 @@ async function saveEventTypeChildren(
   eventTypeId: string,
   type: EventTypeDraft
 ): Promise<void> {
-  const contentValues = {
-    heroTitle: type.content.heroTitle,
-    heroDescription: type.content.heroDescription,
-    packageAmount: type.content.packageAmount,
-    packageChildrenCount: type.content.packageChildrenCount,
-    extraChildAmount: type.content.extraChildAmount,
-    depositAmount: type.content.depositAmount,
-    formIntro: type.content.formIntro,
-    formTerms: type.content.formTerms,
-    requiresSignature: type.content.requiresSignature,
-  }
   await db
     .insert(eventTypeContent)
-    .values({ eventTypeId, ...contentValues })
+    .values({ eventTypeId, ...type.content })
     .onConflictDoUpdate({
       target: eventTypeContent.eventTypeId,
-      set: contentValues,
+      set: type.content,
     })
 
   const steps = await db.query.eventStep.findMany({
