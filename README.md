@@ -58,11 +58,14 @@ its own page image, upgrades (plus the booking form's upgrades-box title and
 explanation), "what to bring" lists, booking policy and confirmation-form
 texts — unsaved ones show the `messages/*` defaults), the
 **Terms & accessibility** pages, plus owner-only Locations and Team. It uses **Drizzle ORM + PostgreSQL** and
-**Better Auth**, passwordless: sign-in emails a one-time code (via the
-`emailOTP` plugin, so `RESEND_API_KEY` is required to log in; the code is sent
-from `login@<BETTER_AUTH_URL host>`, or `login@bowlingil.com` on
-localhost, so verify that domain in Resend and publish a DMARC record for it,
-e.g. `_dmarc` TXT `v=DMARC1; p=none;`) and public signup is disabled.
+**Better Auth**. The login page (`/admin/login`) has two tabs: **Password**
+(`emailAndPassword`) and **One-time code** (the `emailOTP` plugin emails a
+6-digit code). Both are always available to every team member. Invitations,
+"forgot password" links and one-time codes are all emailed, so `RESEND_API_KEY`
+is required; they are sent from `login@<BETTER_AUTH_URL host>`, or
+`login@bowlingil.com` on localhost, so verify that domain in Resend and publish
+a DMARC record for it, e.g. `_dmarc` TXT `v=DMARC1; p=none;`. Public signup is
+disabled for both methods.
 
 ### Setup
 
@@ -84,14 +87,26 @@ bun run db:migrate    # apply them (DATABASE_URL_UNPOOLED if set, else DATABASE_
 bun run db:seed       # create the owner + the two branches
 ```
 
-Unit tests run with `bun test` (`bun run test`).
+Unit tests run with `bun test` (`bun run test`). `bunfig.toml` preloads
+`lib/db/testing/preload.ts`, which swaps `@/lib/db` for an in-memory PGlite
+database (all migrations applied) for the whole run, so tests never touch the
+real database. Auth tests (`lib/auth.test.ts`) exercise the real Better Auth
+config against it and capture outgoing emails via `lib/db/testing/auth.ts`.
 
 `db:seed` creates an owner from `SEED_ADMIN_EMAIL` (default
-`owner@example.com`); there are no passwords. Sign in at `/admin/login` by
-entering that address — Better Auth emails a one-time code. There is no public
+`owner@example.com`) without a password. Sign in at `/admin/login` on the
+**One-time code** tab, or choose **Forgot your password, or don't have one
+yet?** on the Password tab to get a link for choosing one. There is no public
 signup: owners add everyone else under **Team** (`/admin/team`) — name, email,
-role, and (for managers/staff) the locations they may edit. The new user can
-sign in right away with that email.
+role, and (for managers/staff) the locations they may edit.
+
+Adding a member emails them an **invitation** with a link to
+`/admin/set-password`, where they choose a password (min. 8 characters) and are
+signed straight in. The same page handles "forgot password" links (the email
+says "reset" instead of "invite" once the user has a password). Links are
+single-use and valid for 24 hours (`lib/admin/password.ts`); an expired link
+offers to send a new one. Resetting a password signs the user out of every
+other session. One-time codes keep working whether or not a password is set.
 
 ### Architecture
 

@@ -14,11 +14,13 @@ export function AdminTabs({
   tabs,
   value,
   onValueChange,
+  stretch = false,
   className,
 }: {
   tabs: AdminTab[]
   value?: string
   onValueChange?: (value: string) => void
+  stretch?: boolean
   className?: string
 }) {
   return (
@@ -33,7 +35,10 @@ export function AdminTabs({
           <Tabs.Tab
             key={tab.value}
             value={tab.value}
-            className="h-8 shrink-0 rounded-md px-3 text-sm font-medium whitespace-nowrap text-muted-foreground outline-none select-none not-data-active:hover:bg-muted not-data-active:hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 data-active:bg-primary data-active:text-primary-foreground"
+            className={cn(
+              "h-8 shrink-0 rounded-md px-3 text-sm font-medium whitespace-nowrap text-muted-foreground outline-none select-none not-data-active:hover:bg-muted not-data-active:hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 data-active:bg-primary data-active:text-primary-foreground",
+              stretch && "flex-1"
+            )}
           >
             {tab.label}
           </Tabs.Tab>

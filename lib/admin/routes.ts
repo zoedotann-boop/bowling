@@ -26,3 +26,7 @@ export const OWNER_SECTIONS = [
   { key: "locations", path: `${ADMIN_ROOT}/locations` },
   { key: "team", path: `${ADMIN_ROOT}/team` },
 ] as const
+
+export function setPasswordPath(email: string): string {
+  return `${ADMIN_ROOT}/set-password?${new URLSearchParams({ email })}`
+}
