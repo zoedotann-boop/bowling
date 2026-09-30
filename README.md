@@ -53,7 +53,9 @@ is missing, the route responds with `500 { error: "Email service is not configur
 ## Admin
 
 The admin lives under `/admin` (login at `/admin/login`) and manages per-location
-content: settings, home page, menu, events (multiple event types), the
+content: settings, home page, menu, events (multiple event types, each with
+its own "what to bring" lists, booking policy and confirmation-form texts —
+unsaved ones show the `messages/*` defaults), the
 **Terms & accessibility** pages, plus owner-only Locations and Team. It uses **Drizzle ORM + PostgreSQL** and
 **Better Auth**, passwordless: sign-in emails a one-time code (via the
 `emailOTP` plugin, so `RESEND_API_KEY` is required to log in; the code is sent

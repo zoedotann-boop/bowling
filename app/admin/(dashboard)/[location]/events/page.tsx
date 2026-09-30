@@ -1,8 +1,13 @@
 import { EventsForm } from "@/components/admin/sections/events-form"
 import { requireLocationAccess } from "@/lib/admin/access"
-import { toLocalized } from "@/lib/admin/drafts"
+import { toFormFieldDraft, toLocalized } from "@/lib/admin/drafts"
 import type { EventsDraft } from "@/lib/actions/admin/schemas"
 import { getEventsEditor } from "@/lib/db/queries/admin"
+import {
+  defaultFormFields,
+  eventDetailDefaults,
+} from "@/lib/events/detail-defaults"
+import { withEventDetailDefaults } from "@/lib/events/details"
 
 export default async function EventsPage({
   params,
@@ -27,8 +32,10 @@ export default async function EventsPage({
         packageChildrenCount: type.content?.packageChildrenCount ?? null,
         extraChildAmount: type.content?.extraChildAmount ?? null,
         depositAmount: type.content?.depositAmount ?? null,
-        formIntro: toLocalized(type.content?.formIntro),
-        formTerms: toLocalized(type.content?.formTerms),
+        ...withEventDetailDefaults(
+          type.content,
+          eventDetailDefaults(slug, type.slug)
+        ),
         requiresSignature: type.content?.requiresSignature ?? false,
       },
       steps: type.steps.map((step) => ({
@@ -45,21 +52,10 @@ export default async function EventsPage({
         label: toLocalized(upgrade.label),
         amount: upgrade.amount,
       })),
-      formFields: type.formFields.map((field) => ({
-        id: field.id,
-        key: field.key,
-        label: toLocalized(field.label),
-        placeholder: toLocalized(field.placeholder),
-        type: field.type,
-        options: (field.options ?? []).map((option) => ({
-          value: option.value,
-          label: toLocalized(option.label),
-        })),
-        minValue: field.minValue,
-        maxValue: field.maxValue,
-        isRequired: field.isRequired,
-        isVisible: field.isVisible,
-      })),
+      formFields: (type.formFields.length
+        ? type.formFields
+        : defaultFormFields(slug, type.slug)
+      ).map(toFormFieldDraft),
     })),
   }
 

@@ -3,10 +3,8 @@
 import {
   useRef,
   useState,
-  type ChangeEvent,
   type ComponentType,
   type FormEvent,
-  type InputHTMLAttributes,
   type SVGProps,
 } from "react"
 import Image from "next/image"
@@ -17,7 +15,9 @@ import SignatureCanvas from "react-signature-canvas"
 
 import { cn } from "@/lib/utils"
 import { branchPath, type BranchId } from "@/lib/branches"
-import type { SiteEventLocation, SiteEventType } from "@/lib/db/queries/site"
+import type { SiteEventLocation } from "@/lib/db/queries/site"
+import type { Localized } from "@/lib/db/schema/_shared"
+import type { BookingFormField } from "@/lib/events/fields"
 import { formatPrice, pickLocale } from "@/lib/localized"
 import { useBranch } from "@/components/branch-context"
 import {
@@ -29,8 +29,6 @@ import {
 } from "@/components/illustrations"
 import { Contact } from "@/components/home/contact"
 import { Container } from "@/components/home/container"
-
-type FormField = SiteEventType["formFields"][number]
 
 const ILLUSTRATIONS: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
   birthdays: BirthdaysIllustration,
@@ -61,10 +59,10 @@ interface Extra {
 }
 interface PriceCard {
   tag?: string
-  sub: string
+  sub?: string
   label: string
   price: string
-  note: string
+  note?: string
   note2?: string
 }
 interface PolicyRow {
@@ -76,6 +74,11 @@ interface FormConfig {
   countPlaceholder: string
   celebrant: boolean
   policyCheckbox: boolean
+}
+interface BookingTexts {
+  intro: string
+  terms: string
+  footnote: string
 }
 interface FormSummary {
   rows: { label: string; value: string }[]
@@ -276,9 +279,11 @@ function PriceSection({
           >
             <div className="flex items-start justify-between gap-3">
               <div>
-                <div className="font-mono text-[12.5px] font-bold text-mud">
-                  {card.sub}
-                </div>
+                {card.sub ? (
+                  <div className="font-mono text-[12.5px] font-bold text-mud">
+                    {card.sub}
+                  </div>
+                ) : null}
                 <div className="mt-0.5 font-heading text-[19px] font-black text-navy">
                   {card.label}
                 </div>
@@ -292,9 +297,11 @@ function PriceSection({
             <div className="mt-4 font-heading text-[44px] leading-none font-black text-primary">
               {card.price}
             </div>
-            <div className="mt-2 text-[12.5px] font-semibold text-mud">
-              {card.note}
-            </div>
+            {card.note ? (
+              <div className="mt-2 text-[12.5px] font-semibold text-mud">
+                {card.note}
+              </div>
+            ) : null}
             {card.note2 ? (
               <div className="mt-2 inline-block border-b-2 border-primary/40 pb-0.5 font-heading text-[12px] font-extrabold text-navy">
                 {card.note2}
@@ -421,8 +428,12 @@ function RulesSection({
     <div>
       <SectionHeading title={title} />
       <div className="grid gap-8 sm:grid-cols-2 lg:gap-12">
-        <RuleCard heading={allowedTitle} items={allowed} ok />
-        <RuleCard heading={forbiddenTitle} items={forbidden} ok={false} />
+        {allowed.length ? (
+          <RuleCard heading={allowedTitle} items={allowed} ok />
+        ) : null}
+        {forbidden.length ? (
+          <RuleCard heading={forbiddenTitle} items={forbidden} ok={false} />
+        ) : null}
       </div>
       {footnote ? (
         <p className="mt-5 text-[13px] font-semibold text-mud italic">
@@ -505,31 +516,14 @@ function TermsSection({
   )
 }
 
-function Field({
-  label,
-  ...props
-}: { label: string } & InputHTMLAttributes<HTMLInputElement>) {
-  return (
-    <label className="flex flex-col gap-1.5">
-      <span className="font-heading text-[13px] font-extrabold text-navy">
-        {label}
-      </span>
-      <input className={inputClass} {...props} />
-    </label>
-  )
+const AUTOCOMPLETE: Partial<Record<string, string>> = {
+  firstName: "given-name",
+  lastName: "family-name",
+  email: "email",
+  phone: "tel",
 }
 
-const EMPTY_FIELDS = {
-  firstName: "",
-  lastName: "",
-  idNumber: "",
-  celebrants: "",
-  email: "",
-  phone: "",
-  date: "",
-}
-
-const INPUT_TYPES: Record<FormField["type"], string> = {
+const INPUT_TYPES: Record<BookingFormField["type"], string> = {
   text: "text",
   textarea: "textarea",
   tel: "tel",
@@ -541,13 +535,13 @@ const INPUT_TYPES: Record<FormField["type"], string> = {
   checkbox: "checkbox",
 }
 
-function DynamicField({
+function BookingFieldInput({
   field,
   value,
   onChange,
   locale,
 }: {
-  field: FormField
+  field: BookingFormField
   value: string
   onChange: (value: string) => void
   locale: "he" | "en"
@@ -613,6 +607,7 @@ function DynamicField({
           placeholder={placeholder || undefined}
           required={field.isRequired}
           inputMode={field.type === "id" ? "numeric" : undefined}
+          autoComplete={AUTOCOMPLETE[field.key]}
           min={
             field.type === "number" ? (field.minValue ?? undefined) : undefined
           }
@@ -627,22 +622,22 @@ function DynamicField({
 
 function BookingForm({
   event,
+  texts,
   upgrades,
   formFields,
   requiresSignature,
 }: {
   event: string
+  texts: BookingTexts
   upgrades?: Extra[]
-  formFields: FormField[]
+  formFields: BookingFormField[]
   requiresSignature: boolean
 }) {
   const t = useTranslations("eventDetails.form")
   const { branchId } = useBranch()
   const locale = useLocale() as "he" | "en"
   const sigRef = useRef<SignatureCanvas>(null)
-  const isDynamic = formFields.length > 0
 
-  const [fields, setFields] = useState(EMPTY_FIELDS)
   const [values, setValues] = useState<Record<string, string>>({})
   const [selectedUpgrades, setSelectedUpgrades] = useState<string[]>([])
   const [agreed, setAgreed] = useState(false)
@@ -650,10 +645,6 @@ function BookingForm({
     "idle"
   )
   const [error, setError] = useState<string | null>(null)
-
-  const update =
-    (key: keyof typeof fields) => (e: ChangeEvent<HTMLInputElement>) =>
-      setFields((prev) => ({ ...prev, [key]: e.target.value }))
 
   const setValue = (key: string, value: string) =>
     setValues((prev) => ({ ...prev, [key]: value }))
@@ -687,7 +678,7 @@ function BookingForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           event,
-          ...(isDynamic ? values : fields),
+          ...values,
           branch: branchId,
           upgrades: selectedUpgrades,
           signature,
@@ -695,7 +686,6 @@ function BookingForm({
       })
       if (!res.ok) throw new Error("request failed")
       setStatus("sent")
-      setFields(EMPTY_FIELDS)
       setValues({})
       setSelectedUpgrades([])
       setAgreed(false)
@@ -718,79 +708,19 @@ function BookingForm({
           onChange={(e) => setAgreed(e.target.checked)}
           className="mt-0.5 size-4 shrink-0 accent-primary"
         />
-        {t("termsConfirm")}
+        {texts.terms}
       </label>
 
       <div className="grid gap-3.5 sm:grid-cols-2">
-        {isDynamic ? (
-          formFields.map((field) => (
-            <DynamicField
-              key={field.id}
-              field={field}
-              value={values[field.key] ?? ""}
-              onChange={(value) => setValue(field.key, value)}
-              locale={locale}
-            />
-          ))
-        ) : (
-          <>
-            <Field
-              label={t("firstNameLabel")}
-              value={fields.firstName}
-              onChange={update("firstName")}
-              placeholder={t("firstNamePlaceholder")}
-              autoComplete="given-name"
-              required
-            />
-            <Field
-              label={t("lastNameLabel")}
-              value={fields.lastName}
-              onChange={update("lastName")}
-              placeholder={t("lastNamePlaceholder")}
-              autoComplete="family-name"
-              required
-            />
-            <Field
-              label={t("idLabel")}
-              value={fields.idNumber}
-              onChange={update("idNumber")}
-              placeholder={t("idPlaceholder")}
-              inputMode="numeric"
-              required
-            />
-            <Field
-              label={t("celebrantsLabel")}
-              value={fields.celebrants}
-              onChange={update("celebrants")}
-              placeholder={t("celebrantsPlaceholder")}
-            />
-            <Field
-              label={t("emailLabel")}
-              type="email"
-              value={fields.email}
-              onChange={update("email")}
-              placeholder={t("emailPlaceholder")}
-              autoComplete="email"
-              required
-            />
-            <Field
-              label={t("phoneLabel")}
-              type="tel"
-              value={fields.phone}
-              onChange={update("phone")}
-              placeholder={t("phonePlaceholder")}
-              autoComplete="tel"
-              required
-            />
-            <Field
-              label={t("dateLabel")}
-              type="date"
-              value={fields.date}
-              onChange={update("date")}
-              required
-            />
-          </>
-        )}
+        {formFields.map((field) => (
+          <BookingFieldInput
+            key={field.key}
+            field={field}
+            value={values[field.key] ?? ""}
+            onChange={(value) => setValue(field.key, value)}
+            locale={locale}
+          />
+        ))}
       </div>
 
       {upgrades?.length ? (
@@ -887,24 +817,28 @@ function BookingForm({
         <p className="text-center text-[13.5px] font-bold text-rust">{error}</p>
       ) : null}
 
-      <p className="text-center text-[12px] font-medium text-mud">
-        {t("footnote")}
-      </p>
+      {texts.footnote ? (
+        <p className="text-center text-[12px] font-medium text-mud">
+          {texts.footnote}
+        </p>
+      ) : null}
     </form>
   )
 }
 
 function BookingSection({
   event,
+  texts,
   upgrades,
   summary,
   formFields,
   requiresSignature,
 }: {
   event: string
+  texts: BookingTexts
   upgrades?: Extra[]
   summary?: FormSummary
-  formFields: FormField[]
+  formFields: BookingFormField[]
   requiresSignature: boolean
 }) {
   const t = useTranslations("eventDetails.form")
@@ -921,9 +855,11 @@ function BookingSection({
             {t("title")}
           </h2>
           <div className="glow-primary mx-auto mt-3 h-[7px] w-[70px] rounded-full bg-primary lg:w-20" />
-          <p className="mx-auto mt-3 max-w-[520px] text-[14px] leading-[1.55] font-semibold text-muted-foreground lg:text-[16px]">
-            {t("desc")}
-          </p>
+          {texts.intro ? (
+            <p className="mx-auto mt-3 max-w-[520px] text-[14px] leading-[1.55] font-semibold text-muted-foreground lg:text-[16px]">
+              {texts.intro}
+            </p>
+          ) : null}
         </div>
 
         {summary ? (
@@ -956,6 +892,7 @@ function BookingSection({
 
         <BookingForm
           event={event}
+          texts={texts}
           upgrades={upgrades}
           formFields={formFields}
           requiresSignature={requiresSignature}
@@ -968,9 +905,11 @@ function BookingSection({
 export function EventDetailPage({
   slug,
   events,
+  defaultFormFields,
 }: {
   slug: string
   events: Partial<Record<BranchId, SiteEventLocation>>
+  defaultFormFields: BookingFormField[]
 }) {
   const t = useTranslations("eventDetails")
   const { branch } = useBranch()
@@ -981,6 +920,44 @@ export function EventDetailPage({
 
   const dbTypes = events[branch.id]?.eventTypes ?? []
   const dbType = dbTypes.find((e) => e.slug === slug)
+  const content = dbType?.content
+  const pick = (value: Localized) => pickLocale(value, locale)
+  const pickOr = <T extends string | undefined>(
+    value: Localized | null | undefined,
+    fallback: T
+  ): string | T => (value ? pick(value) : fallback)
+  const money = (amount: number) => formatPrice(amount, locale)
+  const childCount = content?.packageChildrenCount
+  const extraChild = content?.extraChildAmount
+  const deposit = content?.depositAmount
+  const extraChildNote =
+    extraChild == null
+      ? undefined
+      : childCount
+        ? t("package.extraOver", {
+            count: childCount,
+            price: money(extraChild),
+          })
+        : t("package.extra", { price: money(extraChild) })
+  const packagePrice: EventItem["price"] =
+    content?.packageAmount != null
+      ? {
+          note:
+            deposit != null
+              ? t("package.deposit", { price: money(deposit) })
+              : undefined,
+          cards: [
+            {
+              label: t("package.label"),
+              price: money(content.packageAmount),
+              note: childCount
+                ? t("package.upTo", { count: childCount })
+                : undefined,
+              note2: extraChildNote,
+            },
+          ],
+        }
+      : undefined
   const data: EventItem = {
     ...messageData,
     title: pickLocale(dbType?.content?.heroTitle, locale) || messageData.title,
@@ -997,6 +974,7 @@ export function EventDetailPage({
           }))
         : messageData.schedule.steps,
     },
+    price: packagePrice ?? messageData.price,
     included: dbType?.packageLines.length
       ? dbType.packageLines.map((l) => pickLocale(l.label, locale))
       : messageData.included,
@@ -1006,6 +984,20 @@ export function EventDetailPage({
           price: u.amount != null ? formatPrice(u.amount, locale) : "",
         }))
       : messageData.extras,
+    allowed: content?.allowedItems?.map(pick) ?? messageData.allowed,
+    forbidden: content?.forbiddenItems?.map(pick) ?? messageData.forbidden,
+    rulesFootnote: pickOr(content?.rulesNote, messageData.rulesFootnote),
+    policy:
+      content?.policyItems?.map((row) => ({
+        title: pick(row.title),
+        desc: pick(row.description),
+      })) ?? messageData.policy,
+    policyFootnote: pickOr(content?.policyNote, messageData.policyFootnote),
+  }
+  const bookingTexts: BookingTexts = {
+    intro: pickOr(content?.formIntro, t("form.desc")),
+    terms: pickLocale(content?.formTerms, locale) || t("form.termsConfirm"),
+    footnote: pickOr(content?.formFootnote, t("form.footnote")),
   }
 
   const isCorporate = slug === "corporate"
@@ -1089,10 +1081,10 @@ export function EventDetailPage({
                 notes={data.includedNotes}
               />
             ) : null}
-            {data.allowed && data.forbidden ? (
+            {data.allowed?.length || data.forbidden?.length ? (
               <RulesSection
-                allowed={data.allowed}
-                forbidden={data.forbidden}
+                allowed={data.allowed ?? []}
+                forbidden={data.forbidden ?? []}
                 title={t("rulesTitle")}
                 allowedTitle={t("allowedTitle")}
                 forbiddenTitle={t("forbiddenTitle")}
@@ -1108,7 +1100,7 @@ export function EventDetailPage({
             ) : null}
           </Container>
 
-          {data.policy ? (
+          {data.policy?.length ? (
             <section className="border-t border-border bg-background py-10 lg:py-14">
               <Container>
                 <TermsSection
@@ -1130,9 +1122,12 @@ export function EventDetailPage({
       ) : data.form || dbType?.formFields.length ? (
         <BookingSection
           event={data.title}
+          texts={bookingTexts}
           upgrades={data.extras}
           summary={data.formSummary}
-          formFields={dbType?.formFields ?? []}
+          formFields={
+            dbType?.formFields.length ? dbType.formFields : defaultFormFields
+          }
           requiresSignature={dbType?.content?.requiresSignature ?? true}
         />
       ) : null}

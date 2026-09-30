@@ -205,6 +205,10 @@ const eventUpgradeSchema = z.object({
   label: localizedSchema,
   amount: optionalMoney,
 })
+const eventPolicyItemSchema = z.object({
+  title: localizedSchema,
+  description: localizedSchema,
+})
 const eventTypeContentSchema = z.object({
   heroTitle: localizedSchema,
   heroDescription: localizedSchema,
@@ -212,8 +216,14 @@ const eventTypeContentSchema = z.object({
   packageChildrenCount: z.number().int().nonnegative().nullable(),
   extraChildAmount: optionalMoney,
   depositAmount: optionalMoney,
+  allowedItems: z.array(localizedSchema),
+  forbiddenItems: z.array(localizedSchema),
+  rulesNote: localizedSchema,
+  policyItems: z.array(eventPolicyItemSchema),
+  policyNote: localizedSchema,
   formIntro: localizedSchema,
   formTerms: localizedSchema,
+  formFootnote: localizedSchema,
   requiresSignature: z.boolean(),
 })
 const eventTypeSchema = z.object({

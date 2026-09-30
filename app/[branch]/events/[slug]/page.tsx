@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server"
 import { EventDetailPage } from "@/components/pages/event-detail-page"
 import { byBranch } from "@/lib/branches"
 import { getEvents } from "@/lib/db/queries/site"
+import { defaultBookingFields } from "@/lib/events/detail-defaults"
 
 const SLUGS = ["birthdays", "no-room", "team", "gymboree", "corporate"] as const
 
@@ -32,5 +33,11 @@ export default async function Page({
   const { slug } = await params
   if (!SLUGS.includes(slug as (typeof SLUGS)[number])) notFound()
   const events = byBranch(await getEvents().catch(() => []))
-  return <EventDetailPage slug={slug} events={events} />
+  return (
+    <EventDetailPage
+      slug={slug}
+      events={events}
+      defaultFormFields={defaultBookingFields()}
+    />
+  )
 }

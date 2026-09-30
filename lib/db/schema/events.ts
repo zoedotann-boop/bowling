@@ -8,9 +8,10 @@ import {
   uuid,
 } from "drizzle-orm/pg-core"
 
+import type { EventPolicyItem } from "@/lib/events/details"
 import { FORM_FIELD_TYPES, type FormFieldOption } from "@/lib/events/fields"
 
-import { localized, timestamps } from "./_shared"
+import { localized, timestamps, type Localized } from "./_shared"
 import { location } from "./locations"
 
 export const formFieldType = pgEnum("form_field_type", FORM_FIELD_TYPES)
@@ -37,8 +38,14 @@ export const eventTypeContent = pgTable("event_type_content", {
   packageChildrenCount: integer("package_children_count"),
   extraChildAmount: integer("extra_child_amount"),
   depositAmount: integer("deposit_amount"),
+  allowedItems: jsonb().$type<Localized[]>(),
+  forbiddenItems: jsonb().$type<Localized[]>(),
+  rulesNote: localized(),
+  policyItems: jsonb().$type<EventPolicyItem[]>(),
+  policyNote: localized(),
   formIntro: localized(),
   formTerms: localized(),
+  formFootnote: localized(),
   requiresSignature: boolean("requires_signature").notNull().default(false),
   ...timestamps,
 })
