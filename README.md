@@ -34,6 +34,16 @@ bun run comments:remove   # strip comments in place
 `commentless.config.json` sets `maxAllowed` to `0`. For the rare comment that
 must stay, mark it with `// commentless-keep`.
 
+## React Doctor
+
+CI runs [React Doctor](https://github.com/millionco/react-doctor) and fails on
+error-level findings (warnings are reported only). It is a pinned dev dependency
+so it installs from `bun.lock` like everything else — bump it deliberately.
+
+```bash
+bun run doctor
+```
+
 ## Environment variables
 
 Create a `.env` file (git-ignored). The contact form
