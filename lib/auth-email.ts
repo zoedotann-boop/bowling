@@ -1,7 +1,7 @@
 import "server-only"
 
 import { BRANCHES, DEFAULT_BRANCH } from "@/lib/branches"
-import { noReplySender, sendMail } from "@/lib/email"
+import { loginSender, sendMail } from "@/lib/email"
 import { emailShell, noteParagraph, otpCode } from "@/lib/email-template"
 
 export async function sendLoginOtp(to: string, otp: string): Promise<void> {
@@ -15,10 +15,11 @@ export async function sendLoginOtp(to: string, otp: string): Promise<void> {
       noteParagraph(
         "הקוד תקף ל-5 דקות. אם לא ביקשתם אותו, אפשר להתעלם מההודעה."
       ),
+    contactLinks: false,
   })
 
   const result = await sendMail({
-    from: noReplySender(process.env.BETTER_AUTH_URL),
+    from: loginSender(process.env.BETTER_AUTH_URL),
     to,
     subject: "קוד הכניסה שלך לאזור הניהול 🔐",
     html,

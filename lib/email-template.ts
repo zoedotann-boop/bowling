@@ -27,6 +27,7 @@ interface EmailShellInput {
   heading: string
   intro?: string
   body: string
+  contactLinks?: boolean
 }
 
 export function emailShell({
@@ -35,9 +36,18 @@ export function emailShell({
   heading,
   intro,
   body,
+  contactLinks = true,
 }: EmailShellInput): string {
   const introHtml = intro
     ? `<p style="margin:0 0 20px;font-size:15px;line-height:1.7;color:${C.muted};text-align:right;">${escapeHtml(intro)}</p>`
+    : ""
+
+  const contactHtml = contactLinks
+    ? `<div style="margin-top:4px;font-size:13px;color:${C.muted};">
+                  <a href="tel:${escapeHtml(branch.phone)}" style="color:${C.cyan};text-decoration:none;font-weight:700;">${escapeHtml(branch.phone)}</a>
+                  &nbsp;·&nbsp;
+                  <a href="https://wa.me/${escapeHtml(branch.whatsapp)}" style="color:${C.cyan};text-decoration:none;font-weight:700;">WhatsApp</a>
+                </div>`
     : ""
 
   return `<!doctype html>
@@ -78,11 +88,7 @@ export function emailShell({
               <td style="background:${C.deep};padding:24px 32px;font-family:${FONT};border-top:1px solid ${C.border};text-align:right;">
                 <div style="font-size:14px;font-weight:900;color:${C.text};">${escapeHtml(BRAND_HE)} · ${escapeHtml(branch.name.he)}</div>
                 <div style="margin-top:6px;font-size:13px;line-height:1.6;color:${C.muted};">${escapeHtml(branch.addressFull.he)}</div>
-                <div style="margin-top:4px;font-size:13px;color:${C.muted};">
-                  <a href="tel:${escapeHtml(branch.phone)}" style="color:${C.cyan};text-decoration:none;font-weight:700;">${escapeHtml(branch.phone)}</a>
-                  &nbsp;·&nbsp;
-                  <a href="https://wa.me/${escapeHtml(branch.whatsapp)}" style="color:${C.cyan};text-decoration:none;font-weight:700;">WhatsApp</a>
-                </div>
+                ${contactHtml}
                 <div style="margin-top:14px;font-size:11px;color:${C.faint};">הודעה זו נשלחה אוטומטית ממערכת האתר.</div>
               </td>
             </tr>
