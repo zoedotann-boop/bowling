@@ -88,7 +88,7 @@ describe("mergeBranch", () => {
 
   test("falls back to built-in values for blank database fields", () => {
     const empty = { he: "", en: "" }
-    expect(mergeBranch(base, row())).toEqual({
+    expect(mergeBranch(base, row({ email: "  " }))).toEqual({
       ...base,
       seoTitle: empty,
       seoDescription: empty,
@@ -118,11 +118,13 @@ describe("mergeBranch", () => {
       row({
         name: { he: "  ראשון החדש ", en: " " },
         phone: "03-1234567",
+        email: " hello@example.com ",
         lanes: 20,
       })
     )
     expect(merged.name).toEqual({ he: "ראשון החדש", en: base.name.en })
     expect(merged.phone).toBe("03-1234567")
+    expect(merged.email).toBe("hello@example.com")
     expect(merged.lanes).toBe(20)
   })
 
