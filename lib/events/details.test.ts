@@ -8,10 +8,27 @@ import {
   defaultFormFields,
   eventDetailDefaults,
 } from "./detail-defaults"
-import { withEventDetailDefaults, type EventDetailTexts } from "./details"
+import {
+  summaryRowsFromPrices,
+  withEventDetailDefaults,
+  type EventDetailTexts,
+} from "./details"
 
 const DEFAULTS: EventDetailTexts = {
   scheduleTitle: { he: "מה הלו״ז?", en: "What's the schedule?" },
+  priceNote: { he: "מינימום 20 משתתפים", en: "Minimum 20 participants" },
+  priceOptions: [
+    {
+      label: { he: "אמצע שבוע", en: "Midweek" },
+      days: { he: "א׳–ה׳", en: "Sun–Thu" },
+      badge: { he: "", en: "" },
+      amount: 1180,
+      childrenCount: 20,
+      extraChildAmount: 59,
+    },
+  ],
+  priceSummaryMode: "auto",
+  priceSummaryRows: [],
   allowedItems: [{ he: "עוגה", en: "Cake" }],
   forbiddenItems: [{ he: "זיקוקים", en: "Fireworks" }],
   rulesNote: { he: "הערת כללים", en: "Rules note" },
@@ -50,6 +67,24 @@ describe("withEventDetailDefaults", () => {
   test("stored values replace the defaults", () => {
     const stored: EventDetailTexts = {
       scheduleTitle: { he: "איך זה עובד?", en: "How it works" },
+      priceNote: { he: "מחיר לקבוצה", en: "Per group" },
+      priceOptions: [
+        {
+          label: { he: "סופ״ש", en: "Weekend" },
+          days: { he: "", en: "" },
+          badge: { he: "מבוקש", en: "Popular" },
+          amount: 900,
+          childrenCount: null,
+          extraChildAmount: null,
+        },
+      ],
+      priceSummaryMode: "manual",
+      priceSummaryRows: [
+        {
+          label: { he: "סופ״ש", en: "Weekend" },
+          value: { he: "900 ₪", en: "₪ 900" },
+        },
+      ],
       allowedItems: [{ he: "בלונים", en: "Balloons" }],
       forbiddenItems: [{ he: "אלכוהול", en: "Alcohol" }],
       rulesNote: { he: "א", en: "a" },
@@ -71,23 +106,53 @@ describe("withEventDetailDefaults", () => {
 
   test("keeps an emptied list empty so the admin can hide a section", () => {
     const result = withEventDetailDefaults(
-      { allowedItems: [], forbiddenItems: [], policyItems: [] },
+      {
+        allowedItems: [],
+        forbiddenItems: [],
+        policyItems: [],
+        priceOptions: [],
+      },
       DEFAULTS
     )
     expect(result.allowedItems).toEqual([])
     expect(result.forbiddenItems).toEqual([])
     expect(result.policyItems).toEqual([])
+    expect(result.priceOptions).toEqual([])
   })
 
   test("keeps a cleared note blank so the admin can hide it", () => {
     const blank = { he: "", en: "" }
     const result = withEventDetailDefaults(
-      { rulesNote: blank, policyNote: blank, formFootnote: blank },
+      {
+        rulesNote: blank,
+        policyNote: blank,
+        formFootnote: blank,
+        priceNote: blank,
+      },
       DEFAULTS
     )
+    expect(result.priceNote).toEqual(blank)
     expect(result.rulesNote).toEqual(blank)
     expect(result.policyNote).toEqual(blank)
     expect(result.formFootnote).toEqual(blank)
+  })
+})
+
+describe("summaryRowsFromPrices", () => {
+  test("turns each priced option into a row with the price in both languages", () => {
+    const [midweek] = DEFAULTS.priceOptions
+    expect(
+      summaryRowsFromPrices([
+        { ...midweek, amount: 1180 },
+        { ...midweek, label: { he: "בוקר", en: "Morning" }, amount: null },
+      ])
+    ).toEqual([
+      { label: midweek.label, value: { he: "1,180 ₪", en: "1,180 ₪" } },
+    ])
+  })
+
+  test("returns no rows when there are no prices", () => {
+    expect(summaryRowsFromPrices([])).toEqual([])
   })
 })
 
@@ -138,6 +203,66 @@ describe("eventDetailDefaults", () => {
       en: enOverride.policyFootnote,
     })
     expect(defaults.policyItems).toHaveLength(override.policy.length)
+  })
+
+  test("offers Rishon's weekend and midweek birthday prices as options", () => {
+    const defaults = eventDetailDefaults("rishon", "birthdays")
+    expect(defaults.priceNote).toEqual({
+      he: "מינימום 20 משתתפים. תוספת לכל משתתף מעל למינימום.",
+      en: "Minimum 20 participants. Extra charge for each participant above the minimum.",
+    })
+    expect(defaults.priceOptions).toEqual([
+      {
+        label: { he: "סופ״ש / חול המועד", en: "Weekend / Chol HaMoed" },
+        days: { he: "שי׳–שב׳", en: "Fri–Sat" },
+        badge: { he: "סופ״ש וחגים", en: "Weekends & holidays" },
+        amount: 1280,
+        childrenCount: 20,
+        extraChildAmount: 64,
+      },
+      {
+        label: { he: "אמצע שבוע", en: "Midweek" },
+        days: { he: "א׳–ה׳", en: "Sun–Thu" },
+        badge: { he: "", en: "" },
+        amount: 1180,
+        childrenCount: 20,
+        extraChildAmount: 59,
+      },
+    ])
+  })
+
+  test("leaves the participant fields empty when a price has none", () => {
+    const defaults = eventDetailDefaults("rishon", "team")
+    expect(defaults.priceNote.he).toBe("מחיר לקבוצה · מינימום משתתפים")
+    expect(
+      defaults.priceOptions.map((option) => [
+        option.amount,
+        option.childrenCount,
+        option.extraChildAmount,
+      ])
+    ).toEqual([
+      [1280, null, null],
+      [1180, null, null],
+    ])
+  })
+
+  test("has no price options when the event has no default prices", () => {
+    const defaults = eventDetailDefaults("ramat-gan", "birthdays")
+    expect(defaults.priceOptions).toEqual([])
+    expect(defaults.priceNote).toEqual({ he: "", en: "" })
+  })
+
+  test("builds the price summary from the prices only where it was shown", () => {
+    expect(eventDetailDefaults("rishon", "birthdays")).toMatchObject({
+      priceSummaryMode: "auto",
+      priceSummaryRows: [],
+    })
+    expect(eventDetailDefaults("ramat-gan", "birthdays").priceSummaryMode).toBe(
+      "hidden"
+    )
+    expect(eventDetailDefaults("rishon", "team").priceSummaryMode).toBe(
+      "hidden"
+    )
   })
 
   test("takes the form texts from the shared booking form copy", () => {

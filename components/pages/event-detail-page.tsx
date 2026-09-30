@@ -59,11 +59,19 @@ interface Extra {
   desc?: string
   price: string
 }
+interface PriceOption {
+  badge?: string
+  days?: string
+  label: string
+  amount: number | null
+  childrenCount?: number | null
+  extraChildAmount?: number | null
+}
 interface PriceCard {
   tag?: string
   sub?: string
   label: string
-  price: string
+  price?: string
   note?: string
   note2?: string
 }
@@ -95,7 +103,7 @@ interface EventItem {
   description: string
   schedule?: { note: string; footnote: string; steps: Step[] }
   scheduleTitle?: string
-  price?: { note?: string; cards: PriceCard[] }
+  price?: { note?: string; options: PriceOption[] }
   included?: string[]
   includedTitle?: string
   includedNotes?: string[]
@@ -110,7 +118,7 @@ interface EventItem {
   groupOptions?: string[]
   groupOptionsTitle?: string
   form?: FormConfig
-  formSummary?: FormSummary
+  showPriceSummary?: boolean
 }
 
 const inputClass =
@@ -302,9 +310,11 @@ function PriceSection({
                 </span>
               ) : null}
             </div>
-            <div className="mt-4 font-heading text-[44px] leading-none font-black text-primary">
-              {card.price}
-            </div>
+            {card.price ? (
+              <div className="mt-4 font-heading text-[44px] leading-none font-black text-primary">
+                {card.price}
+              </div>
+            ) : null}
             {card.note ? (
               <div className="mt-2 text-[12.5px] font-semibold text-mud">
                 {card.note}
@@ -872,9 +882,9 @@ function BookingSection({
               {te("summaryTitle")}
             </div>
             <div className="mt-3 flex flex-col gap-2">
-              {summary.rows.map((r) => (
+              {summary.rows.map((r, i) => (
                 <div
-                  key={r.label}
+                  key={i}
                   className="flex items-center justify-between gap-3 border-t border-border pt-2 first:border-t-0 first:pt-0"
                 >
                   <span className="text-[13.5px] font-semibold text-foreground">
@@ -933,37 +943,76 @@ export function EventDetailPage({
     fallback: T
   ): string | T => (value ? pick(value) : fallback)
   const money = (amount: number) => formatPrice(amount, locale)
-  const childCount = content?.packageChildrenCount
-  const extraChild = content?.extraChildAmount
-  const deposit = content?.depositAmount
-  const extraChildNote =
-    extraChild == null
-      ? undefined
-      : childCount
-        ? t("package.extraOver", {
-            count: childCount,
-            price: money(extraChild),
-          })
-        : t("package.extra", { price: money(extraChild) })
-  const packagePrice: EventItem["price"] =
-    content?.packageAmount != null
-      ? {
-          note:
-            deposit != null
-              ? t("package.deposit", { price: money(deposit) })
-              : undefined,
-          cards: [
-            {
-              label: t("package.label"),
-              price: money(content.packageAmount),
-              note: childCount
-                ? t("package.upTo", { count: childCount })
-                : undefined,
-              note2: extraChildNote,
-            },
-          ],
-        }
+  const priceCard = ({
+    badge,
+    days,
+    label,
+    amount,
+    childrenCount,
+    extraChildAmount,
+  }: PriceOption): PriceCard => ({
+    tag: badge || undefined,
+    sub: days || undefined,
+    label,
+    price: amount != null ? money(amount) : undefined,
+    note: childrenCount
+      ? t("package.upTo", { count: childrenCount })
+      : undefined,
+    note2:
+      extraChildAmount == null
+        ? undefined
+        : childrenCount
+          ? t("package.extraOver", {
+              count: childrenCount,
+              price: money(extraChildAmount),
+            })
+          : t("package.extra", { price: money(extraChildAmount) }),
+  })
+  const priceOptions: PriceOption[] =
+    content?.priceOptions?.map((option) => ({
+      ...option,
+      badge: pick(option.badge),
+      days: pick(option.days),
+      label: pick(option.label),
+    })) ??
+    messageData.price?.options ??
+    []
+  const depositNote =
+    content?.depositAmount != null
+      ? t("package.deposit", { price: money(content.depositAmount) })
       : undefined
+  const priceNote = [
+    pickOr(content?.priceNote, messageData.price?.note),
+    depositNote,
+  ]
+    .filter(Boolean)
+    .join(" ")
+  const summaryMode =
+    content?.priceSummaryMode ??
+    (messageData.showPriceSummary ? "auto" : "hidden")
+  const summaryRows: FormSummary["rows"] =
+    summaryMode === "auto"
+      ? priceOptions.flatMap(({ label, amount, childrenCount }) =>
+          amount == null
+            ? []
+            : [
+                {
+                  label: childrenCount
+                    ? `${label} · ${t("package.kids", { count: childrenCount })}`
+                    : label,
+                  value: money(amount),
+                },
+              ]
+        )
+      : summaryMode === "manual"
+        ? (content?.priceSummaryRows ?? []).map((row) => ({
+            label: pick(row.label),
+            value: pick(row.value),
+          }))
+        : []
+  const summary: FormSummary | undefined = summaryRows.length
+    ? { rows: summaryRows, note: depositNote }
+    : undefined
   const steps: Step[] = dbType
     ? dbType.steps.map((s) => ({
         icon: "",
@@ -987,7 +1036,6 @@ export function EventDetailPage({
           steps,
         }
       : undefined,
-    price: packagePrice ?? messageData.price,
     included: dbType
       ? dbType.packageLines.map((l) => pick(l.label))
       : messageData.included,
@@ -1069,11 +1117,11 @@ export function EventDetailPage({
       ) : null}
 
       <Container className="flex flex-col gap-12 py-10 lg:gap-16 lg:py-14">
-        {data.price ? (
+        {priceOptions.length ? (
           <PriceSection
-            cards={data.price.cards}
+            cards={priceOptions.map(priceCard)}
             title={t("priceTitle")}
-            note={data.price.note}
+            note={priceNote || undefined}
           />
         ) : null}
         {data.included?.length ? (
@@ -1131,7 +1179,7 @@ export function EventDetailPage({
           slug={slug}
           texts={bookingTexts}
           upgrades={data.extras}
-          summary={data.formSummary}
+          summary={summary}
           formFields={
             dbType?.formFields.length ? dbType.formFields : defaultFormFields
           }

@@ -8,13 +8,22 @@ import {
   uuid,
 } from "drizzle-orm/pg-core"
 
-import type { EventPolicyItem } from "@/lib/events/details"
+import {
+  PRICE_SUMMARY_MODES,
+  type EventPolicyItem,
+  type EventPriceOption,
+  type EventSummaryRow,
+} from "@/lib/events/details"
 import { FORM_FIELD_TYPES, type FormFieldOption } from "@/lib/events/fields"
 
 import { localized, timestamps, type Localized } from "./_shared"
 import { location } from "./locations"
 
 export const formFieldType = pgEnum("form_field_type", FORM_FIELD_TYPES)
+export const priceSummaryMode = pgEnum(
+  "price_summary_mode",
+  PRICE_SUMMARY_MODES
+)
 
 export const eventType = pgTable("event_type", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -35,10 +44,11 @@ export const eventTypeContent = pgTable("event_type_content", {
   heroTitle: localized(),
   heroDescription: localized(),
   heroImageUrl: text("hero_image_url"),
-  packageAmount: integer("package_amount"),
-  packageChildrenCount: integer("package_children_count"),
-  extraChildAmount: integer("extra_child_amount"),
   depositAmount: integer("deposit_amount"),
+  priceNote: localized(),
+  priceOptions: jsonb().$type<EventPriceOption[]>(),
+  priceSummaryMode: priceSummaryMode(),
+  priceSummaryRows: jsonb().$type<EventSummaryRow[]>(),
   scheduleTitle: localized(),
   allowedItems: jsonb().$type<Localized[]>(),
   forbiddenItems: jsonb().$type<Localized[]>(),

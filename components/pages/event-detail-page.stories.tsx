@@ -34,9 +34,6 @@ const DEFAULT_FIELDS = [
 
 interface HeroAndPricing {
   heroImageUrl: string | null
-  packageAmount: number | null
-  packageChildrenCount: number | null
-  extraChildAmount: number | null
   depositAmount: number | null
 }
 
@@ -55,10 +52,11 @@ function birthdaysWith(
       heroTitle: null,
       heroDescription: null,
       heroImageUrl: null,
-      packageAmount: null,
-      packageChildrenCount: null,
-      extraChildAmount: null,
       depositAmount: null,
+      priceNote: null,
+      priceOptions: null,
+      priceSummaryMode: null,
+      priceSummaryRows: null,
       requiresSignature: true,
       allowedItems: null,
       forbiddenItems: null,
@@ -99,10 +97,35 @@ export const CustomizedInAdmin: Story = {
   args: {
     events: birthdaysWith(
       {
-        packageAmount: 1000,
-        packageChildrenCount: 20,
-        extraChildAmount: 23,
+        priceNote: { he: "מינימום 15 משתתפים." },
+        priceOptions: [
+          {
+            label: { he: "סופ״ש" },
+            days: { he: "שי׳–שב׳" },
+            badge: { he: "הכי מבוקש" },
+            amount: 1100,
+            childrenCount: 15,
+            extraChildAmount: 25,
+          },
+          {
+            label: { he: "אמצע שבוע" },
+            days: { he: "א׳–ה׳" },
+            badge: blank,
+            amount: 1000,
+            childrenCount: 15,
+            extraChildAmount: 23,
+          },
+          {
+            label: { he: "בוקר" },
+            days: blank,
+            badge: blank,
+            amount: 900,
+            childrenCount: null,
+            extraChildAmount: null,
+          },
+        ],
         depositAmount: 200,
+        priceSummaryMode: "auto",
         allowedItems: [{ he: "בלונים" }, { he: "עוגה ביתית" }],
         forbiddenItems: [{ he: "קונפטי" }],
         rulesNote: { he: "את העוגה מגישים רק בשולחן יום ההולדת." },
@@ -128,6 +151,29 @@ export const CustomizedInAdmin: Story = {
         { label: { he: "מדריך נוסף" }, amount: 150 },
       ]
     ),
+  },
+}
+
+export const ManualPriceSummary: Story = {
+  args: {
+    events: birthdaysWith({
+      priceOptions: [
+        {
+          label: { he: "אמצע שבוע", en: "" },
+          days: { he: "א׳–ה׳", en: "" },
+          badge: blank,
+          amount: 1180,
+          childrenCount: 20,
+          extraChildAmount: 59,
+        },
+      ],
+      priceSummaryMode: "manual",
+      priceSummaryRows: [
+        { label: { he: "חבילה בסיסית · 20 ילדים" }, value: { he: "1,180 ₪" } },
+        { label: { he: "כל ילד נוסף" }, value: { he: "59 ₪" } },
+      ],
+      depositAmount: 200,
+    }),
   },
 }
 

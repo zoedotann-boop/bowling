@@ -1,12 +1,34 @@
 import type { Localized } from "@/lib/db/schema/_shared"
+import { formatPrice } from "@/lib/localized"
 
 export interface EventPolicyItem {
   title: Localized
   description: Localized
 }
 
+export const PRICE_SUMMARY_MODES = ["auto", "manual", "hidden"] as const
+export type PriceSummaryMode = (typeof PRICE_SUMMARY_MODES)[number]
+
+export interface EventSummaryRow {
+  label: Localized
+  value: Localized
+}
+
+export interface EventPriceOption {
+  label: Localized
+  days: Localized
+  badge: Localized
+  amount: number | null
+  childrenCount: number | null
+  extraChildAmount: number | null
+}
+
 export interface EventDetailTexts {
   scheduleTitle: Localized
+  priceNote: Localized
+  priceOptions: EventPriceOption[]
+  priceSummaryMode: PriceSummaryMode
+  priceSummaryRows: EventSummaryRow[]
   allowedItems: Localized[]
   forbiddenItems: Localized[]
   rulesNote: Localized
@@ -19,6 +41,24 @@ export interface EventDetailTexts {
   upgradesNote: Localized
 }
 
+export function summaryRowsFromPrices(
+  options: EventPriceOption[]
+): EventSummaryRow[] {
+  return options.flatMap(({ label, amount }) =>
+    amount == null
+      ? []
+      : [
+          {
+            label,
+            value: {
+              he: formatPrice(amount, "he"),
+              en: formatPrice(amount, "en"),
+            },
+          },
+        ]
+  )
+}
+
 type StoredEventDetailTexts = {
   [K in keyof EventDetailTexts]?: EventDetailTexts[K] | null
 }
@@ -29,6 +69,10 @@ export function withEventDetailDefaults(
 ): EventDetailTexts {
   return {
     scheduleTitle: stored?.scheduleTitle ?? defaults.scheduleTitle,
+    priceNote: stored?.priceNote ?? defaults.priceNote,
+    priceOptions: stored?.priceOptions ?? defaults.priceOptions,
+    priceSummaryMode: stored?.priceSummaryMode ?? defaults.priceSummaryMode,
+    priceSummaryRows: stored?.priceSummaryRows ?? defaults.priceSummaryRows,
     allowedItems: stored?.allowedItems ?? defaults.allowedItems,
     forbiddenItems: stored?.forbiddenItems ?? defaults.forbiddenItems,
     rulesNote: stored?.rulesNote ?? defaults.rulesNote,

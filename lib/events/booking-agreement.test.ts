@@ -29,6 +29,10 @@ async function addEvent(
 
 const TEXTS: EventDetailTexts = {
   scheduleTitle: text(""),
+  priceNote: text(""),
+  priceOptions: [],
+  priceSummaryMode: "hidden",
+  priceSummaryRows: [],
   allowedItems: [text("עוגה"), text("  ")],
   forbiddenItems: [text("זיקוקים")],
   rulesNote: text("הערת כללים"),

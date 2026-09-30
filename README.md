@@ -165,8 +165,18 @@ The public pages render the admin's content live from the database:
   their message array) when the DB value is blank (except reviews, which only
   ever come from Google — see below), so the site never breaks if
   the database is unavailable or a field is unset. Copy that the admin does not
-  manage (UI chrome, pricing/gymboree sections, event badges / price cards /
-  rules / policy) stays in `messages/*`.
+  manage (UI chrome, pricing/gymboree sections, event badges) stays in
+  `messages/*`.
+- **Event prices** each event type has a list of price options (name, days,
+  highlight tag, price, participants included, price per extra participant)
+  plus a note under the heading, stored as `event_type_content.price_options`
+  / `price_note`. While they are NULL the page and the admin editor use the
+  defaults in `messages/*` (`eventDetails[.branch.<id>].<slug>.price`); an
+  empty list hides the Price section. The "Price summary" box above the booking
+  form follows `price_summary_mode`: `auto` builds its rows from the price
+  options, `manual` shows `price_summary_rows`, `hidden` hides it (NULL = `auto`
+  where the messages set `showPriceSummary`, else hidden). The deposit line
+  appears under both.
 - **Legal pages** `/terms` (תקנון האתר) and `/accessibility` (הצהרת נגישות)
   render the branch's `legal_page` row (admin → **Terms & accessibility**,
   managers and owners). The body is plain text: `## ` starts a section card,

@@ -632,11 +632,11 @@
     "includedTitle": "What's included",
     "priceTitle": "Price",
     "package": {
-      "label": "Package price",
       "upTo": "Up to {count} participants",
       "extraOver": "Over {count} · {price} / child",
       "extra": "Each additional child {price}",
-      "deposit": "Deposit to hold the date: {price} (deducted from the final total)"
+      "deposit": "Deposit to hold the date: {price} (deducted from the final total)",
+      "kids": "{count} kids"
     },
     "rulesTitle": "Allowed & not allowed to bring",
     "allowedTitle": "Allowed",
@@ -715,21 +715,21 @@
           },
           "price": {
             "note": "Minimum 20 participants. Extra charge for each participant above the minimum.",
-            "cards": [
+            "options": [
               {
-                "tag": "Weekends & holidays",
-                "sub": "Fri–Sat",
+                "badge": "Weekends & holidays",
+                "days": "Fri–Sat",
                 "label": "Weekend / Chol HaMoed",
-                "price": "₪ 1,280",
-                "note": "Up to 20 participants",
-                "note2": "Over 20 · ₪ 64 / child"
+                "amount": 1280,
+                "childrenCount": 20,
+                "extraChildAmount": 64
               },
               {
-                "sub": "Sun–Thu",
+                "days": "Sun–Thu",
                 "label": "Midweek",
-                "price": "₪ 1,180",
-                "note": "Up to 20 participants",
-                "note2": "Over 20 · ₪ 59 / child"
+                "amount": 1180,
+                "childrenCount": 20,
+                "extraChildAmount": 59
               }
             ]
           },
@@ -831,19 +831,7 @@
             "celebrant": false,
             "policyCheckbox": true
           },
-          "formSummary": {
-            "rows": [
-              {
-                "label": "Midweek · 20 kids",
-                "value": "₪ 1,180"
-              },
-              {
-                "label": "Weekend / holidays · 20 kids",
-                "value": "₪ 1,280"
-              }
-            ],
-            "note": "Reservation deposit: ₪ 200 (deducted from the final total)"
-          }
+          "showPriceSummary": true
         }
       }
     },
@@ -1100,19 +1088,18 @@
           ]
         },
         "price": {
-          "cards": [
+          "note": "Price per group · minimum participants",
+          "options": [
             {
-              "tag": "Weekends & holidays",
-              "sub": "Fri–Sat",
+              "badge": "Weekends & holidays",
+              "days": "Fri–Sat",
               "label": "Weekend / Chol HaMoed",
-              "price": "₪ 1,280",
-              "note": "Price per group · minimum participants"
+              "amount": 1280
             },
             {
-              "sub": "Sun–Thu",
+              "days": "Sun–Thu",
               "label": "Midweek",
-              "price": "₪ 1,180",
-              "note": "Price per group · minimum participants"
+              "amount": 1180
             }
           ]
         },
@@ -1227,12 +1214,13 @@
           ]
         },
         "price": {
-          "cards": [
+          "options": [
             {
-              "sub": "All week",
+              "days": "All week",
               "label": "Sun to Sat",
-              "price": "₪ 1,200",
-              "note": "Up to 20 participants · each additional child ₪ 60"
+              "amount": 1200,
+              "childrenCount": 20,
+              "extraChildAmount": 60
             }
           ]
         },
@@ -1688,8 +1676,8 @@
       "pageTop": "Top of page",
       "pageAddress": "Page address",
       "pageAddressTip": "The English end of the page address (lowercase letters, digits and dashes). Filled in automatically — you can change it to something readable, e.g. summer-camp. Set once when the event type is created.",
-      "price": "Package price",
-      "priceHint": "While the package price is empty, the page keeps showing the existing price cards.",
+      "price": "Prices",
+      "priceHint": "The price options in the event page's Price section — e.g. midweek and weekend, each on its own card. Delete every option to hide the section.",
       "typeName": "Event name",
       "typeNameTip": "Event type name, shown as the card title on the Events page (e.g. Birthdays).",
       "heroTitle": "Title",
@@ -1698,14 +1686,38 @@
       "heroDescriptionTip": "Intro paragraph under the event page's headline. Also shown on its card on the Events page.",
       "heroImage": "Image",
       "heroImageTip": "The large picture next to the title at the top of the event page. Upload a file (JPG, PNG, WebP or AVIF, up to 10 MB) or paste a URL. Leave empty to show the event's original illustration (or photo). A landscape 4:3 image works best.",
-      "packageAmount": "Package price",
-      "packageAmountTip": "Base package price in whole shekels, digits only (e.g. 1200). Shown in the event page's Price section; leave blank to keep the existing price cards.",
-      "packageChildrenCount": "Children in package",
-      "packageChildrenCountTip": "How many children the base price covers, shown on the price card (\"Up to N participants\"). Only shown when a package price is set.",
-      "extraChildAmount": "Price per extra child",
-      "extraChildAmountTip": "Price per child beyond the included count, in whole shekels. Shown on the price card when a package price is set.",
+      "priceNote": "Note under the Price heading",
+      "priceNoteTip": "A line of explanation under the section heading, e.g. \"Minimum 20 participants\". Leave empty to hide it.",
+      "addPriceOption": "Add price option",
+      "priceOptionLabel": "Option name",
+      "priceOptionLabelTip": "The price card's title, e.g. \"Midweek\" or \"Weekend / Chol HaMoed\".",
+      "priceOptionDays": "Days",
+      "priceOptionDaysTip": "A small line above the option name, e.g. \"Sun–Thu\". Can be left empty.",
+      "priceOptionBadge": "Highlight tag",
+      "priceOptionBadgeTip": "A colored tag in the card's corner, e.g. \"Weekends & holidays\". A card with a tag gets a colored top line. Leave empty for no tag.",
+      "priceOptionAmount": "Price",
+      "priceOptionAmountTip": "The price in whole shekels, digits only (e.g. 1180).",
+      "priceOptionChildren": "Participants included",
+      "priceOptionChildrenTip": "How many participants the price covers, shown on the card as \"Up to N participants\". Can be left empty.",
+      "priceOptionExtraChild": "Price per extra participant",
+      "priceOptionExtraChildTip": "Price for each participant beyond the included number, in whole shekels. Shown on the card as \"Over N · price / child\".",
       "depositAmount": "Deposit",
-      "depositAmountTip": "Advance deposit needed to hold the date, in whole shekels. Shown under the price card when a package price is set.",
+      "depositAmountTip": "Advance deposit needed to hold the date, in whole shekels. Shown under the Price heading and in the price summary box.",
+      "priceSummary": "Price summary",
+      "priceSummaryTip": "The \"Price summary\" box above the booking form at the bottom of the event page.",
+      "priceSummaryMode": "What to show",
+      "priceSummaryModeTip": "Automatic: the rows are built from the price options above and update with them. Manual: you write the rows yourself. Don't show: the box is hidden.",
+      "priceSummaryModeOption": {
+        "auto": "Automatic — from the prices",
+        "manual": "Manual — rows I write",
+        "hidden": "Don't show"
+      },
+      "priceSummaryAutoHint": "Each price option is shown as a row (name · number of kids, and the price), with the deposit underneath. Changing the prices updates the summary automatically.",
+      "addSummaryRow": "Add row",
+      "summaryRowLabel": "Description",
+      "summaryRowLabelTip": "The text on the row's start side, e.g. \"Midweek · 20 kids\".",
+      "summaryRowValue": "Price",
+      "summaryRowValueTip": "The bold text on the row's end side, including currency, e.g. \"₪ 1,180\".",
       "bookingForm": "Form texts",
       "bookingFormTip": "The texts of the confirmation form at the bottom of the event page.",
       "contactFormTip": "This event type uses the site's general contact form instead of a booking form. Edit the inquiry topics on the Home page.",
