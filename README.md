@@ -60,6 +60,18 @@ Each location's **Inquiries inbox** (admin → Settings) takes priority over
 `EVENTS_TO_EMAIL`; if neither is set, or `RESEND_API_KEY`/`CONTACT_FROM_EMAIL`
 is missing, the route responds with `500 { error: "Email service is not configured." }`.
 
+### Birthday invitation PDF
+
+For birthday events (`birthdays`, `gymboree`, `no-room`) the customer's
+confirmation email also carries `birthday-invitation.pdf`: an A4 landscape
+invitation with the branch logo, the requested day and date, the celebrants'
+names and the branch address and phone. It is rendered on the server with
+[`@react-pdf/renderer`](https://react-pdf.org) (its bidi support handles the
+Hebrew text) in `lib/invitations/`, using the Rubik fonts (OFL) and the
+background artwork in `lib/invitations/assets/`. `next.config.ts` adds those
+files and `public/logo-*.png` to the booking route's file trace. If the PDF
+fails to render, the email is sent without it.
+
 ## Admin
 
 The admin lives under `/admin` (login at `/admin/login`) and manages per-location

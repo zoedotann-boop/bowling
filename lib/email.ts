@@ -54,7 +54,7 @@ export function loginSender(baseUrl: string | undefined): string {
   return `login@${isPublic ? host : FALLBACK_SENDER_HOST}`
 }
 
-interface MailAttachment {
+export interface MailAttachment {
   filename: string
   content: Buffer
   contentId?: string
