@@ -3,6 +3,7 @@ import { requireLocationAccess } from "@/lib/admin/access"
 import { toLocalized, toPricingDraft } from "@/lib/admin/drafts"
 import type { HomeDraft } from "@/lib/actions/admin/schemas"
 import { getHomeEditor } from "@/lib/db/queries/admin"
+import { serviceIconAt } from "@/lib/home"
 
 export default async function HomePage({
   params,
@@ -31,10 +32,11 @@ export default async function HomePage({
       label: toLocalized(row.label),
       description: toLocalized(row.description),
     })),
-    services: (data?.services ?? []).map((row) => ({
+    services: (data?.services ?? []).map((row, i) => ({
       id: row.id,
       title: toLocalized(row.title),
       description: toLocalized(row.description),
+      icon: serviceIconAt(row.icon, i),
       imageUrl: row.imageUrl ?? "",
     })),
     gallery: (data?.galleryImages ?? []).map((row) => ({

@@ -1,22 +1,21 @@
 "use client"
 
-import Image from "next/image"
 import Link from "next/link"
 import { useLocale, useTranslations } from "next-intl"
 
-import { cn, isRemoteImage } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import { branchPath } from "@/lib/branches"
 import { pickLocale } from "@/lib/localized"
 import { useBranch } from "@/components/branch-context"
 import { useSiteContent } from "@/components/site-content-context"
-import { BowlingIcon, MenuIcon, PartyIcon } from "@/components/icons"
 import { LedDot } from "@/components/decor/led-dot"
 import { Container } from "./container"
+import { ServiceArt } from "./service-art"
 
 const CONFIG = [
-  { strip: "bg-primary", Icon: BowlingIcon, href: "/events" },
-  { strip: "bg-secondary", Icon: PartyIcon, href: "/events" },
-  { strip: "bg-primary", Icon: MenuIcon, href: "/menu" },
+  { strip: "bg-primary", href: "/events" },
+  { strip: "bg-secondary", href: "/events" },
+  { strip: "bg-primary", href: "/menu" },
 ]
 
 export function Services() {
@@ -28,16 +27,16 @@ export function Services() {
     title: string
     desc: string
     cta: string
-    imageUrl?: string | null
   }[]
   const items = home
     ? home.services.map((s, i) => ({
         title: pickLocale(s.title, locale),
         desc: pickLocale(s.description, locale),
         cta: messageItems[i]?.cta ?? "",
+        icon: s.icon,
         imageUrl: s.imageUrl,
       }))
-    : messageItems
+    : messageItems.map((s) => ({ ...s, icon: "", imageUrl: null }))
   const eyebrow = pickLocale(home?.home?.servicesIntro, locale) || t("eyebrow")
   const title = pickLocale(home?.home?.servicesTitle, locale) || t("title")
 
@@ -56,7 +55,7 @@ export function Services() {
       </div>
       <div className="flex flex-col gap-3.5 lg:grid lg:grid-cols-3 lg:gap-5">
         {items.map((s, i) => {
-          const { Icon, strip, href } = CONFIG[i % CONFIG.length]
+          const { strip, href } = CONFIG[i % CONFIG.length]
           return (
             <Link
               key={i}
@@ -65,18 +64,7 @@ export function Services() {
             >
               <div className={cn("h-1", strip)} />
               <div className="flex h-full items-center gap-4 p-[18px] lg:p-6">
-                {s.imageUrl ? (
-                  <Image
-                    src={s.imageUrl}
-                    alt=""
-                    width={80}
-                    height={80}
-                    unoptimized={isRemoteImage(s.imageUrl)}
-                    className="size-[68px] shrink-0 object-contain lg:size-20"
-                  />
-                ) : (
-                  <Icon className="h-[68px] w-auto shrink-0 lg:h-20" />
-                )}
+                <ServiceArt icon={s.icon} imageUrl={s.imageUrl} index={i} />
                 <div>
                   <div className="mb-1 font-heading text-xl font-black text-navy lg:text-[22px]">
                     {s.title}

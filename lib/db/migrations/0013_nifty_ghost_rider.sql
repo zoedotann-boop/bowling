@@ -1,0 +1,1 @@
+ALTER TABLE "home_service" ADD COLUMN IF NOT EXISTS "icon" text DEFAULT '' NOT NULL;

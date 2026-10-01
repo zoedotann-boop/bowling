@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, test } from "bun:test"
 import { asc, eq } from "drizzle-orm"
 
 import { toPricingDraft } from "@/lib/admin/drafts"
-import { homeFeature, siteContent } from "@/lib/db/schema"
+import { homeFeature, homeService, siteContent } from "@/lib/db/schema"
 import {
   access,
   db,
@@ -40,6 +40,24 @@ const features = () =>
     where: eq(homeFeature.locationId, access.location.id),
     orderBy: [asc(homeFeature.sortOrder)],
   })
+
+const services = () =>
+  db.query.homeService.findMany({
+    where: eq(homeService.locationId, access.location.id),
+    orderBy: [asc(homeService.sortOrder)],
+  })
+
+function service(
+  patch: Partial<HomeDraft["services"][number]> = {}
+): HomeDraft["services"][number] {
+  return {
+    title: text("שירות"),
+    description: text(""),
+    icon: "bowling",
+    imageUrl: "",
+    ...patch,
+  }
+}
 
 beforeEach(async () => {
   await resetLocations()
@@ -100,5 +118,41 @@ describe("saveHome", () => {
 
     expect(await features()).toEqual([])
     expect(await db.query.contactSubject.findMany()).toEqual([])
+  })
+
+  test("saves each service card's illustration and uploaded picture", async () => {
+    const picture = "https://x.public.blob.vercel-storage.com/admin/arcade.png"
+    const result = await saveHome(
+      homeDraft({
+        services: [
+          service({ title: text("ג׳ימבורי"), icon: "gymboree" }),
+          service({ title: text("ארקייד"), icon: "party", imageUrl: picture }),
+        ],
+      })
+    )
+
+    expect(result).toEqual({ ok: true })
+    expect(
+      (await services()).map((row) => [row.title.he, row.icon, row.imageUrl])
+    ).toEqual([
+      ["ג׳ימבורי", "gymboree", null],
+      ["ארקייד", "party", picture],
+    ])
+  })
+
+  test("rejects an unknown illustration or an invalid picture address", async () => {
+    await saveHome(homeDraft({ services: [service({ icon: "menu" })] }))
+
+    for (const bad of [
+      service({ icon: "rocket" as "menu" }),
+      service({ imageUrl: "javascript:alert(1)" }),
+      service({ imageUrl: "http://example.com/a.png" }),
+    ]) {
+      expect(await saveHome(homeDraft({ services: [bad] }))).toEqual({
+        ok: false,
+        error: "invalid",
+      })
+    }
+    expect((await services()).map((row) => row.icon)).toEqual(["menu"])
   })
 })

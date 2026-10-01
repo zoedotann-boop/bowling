@@ -8,9 +8,11 @@ import { ImageField } from "@/components/admin/image-field"
 import { LocalizedField } from "@/components/admin/localized-field"
 import { RowTable } from "@/components/admin/row-table"
 import { SectionForm, useSectionDraft } from "@/components/admin/section-form"
+import { ServiceArtPicker } from "@/components/admin/service-art-picker"
+import { SERVICE_ART } from "@/components/home/service-art"
 import { saveHome } from "@/lib/actions/admin/home"
 import type { HomeDraft, PricingDraft } from "@/lib/actions/admin/schemas"
-import { FEATURE_ICONS } from "@/lib/home"
+import { FEATURE_ICONS, serviceIconAt } from "@/lib/home"
 import { emptyLocalized } from "@/lib/localized"
 
 type PricingKey = keyof PricingDraft
@@ -151,10 +153,15 @@ export function HomeForm({
         createItem={() => ({
           title: emptyLocalized(),
           description: emptyLocalized(),
+          icon: serviceIconAt("", draft.services.length),
           imageUrl: "",
         })}
         addLabel={t("addService")}
         columns={[
+          {
+            header: t("servicePicture"),
+            cell: (item) => <ServicePreview {...item} />,
+          },
           { header: t("serviceTitle"), cell: (item) => item.title.he || "—" },
         ]}
         renderRow={(item, update) => (
@@ -171,6 +178,12 @@ export function HomeForm({
               multiline
               value={item.description}
               onChange={(description) => update({ ...item, description })}
+            />
+            <ServiceArtPicker
+              label={t("serviceArt")}
+              tooltip={t("serviceArtTip")}
+              value={item.imageUrl ? "" : item.icon}
+              onChange={(icon) => update({ ...item, icon, imageUrl: "" })}
             />
             <ImageField
               label={t("serviceImage")}
@@ -326,6 +339,12 @@ export function HomeForm({
       />
     </SectionForm>
   )
+}
+
+function ServicePreview({ icon, imageUrl }: HomeDraft["services"][number]) {
+  if (imageUrl) return <Thumbnail url={imageUrl} />
+  const Art = SERVICE_ART[serviceIconAt(icon, 0)]
+  return <Art className="h-10 w-auto" />
 }
 
 function Thumbnail({ url }: { url: string }) {
