@@ -81,6 +81,7 @@ export const homeService = pgTable("home_service", {
     .references(() => location.id, { onDelete: "cascade" }),
   title: localized().notNull(),
   description: localized(),
+  icon: text("icon").notNull().default(""),
   imageUrl: text("image_url"),
   sortOrder: integer("sort_order").notNull().default(0),
   ...timestamps,

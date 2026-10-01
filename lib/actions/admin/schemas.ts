@@ -3,6 +3,7 @@ import { z } from "zod"
 import { ADMIN_ROLES } from "@/lib/admin/permissions"
 import { PRICE_SUMMARY_MODES } from "@/lib/events/details"
 import { FORM_FIELD_TYPES } from "@/lib/events/fields"
+import { SERVICE_ICONS } from "@/lib/home"
 
 import { localizedSchema, rowIdSchema } from "./shared"
 
@@ -84,7 +85,8 @@ const homeServiceSchema = z.object({
   id: rowIdSchema,
   title: localizedSchema,
   description: localizedSchema,
-  imageUrl: z.string(),
+  icon: z.enum(SERVICE_ICONS),
+  imageUrl: imageUrlSchema,
 })
 const galleryImageSchema = z.object({
   id: rowIdSchema,
