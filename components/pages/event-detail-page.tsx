@@ -1022,6 +1022,7 @@ export function EventDetailPage({
     : (messageData.schedule?.steps ?? [])
   const data: EventItem = {
     ...messageData,
+    badges: content?.badges?.map(pick).filter(Boolean) ?? messageData.badges,
     title:
       pickLocale(dbType?.content?.heroTitle, locale) ||
       messageData.title ||

@@ -52,6 +52,7 @@ function birthdaysWith(
       heroTitle: null,
       heroDescription: null,
       heroImageUrl: null,
+      badges: null,
       depositAmount: null,
       priceNote: null,
       priceOptions: null,
@@ -97,6 +98,7 @@ export const CustomizedInAdmin: Story = {
   args: {
     events: birthdaysWith(
       {
+        badges: [{ he: "מגיל 6+" }, { he: "עד 30 ילדים" }],
         priceNote: { he: "מינימום 15 משתתפים." },
         priceOptions: [
           {
@@ -180,6 +182,7 @@ export const ManualPriceSummary: Story = {
 export const SectionsHidden: Story = {
   args: {
     events: birthdaysWith({
+      badges: [],
       allowedItems: [],
       forbiddenItems: [],
       policyItems: [],

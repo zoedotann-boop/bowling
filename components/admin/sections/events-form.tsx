@@ -50,6 +50,7 @@ function newEventType(slug: string): EventTypeDraft {
       heroTitle: emptyLocalized(),
       heroDescription: emptyLocalized(),
       heroImageUrl: "",
+      badges: [],
       depositAmount: null,
       scheduleTitle: emptyLocalized(),
       priceNote: emptyLocalized(),
@@ -129,28 +130,31 @@ function NumberField({
 function TextListField({
   title,
   addLabel,
+  itemLabel,
+  itemTooltip,
   items,
   onChange,
 }: {
-  title: string
+  title?: string
   addLabel: string
+  itemLabel: string
+  itemTooltip: string
   items: Localized[]
   onChange: (items: Localized[]) => void
 }) {
-  const t = useTranslations("admin.events")
   return (
     <div>
-      <h4 className="mb-2 text-sm font-medium">{title}</h4>
+      {title && <h4 className="mb-2 text-sm font-medium">{title}</h4>}
       <RowTable
         items={items}
         onChange={onChange}
         createItem={emptyLocalized}
         addLabel={addLabel}
-        columns={[{ header: t("ruleText"), cell: (item) => item.he || "—" }]}
+        columns={[{ header: itemLabel, cell: (item) => item.he || "—" }]}
         renderRow={(item, update) => (
           <LocalizedField
-            label={t("ruleText")}
-            tooltip={t("ruleTextTip")}
+            label={itemLabel}
+            tooltip={itemTooltip}
             value={item}
             onChange={update}
           />
@@ -305,6 +309,16 @@ function EventTypeEditor({
           tooltip={t("heroImageTip")}
           value={type.content.heroImageUrl}
           onChange={(heroImageUrl) => setContent({ heroImageUrl })}
+        />
+      </AdminSubsection>
+
+      <AdminSubsection title={t("badges")} description={t("badgesTip")}>
+        <TextListField
+          addLabel={t("addBadge")}
+          itemLabel={t("badgeText")}
+          itemTooltip={t("badgeTextTip")}
+          items={type.content.badges}
+          onChange={(badges) => setContent({ badges })}
         />
       </AdminSubsection>
 
@@ -546,12 +560,16 @@ function EventTypeEditor({
           <TextListField
             title={t("allowedItems")}
             addLabel={t("addAllowedItem")}
+            itemLabel={t("ruleText")}
+            itemTooltip={t("ruleTextTip")}
             items={type.content.allowedItems}
             onChange={(allowedItems) => setContent({ allowedItems })}
           />
           <TextListField
             title={t("forbiddenItems")}
             addLabel={t("addForbiddenItem")}
+            itemLabel={t("ruleText")}
+            itemTooltip={t("ruleTextTip")}
             items={type.content.forbiddenItems}
             onChange={(forbiddenItems) => setContent({ forbiddenItems })}
           />

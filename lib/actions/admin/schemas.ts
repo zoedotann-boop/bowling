@@ -229,6 +229,7 @@ const eventTypeContentSchema = z.object({
   heroTitle: localizedSchema,
   heroDescription: localizedSchema,
   heroImageUrl: imageUrlSchema,
+  badges: z.array(localizedSchema),
   depositAmount: optionalMoney,
   scheduleTitle: localizedSchema,
   priceNote: localizedSchema,

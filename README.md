@@ -64,7 +64,7 @@ is missing, the route responds with `500 { error: "Email service is not configur
 
 The admin lives under `/admin` (login at `/admin/login`) and manages per-location
 content: settings, home page, menu, events (multiple event types, each with
-its own page image, upgrades (plus the booking form's upgrades-box title and
+its own page image, the small badges above the page title, upgrades (plus the booking form's upgrades-box title and
 explanation), "what to bring" lists, booking policy and confirmation-form
 texts — unsaved ones show the `messages/*` defaults), the
 **Terms & accessibility** pages, plus owner-only Locations and Team. It uses **Drizzle ORM + PostgreSQL** and
@@ -175,8 +175,11 @@ The public pages render the admin's content live from the database:
   their message array) when the DB value is blank (except reviews, which only
   ever come from Google — see below), so the site never breaks if
   the database is unavailable or a field is unset. Copy that the admin does not
-  manage (UI chrome, pricing/gymboree sections, event badges) stays in
-  `messages/*`.
+  manage (UI chrome, pricing/gymboree sections) stays in `messages/*`.
+- **Event badges** the tags above an event page's title ("מגיל 8+", …) are
+  `event_type_content.badges` (a list of `{ he, en }`). NULL shows the
+  `messages/*` defaults (`eventDetails[.branch.<id>].<slug>.badges`), which the
+  admin editor opens prefilled with; an empty list hides them.
 - **Event prices** each event type has a list of price options (name, days,
   highlight tag, price, participants included, price per extra participant)
   plus a note under the heading, stored as `event_type_content.price_options`

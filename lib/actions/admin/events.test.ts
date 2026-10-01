@@ -26,6 +26,7 @@ function eventTypeDraft(
       heroTitle: text(`${slug} title`),
       heroDescription: text(""),
       heroImageUrl: "",
+      badges: [],
       depositAmount: null,
       scheduleTitle: text(""),
       priceNote: text(""),
@@ -104,6 +105,22 @@ describe("saveEvents", () => {
     ])
     expect(corporate.packageLines).toHaveLength(1)
     expect(corporate.upgrades[0]).toMatchObject({ amount: 100 })
+  })
+
+  test("stores the hero badges in order and keeps an emptied list empty", async () => {
+    const draft = eventTypeDraft("birthdays")
+    const badges = [text("מגיל 8+"), text("מינימום 20 ילדים")]
+    await save({
+      eventTypes: [{ ...draft, content: { ...draft.content, badges } }],
+    })
+    const [saved] = await load(access.location.id)
+    expect(saved.content?.badges).toEqual(badges)
+
+    await save({
+      eventTypes: [{ ...draft, id: saved.id }],
+    })
+    const [cleared] = await load(access.location.id)
+    expect(cleared.content?.badges).toEqual([])
   })
 
   test("stores the upgrades box title and explanation", async () => {

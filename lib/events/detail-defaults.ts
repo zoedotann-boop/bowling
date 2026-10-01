@@ -16,6 +16,7 @@ interface MessagePriceOption {
 }
 
 interface MessageEvent {
+  badges?: string[]
   scheduleTitle?: string
   price?: { note?: string; options: MessagePriceOption[] }
   showPriceSummary?: boolean
@@ -51,6 +52,7 @@ export function eventDetailDefaults(
   const enEvent = messageEvent(en.eventDetails, branchId, slug)
 
   return {
+    badges: list(heEvent.badges, enEvent.badges),
     scheduleTitle: {
       he: heEvent.scheduleTitle ?? he.eventDetails.scheduleTitle,
       en: enEvent.scheduleTitle ?? en.eventDetails.scheduleTitle,
