@@ -24,6 +24,7 @@ export interface EventPriceOption {
 }
 
 export interface EventDetailTexts {
+  badges: Localized[]
   scheduleTitle: Localized
   priceNote: Localized
   priceOptions: EventPriceOption[]
@@ -68,6 +69,7 @@ export function withEventDetailDefaults(
   defaults: EventDetailTexts
 ): EventDetailTexts {
   return {
+    badges: stored?.badges ?? defaults.badges,
     scheduleTitle: stored?.scheduleTitle ?? defaults.scheduleTitle,
     priceNote: stored?.priceNote ?? defaults.priceNote,
     priceOptions: stored?.priceOptions ?? defaults.priceOptions,

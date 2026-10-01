@@ -99,6 +99,13 @@
       "when": 1790840826670,
       "tag": "0013_nifty_ghost_rider",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1790841910520,
+      "tag": "0014_closed_electro",
+      "breakpoints": true
     }
   ]
 }

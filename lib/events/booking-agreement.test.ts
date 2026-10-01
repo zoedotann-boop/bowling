@@ -28,6 +28,7 @@ async function addEvent(
 }
 
 const TEXTS: EventDetailTexts = {
+  badges: [],
   scheduleTitle: text(""),
   priceNote: text(""),
   priceOptions: [],

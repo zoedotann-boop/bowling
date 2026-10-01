@@ -44,6 +44,7 @@ export const eventTypeContent = pgTable("event_type_content", {
   heroTitle: localized(),
   heroDescription: localized(),
   heroImageUrl: text("hero_image_url"),
+  badges: jsonb().$type<Localized[]>(),
   depositAmount: integer("deposit_amount"),
   priceNote: localized(),
   priceOptions: jsonb().$type<EventPriceOption[]>(),

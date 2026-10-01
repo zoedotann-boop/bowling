@@ -15,6 +15,7 @@ import {
 } from "./details"
 
 const DEFAULTS: EventDetailTexts = {
+  badges: [{ he: "מגיל 8+", en: "Ages 8+" }],
   scheduleTitle: { he: "מה הלו״ז?", en: "What's the schedule?" },
   priceNote: { he: "מינימום 20 משתתפים", en: "Minimum 20 participants" },
   priceOptions: [
@@ -66,6 +67,7 @@ describe("withEventDetailDefaults", () => {
 
   test("stored values replace the defaults", () => {
     const stored: EventDetailTexts = {
+      badges: [{ he: "מינימום 20 ילדים", en: "Minimum 20 kids" }],
       scheduleTitle: { he: "איך זה עובד?", en: "How it works" },
       priceNote: { he: "מחיר לקבוצה", en: "Per group" },
       priceOptions: [
@@ -107,6 +109,7 @@ describe("withEventDetailDefaults", () => {
   test("keeps an emptied list empty so the admin can hide a section", () => {
     const result = withEventDetailDefaults(
       {
+        badges: [],
         allowedItems: [],
         forbiddenItems: [],
         policyItems: [],
@@ -114,6 +117,7 @@ describe("withEventDetailDefaults", () => {
       },
       DEFAULTS
     )
+    expect(result.badges).toEqual([])
     expect(result.allowedItems).toEqual([])
     expect(result.forbiddenItems).toEqual([])
     expect(result.policyItems).toEqual([])
@@ -162,6 +166,9 @@ describe("eventDetailDefaults", () => {
     const enItem = en.eventDetails.items.birthdays
     const defaults = eventDetailDefaults("ramat-gan", "birthdays")
 
+    expect(defaults.badges).toEqual(
+      item.badges.map((text, i) => ({ he: text, en: enItem.badges[i] }))
+    )
     expect(defaults.allowedItems).toEqual(
       item.allowed.map((text, i) => ({ he: text, en: enItem.allowed[i] }))
     )
@@ -191,6 +198,9 @@ describe("eventDetailDefaults", () => {
     const enOverride = en.eventDetails.branch.rishon.birthdays
     const defaults = eventDetailDefaults("rishon", "birthdays")
 
+    expect(defaults.badges).toEqual(
+      override.badges.map((text, i) => ({ he: text, en: enOverride.badges[i] }))
+    )
     expect(defaults.allowedItems.map((item) => item.he)).toEqual(
       override.allowed
     )
@@ -283,6 +293,7 @@ describe("eventDetailDefaults", () => {
 
   test("returns empty sections for an event type with no default copy", () => {
     const defaults = eventDetailDefaults("ramat-gan", "brand-new-event")
+    expect(defaults.badges).toEqual([])
     expect(defaults.allowedItems).toEqual([])
     expect(defaults.forbiddenItems).toEqual([])
     expect(defaults.policyItems).toEqual([])
