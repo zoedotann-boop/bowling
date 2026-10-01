@@ -16,6 +16,12 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  outputFileTracingIncludes: {
+    "/api/events/booking": [
+      "./lib/invitations/assets/**/*",
+      "./public/logo-*.png",
+    ],
+  },
   async redirects() {
     return LEGACY_SITE_PATHS.map((source) => ({
       source,
