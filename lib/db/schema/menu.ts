@@ -1,4 +1,6 @@
-import { boolean, integer, pgTable, uuid } from "drizzle-orm/pg-core"
+import { boolean, integer, jsonb, pgTable, uuid } from "drizzle-orm/pg-core"
+
+import type { MenuItemPrice } from "@/lib/menu"
 
 import { localized, timestamps } from "./_shared"
 import { location } from "./locations"
@@ -30,7 +32,7 @@ export const menuItem = pgTable("menu_item", {
     .references(() => menuCategory.id, { onDelete: "cascade" }),
   name: localized().notNull(),
   description: localized(),
-  amount: integer("amount"),
+  prices: jsonb().$type<MenuItemPrice[]>().notNull().default([]),
   isVisible: boolean("is_visible").notNull().default(true),
   sortOrder: integer("sort_order").notNull().default(0),
   ...timestamps,

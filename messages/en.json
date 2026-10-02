@@ -298,57 +298,57 @@
         "items": [
           {
             "name": "Pretzel",
-            "price": "₪ 12",
+            "prices": [{ "amount": 12 }],
             "desc": ""
           },
           {
             "name": "Hot dog in a bun",
-            "price": "₪ 19",
+            "prices": [{ "amount": 19 }],
             "desc": ""
           },
           {
             "name": "Edamame",
-            "price": "₪ 25",
+            "prices": [{ "amount": 25 }],
             "desc": ""
           },
           {
             "name": "Nachos",
-            "price": "₪ 26",
+            "prices": [{ "amount": 26 }],
             "desc": "Served with salsa"
           },
           {
             "name": "Fries",
-            "price": "₪ 28",
+            "prices": [{ "amount": 28 }],
             "desc": "Spicy / Bulgarian topping – ₪ 3"
           },
           {
             "name": "Home fries",
-            "price": "₪ 32",
+            "prices": [{ "amount": 32 }],
             "desc": "Potato cubes fried in sweet chili"
           },
           {
             "name": "Pizzush",
-            "price": "₪ 32",
+            "prices": [{ "amount": 32 }],
             "desc": "Toppings: olives, Bulgarian, tuna, corn – ₪ 3"
           },
           {
             "name": "Mashed potato rolls",
-            "price": "₪ 32",
+            "prices": [{ "amount": 32 }],
             "desc": ""
           },
           {
             "name": "Onion rings",
-            "price": "₪ 32",
+            "prices": [{ "amount": 32 }],
             "desc": ""
           },
           {
             "name": "Pretzel bites",
-            "price": "₪ 36",
+            "prices": [{ "amount": 36 }],
             "desc": "Served with cream cheese"
           },
           {
             "name": "Shoshana's toast",
-            "price": "₪ 36",
+            "prices": [{ "amount": 36 }],
             "desc": "Sesame bagel with cheeses, garlic butter and thousand-island sauce"
           }
         ]
@@ -359,17 +359,17 @@
         "items": [
           {
             "name": "Mini schnitzels & fries",
-            "price": "₪ 44",
+            "prices": [{ "amount": 44 }],
             "desc": ""
           },
           {
             "name": "Mini burger",
-            "price": "₪ 48",
+            "prices": [{ "amount": 48 }],
             "desc": "2 pcs, patty, a little fries"
           },
           {
             "name": "Family pizza",
-            "price": "₪ 60",
+            "prices": [{ "amount": 60 }],
             "desc": "Toppings: olives, Bulgarian, tuna, corn – ₪ 6"
           }
         ]
@@ -380,37 +380,37 @@
         "items": [
           {
             "name": "Mineral water / soda",
-            "price": "₪ 8",
+            "prices": [{ "amount": 8 }],
             "desc": ""
           },
           {
             "name": "Cola / Zero",
-            "price": "₪ 10",
+            "prices": [{ "amount": 10 }],
             "desc": ""
           },
           {
             "name": "Sprite / Zero",
-            "price": "₪ 10",
+            "prices": [{ "amount": 10 }],
             "desc": ""
           },
           {
             "name": "Schweppes Mug",
-            "price": "₪ 10",
+            "prices": [{ "amount": 10 }],
             "desc": "Apple / berries / peach / grape"
           },
           {
             "name": "Energy drink",
-            "price": "₪ 10",
+            "prices": [{ "amount": 10 }],
             "desc": ""
           },
           {
             "name": "Juices",
-            "price": "₪ 12",
+            "prices": [{ "amount": 12 }],
             "desc": "Cranberry / lemon-mint / orange / grape"
           },
           {
             "name": "Slushy bottle",
-            "price": "₪ 20",
+            "prices": [{ "amount": 20 }],
             "desc": ""
           }
         ]
@@ -421,32 +421,32 @@
         "items": [
           {
             "name": "Tea",
-            "price": "₪ 9",
+            "prices": [{ "amount": 9 }],
             "desc": ""
           },
           {
             "name": "Short espresso",
-            "price": "₪ 9",
+            "prices": [{ "amount": 9 }],
             "desc": ""
           },
           {
             "name": "Long espresso",
-            "price": "₪ 10",
+            "prices": [{ "amount": 10 }],
             "desc": ""
           },
           {
             "name": "Americano / latte",
-            "price": "₪ 12",
+            "prices": [{ "amount": 12 }],
             "desc": ""
           },
           {
             "name": "Hot chocolate",
-            "price": "₪ 12",
+            "prices": [{ "amount": 12 }],
             "desc": ""
           },
           {
             "name": "Instant with milk / iced coffee",
-            "price": "₪ 14",
+            "prices": [{ "amount": 14 }],
             "desc": ""
           }
         ]
@@ -457,22 +457,22 @@
         "items": [
           {
             "name": "Wine can",
-            "price": "₪ 28",
+            "prices": [{ "amount": 28 }],
             "desc": ""
           },
           {
             "name": "Cava / Lambrusco",
-            "price": "₪ 95",
+            "prices": [{ "amount": 95 }],
             "desc": ""
           },
           {
             "name": "White – Blue Nun",
-            "price": "₪ 95",
+            "prices": [{ "amount": 95 }],
             "desc": ""
           },
           {
             "name": "Red – Merlot / Cabernet",
-            "price": "₪ 95",
+            "prices": [{ "amount": 95 }],
             "desc": ""
           }
         ]
@@ -483,32 +483,56 @@
         "items": [
           {
             "name": "Arak",
-            "price": "₪ 19 / 29 / 200",
-            "desc": "Shot / bottle / chaser"
+            "prices": [
+              { "label": "Chaser", "amount": 19 },
+              { "label": "Shot", "amount": 29 },
+              { "label": "Bottle", "amount": 200 }
+            ],
+            "desc": ""
           },
           {
             "name": "Stolichnaya",
-            "price": "₪ 19 / 29 / 300",
+            "prices": [
+              { "label": "Chaser", "amount": 19 },
+              { "label": "Shot", "amount": 29 },
+              { "label": "Bottle", "amount": 300 }
+            ],
             "desc": ""
           },
           {
             "name": "Jameson",
-            "price": "₪ 25 / 41 / 430",
+            "prices": [
+              { "label": "Chaser", "amount": 25 },
+              { "label": "Shot", "amount": 41 },
+              { "label": "Bottle", "amount": 430 }
+            ],
             "desc": ""
           },
           {
             "name": "Campari",
-            "price": "₪ 25 / 41 / 360",
+            "prices": [
+              { "label": "Chaser", "amount": 25 },
+              { "label": "Shot", "amount": 41 },
+              { "label": "Bottle", "amount": 360 }
+            ],
             "desc": ""
           },
           {
             "name": "Bombay gin",
-            "price": "₪ 25 / 41 / 520",
+            "prices": [
+              { "label": "Chaser", "amount": 25 },
+              { "label": "Shot", "amount": 41 },
+              { "label": "Bottle", "amount": 520 }
+            ],
             "desc": ""
           },
           {
             "name": "Jack Daniel's",
-            "price": "₪ 28 / 44 / 490",
+            "prices": [
+              { "label": "Chaser", "amount": 28 },
+              { "label": "Shot", "amount": 44 },
+              { "label": "Bottle", "amount": 490 }
+            ],
             "desc": ""
           }
         ]
@@ -519,32 +543,32 @@
         "items": [
           {
             "name": "Carlsberg",
-            "price": "₪ 20",
+            "prices": [{ "amount": 20 }],
             "desc": ""
           },
           {
             "name": "Goldstar",
-            "price": "₪ 20",
+            "prices": [{ "amount": 20 }],
             "desc": ""
           },
           {
             "name": "Goldstar Unfiltered",
-            "price": "₪ 25",
+            "prices": [{ "amount": 25 }],
             "desc": ""
           },
           {
             "name": "Stella",
-            "price": "₪ 25",
+            "prices": [{ "amount": 25 }],
             "desc": ""
           },
           {
             "name": "Corona",
-            "price": "₪ 25",
+            "prices": [{ "amount": 25 }],
             "desc": ""
           },
           {
             "name": "Smirnoff Ice",
-            "price": "₪ 25",
+            "prices": [{ "amount": 25 }],
             "desc": ""
           }
         ]
@@ -555,22 +579,22 @@
         "items": [
           {
             "name": "Belgian waffle",
-            "price": "₪ 32",
+            "prices": [{ "amount": 32 }],
             "desc": "Warm or with ice cream"
           },
           {
             "name": "Mini pancakes",
-            "price": "₪ 36",
+            "prices": [{ "amount": 36 }],
             "desc": "With powdered sugar and mini Nutella"
           },
           {
             "name": "Chocolate fudge",
-            "price": "₪ 36",
+            "prices": [{ "amount": 36 }],
             "desc": "Warm chocolate cake"
           },
           {
             "name": "Hot chocolate soufflé",
-            "price": "₪ 36",
+            "prices": [{ "amount": 36 }],
             "desc": "With ice cream, of course"
           }
         ]
@@ -1670,8 +1694,14 @@
       "itemNameTip": "Name of the dish or drink as it appears on the menu.",
       "itemDescription": "Description",
       "itemDescriptionTip": "Optional details such as ingredients or portion size, shown under the item name.",
-      "itemAmount": "Price",
-      "itemAmountTip": "Price in whole shekels, digits only (e.g. 45). Leave blank to hide the price."
+      "itemPrices": "Prices",
+      "itemPricesTip": "Most items need one price with no name. For a drink sold in several sizes (e.g. chaser / shot / bottle), add a price for each size and name it. Switch a price off to hide it from the site without deleting it.",
+      "priceLabel": "Name (optional)",
+      "priceLabelPlaceholder": "e.g. Shot",
+      "priceAmount": "Price in ₪",
+      "priceVisible": "Shown",
+      "addPrice": "Add price",
+      "removePrice": "Remove price"
     },
     "events": {
       "title": "Events",

@@ -7,14 +7,16 @@ import { cn } from "@/lib/utils"
 import type { BranchId } from "@/lib/branches"
 import type { SiteMenu } from "@/lib/db/queries/site"
 import { formatPrice, pickLocale } from "@/lib/localized"
+import { displayPrices, type DisplayPrice } from "@/lib/menu"
 import { useBranch } from "@/components/branch-context"
 import { Container } from "@/components/home/container"
 
-type Category = {
+type Category<Price> = {
   id: string
   label: string
-  items: { name: string; price: string; desc: string }[]
+  items: { name: string; prices: Price[]; desc: string }[]
 }
+type MessagePrice = { label?: string; amount: number }
 
 export function MenuPage({
   menus,
@@ -26,7 +28,7 @@ export function MenuPage({
   const { branchId } = useBranch()
   const dbMenu = menus[branchId]
 
-  const categories: Category[] = dbMenu
+  const categories: Category<DisplayPrice>[] = dbMenu
     ? dbMenu.menuCategories
         .filter((c) => c.items.length > 0)
         .map((c) => ({
@@ -34,11 +36,20 @@ export function MenuPage({
           label: pickLocale(c.label, locale),
           items: c.items.map((item) => ({
             name: pickLocale(item.name, locale),
-            price: item.amount != null ? formatPrice(item.amount, locale) : "",
+            prices: displayPrices(item.prices, locale),
             desc: pickLocale(item.description, locale),
           })),
         }))
-    : (t.raw("categories") as Category[])
+    : (t.raw("categories") as Category<MessagePrice>[]).map((c) => ({
+        ...c,
+        items: c.items.map((item) => ({
+          ...item,
+          prices: item.prices.map(({ label = "", amount }) => ({
+            label,
+            price: formatPrice(amount, locale),
+          })),
+        })),
+      }))
   const heading = pickLocale(dbMenu?.menu?.heading, locale) || t("title")
   const intro = pickLocale(dbMenu?.menu?.intro, locale) || t("subtitle")
 
@@ -80,26 +91,48 @@ export function MenuPage({
         </aside>
 
         <div className="grid flex-1 grid-cols-1 content-start gap-3 sm:grid-cols-2">
-          {(current?.items ?? []).map((d, i) => (
-            <div
-              key={i}
-              className="rounded-sm border border-border bg-card p-4 transition-colors hover:border-primary"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="font-heading text-[15px] font-black text-navy lg:text-base">
-                  {d.name}
+          {(current?.items ?? []).map((d, i) => {
+            const [single] = d.prices
+            const inline = d.prices.length === 1 && !single.label
+            return (
+              <div
+                key={i}
+                className="rounded-sm border border-border bg-card p-4 transition-colors hover:border-primary"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="font-heading text-[15px] font-black text-navy lg:text-base">
+                    {d.name}
+                  </div>
+                  {inline && (
+                    <div className="shrink-0 font-heading text-[15px] font-black whitespace-nowrap text-rust lg:text-base">
+                      {single.price}
+                    </div>
+                  )}
                 </div>
-                <div className="shrink-0 font-heading text-[15px] font-black whitespace-nowrap text-rust lg:text-base">
-                  {d.price}
-                </div>
+                {d.desc && (
+                  <div className="mt-1.5 text-[12.5px] leading-snug font-semibold text-mud">
+                    {d.desc}
+                  </div>
+                )}
+                {!inline && d.prices.length > 0 && (
+                  <ul className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1">
+                    {d.prices.map((p, j) => (
+                      <li key={j} className="flex items-baseline gap-1.5">
+                        {p.label && (
+                          <span className="text-[12.5px] font-semibold text-mud">
+                            {p.label}
+                          </span>
+                        )}
+                        <span className="font-heading text-[15px] font-black whitespace-nowrap text-rust lg:text-base">
+                          {p.price}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
-              {d.desc && (
-                <div className="mt-1.5 text-[12.5px] leading-snug font-semibold text-mud">
-                  {d.desc}
-                </div>
-              )}
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
 

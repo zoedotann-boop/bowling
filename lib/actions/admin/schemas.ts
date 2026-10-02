@@ -157,11 +157,16 @@ export interface GoogleReviewDraft {
   isPublished: boolean
 }
 
+const menuItemPriceSchema = z.object({
+  label: localizedSchema,
+  amount: optionalMoney,
+  isVisible: z.boolean(),
+})
 const menuItemSchema = z.object({
   id: rowIdSchema,
   name: localizedSchema,
   description: localizedSchema,
-  amount: optionalMoney,
+  prices: z.array(menuItemPriceSchema),
   isVisible: z.boolean(),
 })
 const menuCategorySchema = z.object({

@@ -25,7 +25,11 @@ export default async function MenuPage({
         id: item.id,
         name: toLocalized(item.name),
         description: toLocalized(item.description),
-        amount: item.amount,
+        prices: item.prices.map((price) => ({
+          label: toLocalized(price.label),
+          amount: price.amount,
+          isVisible: price.isVisible,
+        })),
         isVisible: item.isVisible,
       })),
     })),

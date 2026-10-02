@@ -202,6 +202,12 @@ The public pages render the admin's content live from the database:
   options, `manual` shows `price_summary_rows`, `hidden` hides it (NULL = `auto`
   where the messages set `showPriceSummary`, else hidden). The deposit line
   appears under both.
+- **Menu prices** each menu item has a list of prices in `menu_item.prices`
+  (`{ label, amount, isVisible }`, `lib/menu.ts`). Most items have one unnamed
+  price; drinks sold in several sizes get one named price per size (צ׳ייסר /
+  שוט / בקבוק). Hidden prices and prices without an amount are not shown; an
+  empty list shows no price. A new item in the admin starts with the price
+  names of the item above it.
 - **Legal pages** `/terms` (תקנון האתר) and `/accessibility` (הצהרת נגישות)
   render the branch's `legal_page` row (admin → **Terms & accessibility**,
   managers and owners). The body is plain text: `## ` starts a section card,
