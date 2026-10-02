@@ -1,5 +1,5 @@
 import type { Localized } from "@/lib/db/schema/_shared"
-import type { Locale } from "@/lib/locales"
+import { locales, type Locale } from "@/lib/locales"
 
 export function pickLocale(
   value: Localized | null | undefined,
@@ -16,4 +16,28 @@ export function emptyLocalized(): Localized {
 export function formatPrice(amount: number, locale: Locale): string {
   const formatter = new Intl.NumberFormat(locale === "he" ? "he-IL" : "en-US")
   return `${formatter.format(amount)} ₪`
+}
+
+// The English site falls back to Hebrew (see pickLocale), so a Hebrew text
+// without English shows up as Hebrew on the English site.
+export function isMissingEnglish(value: Localized): boolean {
+  return value.he.trim() !== "" && !value.en?.trim()
+}
+
+function isLocalized(value: unknown): value is Localized {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    typeof (value as Localized).he === "string" &&
+    Object.keys(value).every((key) => locales.includes(key as Locale))
+  )
+}
+
+export function countMissingEnglish(value: unknown): number {
+  if (isLocalized(value)) return isMissingEnglish(value) ? 1 : 0
+  if (typeof value !== "object" || value === null) return 0
+  return Object.values(value).reduce<number>(
+    (total, child) => total + countMissingEnglish(child),
+    0
+  )
 }

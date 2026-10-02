@@ -1455,6 +1455,8 @@
         "he": "עברית",
         "en": "English"
       },
+      "missingEnglish": "No English yet — the English site shows the Hebrew text here",
+      "missingEnglishCount": "{count, plural, one {# text} other {# texts}} without English",
       "upload": "Upload",
       "uploading": "Uploading…",
       "uploadError": "Upload failed. Use a JPG, PNG, WebP or AVIF up to 10 MB.",
