@@ -14,10 +14,16 @@ import type { MenuDraft } from "./schemas"
 
 const { saveMenu } = await import("./menu")
 
-const item = (name: string, amount: number | null = null) => ({
+const price = (amount: number | null, label = "", isVisible = true) => ({
+  label: text(label),
+  amount,
+  isVisible,
+})
+
+const item = (name: string, amount?: number) => ({
   name: text(name),
   description: text(""),
-  amount,
+  prices: amount === undefined ? [] : [price(amount)],
   isVisible: true,
 })
 
@@ -56,7 +62,9 @@ describe("saveMenu", () => {
     expect(result).toEqual({ ok: true })
     const categories = await load()
     expect(categories.map((c) => c.label.he)).toEqual(["פיצות", "שתייה"])
-    expect(categories[0].items.map((i) => [i.name.he, i.amount])).toEqual([
+    expect(
+      categories[0].items.map((i) => [i.name.he, i.prices[0].amount])
+    ).toEqual([
       ["מרגריטה", 49],
       ["זיתים", 55],
     ])
@@ -106,5 +114,48 @@ describe("saveMenu", () => {
     const [untouched] = await load(other.id)
     expect(untouched.label).toEqual(text("זר"))
     expect((await load()).map((c) => c.label.he)).toEqual(["נחטף"])
+  })
+
+  test("saves several named prices per item, including hidden ones", async () => {
+    const prices = [
+      price(19, "צ׳ייסר"),
+      price(29, "שוט"),
+      price(200, "בקבוק", false),
+    ]
+    await save([
+      {
+        label: text("אלכוהול"),
+        isVisible: true,
+        items: [{ ...item("ערק"), prices }],
+      },
+    ])
+
+    const [category] = await load()
+    expect(category.items[0].prices).toEqual(prices)
+
+    await save([
+      {
+        id: category.id,
+        label: text("אלכוהול"),
+        isVisible: true,
+        items: [{ ...item("ערק"), id: category.items[0].id, prices: [] }],
+      },
+    ])
+    const [updated] = await load()
+    expect(updated.items[0].prices).toEqual([])
+  })
+
+  test("rejects prices that are not whole, non-negative shekels", async () => {
+    for (const amount of [-5, 12.5]) {
+      const result = await save([
+        {
+          label: text("שתייה"),
+          isVisible: true,
+          items: [{ ...item("קולה"), prices: [price(amount)] }],
+        },
+      ])
+      expect(result).toEqual({ ok: false, error: "invalid" })
+    }
+    expect(await load()).toEqual([])
   })
 })

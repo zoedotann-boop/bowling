@@ -195,13 +195,20 @@ async function backfill() {
       const items = arr(["menuPage", "categories", c, "items"])
       if (items.length > 0) {
         await db.insert(schema.menuItem).values(
-          items.map((item, i) => ({
-            categoryId: cat.id,
-            name: L(["menuPage", "categories", c, "items", i, "name"]),
-            description: L(["menuPage", "categories", c, "items", i, "desc"]),
-            amount: money((item as { price?: string }).price),
-            sortOrder: i,
-          }))
+          items.map((_, i) => {
+            const at = ["menuPage", "categories", c, "items", i]
+            return {
+              categoryId: cat.id,
+              name: L([...at, "name"]),
+              description: L([...at, "desc"]),
+              prices: arr([...at, "prices"]).map((price, p) => ({
+                label: L([...at, "prices", p, "label"]),
+                amount: (price as { amount: number }).amount,
+                isVisible: true,
+              })),
+              sortOrder: i,
+            }
+          })
         )
       }
     }

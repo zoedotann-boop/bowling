@@ -6,20 +6,19 @@ import { AdminTabs } from "@/components/admin/admin-tabs"
 import {
   AdminBadge,
   AdminCard,
-  AdminField,
   AdminFlag,
-  AdminInput,
   AdminSubsection,
 } from "@/components/admin/admin-ui"
 import { CollectionEditor } from "@/components/admin/collection-editor"
 import { LocalizedField } from "@/components/admin/localized-field"
+import { MenuPricesEditor } from "@/components/admin/menu-prices-editor"
 import { RowTable } from "@/components/admin/row-table"
 import { SectionForm, useSectionDraft } from "@/components/admin/section-form"
 import { saveMenu } from "@/lib/actions/admin/menu"
 import type { MenuDraft, MenuItemDraft } from "@/lib/actions/admin/schemas"
-import { parseWholeNumber } from "@/lib/admin/drafts"
-import { emptyLocalized, formatPrice } from "@/lib/localized"
+import { emptyLocalized } from "@/lib/localized"
 import type { Locale } from "@/lib/locales"
+import { blankPricesLike, displayPrices } from "@/lib/menu"
 
 export function MenuForm({
   slug,
@@ -74,7 +73,7 @@ export function MenuForm({
               createItem={() => ({
                 name: emptyLocalized(),
                 description: emptyLocalized(),
-                amount: null,
+                prices: blankPricesLike(category.items.at(-1)?.prices),
                 isVisible: true,
               })}
               addLabel={t("addItem")}
@@ -91,12 +90,12 @@ export function MenuForm({
                   ),
                 },
                 {
-                  header: t("itemAmount"),
+                  header: t("itemPrices"),
                   cell: (item) =>
-                    item.amount === null
-                      ? "—"
-                      : formatPrice(item.amount, locale),
-                  className: "w-24",
+                    displayPrices(item.prices, locale)
+                      .map(({ price }) => price)
+                      .join(" · ") || "—",
+                  className: "whitespace-nowrap",
                 },
               ]}
               renderRow={(item, updateItem) => (
@@ -157,26 +156,16 @@ function MenuItemEditor({
 
   return (
     <>
-      <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_10rem]">
-        <LocalizedField
-          label={t("itemName")}
-          tooltip={t("itemNameTip")}
-          value={item.name}
-          onChange={(name) => update({ ...item, name })}
-        />
-        <AdminField label={t("itemAmount")} tooltip={t("itemAmountTip")}>
-          <AdminInput
-            type="number"
-            min={0}
-            step={1}
-            dir="ltr"
-            value={item.amount ?? ""}
-            onChange={(event) =>
-              update({ ...item, amount: parseWholeNumber(event.target.value) })
-            }
-          />
-        </AdminField>
-      </div>
+      <LocalizedField
+        label={t("itemName")}
+        tooltip={t("itemNameTip")}
+        value={item.name}
+        onChange={(name) => update({ ...item, name })}
+      />
+      <MenuPricesEditor
+        prices={item.prices}
+        onChange={(prices) => update({ ...item, prices })}
+      />
       <LocalizedField
         label={t("itemDescription")}
         tooltip={t("itemDescriptionTip")}

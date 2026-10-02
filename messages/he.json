@@ -290,57 +290,57 @@
         "items": [
           {
             "name": "פרצל",
-            "price": "₪ 12",
+            "prices": [{ "amount": 12 }],
             "desc": ""
           },
           {
             "name": "נקניקייה בלחמניה",
-            "price": "₪ 19",
+            "prices": [{ "amount": 19 }],
             "desc": ""
           },
           {
             "name": "אדממה",
-            "price": "₪ 25",
+            "prices": [{ "amount": 25 }],
             "desc": ""
           },
           {
             "name": "נאצ׳וס",
-            "price": "₪ 26",
+            "prices": [{ "amount": 26 }],
             "desc": "מוגש עם רוטב סלסה"
           },
           {
             "name": "צ׳יפס",
-            "price": "₪ 28",
+            "prices": [{ "amount": 28 }],
             "desc": "תוספת פיקנטי / בולגרית – 3 ₪"
           },
           {
             "name": "הום פרייז",
-            "price": "₪ 32",
+            "prices": [{ "amount": 32 }],
             "desc": "קוביות תפו׳א מטוגנות בצ׳לי מתוק"
           },
           {
             "name": "פיצוש",
-            "price": "₪ 32",
+            "prices": [{ "amount": 32 }],
             "desc": "תוספות: זיתים, בולגרית, טונה, תירס – 3 ₪"
           },
           {
             "name": "גלגולי פירה",
-            "price": "₪ 32",
+            "prices": [{ "amount": 32 }],
             "desc": ""
           },
           {
             "name": "טבעות בצל",
-            "price": "₪ 32",
+            "prices": [{ "amount": 32 }],
             "desc": ""
           },
           {
             "name": "נשנושי פרצל",
-            "price": "₪ 36",
+            "prices": [{ "amount": 36 }],
             "desc": "מוגש עם גבינת שמנת"
           },
           {
             "name": "הטוסטט של שושנה",
-            "price": "₪ 36",
+            "prices": [{ "amount": 36 }],
             "desc": "בייגל שומשום עם גבינות, חמאת שום ורוטב אלף החיים"
           }
         ]
@@ -351,17 +351,17 @@
         "items": [
           {
             "name": "שניצלונים וצ׳יפס",
-            "price": "₪ 44",
+            "prices": [{ "amount": 44 }],
             "desc": ""
           },
           {
             "name": "מיני המבורגר",
-            "price": "₪ 48",
+            "prices": [{ "amount": 48 }],
             "desc": "2 יח׳, קציצה, קצת צ׳יפס"
           },
           {
             "name": "פיצה משפחתית",
-            "price": "₪ 60",
+            "prices": [{ "amount": 60 }],
             "desc": "תוספות: זיתים, בולגרית, טונה, תירס – 6 ₪"
           }
         ]
@@ -372,37 +372,37 @@
         "items": [
           {
             "name": "מינרלים / סודה",
-            "price": "₪ 8",
+            "prices": [{ "amount": 8 }],
             "desc": ""
           },
           {
             "name": "קולה / זירו",
-            "price": "₪ 10",
+            "prices": [{ "amount": 10 }],
             "desc": ""
           },
           {
             "name": "ספרייט / זירו",
-            "price": "₪ 10",
+            "prices": [{ "amount": 10 }],
             "desc": ""
           },
           {
             "name": "שופס מוג",
-            "price": "₪ 10",
+            "prices": [{ "amount": 10 }],
             "desc": "תפוח / פירות יער / אפרסק / ענבים"
           },
           {
             "name": "משקה אנרגיה",
-            "price": "₪ 10",
+            "prices": [{ "amount": 10 }],
             "desc": ""
           },
           {
             "name": "מיצים",
-            "price": "₪ 12",
+            "prices": [{ "amount": 12 }],
             "desc": "חמוציות / לימונענע / תפוזים / ענבים"
           },
           {
             "name": "בקבוק ברד",
-            "price": "₪ 20",
+            "prices": [{ "amount": 20 }],
             "desc": ""
           }
         ]
@@ -413,32 +413,32 @@
         "items": [
           {
             "name": "תה",
-            "price": "₪ 9",
+            "prices": [{ "amount": 9 }],
             "desc": ""
           },
           {
             "name": "אספרסו קצר",
-            "price": "₪ 9",
+            "prices": [{ "amount": 9 }],
             "desc": ""
           },
           {
             "name": "אספרסו ארוך",
-            "price": "₪ 10",
+            "prices": [{ "amount": 10 }],
             "desc": ""
           },
           {
             "name": "אמריקנו / הפוך",
-            "price": "₪ 12",
+            "prices": [{ "amount": 12 }],
             "desc": ""
           },
           {
             "name": "שוקו חם",
-            "price": "₪ 12",
+            "prices": [{ "amount": 12 }],
             "desc": ""
           },
           {
             "name": "נס על חלב / קפה קר",
-            "price": "₪ 14",
+            "prices": [{ "amount": 14 }],
             "desc": ""
           }
         ]
@@ -449,22 +449,22 @@
         "items": [
           {
             "name": "פחית יין",
-            "price": "₪ 28",
+            "prices": [{ "amount": 28 }],
             "desc": ""
           },
           {
             "name": "קאווה / למברוסקו",
-            "price": "₪ 95",
+            "prices": [{ "amount": 95 }],
             "desc": ""
           },
           {
             "name": "לבן – בלו נאן",
-            "price": "₪ 95",
+            "prices": [{ "amount": 95 }],
             "desc": ""
           },
           {
             "name": "אדום – מרלו / קברנה",
-            "price": "₪ 95",
+            "prices": [{ "amount": 95 }],
             "desc": ""
           }
         ]
@@ -475,32 +475,56 @@
         "items": [
           {
             "name": "ערק",
-            "price": "₪ 19 / 29 / 200",
-            "desc": "שוט / בקבוק / צ׳ייסר"
+            "prices": [
+              { "label": "צ׳ייסר", "amount": 19 },
+              { "label": "שוט", "amount": 29 },
+              { "label": "בקבוק", "amount": 200 }
+            ],
+            "desc": ""
           },
           {
             "name": "סטוליצ׳ניה",
-            "price": "₪ 19 / 29 / 300",
+            "prices": [
+              { "label": "צ׳ייסר", "amount": 19 },
+              { "label": "שוט", "amount": 29 },
+              { "label": "בקבוק", "amount": 300 }
+            ],
             "desc": ""
           },
           {
             "name": "ג׳יימסון",
-            "price": "₪ 25 / 41 / 430",
+            "prices": [
+              { "label": "צ׳ייסר", "amount": 25 },
+              { "label": "שוט", "amount": 41 },
+              { "label": "בקבוק", "amount": 430 }
+            ],
             "desc": ""
           },
           {
             "name": "קמפרי",
-            "price": "₪ 25 / 41 / 360",
+            "prices": [
+              { "label": "צ׳ייסר", "amount": 25 },
+              { "label": "שוט", "amount": 41 },
+              { "label": "בקבוק", "amount": 360 }
+            ],
             "desc": ""
           },
           {
             "name": "ג׳ין בומביי",
-            "price": "₪ 25 / 41 / 520",
+            "prices": [
+              { "label": "צ׳ייסר", "amount": 25 },
+              { "label": "שוט", "amount": 41 },
+              { "label": "בקבוק", "amount": 520 }
+            ],
             "desc": ""
           },
           {
             "name": "ג׳ק דניאלס",
-            "price": "₪ 28 / 44 / 490",
+            "prices": [
+              { "label": "צ׳ייסר", "amount": 28 },
+              { "label": "שוט", "amount": 44 },
+              { "label": "בקבוק", "amount": 490 }
+            ],
             "desc": ""
           }
         ]
@@ -511,32 +535,32 @@
         "items": [
           {
             "name": "קרלסברג",
-            "price": "₪ 20",
+            "prices": [{ "amount": 20 }],
             "desc": ""
           },
           {
             "name": "גולדסטאר",
-            "price": "₪ 20",
+            "prices": [{ "amount": 20 }],
             "desc": ""
           },
           {
             "name": "גולדסטאר אנפילטרד",
-            "price": "₪ 25",
+            "prices": [{ "amount": 25 }],
             "desc": ""
           },
           {
             "name": "סטלה",
-            "price": "₪ 25",
+            "prices": [{ "amount": 25 }],
             "desc": ""
           },
           {
             "name": "קורונה",
-            "price": "₪ 25",
+            "prices": [{ "amount": 25 }],
             "desc": ""
           },
           {
             "name": "סמירנוף אייס",
-            "price": "₪ 25",
+            "prices": [{ "amount": 25 }],
             "desc": ""
           }
         ]
@@ -547,22 +571,22 @@
         "items": [
           {
             "name": "וופל בלגי",
-            "price": "₪ 32",
+            "prices": [{ "amount": 32 }],
             "desc": "גם חם וגם עם גלידה"
           },
           {
             "name": "מיני פנקייק",
-            "price": "₪ 36",
+            "prices": [{ "amount": 36 }],
             "desc": "עם אבקת סוכר ומיני נוטלה"
           },
           {
             "name": "פאדג׳ שוקולד",
-            "price": "₪ 36",
+            "prices": [{ "amount": 36 }],
             "desc": "עוגת שוקולד חמה"
           },
           {
             "name": "סופלה שוקולד חם",
-            "price": "₪ 36",
+            "prices": [{ "amount": 36 }],
             "desc": "עם גלידה, ברור"
           }
         ]
@@ -1654,8 +1678,14 @@
       "itemNameTip": "שם המנה או המשקה כפי שמופיע בתפריט.",
       "itemDescription": "תיאור",
       "itemDescriptionTip": "פרטים אופציונליים כגון מרכיבים או גודל מנה, מוצגים מתחת לשם הפריט.",
-      "itemAmount": "מחיר",
-      "itemAmountTip": "מחיר בשקלים שלמים, ספרות בלבד (למשל 45). השאירו ריק כדי להסתיר את המחיר."
+      "itemPrices": "מחירים",
+      "itemPricesTip": "לרוב מספיק מחיר אחד בלי שם. למשקה שנמכר בכמה גדלים (למשל צ׳ייסר / שוט / בקבוק) הוסיפו מחיר לכל גודל ותנו לו שם. כבו את המתג כדי להסתיר מחיר מהאתר בלי למחוק אותו.",
+      "priceLabel": "שם (לא חובה)",
+      "priceLabelPlaceholder": "למשל: שוט",
+      "priceAmount": "מחיר ב־₪",
+      "priceVisible": "מוצג",
+      "addPrice": "הוספת מחיר",
+      "removePrice": "מחיקת מחיר"
     },
     "events": {
       "title": "אירועים",

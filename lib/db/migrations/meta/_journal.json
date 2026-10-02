@@ -106,6 +106,20 @@
       "when": 1790841910520,
       "tag": "0014_closed_electro",
       "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1790953763878,
+      "tag": "0015_amused_ultragirl",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1790953767910,
+      "tag": "0016_vengeful_hiroim",
+      "breakpoints": true
     }
   ]
 }
