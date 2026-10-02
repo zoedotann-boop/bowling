@@ -1415,6 +1415,8 @@
         "he": "עברית",
         "en": "English"
       },
+      "missingEnglish": "אין עדיין טקסט באנגלית — באתר באנגלית יוצג כאן הטקסט בעברית",
+      "missingEnglishCount": "{count, plural, one {טקסט אחד} other {# טקסטים}} בלי אנגלית",
       "upload": "העלאה",
       "uploading": "מעלה…",
       "uploadError": "ההעלאה נכשלה. אפשר להעלות JPG, PNG, WebP או AVIF עד 10MB.",

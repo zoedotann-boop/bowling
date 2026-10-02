@@ -5,6 +5,7 @@ import { createContext, useContext, useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { locales, type Locale } from "@/lib/locales"
+import { countMissingEnglish } from "@/lib/localized"
 import { cn } from "@/lib/utils"
 
 import { useToast } from "./toast"
@@ -55,6 +56,7 @@ export function SectionForm<T>({
   const { toast } = useToast()
   const [locale, setLocale] = useState<Locale>("he")
   const [saving, setSaving] = useState(false)
+  const missingEnglish = countMissingEnglish(draft)
 
   async function handleSave() {
     setSaving(true)
@@ -112,6 +114,19 @@ export function SectionForm<T>({
                   )}
                 >
                   {t(`locales.${code}`)}
+                  {code === "en" && missingEnglish > 0 && (
+                    <>
+                      <span
+                        aria-hidden
+                        className="ms-1.5 rounded-full bg-destructive px-1.5 text-white"
+                      >
+                        {missingEnglish}
+                      </span>
+                      <span className="sr-only">
+                        {t("missingEnglishCount", { count: missingEnglish })}
+                      </span>
+                    </>
+                  )}
                 </button>
               ))}
             </div>
