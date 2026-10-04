@@ -1830,7 +1830,7 @@
       "formFieldsTip": "The fields a customer fills in on the booking form. Drag to reorder. First name, last name and email are needed to send the inquiry and the customer's confirmation, so they can't be deleted.",
       "addField": "Add field",
       "fieldType": "Type",
-      "fieldTypeTip": "The kind of input shown to the customer (text, number, date, dropdown…). Some types reveal extra options below.",
+      "fieldTypeTip": "The kind of input shown to the customer (text, number, date, time, dropdown…). Some types reveal extra options below.",
       "fieldTypeOption": {
         "text": "Text",
         "textarea": "Long text",
@@ -1838,6 +1838,7 @@
         "email": "Email",
         "id": "ID number",
         "date": "Date",
+        "time": "Time",
         "number": "Number",
         "select": "Select",
         "checkbox": "Checkbox"
@@ -1854,6 +1855,12 @@
       "addOption": "Add option",
       "optionLabel": "Label",
       "optionLabelTip": "The option text the customer sees in the list. This is also what appears in the inquiry email.",
+      "timeOptions": "Times to choose from",
+      "timeOptionsTip": "The times the customer can pick for the event from a list. On save they're put in order through the day, with after-midnight times (until 06:00) last. The chosen time appears in the inquiry email.",
+      "timeOptionsEmpty": "No times yet. The field only shows on the form once you add at least one time.",
+      "timeOption": "Time {number}",
+      "addTime": "Add time",
+      "removeTime": "Remove time {time}",
       "fieldRequired": "Required field",
       "fieldRequiredTip": "When on, the customer must fill this field before the form can be submitted."
     },

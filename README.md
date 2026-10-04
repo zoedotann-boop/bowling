@@ -155,8 +155,9 @@ other session. One-time codes keep working whether or not a password is set.
   staff, so internal identifiers stay out of the UI: an event type's or
   location's page address is only asked for when it is created (pre-filled
   for event types), booking-form fields get an auto-generated key (the inquiry
-  email shows the field's label), and dropdown option values follow their
-  Hebrew label. SEO texts and the Google Place ID are owner-only (in the UI and
+  email shows the field's label), dropdown option values follow their
+  Hebrew label, and a **time** field is just a list of times (sorted on save,
+  after-midnight times last) that the customer picks from. SEO texts and the Google Place ID are owner-only (in the UI and
   in the save actions).
 - **Save pattern** each section is `page → Drizzle query → draft → SectionForm
   → one server action` that persists the whole draft via `syncCollection`

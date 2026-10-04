@@ -18,8 +18,6 @@ export function formatPrice(amount: number, locale: Locale): string {
   return `${formatter.format(amount)} ₪`
 }
 
-// The English site falls back to Hebrew (see pickLocale), so a Hebrew text
-// without English shows up as Hebrew on the English site.
 export function isMissingEnglish(value: Localized): boolean {
   return value.he.trim() !== "" && !value.en?.trim()
 }

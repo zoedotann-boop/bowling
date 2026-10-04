@@ -2,7 +2,7 @@ import { z } from "zod"
 
 import { ADMIN_ROLES } from "@/lib/admin/permissions"
 import { PRICE_SUMMARY_MODES } from "@/lib/events/details"
-import { FORM_FIELD_TYPES } from "@/lib/events/fields"
+import { FORM_FIELD_TYPES, toTimeOptions } from "@/lib/events/fields"
 import { SERVICE_ICONS } from "@/lib/home"
 
 import { localizedSchema, rowIdSchema } from "./shared"
@@ -188,18 +188,27 @@ const formFieldOptionSchema = z.object({
   value: z.string(),
   label: localizedSchema,
 })
-const eventFormFieldSchema = z.object({
-  id: rowIdSchema,
-  key: z.string().regex(/^[a-zA-Z][a-zA-Z0-9_]*$/),
-  label: localizedSchema,
-  placeholder: localizedSchema,
-  type: z.enum(FORM_FIELD_TYPES),
-  options: z.array(formFieldOptionSchema),
-  minValue: z.number().int().nullable(),
-  maxValue: z.number().int().nullable(),
-  isRequired: z.boolean(),
-  isVisible: z.boolean(),
-})
+const eventFormFieldSchema = z
+  .object({
+    id: rowIdSchema,
+    key: z.string().regex(/^[a-zA-Z][a-zA-Z0-9_]*$/),
+    label: localizedSchema,
+    placeholder: localizedSchema,
+    type: z.enum(FORM_FIELD_TYPES),
+    options: z.array(formFieldOptionSchema),
+    minValue: z.number().int().nullable(),
+    maxValue: z.number().int().nullable(),
+    isRequired: z.boolean(),
+    isVisible: z.boolean(),
+  })
+  .transform((field) =>
+    field.type === "time"
+      ? {
+          ...field,
+          options: toTimeOptions(field.options.map((option) => option.value)),
+        }
+      : field
+  )
 const eventStepSchema = z.object({
   id: rowIdSchema,
   title: localizedSchema,
