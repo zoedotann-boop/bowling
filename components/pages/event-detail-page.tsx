@@ -575,7 +575,6 @@ function BookingFieldInput({
   const placeholder = pickLocale(field.placeholder, locale)
   const isChoice = field.type === "select" || field.type === "time"
 
-  // A dropdown with nothing to pick would block a required field's submit.
   if (isChoice && !field.options?.length) return null
 
   if (field.type === "checkbox") {

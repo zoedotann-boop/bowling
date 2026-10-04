@@ -40,13 +40,12 @@ export function newFieldKey(): string {
 }
 
 const TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/
-const DAY_STARTS_AT = 6 * 60
+const PREVIOUS_EVENING_UNTIL = 6 * 60
 
-// Times before 06:00 belong to the previous evening (the branches close at 03:00).
-function minutesIntoDay(time: string): number {
+function minutesIntoBusinessDay(time: string): number {
   const [hours, minutes] = time.split(":").map(Number)
   const total = hours * 60 + minutes
-  return total < DAY_STARTS_AT ? total + 24 * 60 : total
+  return total < PREVIOUS_EVENING_UNTIL ? total + 24 * 60 : total
 }
 
 export function timeOption(time: string): FormFieldOption {
@@ -56,6 +55,6 @@ export function timeOption(time: string): FormFieldOption {
 export function toTimeOptions(times: string[]): FormFieldOption[] {
   return [...new Set(times.map((time) => time.trim()))]
     .filter((time) => TIME_PATTERN.test(time))
-    .sort((a, b) => minutesIntoDay(a) - minutesIntoDay(b))
+    .sort((a, b) => minutesIntoBusinessDay(a) - minutesIntoBusinessDay(b))
     .map(timeOption)
 }
