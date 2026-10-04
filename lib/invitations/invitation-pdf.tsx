@@ -1,5 +1,6 @@
 import "server-only"
 
+import { readFile } from "node:fs/promises"
 import { join } from "node:path"
 
 import {
@@ -13,13 +14,9 @@ import {
   renderToBuffer,
 } from "@react-pdf/renderer"
 
-import type { Branch } from "@/lib/branches"
+import { BRANCHES, type Branch } from "@/lib/branches"
 import type { MailAttachment } from "@/lib/email"
-import { isBirthdayEvent } from "@/lib/events/slugs"
-import {
-  birthdayInvitation,
-  type BirthdayInvitation,
-} from "@/lib/invitations/birthday-invitation"
+import { eventInvitation, type Invitation } from "@/lib/invitations/invitation"
 
 const ASSETS = join(process.cwd(), "lib/invitations/assets")
 
@@ -80,34 +77,58 @@ const styles = StyleSheet.create({
   },
 })
 
-function BirthdayInvitationDocument({
+const LOGO_TIMEOUT_MS = 5000
+
+async function readLogo(src: string): Promise<Buffer> {
+  if (src.startsWith("/")) return readFile(join(process.cwd(), "public", src))
+  const res = await fetch(src, { signal: AbortSignal.timeout(LOGO_TIMEOUT_MS) })
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  return Buffer.from(await res.arrayBuffer())
+}
+
+const isPngOrJpeg = (data: Buffer) =>
+  data.subarray(0, 4).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47])) ||
+  data.subarray(0, 3).equals(Buffer.from([0xff, 0xd8, 0xff]))
+
+async function loadLogo(branch: Branch): Promise<Buffer> {
+  const bundled = BRANCHES[branch.id].logo.src
+  if (branch.logo.src !== bundled) {
+    try {
+      const data = await readLogo(branch.logo.src)
+      if (isPngOrJpeg(data)) return data
+      console.warn("[booking] invitation logo is not PNG/JPEG; using default")
+    } catch (error) {
+      console.warn("[booking] invitation logo failed; using default", error)
+    }
+  }
+  return readLogo(bundled)
+}
+
+function InvitationDocument({
   invitation,
+  logo,
 }: {
-  invitation: BirthdayInvitation
+  invitation: Invitation
+  logo: Buffer
 }) {
   return (
-    <Document title="הזמנה ליום הולדת" language="he">
+    <Document title="הזמנה לבאולינג" language="he">
       <Page size="A4" orientation="landscape" style={styles.page}>
         <PdfImage
           fixed
           src={join(ASSETS, "birthday-background.jpg")}
           style={styles.background}
         />
-        <PdfImage
-          src={join(process.cwd(), "public", invitation.logoSrc)}
-          style={styles.logo}
-        />
+        <PdfImage src={logo} style={styles.logo} />
         <View style={styles.card}>
           <Text style={[styles.rtl, styles.title]}>יאללה מסיבה!</Text>
-          <Text style={[styles.rtl, styles.message]}>
-            {`אז החלטתי לחגוג בבאולינג ${invitation.city}!\nאשמח להזמין אותך למסיבת יום ההולדת הכי שווה שיש!`}
-          </Text>
+          <Text style={[styles.rtl, styles.message]}>{invitation.message}</Text>
           {invitation.when ? (
             <Text style={[styles.rtl, styles.when]}>{invitation.when}</Text>
           ) : null}
           <Text style={[styles.rtl, styles.signOff]}>
-            {invitation.celebrants
-              ? `אשמח לראותך!\n${invitation.celebrants}!`
+            {invitation.host
+              ? `אשמח לראותך!\n${invitation.host}!`
               : "אשמח לראותך!"}
           </Text>
         </View>
@@ -117,26 +138,22 @@ function BirthdayInvitationDocument({
   )
 }
 
-function renderBirthdayInvitation(
-  invitation: BirthdayInvitation
-): Promise<Buffer> {
-  return renderToBuffer(<BirthdayInvitationDocument invitation={invitation} />)
-}
+const INVITATION_FILENAME = "invitation.pdf"
 
-const INVITATION_FILENAME = "birthday-invitation.pdf"
-
-export async function birthdayInvitationAttachment(
+export async function invitationAttachment(
   payload: Record<string, unknown>,
   branch: Branch
 ): Promise<MailAttachment | undefined> {
-  if (!isBirthdayEvent(payload.slug)) return undefined
   try {
-    const content = await renderBirthdayInvitation(
-      birthdayInvitation(payload, branch)
+    const content = await renderToBuffer(
+      <InvitationDocument
+        invitation={eventInvitation(payload, branch)}
+        logo={await loadLogo(branch)}
+      />
     )
     return { filename: INVITATION_FILENAME, content }
   } catch (error) {
-    console.error("[booking] birthday invitation PDF failed", error)
+    console.error("[booking] invitation PDF failed", error)
     return undefined
   }
 }

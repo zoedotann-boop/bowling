@@ -39,6 +39,7 @@ describe("bookingAnswers", () => {
         slug: "birthdays",
         signature: "data:image/png;base64,xx",
         labels: {},
+        types: "date",
         email: "  ",
         agreed: true,
         lastName: "כהן",

@@ -708,6 +708,9 @@ function BookingForm({
               pickLocale(field.label, "he"),
             ])
           ),
+          types: Object.fromEntries(
+            formFields.map((field) => [field.key, field.type])
+          ),
           branch: branchId,
           signature,
         }),

@@ -9,7 +9,13 @@ const FIELD_LABELS: Record<string, string> = {
   date: "תאריך",
 }
 
-const RESERVED_KEYS = new Set(["branch", "slug", "signature", "labels"])
+const RESERVED_KEYS = new Set([
+  "branch",
+  "slug",
+  "signature",
+  "labels",
+  "types",
+])
 
 function readLabels(value: unknown): Record<string, string> {
   if (typeof value !== "object" || value === null) return {}
