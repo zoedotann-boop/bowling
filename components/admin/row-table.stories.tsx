@@ -9,7 +9,7 @@ interface Row {
   label: string
 }
 
-function Example() {
+function Example({ lockedId }: { lockedId?: string }) {
   const [items, setItems] = useState<Row[]>([
     { id: "1", label: "מנות ראשונות" },
     { id: "2", label: "עיקריות" },
@@ -22,6 +22,8 @@ function Example() {
       createItem={() => ({ label: "" })}
       addLabel="הוספת קטגוריה"
       columns={[{ header: "שם", cell: (item) => item.label || "—" }]}
+      canEdit={(item) => item.id !== lockedId}
+      canRemove={(item) => item.id !== lockedId}
       renderRow={(item, update) => (
         <AdminField label="שם הקטגוריה">
           <AdminInput
@@ -50,3 +52,7 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
+
+export const WithLockedRow: Story = {
+  args: { lockedId: "2" },
+}

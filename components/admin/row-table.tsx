@@ -28,6 +28,7 @@ interface RowTableProps<T> {
   emptyLabel?: string
   columns: RowColumn<T>[]
   canRemove?: (item: T) => boolean
+  canEdit?: (item: T) => boolean
   renderRow: (item: T, update: (item: T) => void) => React.ReactNode
 }
 
@@ -39,6 +40,7 @@ export function RowTable<T>({
   emptyLabel,
   columns,
   canRemove,
+  canEdit,
   renderRow,
 }: RowTableProps<T>) {
   const t = useTranslations("admin.common")
@@ -106,45 +108,50 @@ export function RowTable<T>({
                 </td>
               </tr>
             )}
-            {items.map((item, index) => (
-              <SortableRow
-                key={index}
-                id={index}
-                columnCount={columnCount}
-                expanded={editing === index}
-                onToggle={() => {
-                  setConfirming(null)
-                  setEditing(editing === index ? null : index)
-                }}
-                cells={columns.map((column) => (
-                  <td
-                    key={column.header}
-                    className={cn(
-                      "cursor-pointer py-2 pe-2 align-middle",
-                      column.className
-                    )}
-                  >
-                    {column.cell(item)}
-                  </td>
-                ))}
-                removable={canRemove?.(item) ?? true}
-                onRemove={() => setConfirming(index)}
-                confirm={
-                  confirming === index && (
-                    <InlineConfirm
-                      message={t("removeRowMessage")}
-                      confirmLabel={t("remove")}
-                      onConfirm={() => removeItem(index)}
-                      onCancel={() => setConfirming(null)}
-                    />
-                  )
-                }
-              >
-                {renderRow(item, (next) =>
-                  onChange(items.map((row, i) => (i === index ? next : row)))
-                )}
-              </SortableRow>
-            ))}
+            {items.map((item, index) => {
+              const editable = canEdit?.(item) ?? true
+              return (
+                <SortableRow
+                  key={index}
+                  id={index}
+                  columnCount={columnCount}
+                  editable={editable}
+                  expanded={editable && editing === index}
+                  onToggle={() => {
+                    setConfirming(null)
+                    setEditing(editing === index ? null : index)
+                  }}
+                  cells={columns.map((column) => (
+                    <td
+                      key={column.header}
+                      className={cn(
+                        "py-2 pe-2 align-middle",
+                        editable && "cursor-pointer",
+                        column.className
+                      )}
+                    >
+                      {column.cell(item)}
+                    </td>
+                  ))}
+                  removable={canRemove?.(item) ?? true}
+                  onRemove={() => setConfirming(index)}
+                  confirm={
+                    confirming === index && (
+                      <InlineConfirm
+                        message={t("removeRowMessage")}
+                        confirmLabel={t("remove")}
+                        onConfirm={() => removeItem(index)}
+                        onCancel={() => setConfirming(null)}
+                      />
+                    )
+                  }
+                >
+                  {renderRow(item, (next) =>
+                    onChange(items.map((row, i) => (i === index ? next : row)))
+                  )}
+                </SortableRow>
+              )
+            })}
           </tbody>
         </table>
       </SortableArea>
@@ -160,6 +167,7 @@ export function RowTable<T>({
 function SortableRow({
   id,
   columnCount,
+  editable,
   expanded,
   onToggle,
   cells,
@@ -170,6 +178,7 @@ function SortableRow({
 }: {
   id: number
   columnCount: number
+  editable: boolean
   expanded: boolean
   onToggle: () => void
   cells: React.ReactNode
@@ -187,7 +196,8 @@ function SortableRow({
         ref={setNodeRef}
         style={style}
         onClick={(event) => {
-          if ((event.target as HTMLElement).closest("button")) return
+          if (!editable || (event.target as HTMLElement).closest("button"))
+            return
           onToggle()
         }}
         className={cn(
@@ -202,16 +212,18 @@ function SortableRow({
         {cells}
         <td className="w-20 py-2 align-middle">
           <div className="flex justify-end gap-1">
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon-sm"
-              aria-label={t("edit")}
-              aria-expanded={expanded}
-              onClick={onToggle}
-            >
-              <Pencil />
-            </Button>
+            {editable && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                aria-label={t("edit")}
+                aria-expanded={expanded}
+                onClick={onToggle}
+              >
+                <Pencil />
+              </Button>
+            )}
             {removable && (
               <Button
                 type="button"

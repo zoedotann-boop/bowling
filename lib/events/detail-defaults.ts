@@ -1,5 +1,7 @@
 import "server-only"
 
+import type { EventFormFieldDraft } from "@/lib/actions/admin/schemas"
+import { toFormFieldDraft } from "@/lib/admin/drafts"
 import type { Localized } from "@/lib/db/schema/_shared"
 import type { EventDetailTexts } from "@/lib/events/details"
 import type { BookingFormField } from "@/lib/events/fields"
@@ -108,7 +110,21 @@ export function eventDetailDefaults(
   }
 }
 
-const DEFAULT_BOOKING_FIELDS = [
+interface DefaultBookingField {
+  key: string
+  message: string
+  type: BookingFormField["type"]
+  isRequired: boolean
+}
+
+const TIME_FIELD: DefaultBookingField = {
+  key: "time",
+  message: "time",
+  type: "time",
+  isRequired: true,
+}
+
+const DEFAULT_BOOKING_FIELDS: DefaultBookingField[] = [
   { key: "firstName", message: "firstName", type: "text", isRequired: true },
   { key: "lastName", message: "lastName", type: "text", isRequired: true },
   { key: "idNumber", message: "id", type: "id", isRequired: true },
@@ -116,26 +132,54 @@ const DEFAULT_BOOKING_FIELDS = [
   { key: "email", message: "email", type: "email", isRequired: true },
   { key: "phone", message: "phone", type: "tel", isRequired: true },
   { key: "date", message: "date", type: "date", isRequired: true },
-] as const
+  TIME_FIELD,
+]
 
-export function defaultBookingFields(): BookingFormField[] {
+function formText(key: string): Localized {
   const heForm: Partial<Record<string, string>> = he.eventDetails.form
   const enForm: Partial<Record<string, string>> = en.eventDetails.form
-  const text = (key: string): Localized => ({
-    he: heForm[key] ?? "",
-    en: enForm[key] ?? "",
-  })
+  return { he: heForm[key] ?? "", en: enForm[key] ?? "" }
+}
 
-  return DEFAULT_BOOKING_FIELDS.map(({ key, message, type, isRequired }) => ({
+function bookingField({
+  key,
+  message,
+  type,
+  isRequired,
+}: DefaultBookingField): BookingFormField {
+  return {
     key,
     type,
-    label: text(`${message}Label`),
-    placeholder: text(`${message}Placeholder`),
+    label: formText(`${message}Label`),
+    placeholder: formText(`${message}Placeholder`),
     options: null,
     minValue: null,
     maxValue: null,
     isRequired,
-  }))
+  }
+}
+
+export function defaultBookingFields(): BookingFormField[] {
+  return DEFAULT_BOOKING_FIELDS.map(bookingField)
+}
+
+export function withTimeField(
+  fields: EventFormFieldDraft[]
+): EventFormFieldDraft[] {
+  if (fields.length === 0) return fields
+
+  const current = fields.find((field) => field.type === "time")
+  const time = toFormFieldDraft({
+    ...bookingField(TIME_FIELD),
+    id: current?.id,
+    key: current?.key ?? TIME_FIELD.key,
+  })
+  const others = fields.filter((field) => field.type !== "time")
+  const at = current
+    ? fields.indexOf(current)
+    : others.findIndex((field) => field.type === "date") + 1 || others.length
+
+  return [...others.slice(0, at), time, ...others.slice(at)]
 }
 
 export function defaultFormFields(

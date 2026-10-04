@@ -65,8 +65,9 @@ is missing, the route responds with `500 { error: "Email service is not configur
 Every booking form ("טופס אישור והתחייבות") also sends the customer an
 `invitation.pdf`: an A4 landscape invitation over the bowling artwork with the
 branch logo, address and phone as saved in the admin (falling back to
-`lib/branches.ts`), the requested day and date, the time when the form has a
-time field (15 minutes before the booked time, so guests arrive early), and the
+`lib/branches.ts`), the requested day and date, the time from the form's **שעה** field (15
+minutes before the booked time, so guests arrive early; the form tells the
+customer so under the field), and the
 celebrants' names (or the customer's first name).
 Birthday events (`birthdays`, `gymboree`, `no-room`) get birthday wording;
 other events get a general party invitation. The form sends each field's type,
@@ -156,8 +157,11 @@ other session. One-time codes keep working whether or not a password is set.
   location's page address is only asked for when it is created (pre-filled
   for event types), booking-form fields get an auto-generated key (the inquiry
   email shows the field's label), dropdown option values follow their
-  Hebrew label, and a **time** field is just a list of times (sorted on save,
-  after-midnight times last) that the customer picks from. SEO texts and the Google Place ID are owner-only (in the UI and
+  Hebrew label, and every booking form has exactly one fixed **שעה** field
+  that staff can move but not edit or delete: the customer picks from every
+  quarter hour (`TIME_OPTIONS`, 00:00–23:45) with a note that the invitation
+  shows a time 15 minutes earlier. `withTimeField` (`lib/events/detail-defaults.ts`)
+  adds or resets it when the editor loads and again on save. SEO texts and the Google Place ID are owner-only (in the UI and
   in the save actions).
 - **Save pattern** each section is `page → Drizzle query → draft → SectionForm
   → one server action` that persists the whole draft via `syncCollection`
@@ -226,7 +230,8 @@ The public pages render the admin's content live from the database:
   stores nothing, so the default keeps tracking `messages/*` and "Last updated"
   reflects real edits only.
 - **Event booking** the booking form renders the event type's dynamic
-  `eventFormField`s when defined, otherwise the built-in fields; `POST
+  `eventFormField`s when defined, otherwise the built-in fields (which include
+  a required **שעה** time field after the date); `POST
   /api/events/booking` stores answers in `lead.formData` and the signature in
   `lead.signatureUrl`.
 

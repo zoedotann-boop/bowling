@@ -30,6 +30,7 @@ const DEFAULT_FIELDS = [
   field("email", "email", "אימייל"),
   field("phone", "tel", "טלפון"),
   field("date", "date", "תאריך"),
+  { ...field("time", "time", "שעה"), placeholder: { he: "בחרו שעה" } },
 ]
 
 interface HeroAndPricing {
@@ -195,21 +196,5 @@ export const SectionsHidden: Story = {
 export const CustomHeroImage: Story = {
   args: {
     events: birthdaysWith({ heroImageUrl: "/gallery/2.png" }),
-  },
-}
-
-export const WithTimeOptions: Story = {
-  args: {
-    defaultFormFields: [
-      ...DEFAULT_FIELDS,
-      {
-        ...field("eventTime", "time", "שעת האירוע"),
-        placeholder: { he: "בחרו שעה" },
-        options: ["10:00", "12:30", "16:00", "18:30"].map((time) => ({
-          value: time,
-          label: { he: time, en: time },
-        })),
-      },
-    ],
   },
 }

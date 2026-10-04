@@ -39,22 +39,18 @@ export function newFieldKey(): string {
   return `field_${crypto.randomUUID().replaceAll("-", "").slice(0, 12)}`
 }
 
-const TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/
-const PREVIOUS_EVENING_UNTIL = 6 * 60
+const MINUTES_PER_DAY = 24 * 60
+const TIME_STEP_MINUTES = 15
 
-function minutesIntoBusinessDay(time: string): number {
-  const [hours, minutes] = time.split(":").map(Number)
-  const total = hours * 60 + minutes
-  return total < PREVIOUS_EVENING_UNTIL ? total + 24 * 60 : total
+export function clockTime(minutes: number): string {
+  const pad = (value: number) => String(value).padStart(2, "0")
+  return `${pad(Math.floor(minutes / 60))}:${pad(minutes % 60)}`
 }
 
-export function timeOption(time: string): FormFieldOption {
-  return { value: time, label: { he: time, en: time } }
-}
-
-export function toTimeOptions(times: string[]): FormFieldOption[] {
-  return [...new Set(times.map((time) => time.trim()))]
-    .filter((time) => TIME_PATTERN.test(time))
-    .sort((a, b) => minutesIntoBusinessDay(a) - minutesIntoBusinessDay(b))
-    .map(timeOption)
-}
+export const TIME_OPTIONS: FormFieldOption[] = Array.from(
+  { length: MINUTES_PER_DAY / TIME_STEP_MINUTES },
+  (_, index) => {
+    const time = clockTime(index * TIME_STEP_MINUTES)
+    return { value: time, label: { he: time, en: time } }
+  }
+)

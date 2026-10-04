@@ -123,24 +123,51 @@ describe("saveEvents", () => {
     expect(cleared.content?.badges).toEqual([])
   })
 
-  test("stores a time field's times in order through the evening", async () => {
-    const time = (value: string) => ({ value, label: text(value) })
+  test("stores the fixed time field, whatever the draft says about it", async () => {
     const result = await save({
       eventTypes: [
         eventTypeDraft("birthdays", {
           formFields: [
             {
-              key: "field_eventtime",
-              label: text("שעת האירוע"),
-              placeholder: text("בחרו שעה"),
+              key: "time",
+              label: text(""),
+              placeholder: text(""),
               type: "time",
-              options: [
-                time("00:30"),
-                time("18:00"),
-                time(""),
-                time("10:00"),
-                time("18:00"),
-              ],
+              options: [{ value: "18:00", label: text("18:00") }],
+              minValue: null,
+              maxValue: null,
+              isRequired: false,
+              isVisible: false,
+            },
+          ],
+        }),
+      ],
+    })
+
+    expect(result).toEqual({ ok: true })
+    const [birthdays] = await load(access.location.id)
+    const [field] = birthdays.formFields
+    expect(field).toMatchObject({
+      key: "time",
+      type: "time",
+      label: { he: "שעה", en: "Time" },
+      isRequired: true,
+      isVisible: true,
+    })
+    expect(field.options ?? []).toEqual([])
+  })
+
+  test("adds the time field to a saved form that has none", async () => {
+    await save({
+      eventTypes: [
+        eventTypeDraft("birthdays", {
+          formFields: [
+            {
+              key: "date",
+              label: text("תאריך"),
+              placeholder: text(""),
+              type: "date",
+              options: [],
               minValue: null,
               maxValue: null,
               isRequired: true,
@@ -151,16 +178,40 @@ describe("saveEvents", () => {
       ],
     })
 
-    expect(result).toEqual({ ok: true })
     const [birthdays] = await load(access.location.id)
-    const [field] = birthdays.formFields
-    expect(field.type).toBe("time")
-    expect(field.options?.map((option) => option.value)).toEqual([
-      "10:00",
-      "18:00",
-      "00:30",
+    expect(birthdays.formFields.map((field) => field.type)).toEqual([
+      "date",
+      "time",
     ])
-    expect(field.options?.[0].label).toEqual({ he: "10:00", en: "10:00" })
+  })
+
+  test("keeps the options of a dropdown field", async () => {
+    const options = [
+      { value: "a", label: text("כן") },
+      { value: "b", label: text("לא") },
+    ]
+    await save({
+      eventTypes: [
+        eventTypeDraft("birthdays", {
+          formFields: [
+            {
+              key: "field_choice",
+              label: text("בחירה"),
+              placeholder: text(""),
+              type: "select",
+              options,
+              minValue: null,
+              maxValue: null,
+              isRequired: false,
+              isVisible: true,
+            },
+          ],
+        }),
+      ],
+    })
+
+    const [birthdays] = await load(access.location.id)
+    expect(birthdays.formFields[0].options).toEqual(options)
   })
 
   test("stores the upgrades box title and explanation", async () => {

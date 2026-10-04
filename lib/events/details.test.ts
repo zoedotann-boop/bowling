@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test"
 
+import type { EventFormFieldDraft } from "@/lib/actions/admin/schemas"
 import en from "@/messages/en.json"
 import he from "@/messages/he.json"
 
@@ -7,6 +8,7 @@ import {
   defaultBookingFields,
   defaultFormFields,
   eventDetailDefaults,
+  withTimeField,
 } from "./detail-defaults"
 import {
   summaryRowsFromPrices,
@@ -328,7 +330,25 @@ describe("defaultBookingFields", () => {
       "email",
       "phone",
       "date",
+      "time",
     ])
+  })
+
+  test("asks for the event time as a required pick from the fixed list", () => {
+    const time = defaultBookingFields().find((field) => field.key === "time")
+    expect(time).toMatchObject({
+      type: "time",
+      isRequired: true,
+      options: null,
+      label: {
+        he: he.eventDetails.form.timeLabel,
+        en: en.eventDetails.form.timeLabel,
+      },
+      placeholder: {
+        he: he.eventDetails.form.timePlaceholder,
+        en: en.eventDetails.form.timePlaceholder,
+      },
+    })
   })
 
   test("labels and placeholders come from the booking form copy in both locales", () => {
@@ -361,13 +381,102 @@ describe("defaultFormFields", () => {
     expect(defaultFormFields("ramat-gan", "birthdays")).toEqual(
       defaultBookingFields()
     )
-    expect(defaultFormFields("rishon", "birthdays")).toHaveLength(7)
-    expect(defaultFormFields("rishon", "gymboree")).toHaveLength(7)
+    expect(defaultFormFields("rishon", "birthdays")).toHaveLength(8)
+    expect(defaultFormFields("rishon", "gymboree")).toHaveLength(8)
   })
 
   test("returns no fields for events that use the contact form instead", () => {
     expect(defaultFormFields("ramat-gan", "team")).toEqual([])
     expect(defaultFormFields("ramat-gan", "corporate")).toEqual([])
     expect(defaultFormFields("ramat-gan", "brand-new-event")).toEqual([])
+  })
+})
+
+describe("withTimeField", () => {
+  const draft = (
+    key: string,
+    type: EventFormFieldDraft["type"],
+    extra: Partial<EventFormFieldDraft> = {}
+  ): EventFormFieldDraft => ({
+    key,
+    type,
+    label: { he: key, en: key },
+    placeholder: { he: "", en: "" },
+    options: [],
+    minValue: null,
+    maxValue: null,
+    isRequired: false,
+    isVisible: true,
+    ...extra,
+  })
+  const fixedTime = {
+    type: "time",
+    label: {
+      he: he.eventDetails.form.timeLabel,
+      en: en.eventDetails.form.timeLabel,
+    },
+    placeholder: {
+      he: he.eventDetails.form.timePlaceholder,
+      en: en.eventDetails.form.timePlaceholder,
+    },
+    options: [],
+    isRequired: true,
+    isVisible: true,
+  }
+
+  test("adds the time field right after the date when it is missing", () => {
+    const fields = withTimeField([
+      draft("firstName", "text"),
+      draft("date", "date"),
+      draft("notes", "textarea"),
+    ])
+    expect(fields.map((field) => field.key)).toEqual([
+      "firstName",
+      "date",
+      "time",
+      "notes",
+    ])
+    expect(fields[2]).toMatchObject({ ...fixedTime, key: "time" })
+  })
+
+  test("adds it at the end when the form has no date", () => {
+    const fields = withTimeField([draft("firstName", "text")])
+    expect(fields.map((field) => field.key)).toEqual(["firstName", "time"])
+  })
+
+  test("keeps an existing time field's place, id and key but resets its settings", () => {
+    const fields = withTimeField([
+      draft("field_old", "time", {
+        id: "1b4e28ba-2fa1-11d2-883f-0016d3cca427",
+        label: { he: "", en: "" },
+        options: [{ value: "18:00", label: { he: "18:00", en: "18:00" } }],
+        isVisible: false,
+      }),
+      draft("firstName", "text"),
+      draft("date", "date"),
+    ])
+    expect(fields.map((field) => field.key)).toEqual([
+      "field_old",
+      "firstName",
+      "date",
+    ])
+    expect(fields[0]).toMatchObject({
+      ...fixedTime,
+      id: "1b4e28ba-2fa1-11d2-883f-0016d3cca427",
+      key: "field_old",
+    })
+  })
+
+  test("keeps a single time field when the form has several", () => {
+    const fields = withTimeField([
+      draft("date", "date"),
+      draft("field_a", "time"),
+      draft("field_b", "time"),
+    ])
+    expect(fields.map((field) => field.key)).toEqual(["date", "field_a"])
+  })
+
+  test("leaves an empty form empty, so the built-in fields still apply", () => {
+    expect(withTimeField([])).toEqual([])
   })
 })

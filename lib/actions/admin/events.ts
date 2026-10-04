@@ -13,6 +13,7 @@ import {
   eventTypeContent,
   eventUpgrade,
 } from "@/lib/db/schema"
+import { withTimeField } from "@/lib/events/detail-defaults"
 
 import { eventsSchema } from "./schemas"
 import { type ActionResult, OK, readSlug } from "./shared"
@@ -27,7 +28,13 @@ export async function saveEvents(input: unknown): Promise<ActionResult> {
 
   const parsed = eventsSchema.safeParse(input)
   if (!parsed.success) return { ok: false, error: "invalid" }
-  const data = parsed.data
+  const data = {
+    ...parsed.data,
+    eventTypes: parsed.data.eventTypes.map((type) => ({
+      ...type,
+      formFields: withTimeField(type.formFields),
+    })),
+  }
 
   const slugs = data.eventTypes.map((type) => type.slug)
   if (new Set(slugs).size !== slugs.length) {
