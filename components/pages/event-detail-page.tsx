@@ -1,6 +1,7 @@
 "use client"
 
 import {
+  useId,
   useRef,
   useState,
   type ComponentType,
@@ -17,7 +18,7 @@ import { cn } from "@/lib/utils"
 import { branchPath, type BranchId } from "@/lib/branches"
 import type { SiteEventLocation } from "@/lib/db/queries/site"
 import type { Localized } from "@/lib/db/schema/_shared"
-import type { BookingFormField } from "@/lib/events/fields"
+import { TIME_OPTIONS, type BookingFormField } from "@/lib/events/fields"
 import { usesContactForm } from "@/lib/events/slugs"
 import { isOptimizableImage } from "@/lib/images"
 import { formatPrice, pickLocale } from "@/lib/localized"
@@ -557,6 +558,7 @@ const INPUT_TYPES: Record<BookingFormField["type"], string> = {
 const FIELD_SPAN: Partial<Record<BookingFormField["type"], string>> = {
   email: "col-span-2 lg:col-span-1",
   select: "col-span-2 lg:col-span-1",
+  time: "col-span-2 lg:col-span-1",
   textarea: "col-span-full",
 }
 
@@ -571,11 +573,15 @@ function BookingFieldInput({
   onChange: (value: string) => void
   locale: "he" | "en"
 }) {
+  const t = useTranslations("eventDetails.form")
+  const noteId = useId()
   const label = pickLocale(field.label, locale)
   const placeholder = pickLocale(field.placeholder, locale)
-  const isChoice = field.type === "select" || field.type === "time"
+  const isTime = field.type === "time"
+  const isChoice = field.type === "select" || isTime
+  const options = isTime ? TIME_OPTIONS : (field.options ?? [])
 
-  if (isChoice && !field.options?.length) return null
+  if (isChoice && !options.length) return null
 
   if (field.type === "checkbox") {
     return (
@@ -614,9 +620,10 @@ function BookingFieldInput({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             required={field.isRequired}
+            aria-describedby={isTime ? noteId : undefined}
           >
             <option value="">{placeholder || "—"}</option>
-            {field.options?.map((opt) => (
+            {options.map((opt) => (
               <option key={opt.value} value={opt.value}>
                 {pickLocale(opt.label, locale)}
               </option>
@@ -646,6 +653,15 @@ function BookingFieldInput({
           }
         />
       )}
+      {isTime ? (
+        <span
+          id={noteId}
+          aria-hidden
+          className="text-[12px] leading-snug font-semibold text-mud"
+        >
+          {t("timeNote")}
+        </span>
+      ) : null}
     </label>
   )
 }

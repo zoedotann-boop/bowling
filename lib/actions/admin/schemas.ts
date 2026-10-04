@@ -2,7 +2,7 @@ import { z } from "zod"
 
 import { ADMIN_ROLES } from "@/lib/admin/permissions"
 import { PRICE_SUMMARY_MODES } from "@/lib/events/details"
-import { FORM_FIELD_TYPES, toTimeOptions } from "@/lib/events/fields"
+import { FORM_FIELD_TYPES } from "@/lib/events/fields"
 import { SERVICE_ICONS } from "@/lib/home"
 
 import { localizedSchema, rowIdSchema } from "./shared"
@@ -202,12 +202,7 @@ const eventFormFieldSchema = z
     isVisible: z.boolean(),
   })
   .transform((field) =>
-    field.type === "time"
-      ? {
-          ...field,
-          options: toTimeOptions(field.options.map((option) => option.value)),
-        }
-      : field
+    field.type === "select" ? field : { ...field, options: [] }
   )
 const eventStepSchema = z.object({
   id: rowIdSchema,

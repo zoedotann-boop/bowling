@@ -1,4 +1,5 @@
 import type { Branch } from "@/lib/branches"
+import { clockTime } from "@/lib/events/fields"
 import { isBirthdayEvent } from "@/lib/events/slugs"
 
 export interface Invitation {
@@ -34,11 +35,10 @@ export function arrivalTime(raw: string): string {
   const match = TIME.exec(raw)
   if (!match) return raw
 
-  const minutes =
+  return clockTime(
     (+match[1] * 60 + +match[2] - ARRIVE_EARLY_MINUTES + MINUTES_PER_DAY) %
-    MINUTES_PER_DAY
-  const pad = (value: number) => String(value).padStart(2, "0")
-  return `${pad(Math.floor(minutes / 60))}:${pad(minutes % 60)}`
+      MINUTES_PER_DAY
+  )
 }
 
 export function partyWhen(date: string, time: string): string {

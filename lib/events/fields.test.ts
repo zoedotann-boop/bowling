@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
 
-import { isCoreField, newFieldKey, toTimeOptions } from "./fields"
+import { clockTime, isCoreField, newFieldKey, TIME_OPTIONS } from "./fields"
 
 describe("newFieldKey", () => {
   test("produces a key the save schema accepts", () => {
@@ -26,28 +26,43 @@ describe("isCoreField", () => {
   })
 })
 
-describe("toTimeOptions", () => {
-  test("turns times into options labelled with the time itself", () => {
-    expect(toTimeOptions(["16:00"])).toEqual([
-      { value: "16:00", label: { he: "16:00", en: "16:00" } },
+describe("clockTime", () => {
+  test("formats minutes since midnight as a two-digit clock time", () => {
+    expect(clockTime(0)).toBe("00:00")
+    expect(clockTime(9 * 60 + 5)).toBe("09:05")
+    expect(clockTime(23 * 60 + 45)).toBe("23:45")
+  })
+})
+
+describe("TIME_OPTIONS", () => {
+  const values = TIME_OPTIONS.map((option) => option.value)
+
+  test("covers the whole day in quarter hours, in order", () => {
+    expect(values).toHaveLength(96)
+    expect(values.slice(0, 5)).toEqual([
+      "00:00",
+      "00:15",
+      "00:30",
+      "00:45",
+      "01:00",
     ])
+    expect(values.at(-1)).toBe("23:45")
+    expect(values).toEqual([...values].sort())
   })
 
-  test("orders through the evening, keeping after-midnight times last", () => {
-    const values = toTimeOptions(["00:30", "18:00", "10:00", "23:30"]).map(
-      (option) => option.value
-    )
-    expect(values).toEqual(["10:00", "18:00", "23:30", "00:30"])
+  test("includes every full, half and quarter hour once", () => {
+    expect(new Set(values).size).toBe(values.length)
+    expect(values).toContain("17:00")
+    expect(values).toContain("17:15")
+    expect(values).toContain("17:30")
+    expect(values).toContain("17:45")
+    expect(values).not.toContain("17:10")
   })
 
-  test("drops blank, malformed and repeated times", () => {
-    const values = toTimeOptions(["", " 12:00 ", "12:00", "25:00", "9:00"]).map(
-      (option) => option.value
-    )
-    expect(values).toEqual(["12:00"])
-  })
-
-  test("is empty when no times were given", () => {
-    expect(toTimeOptions([])).toEqual([])
+  test("labels each time with the time itself in both languages", () => {
+    expect(TIME_OPTIONS.find((option) => option.value === "16:30")).toEqual({
+      value: "16:30",
+      label: { he: "16:30", en: "16:30" },
+    })
   })
 })

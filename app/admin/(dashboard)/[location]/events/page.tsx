@@ -6,6 +6,7 @@ import { getEventsEditor } from "@/lib/db/queries/admin"
 import {
   defaultFormFields,
   eventDetailDefaults,
+  withTimeField,
 } from "@/lib/events/detail-defaults"
 import { withEventDetailDefaults } from "@/lib/events/details"
 
@@ -50,10 +51,12 @@ export default async function EventsPage({
         label: toLocalized(upgrade.label),
         amount: upgrade.amount,
       })),
-      formFields: (type.formFields.length
-        ? type.formFields
-        : defaultFormFields(slug, type.slug)
-      ).map(toFormFieldDraft),
+      formFields: withTimeField(
+        (type.formFields.length
+          ? type.formFields
+          : defaultFormFields(slug, type.slug)
+        ).map(toFormFieldDraft)
+      ),
     })),
   }
 
