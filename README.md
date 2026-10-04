@@ -60,17 +60,24 @@ Each location's **Inquiries inbox** (admin → Settings) takes priority over
 `EVENTS_TO_EMAIL`; if neither is set, or `RESEND_API_KEY`/`CONTACT_FROM_EMAIL`
 is missing, the route responds with `500 { error: "Email service is not configured." }`.
 
-### Birthday invitation PDF
+### Invitation PDF
 
-For birthday events (`birthdays`, `gymboree`, `no-room`) the customer's
-confirmation email also carries `birthday-invitation.pdf`: an A4 landscape
-invitation with the branch logo, the requested day and date, the celebrants'
-names and the branch address and phone. It is rendered on the server with
-[`@react-pdf/renderer`](https://react-pdf.org) (its bidi support handles the
-Hebrew text) in `lib/invitations/`, using the Rubik fonts (OFL) and the
-background artwork in `lib/invitations/assets/`. `next.config.ts` adds those
-files and `public/logo-*.png` to the booking route's file trace. If the PDF
-fails to render, the email is sent without it.
+Every booking form ("טופס אישור והתחייבות") also sends the customer an
+`invitation.pdf`: an A4 landscape invitation over the bowling artwork with the
+branch logo, address and phone as saved in the admin (falling back to
+`lib/branches.ts`), the requested day and date, the time when the form has a
+time field (15 minutes before the booked time, so guests arrive early), and the
+celebrants' names (or the customer's first name).
+Birthday events (`birthdays`, `gymboree`, `no-room`) get birthday wording;
+other events get a general party invitation. The form sends each field's type,
+so dates and times are found in admin-added fields too.
+
+It is rendered on the server with [`@react-pdf/renderer`](https://react-pdf.org)
+(its bidi support handles the Hebrew text) in `lib/invitations/`, using the
+Rubik fonts (OFL) and the background artwork in `lib/invitations/assets/`.
+An uploaded logo that is missing or not PNG/JPEG is replaced by the bundled
+`public/logo-*.png`. `next.config.ts` adds those files to the booking route's
+file trace. If the PDF fails to render, the email is sent without it.
 
 ## Admin
 

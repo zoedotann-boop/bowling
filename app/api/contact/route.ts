@@ -69,7 +69,7 @@ export async function POST(request: Request) {
     )
   }
 
-  const branch = resolveBranch(payload.branch)
+  const branch = await resolveBranch(payload.branch)
   const to = await resolveInquiriesRecipient(payload.branch)
   if (!to) {
     return NextResponse.json(

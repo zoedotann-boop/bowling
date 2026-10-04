@@ -5,13 +5,9 @@ import { isIP } from "node:net"
 import { eq } from "drizzle-orm"
 import { Resend } from "resend"
 
-import {
-  BRANCHES,
-  DEFAULT_BRANCH,
-  isBranchId,
-  type Branch,
-} from "@/lib/branches"
+import { DEFAULT_BRANCH, isBranchId, type Branch } from "@/lib/branches"
 import { db } from "@/lib/db"
+import { getSiteBranches } from "@/lib/db/queries/site"
 import { location } from "@/lib/db/schema"
 
 export const escapeHtml = (value: string) =>
@@ -42,8 +38,9 @@ export async function resolveInquiriesRecipient(
   return process.env.EVENTS_TO_EMAIL?.trim() || undefined
 }
 
-export function resolveBranch(slug: unknown): Branch {
-  return BRANCHES[isBranchId(slug) ? slug : DEFAULT_BRANCH]
+export async function resolveBranch(slug: unknown): Promise<Branch> {
+  const branches = await getSiteBranches()
+  return branches[isBranchId(slug) ? slug : DEFAULT_BRANCH]
 }
 
 const FALLBACK_SENDER_HOST = "bowlingil.com"

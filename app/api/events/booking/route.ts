@@ -16,7 +16,7 @@ import {
   SIGNATURE_CID,
 } from "@/lib/events/booking-agreement"
 import type { EventDetailTexts } from "@/lib/events/details"
-import { birthdayInvitationAttachment } from "@/lib/invitations/birthday-invitation-pdf"
+import { invitationAttachment } from "@/lib/invitations/invitation-pdf"
 
 interface BookingPayload {
   branch?: string
@@ -63,9 +63,9 @@ function renderCustomerEmail(
         ? sectionHeading("חתימה") + noteParagraph("חתימתך נקלטה בהצלחה.")
         : "") +
       (hasInvitation
-        ? sectionHeading("הזמנה ליום ההולדת") +
+        ? sectionHeading("הזמנה לאורחים") +
           noteParagraph(
-            "צירפנו למייל הזמנה מעוצבת (PDF) עם התאריך שביקשת. אפשר לשלוח אותה לאורחים אחרי שנאשר איתך את המועד."
+            "צירפנו למייל הזמנה מעוצבת (PDF) עם פרטי האירוע שביקשת ופרטי הסניף. אפשר לשלוח אותה לאורחים אחרי שנאשר איתך את המועד."
           )
         : ""),
   })
@@ -89,7 +89,7 @@ export async function POST(request: Request) {
     )
   }
 
-  const branch = resolveBranch(payload.branch)
+  const branch = await resolveBranch(payload.branch)
   const to = await resolveInquiriesRecipient(payload.branch)
   if (!to) {
     return NextResponse.json(
@@ -132,7 +132,7 @@ export async function POST(request: Request) {
   }
 
   if (email?.trim()) {
-    const invitation = await birthdayInvitationAttachment(payload, branch)
+    const invitation = await invitationAttachment(payload, branch)
     await sendMail({
       to: email.trim(),
       subject: `קיבלנו את בקשת האירוע שלך · ${BRAND_HE}`,

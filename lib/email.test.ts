@@ -1,5 +1,9 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test"
 
+import { BRANCHES } from "@/lib/branches"
+import { location } from "@/lib/db/schema"
+import { testDb as db } from "@/lib/db/testing/preload"
+
 const send = mock<
   (payload: Record<string, unknown>) => Promise<{ error: unknown }>
 >(async () => ({ error: null }))
@@ -10,7 +14,7 @@ mock.module("resend", () => ({
   },
 }))
 
-const { loginSender, sendMail } = await import("./email")
+const { loginSender, resolveBranch, sendMail } = await import("./email")
 
 const input = { to: "guest@example.com", subject: "Hi", html: "<p>Hi</p>" }
 const env = { ...process.env }
@@ -100,5 +104,36 @@ describe("loginSender", () => {
     ["an IPv6 address", "http://[::1]:3000"],
   ])("falls back to bowlingil.com when the URL is %s", (_, url) => {
     expect(loginSender(url)).toBe("login@bowlingil.com")
+  })
+})
+
+describe("resolveBranch", () => {
+  beforeEach(async () => {
+    await db.delete(location)
+  })
+
+  test("uses the branch details saved in the admin", async () => {
+    await db.insert(location).values({
+      slug: "rishon",
+      name: { he: "סניף ראשון לציון", en: "Rishon LeZion Branch" },
+      addressLine1: { he: "הרצל 1", en: "Herzl St 1" },
+      addressFull: { he: "הרצל 1, ראשון לציון", en: "" },
+      phone: "03-1234567",
+    })
+
+    const branch = await resolveBranch("rishon")
+    expect(branch.phone).toBe("03-1234567")
+    expect(branch.addressFull).toEqual({
+      he: "הרצל 1, ראשון לציון",
+      en: BRANCHES.rishon.addressFull.en,
+    })
+  })
+
+  test("falls back to the built-in details and the default branch", async () => {
+    expect(await resolveBranch("rishon")).toMatchObject({
+      phone: BRANCHES.rishon.phone,
+      addressFull: BRANCHES.rishon.addressFull,
+    })
+    expect((await resolveBranch("nowhere")).id).toBe("ramat-gan")
   })
 })
