@@ -197,3 +197,19 @@ export const CustomHeroImage: Story = {
     events: birthdaysWith({ heroImageUrl: "/gallery/2.png" }),
   },
 }
+
+export const WithTimeOptions: Story = {
+  args: {
+    defaultFormFields: [
+      ...DEFAULT_FIELDS,
+      {
+        ...field("eventTime", "time", "שעת האירוע"),
+        placeholder: { he: "בחרו שעה" },
+        options: ["10:00", "12:30", "16:00", "18:30"].map((time) => ({
+          value: time,
+          label: { he: time, en: time },
+        })),
+      },
+    ],
+  },
+}

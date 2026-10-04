@@ -548,6 +548,7 @@ const INPUT_TYPES: Record<BookingFormField["type"], string> = {
   email: "email",
   id: "text",
   date: "date",
+  time: "select",
   number: "number",
   select: "select",
   checkbox: "checkbox",
@@ -572,6 +573,10 @@ function BookingFieldInput({
 }) {
   const label = pickLocale(field.label, locale)
   const placeholder = pickLocale(field.placeholder, locale)
+  const isChoice = field.type === "select" || field.type === "time"
+
+  // A dropdown with nothing to pick would block a required field's submit.
+  if (isChoice && !field.options?.length) return null
 
   if (field.type === "checkbox") {
     return (
@@ -603,7 +608,7 @@ function BookingFieldInput({
           placeholder={placeholder || undefined}
           required={field.isRequired}
         />
-      ) : field.type === "select" ? (
+      ) : isChoice ? (
         <div className="relative">
           <select
             className={cn(inputClass, "appearance-none pe-11")}
@@ -612,7 +617,7 @@ function BookingFieldInput({
             required={field.isRequired}
           >
             <option value="">{placeholder || "—"}</option>
-            {(field.options ?? []).map((opt) => (
+            {field.options?.map((opt) => (
               <option key={opt.value} value={opt.value}>
                 {pickLocale(opt.label, locale)}
               </option>

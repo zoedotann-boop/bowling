@@ -18,6 +18,7 @@ import { ImageField } from "@/components/admin/image-field"
 import { LocalizedField } from "@/components/admin/localized-field"
 import { RowTable } from "@/components/admin/row-table"
 import { SectionForm, useSectionDraft } from "@/components/admin/section-form"
+import { TimeOptionsEditor } from "@/components/admin/time-options-editor"
 import { Button } from "@/components/ui/button"
 import { saveEvents } from "@/lib/actions/admin/events"
 import type {
@@ -34,7 +35,12 @@ import {
   summaryRowsFromPrices,
   type PriceSummaryMode,
 } from "@/lib/events/details"
-import { FORM_FIELD_TYPES, isCoreField, newFieldKey } from "@/lib/events/fields"
+import {
+  FORM_FIELD_TYPES,
+  isCoreField,
+  newFieldKey,
+  timeOption,
+} from "@/lib/events/fields"
 import { usesContactForm } from "@/lib/events/slugs"
 import { emptyLocalized, formatPrice } from "@/lib/localized"
 import type { Locale } from "@/lib/locales"
@@ -800,12 +806,15 @@ function FormFieldEditor({
         <AdminField label={t("fieldType")} tooltip={t("fieldTypeTip")}>
           <AdminSelect
             value={field.type}
-            onChange={(event) =>
+            onChange={(event) => {
+              const type = event.target.value as EventFormFieldDraft["type"]
+              const keepsOptions = (type === "time") === (field.type === "time")
               update({
                 ...field,
-                type: event.target.value as EventFormFieldDraft["type"],
+                type,
+                options: keepsOptions ? field.options : [],
               })
-            }
+            }}
           >
             {FORM_FIELD_TYPES.map((type) => (
               <option key={type} value={type}>
@@ -840,6 +849,14 @@ function FormFieldEditor({
             onChange={(maxValue) => update({ ...field, maxValue })}
           />
         </div>
+      )}
+      {field.type === "time" && (
+        <TimeOptionsEditor
+          times={field.options.map((option) => option.value)}
+          onChange={(times) =>
+            update({ ...field, options: times.map(timeOption) })
+          }
+        />
       )}
       {field.type === "select" && (
         <div>
