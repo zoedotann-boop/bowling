@@ -10,7 +10,7 @@ import {
 } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowLeft, Check, ChevronDown, Eraser, X } from "lucide-react"
+import { ArrowLeft, Check, ChevronDown, Eraser, Info, X } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import SignatureCanvas from "react-signature-canvas"
 
@@ -463,40 +463,85 @@ function RulesSection({
   )
 }
 
+function UpgradeList({
+  upgrades,
+  compact,
+}: {
+  upgrades: Extra[]
+  compact?: boolean
+}) {
+  return (
+    <ul
+      className={cn(
+        "grid sm:grid-cols-2",
+        compact ? "mt-2 gap-x-6" : "gap-x-10 lg:gap-x-14"
+      )}
+    >
+      {upgrades.map((upgrade, i) => (
+        <li
+          key={i}
+          className={cn(
+            "flex items-baseline justify-between gap-3 border-b border-dashed border-border",
+            compact ? "py-1.5" : "py-3"
+          )}
+        >
+          <div>
+            <div
+              className={cn(
+                "font-bold text-foreground",
+                compact ? "text-[12.5px]" : "text-[15px]"
+              )}
+            >
+              {upgrade.title}
+            </div>
+            {upgrade.desc ? (
+              <div className="mt-0.5 text-[12.5px] leading-snug font-semibold text-mud">
+                {upgrade.desc}
+              </div>
+            ) : null}
+          </div>
+          {upgrade.price ? (
+            <div
+              className={cn(
+                "shrink-0 font-heading font-black whitespace-nowrap text-rust",
+                compact ? "text-[12.5px]" : "text-[15px]"
+              )}
+            >
+              {upgrade.price}
+            </div>
+          ) : null}
+        </li>
+      ))}
+    </ul>
+  )
+}
+
 function ExtrasSection({
   extras,
   title,
   note,
+  deskNote,
 }: {
   extras: Extra[]
   title: string
   note: string
+  deskNote: string
 }) {
   return (
     <div>
       <SectionHeading title={title} note={note} />
-      <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
-        {extras.map((extra, i) => (
-          <div
-            key={i}
-            className="flex items-start justify-between gap-3 rounded-sm border border-border bg-card p-5 transition-colors hover:border-primary"
-          >
-            <div>
-              <div className="font-heading text-[15px] font-black text-navy">
-                {extra.title}
-              </div>
-              {extra.desc ? (
-                <div className="mt-1 text-[12.5px] leading-snug font-semibold text-mud">
-                  {extra.desc}
-                </div>
-              ) : null}
-            </div>
-            <div className="shrink-0 font-heading text-[15px] font-black whitespace-nowrap text-rust">
-              {extra.price}
-            </div>
-          </div>
-        ))}
-      </div>
+      <p
+        role="note"
+        className="mb-4 flex items-start gap-2.5 rounded-sm border-s-4 border-primary bg-primary/10 px-4 py-3 font-heading text-[15px] leading-snug font-extrabold text-navy lg:text-base"
+      >
+        <Info
+          aria-hidden
+          className="mt-0.5 size-4.5 shrink-0 text-primary"
+          strokeWidth={2.5}
+        />
+        {deskNote}
+      </p>
+      <UpgradeList upgrades={extras} />
     </div>
   )
 }
@@ -787,21 +832,7 @@ function BookingForm({
           <p className="mt-0.5 text-[12.5px] leading-snug font-semibold text-mud">
             {texts.upgradesNote}
           </p>
-          <ul className="mt-2 flex flex-wrap gap-1.5">
-            {upgrades.map((u) => (
-              <li
-                key={u.title}
-                className="rounded-sm border border-border bg-card px-2.5 py-1 text-[12.5px] font-bold text-foreground"
-              >
-                {u.title}
-                {u.price ? (
-                  <span className="ms-1.5 font-heading font-black whitespace-nowrap text-rust">
-                    {u.price}
-                  </span>
-                ) : null}
-              </li>
-            ))}
-          </ul>
+          <UpgradeList upgrades={upgrades} compact />
         </section>
       ) : null}
 
@@ -1176,6 +1207,7 @@ export function EventDetailPage({
             extras={data.extras}
             title={data.extrasTitle ?? t("extrasTitle")}
             note={data.extrasNote ?? t("extrasNote")}
+            deskNote={t("extrasDeskNote")}
           />
         ) : null}
       </Container>
