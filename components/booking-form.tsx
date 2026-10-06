@@ -144,6 +144,65 @@ function BookingFieldInput({
   )
 }
 
+interface BookingUpgrade {
+  title: string
+  desc?: string
+  price: string
+}
+
+export function UpgradeList({
+  upgrades,
+  compact,
+}: {
+  upgrades: BookingUpgrade[]
+  compact?: boolean
+}) {
+  return (
+    <ul
+      className={cn(
+        "grid sm:grid-cols-2",
+        compact ? "mt-2 gap-x-6" : "gap-x-10 lg:gap-x-14"
+      )}
+    >
+      {upgrades.map((upgrade, i) => (
+        <li
+          key={i}
+          className={cn(
+            "flex items-baseline justify-between gap-3 border-b border-dashed border-border",
+            compact ? "py-1.5" : "py-3"
+          )}
+        >
+          <div>
+            <div
+              className={cn(
+                "font-bold text-foreground",
+                compact ? "text-[12.5px]" : "text-[15px]"
+              )}
+            >
+              {upgrade.title}
+            </div>
+            {upgrade.desc ? (
+              <div className="mt-0.5 text-[12.5px] leading-snug font-semibold text-mud">
+                {upgrade.desc}
+              </div>
+            ) : null}
+          </div>
+          {upgrade.price ? (
+            <div
+              className={cn(
+                "shrink-0 font-heading font-black whitespace-nowrap text-rust",
+                compact ? "text-[12.5px]" : "text-[15px]"
+              )}
+            >
+              {upgrade.price}
+            </div>
+          ) : null}
+        </li>
+      ))}
+    </ul>
+  )
+}
+
 interface BookingFormProps {
   branchId: BranchId
   event: string
@@ -154,7 +213,7 @@ interface BookingFormProps {
   upgrades: {
     title: string
     note: string
-    items: { title: string; price: string }[]
+    items: BookingUpgrade[]
   }
   footnote: string
 }
@@ -285,21 +344,7 @@ function BookingForm({
           <p className="mt-0.5 text-[12.5px] leading-snug font-semibold text-mud">
             {upgrades.note}
           </p>
-          <ul className="mt-2 flex flex-wrap gap-1.5">
-            {upgrades.items.map((u) => (
-              <li
-                key={u.title}
-                className="rounded-sm border border-border bg-card px-2.5 py-1 text-[12.5px] font-bold text-foreground"
-              >
-                {u.title}
-                {u.price ? (
-                  <span className="ms-1.5 font-heading font-black whitespace-nowrap text-rust">
-                    {u.price}
-                  </span>
-                ) : null}
-              </li>
-            ))}
-          </ul>
+          <UpgradeList upgrades={upgrades.items} compact />
         </section>
       ) : null}
 

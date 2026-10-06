@@ -667,6 +667,7 @@
     "forbiddenTitle": "Not allowed",
     "extrasTitle": "Pre-arranged upgrades",
     "extrasNote": "All upgrades by prior arrangement only",
+    "extrasDeskNote": "Upgrades are chosen and finalized directly with the receptionist at the front desk.",
     "policyTitle": "Booking policy",
     "policyNote": "Worth reading before you reserve a date",
     "form": {
@@ -788,7 +789,6 @@
           ],
           "rulesFootnote": "Pitchers of water and cordial are provided free of charge throughout the event. Refreshments and food in the lane area only.",
           "extrasTitle": "Add-ons & upgrades",
-          "extrasNote": "Choose what suits your celebration",
           "extras": [
             {
               "title": "Arcade ticket",

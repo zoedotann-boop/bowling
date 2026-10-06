@@ -3,7 +3,7 @@
 import type { ComponentType, SVGProps } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowLeft, Check, X } from "lucide-react"
+import { ArrowLeft, Check, Info, X } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
@@ -14,7 +14,7 @@ import { usesContactForm } from "@/lib/events/slugs"
 import { isOptimizableImage } from "@/lib/images"
 import { formatPrice, pickLocale } from "@/lib/localized"
 import { useBranch } from "@/components/branch-context"
-import { BookingPanel } from "@/components/booking-form"
+import { BookingPanel, UpgradeList } from "@/components/booking-form"
 import {
   BirthdaysIllustration,
   CorporateIllustration,
@@ -400,36 +400,28 @@ function ExtrasSection({
   extras,
   title,
   note,
+  deskNote,
 }: {
   extras: Extra[]
   title: string
   note: string
+  deskNote: string
 }) {
   return (
     <div>
       <SectionHeading title={title} note={note} />
-      <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
-        {extras.map((extra, i) => (
-          <div
-            key={i}
-            className="flex items-start justify-between gap-3 rounded-sm border border-border bg-card p-5 transition-colors hover:border-primary"
-          >
-            <div>
-              <div className="font-heading text-[15px] font-black text-navy">
-                {extra.title}
-              </div>
-              {extra.desc ? (
-                <div className="mt-1 text-[12.5px] leading-snug font-semibold text-mud">
-                  {extra.desc}
-                </div>
-              ) : null}
-            </div>
-            <div className="shrink-0 font-heading text-[15px] font-black whitespace-nowrap text-rust">
-              {extra.price}
-            </div>
-          </div>
-        ))}
-      </div>
+      <p
+        role="note"
+        className="mb-4 flex items-start gap-2.5 rounded-sm border-s-4 border-primary bg-primary/10 px-4 py-3 font-heading text-[15px] leading-snug font-extrabold text-navy lg:text-base"
+      >
+        <Info
+          aria-hidden
+          className="mt-0.5 size-4.5 shrink-0 text-primary"
+          strokeWidth={2.5}
+        />
+        {deskNote}
+      </p>
+      <UpgradeList upgrades={extras} />
     </div>
   )
 }
@@ -636,6 +628,7 @@ export function EventDetailPage({
             extras={data.extras}
             title={data.extrasTitle ?? t("extrasTitle")}
             note={data.extrasNote ?? t("extrasNote")}
+            deskNote={t("extrasDeskNote")}
           />
         ) : null}
       </Container>

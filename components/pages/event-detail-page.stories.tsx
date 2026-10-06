@@ -152,6 +152,7 @@ export const CustomizedInAdmin: Story = {
       [
         { label: { he: "20 בלוני הליום" }, amount: 100 },
         { label: { he: "מדריך נוסף" }, amount: 150 },
+        { label: { he: "צלם לאירוע" }, amount: null },
       ]
     ),
   },
