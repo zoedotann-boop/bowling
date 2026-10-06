@@ -17,3 +17,7 @@ const BIRTHDAY_EVENTS: readonly string[] = ["birthdays", "gymboree", "no-room"]
 export function isBirthdayEvent(slug: unknown): boolean {
   return typeof slug === "string" && BIRTHDAY_EVENTS.includes(slug)
 }
+
+export function waiverPath(branch: string, slug: string): string {
+  return `/${branch}/events/${slug}/waiver`
+}

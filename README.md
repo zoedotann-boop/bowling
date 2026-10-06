@@ -176,10 +176,26 @@ other session. One-time codes keep working whether or not a password is set.
 (logo, lane count, gymboree tag, address). Every public page lives under its
 branch — `/ramat-gan`, `/rishon/menu`, `/rishon/events/birthdays`, … — in
 `app/[branch]/`, whose layout validates the slug (`generateStaticParams` +
-`dynamicParams = false`, unknown slugs 404) and passes it to `SiteChrome` /
-`BranchProvider`. Build links with `branchPath(id, path)`; the header branch
+`dynamicParams = false`, unknown slugs 404). Pages that show the header and
+footer live in the `app/[branch]/(site)/` route group, whose layout wraps them
+in `SiteChrome` / `BranchProvider`. Build links with `branchPath(id, path)`; the header branch
 switcher keeps the current page via `switchBranchPath`. The contact and booking
 forms send `branch` in the request body so emails go to that branch.
+The standalone waiver page `/[branch]/events/[slug]/waiver` (e.g.
+`/ramat-gan/events/birthdays/waiver`) sits outside `(site)`: it renders only the
+event's commitment form block — the same intro, price summary, fields, upgrades,
+terms, signature and footnote as the bottom of the event page, with no header,
+footer, schedule, rules or policy — for customers who open the link on the spot
+to sign. Both pages build that block with `useEventDetail`
+(`hooks/use-event-detail.ts`) and render it with `BookingPanel`
+(`components/booking-form.tsx`), so they can't drift apart. Nothing on the site
+links to it and it is `noindex`. Staff get each event's link from the admin
+(Events → event → "Booking form" tab → "Personal commitment form link", with
+copy / open buttons, plus a "Commitment form" button next to "View page");
+`waiverPath` in `lib/events/slugs.ts` builds the URL for both. It 404s for
+events that use the contact form (team / corporate), events the branch doesn't
+offer, and custom events with no form fields (`waiverEventTitle` in
+`lib/events/waiver.ts`).
 Pre-branch URLs (`/menu`, `/events/*`, `/contact`, `/terms`, `/accessibility`)
 redirect permanently to the default branch (`next.config.ts`).
 

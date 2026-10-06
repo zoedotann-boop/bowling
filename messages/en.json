@@ -1783,6 +1783,17 @@
       "formFootnoteTip": "A small line under the submit button. Leave empty to hide it.",
       "requiresSignature": "Requires signature",
       "requiresSignatureTip": "When on, the booking form adds a signature field the customer must sign to submit.",
+      "waiverLink": "Personal commitment form link",
+      "waiverLinkTip": "A page that shows only this event's commitment form, without the rest of the page. Send the link to customers (e.g. on WhatsApp) or open it on the spot so they can sign. The link isn't shown in the site menu.",
+      "waiverCopy": "Copy link",
+      "waiverCopied": "Link copied",
+      "waiverVisit": "Open form",
+      "waiverOpen": "Commitment form",
+      "waiverUnavailable": {
+        "unsaved": "The link will appear here once you save this event type.",
+        "hidden": "This event type is hidden on the site, so the link won't work. Turn on \"Visible\" and save.",
+        "noFields": "The form has no fields, so it has no link. Add fields and save."
+      },
       "steps": "Event steps",
       "stepsTip": "The steps on the event page. Remove every step to hide the section.",
       "scheduleTitle": "Section heading",
