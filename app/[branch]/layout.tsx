@@ -2,7 +2,6 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { getLocale, getTranslations } from "next-intl/server"
 
-import { SiteChrome } from "@/components/site-chrome"
 import { branchIds, isBranchId } from "@/lib/branches"
 import { getSiteBranches } from "@/lib/db/queries/site"
 import type { Locale } from "@/lib/locales"
@@ -44,5 +43,5 @@ export default async function BranchLayout({
   if (!isBranchId(branch)) notFound()
   const branches = await getSiteBranches()
   if (!branches[branch].isVisible) notFound()
-  return <SiteChrome branchId={branch}>{children}</SiteChrome>
+  return children
 }

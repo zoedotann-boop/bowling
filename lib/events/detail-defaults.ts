@@ -18,6 +18,7 @@ interface MessagePriceOption {
 }
 
 interface MessageEvent {
+  title?: string
   badges?: string[]
   scheduleTitle?: string
   price?: { note?: string; options: MessagePriceOption[] }
@@ -44,6 +45,13 @@ function messageEvent(
 
 function list(heItems: string[] = [], enItems: string[] = []): Localized[] {
   return heItems.map((item, index) => ({ he: item, en: enItems[index] ?? "" }))
+}
+
+export function defaultEventTitle(branchId: string, slug: string): Localized {
+  return {
+    he: messageEvent(he.eventDetails, branchId, slug).title ?? "",
+    en: messageEvent(en.eventDetails, branchId, slug).title ?? "",
+  }
 }
 
 export function eventDetailDefaults(

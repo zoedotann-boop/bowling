@@ -1,6 +1,6 @@
 "use client"
 
-import { ExternalLink } from "lucide-react"
+import { ExternalLink, FileSignature } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useState } from "react"
 
@@ -18,6 +18,7 @@ import { ImageField } from "@/components/admin/image-field"
 import { LocalizedField } from "@/components/admin/localized-field"
 import { RowTable } from "@/components/admin/row-table"
 import { SectionForm, useSectionDraft } from "@/components/admin/section-form"
+import { WaiverLink } from "@/components/admin/waiver-link"
 import { Button } from "@/components/ui/button"
 import { saveEvents } from "@/lib/actions/admin/events"
 import type {
@@ -35,7 +36,7 @@ import {
   type PriceSummaryMode,
 } from "@/lib/events/details"
 import { FORM_FIELD_TYPES, isCoreField, newFieldKey } from "@/lib/events/fields"
-import { usesContactForm } from "@/lib/events/slugs"
+import { usesContactForm, waiverPath } from "@/lib/events/slugs"
 import { emptyLocalized, formatPrice } from "@/lib/localized"
 import type { Locale } from "@/lib/locales"
 
@@ -77,6 +78,16 @@ function newEventType(slug: string): EventTypeDraft {
     upgrades: [],
     formFields: [],
   }
+}
+
+type WaiverStatus = "ready" | "unsaved" | "hidden" | "noFields"
+
+function waiverStatus(type: EventTypeDraft): WaiverStatus | null {
+  if (usesContactForm(type.slug)) return null
+  if (!type.id) return "unsaved"
+  if (!type.isVisible) return "hidden"
+  if (!type.formFields.length) return "noFields"
+  return "ready"
 }
 
 function newPriceOption(): EventPriceOptionDraft {
@@ -200,21 +211,40 @@ export function EventsForm({
         isHidden={(type) => !type.isVisible}
         detailActions={(type) =>
           type.id && (
-            <Button
-              variant="outline"
-              size="sm"
-              nativeButton={false}
-              render={
-                <a
-                  href={`/${slug}/events/${type.slug}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <ExternalLink />
-                  {t("viewPage")}
-                </a>
-              }
-            />
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                nativeButton={false}
+                render={
+                  <a
+                    href={`/${slug}/events/${type.slug}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <ExternalLink />
+                    {t("viewPage")}
+                  </a>
+                }
+              />
+              {waiverStatus(type) === "ready" && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  nativeButton={false}
+                  render={
+                    <a
+                      href={waiverPath(slug, type.slug)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <FileSignature />
+                      {t("waiverOpen")}
+                    </a>
+                  }
+                />
+              )}
+            </>
           )
         }
         renderDetail={(type, update) => (
@@ -630,12 +660,24 @@ function EventTypeEditor({
     </>
   )
 
+  const waiver = waiverStatus(type)
+
   const formTab = usesContactForm(type.slug) ? (
     <p className="rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground">
       {t("contactFormTip")}
     </p>
   ) : (
     <>
+      <AdminSubsection title={t("waiverLink")} description={t("waiverLinkTip")}>
+        {waiver === "ready" ? (
+          <WaiverLink path={waiverPath(siteSlug, type.slug)} />
+        ) : (
+          <p className="rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground">
+            {t(`waiverUnavailable.${waiver}`)}
+          </p>
+        )}
+      </AdminSubsection>
+
       <AdminSubsection title={t("formFields")} description={t("formFieldsTip")}>
         <RowTable
           items={type.formFields}

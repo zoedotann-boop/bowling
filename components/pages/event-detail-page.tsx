@@ -1,28 +1,20 @@
 "use client"
 
-import {
-  useId,
-  useRef,
-  useState,
-  type ComponentType,
-  type FormEvent,
-  type SVGProps,
-} from "react"
+import type { ComponentType, SVGProps } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowLeft, Check, ChevronDown, Eraser, Info, X } from "lucide-react"
+import { ArrowLeft, Check, Info, X } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
-import SignatureCanvas from "react-signature-canvas"
 
 import { cn } from "@/lib/utils"
 import { branchPath, type BranchId } from "@/lib/branches"
 import type { SiteEventLocation } from "@/lib/db/queries/site"
-import type { Localized } from "@/lib/db/schema/_shared"
-import { TIME_OPTIONS, type BookingFormField } from "@/lib/events/fields"
+import type { BookingFormField } from "@/lib/events/fields"
 import { usesContactForm } from "@/lib/events/slugs"
 import { isOptimizableImage } from "@/lib/images"
 import { formatPrice, pickLocale } from "@/lib/localized"
 import { useBranch } from "@/components/branch-context"
+import { BookingPanel, UpgradeList } from "@/components/booking-form"
 import {
   BirthdaysIllustration,
   CorporateIllustration,
@@ -32,6 +24,13 @@ import {
 } from "@/components/illustrations"
 import { Contact } from "@/components/home/contact"
 import { Container } from "@/components/home/container"
+import {
+  useEventDetail,
+  type EventItem,
+  type Extra,
+  type PolicyRow,
+  type PriceOption,
+} from "@/hooks/use-event-detail"
 
 const ILLUSTRATIONS: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
   birthdays: BirthdaysIllustration,
@@ -50,24 +49,6 @@ const BADGE_ACCENTS = [
   "border-primary text-primary",
 ]
 
-interface Step {
-  icon: string
-  title: string
-  desc: string
-}
-interface Extra {
-  title: string
-  desc?: string
-  price: string
-}
-interface PriceOption {
-  badge?: string
-  days?: string
-  label: string
-  amount: number | null
-  childrenCount?: number | null
-  extraChildAmount?: number | null
-}
 interface PriceCard {
   tag?: string
   sub?: string
@@ -76,54 +57,6 @@ interface PriceCard {
   note?: string
   note2?: string
 }
-interface PolicyRow {
-  title: string
-  desc: string
-}
-interface FormConfig {
-  countLabel: string
-  countPlaceholder: string
-  celebrant: boolean
-  policyCheckbox: boolean
-}
-interface BookingTexts {
-  intro: string
-  terms: string
-  footnote: string
-  upgradesTitle: string
-  upgradesNote: string
-}
-interface FormSummary {
-  rows: { label: string; value: string }[]
-  note?: string
-}
-interface EventItem {
-  badges: string[]
-  title: string
-  lead?: string
-  description: string
-  schedule?: { note: string; footnote: string; steps: Step[] }
-  scheduleTitle?: string
-  price?: { note?: string; options: PriceOption[] }
-  included?: string[]
-  includedTitle?: string
-  includedNotes?: string[]
-  allowed?: string[]
-  forbidden?: string[]
-  rulesFootnote?: string
-  extras?: Extra[]
-  extrasTitle?: string
-  extrasNote?: string
-  policy?: PolicyRow[]
-  policyFootnote?: string
-  groupOptions?: string[]
-  groupOptionsTitle?: string
-  form?: FormConfig
-  showPriceSummary?: boolean
-}
-
-const inputClass =
-  "w-full min-w-0 rounded-sm border border-border bg-card px-3.5 py-2.5 text-[15px] font-semibold text-foreground placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-primary"
 
 function SectionHeading({
   title,
@@ -463,59 +396,6 @@ function RulesSection({
   )
 }
 
-function UpgradeList({
-  upgrades,
-  compact,
-}: {
-  upgrades: Extra[]
-  compact?: boolean
-}) {
-  return (
-    <ul
-      className={cn(
-        "grid sm:grid-cols-2",
-        compact ? "mt-2 gap-x-6" : "gap-x-10 lg:gap-x-14"
-      )}
-    >
-      {upgrades.map((upgrade, i) => (
-        <li
-          key={i}
-          className={cn(
-            "flex items-baseline justify-between gap-3 border-b border-dashed border-border",
-            compact ? "py-1.5" : "py-3"
-          )}
-        >
-          <div>
-            <div
-              className={cn(
-                "font-bold text-foreground",
-                compact ? "text-[12.5px]" : "text-[15px]"
-              )}
-            >
-              {upgrade.title}
-            </div>
-            {upgrade.desc ? (
-              <div className="mt-0.5 text-[12.5px] leading-snug font-semibold text-mud">
-                {upgrade.desc}
-              </div>
-            ) : null}
-          </div>
-          {upgrade.price ? (
-            <div
-              className={cn(
-                "shrink-0 font-heading font-black whitespace-nowrap text-rust",
-                compact ? "text-[12.5px]" : "text-[15px]"
-              )}
-            >
-              {upgrade.price}
-            </div>
-          ) : null}
-        </li>
-      ))}
-    </ul>
-  )
-}
-
 function ExtrasSection({
   extras,
   title,
@@ -580,337 +460,14 @@ function TermsSection({
   )
 }
 
-const AUTOCOMPLETE: Partial<Record<string, string>> = {
-  firstName: "given-name",
-  lastName: "family-name",
-  email: "email",
-  phone: "tel",
-}
-
-const INPUT_TYPES: Record<BookingFormField["type"], string> = {
-  text: "text",
-  textarea: "textarea",
-  tel: "tel",
-  email: "email",
-  id: "text",
-  date: "date",
-  time: "select",
-  number: "number",
-  select: "select",
-  checkbox: "checkbox",
-}
-
-const FIELD_SPAN: Partial<Record<BookingFormField["type"], string>> = {
-  email: "col-span-2 lg:col-span-1",
-  select: "col-span-2 lg:col-span-1",
-  time: "col-span-2 lg:col-span-1",
-  textarea: "col-span-full",
-}
-
-function BookingFieldInput({
-  field,
-  value,
-  onChange,
-  locale,
-}: {
-  field: BookingFormField
-  value: string
-  onChange: (value: string) => void
-  locale: "he" | "en"
-}) {
-  const t = useTranslations("eventDetails.form")
-  const noteId = useId()
-  const label = pickLocale(field.label, locale)
-  const placeholder = pickLocale(field.placeholder, locale)
-  const isTime = field.type === "time"
-  const isChoice = field.type === "select" || isTime
-  const options = isTime ? TIME_OPTIONS : (field.options ?? [])
-
-  if (isChoice && !options.length) return null
-
-  if (field.type === "checkbox") {
-    return (
-      <label className="col-span-full flex items-center gap-2.5 text-[14px] font-semibold text-foreground">
-        <input
-          type="checkbox"
-          checked={value === "true"}
-          onChange={(e) => onChange(e.target.checked ? "true" : "")}
-          required={field.isRequired}
-          className="size-4 shrink-0 accent-primary"
-        />
-        {label}
-      </label>
-    )
-  }
-
-  return (
-    <label
-      className={cn("flex min-w-0 flex-col gap-1", FIELD_SPAN[field.type])}
-    >
-      <span className="font-heading text-[13px] font-extrabold text-navy">
-        {label}
-      </span>
-      {field.type === "textarea" ? (
-        <textarea
-          className={cn(inputClass, "h-20 resize-none")}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder || undefined}
-          required={field.isRequired}
-        />
-      ) : isChoice ? (
-        <div className="relative">
-          <select
-            className={cn(inputClass, "appearance-none pe-11")}
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            required={field.isRequired}
-            aria-describedby={isTime ? noteId : undefined}
-          >
-            <option value="">{placeholder || "—"}</option>
-            {options.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {pickLocale(opt.label, locale)}
-              </option>
-            ))}
-          </select>
-          <ChevronDown
-            aria-hidden
-            className="pointer-events-none absolute end-4 top-1/2 size-4 -translate-y-1/2 text-navy"
-            strokeWidth={3}
-          />
-        </div>
-      ) : (
-        <input
-          type={INPUT_TYPES[field.type]}
-          className={inputClass}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder || undefined}
-          required={field.isRequired}
-          inputMode={field.type === "id" ? "numeric" : undefined}
-          autoComplete={AUTOCOMPLETE[field.key]}
-          min={
-            field.type === "number" ? (field.minValue ?? undefined) : undefined
-          }
-          max={
-            field.type === "number" ? (field.maxValue ?? undefined) : undefined
-          }
-        />
-      )}
-      {isTime ? (
-        <span
-          id={noteId}
-          aria-hidden
-          className="text-[12px] leading-snug font-semibold text-mud"
-        >
-          {t("timeNote")}
-        </span>
-      ) : null}
-    </label>
-  )
-}
-
-function BookingForm({
-  event,
-  slug,
-  texts,
-  upgrades,
-  formFields,
-  requiresSignature,
-}: {
-  event: string
-  slug: string
-  texts: BookingTexts
-  upgrades?: Extra[]
-  formFields: BookingFormField[]
-  requiresSignature: boolean
-}) {
-  const t = useTranslations("eventDetails.form")
-  const { branchId } = useBranch()
-  const locale = useLocale() as "he" | "en"
-  const sigRef = useRef<SignatureCanvas>(null)
-
-  const [values, setValues] = useState<Record<string, string>>({})
-  const [agreed, setAgreed] = useState(false)
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
-    "idle"
-  )
-  const [error, setError] = useState<string | null>(null)
-
-  const setValue = (key: string, value: string) =>
-    setValues((prev) => ({ ...prev, [key]: value }))
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setError(null)
-
-    if (!agreed) {
-      setError(t("errorTerms"))
-      return
-    }
-    if (requiresSignature && (sigRef.current?.isEmpty() ?? true)) {
-      setError(t("errorSignature"))
-      return
-    }
-
-    const signature = requiresSignature
-      ? sigRef.current?.toDataURL("image/png")
-      : undefined
-
-    setStatus("sending")
-    try {
-      const res = await fetch("/api/events/booking", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          event,
-          slug,
-          ...values,
-          labels: Object.fromEntries(
-            formFields.map((field) => [
-              field.key,
-              pickLocale(field.label, "he"),
-            ])
-          ),
-          types: Object.fromEntries(
-            formFields.map((field) => [field.key, field.type])
-          ),
-          branch: branchId,
-          signature,
-        }),
-      })
-      if (!res.ok) throw new Error("request failed")
-      setStatus("sent")
-      setValues({})
-      setAgreed(false)
-      sigRef.current?.clear()
-    } catch {
-      setStatus("error")
-      setError(t("error"))
-    }
-  }
-
-  return (
-    <form
-      onSubmit={handleSubmit}
-      className="mx-auto flex max-w-3xl flex-col gap-4 rounded-sm border border-primary bg-card p-4 lg:p-6"
-    >
-      <label className="flex items-start gap-2.5 rounded-sm border border-primary/40 bg-background p-3 text-[13px] leading-relaxed font-bold text-foreground">
-        <input
-          type="checkbox"
-          checked={agreed}
-          onChange={(e) => setAgreed(e.target.checked)}
-          className="mt-0.5 size-4 shrink-0 accent-primary"
-        />
-        {texts.terms}
-      </label>
-
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
-        {formFields.map((field) => (
-          <BookingFieldInput
-            key={field.key}
-            field={field}
-            value={values[field.key] ?? ""}
-            onChange={(value) => setValue(field.key, value)}
-            locale={locale}
-          />
-        ))}
-      </div>
-
-      {upgrades?.length ? (
-        <section
-          aria-labelledby="booking-upgrades"
-          className="rounded-sm border border-primary/40 bg-background p-3"
-        >
-          <h3
-            id="booking-upgrades"
-            className="font-heading text-[14px] font-black text-navy"
-          >
-            {texts.upgradesTitle}
-          </h3>
-          <p className="mt-0.5 text-[12.5px] leading-snug font-semibold text-mud">
-            {texts.upgradesNote}
-          </p>
-          <UpgradeList upgrades={upgrades} compact />
-        </section>
-      ) : null}
-
-      {requiresSignature ? (
-        <div>
-          <div className="mb-1.5 flex items-center justify-between gap-3">
-            <div>
-              <div className="font-heading text-[14px] font-black text-navy">
-                {t("signatureTitle")}
-              </div>
-              <p className="text-[12px] font-semibold text-mud">
-                {t("signatureHint")}
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => sigRef.current?.clear()}
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-sm border border-border bg-background px-3 py-1.5 font-heading text-[12.5px] font-extrabold text-mud transition-colors hover:border-primary hover:text-navy"
-            >
-              <Eraser className="size-3.5" strokeWidth={2.5} />
-              {t("signatureClear")}
-            </button>
-          </div>
-          <div className="overflow-hidden rounded-sm border border-border bg-white">
-            <SignatureCanvas
-              ref={sigRef}
-              penColor="#0f172a"
-              canvasProps={{ className: "h-32 w-full touch-none lg:h-36" }}
-            />
-          </div>
-        </div>
-      ) : null}
-
-      <button
-        type="submit"
-        disabled={!agreed || status === "sending"}
-        className="glow-primary w-full rounded-sm border border-primary bg-primary px-5 py-3 font-heading text-[16px] font-black text-primary-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground disabled:cursor-not-allowed disabled:opacity-50 lg:text-[17px]"
-      >
-        {status === "sending" ? t("sending") : t("submit")}
-      </button>
-
-      {status === "sent" ? (
-        <p className="text-center text-[13.5px] font-bold text-secondary">
-          {t("success")}
-        </p>
-      ) : null}
-      {error ? (
-        <p className="text-center text-[13.5px] font-bold text-rust">{error}</p>
-      ) : null}
-
-      {texts.footnote ? (
-        <p className="text-center text-[12px] font-medium text-mud">
-          {texts.footnote}
-        </p>
-      ) : null}
-    </form>
-  )
-}
-
 function BookingSection({
-  event,
-  slug,
-  texts,
-  upgrades,
-  summary,
-  formFields,
-  requiresSignature,
+  intro,
+  children,
 }: {
-  event: string
-  slug: string
-  texts: BookingTexts
-  upgrades?: Extra[]
-  summary?: FormSummary
-  formFields: BookingFormField[]
-  requiresSignature: boolean
+  intro: string
+  children: React.ReactNode
 }) {
   const t = useTranslations("eventDetails.form")
-  const te = useTranslations("eventDetails")
 
   return (
     <section
@@ -923,49 +480,13 @@ function BookingSection({
             {t("title")}
           </h2>
           <div className="glow-primary mx-auto mt-2.5 h-[6px] w-[60px] rounded-full bg-primary lg:w-20" />
-          {texts.intro ? (
+          {intro ? (
             <p className="mx-auto mt-2.5 max-w-[520px] text-[14px] leading-[1.5] font-semibold text-muted-foreground lg:text-[15px]">
-              {texts.intro}
+              {intro}
             </p>
           ) : null}
         </div>
-
-        {summary ? (
-          <div className="mx-auto mb-4 max-w-3xl rounded-sm border border-border bg-card p-4 lg:p-5">
-            <div className="font-heading text-[15px] font-black text-navy">
-              {te("summaryTitle")}
-            </div>
-            <div className="mt-3 flex flex-col gap-2">
-              {summary.rows.map((r, i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-between gap-3 border-t border-border pt-2 first:border-t-0 first:pt-0"
-                >
-                  <span className="text-[13.5px] font-semibold text-foreground">
-                    {r.label}
-                  </span>
-                  <span className="font-heading text-[16px] font-black whitespace-nowrap text-rust">
-                    {r.value}
-                  </span>
-                </div>
-              ))}
-            </div>
-            {summary.note ? (
-              <p className="mt-3 text-[12.5px] font-semibold text-mud">
-                {summary.note}
-              </p>
-            ) : null}
-          </div>
-        ) : null}
-
-        <BookingForm
-          event={event}
-          slug={slug}
-          texts={texts}
-          upgrades={upgrades}
-          formFields={formFields}
-          requiresSignature={requiresSignature}
-        />
+        {children}
       </Container>
     </section>
   )
@@ -983,19 +504,20 @@ export function EventDetailPage({
   const t = useTranslations("eventDetails")
   const { branch } = useBranch()
   const locale = useLocale() as "he" | "en"
-  const items = t.raw("items") as Record<string, EventItem>
-  const overrides = t.raw("branch") as Record<string, Record<string, EventItem>>
-  const messageData: EventItem = overrides?.[branch.id]?.[slug] ??
-    items[slug] ?? { badges: [], title: "", description: "" }
-
-  const dbTypes = events[branch.id]?.eventTypes ?? []
-  const dbType = dbTypes.find((e) => e.slug === slug)
-  const content = dbType?.content
-  const pick = (value: Localized) => pickLocale(value, locale)
-  const pickOr = <T extends string | undefined>(
-    value: Localized | null | undefined,
-    fallback: T
-  ): string | T => (value ? pick(value) : fallback)
+  const {
+    available,
+    content,
+    messageData,
+    data,
+    priceOptions,
+    priceNote,
+    booking,
+  } = useEventDetail({
+    branch,
+    slug,
+    eventTypes: events[branch.id]?.eventTypes ?? [],
+    defaultFormFields,
+  })
   const money = (amount: number) => formatPrice(amount, locale)
   const priceCard = ({
     badge,
@@ -1022,107 +544,6 @@ export function EventDetailPage({
             })
           : t("package.extra", { price: money(extraChildAmount) }),
   })
-  const priceOptions: PriceOption[] =
-    content?.priceOptions?.map((option) => ({
-      ...option,
-      badge: pick(option.badge),
-      days: pick(option.days),
-      label: pick(option.label),
-    })) ??
-    messageData.price?.options ??
-    []
-  const depositNote =
-    content?.depositAmount != null
-      ? t("package.deposit", { price: money(content.depositAmount) })
-      : undefined
-  const priceNote = [
-    pickOr(content?.priceNote, messageData.price?.note),
-    depositNote,
-  ]
-    .filter(Boolean)
-    .join(" ")
-  const summaryMode =
-    content?.priceSummaryMode ??
-    (messageData.showPriceSummary ? "auto" : "hidden")
-  const summaryRows: FormSummary["rows"] =
-    summaryMode === "auto"
-      ? priceOptions.flatMap(({ label, amount, childrenCount }) =>
-          amount == null
-            ? []
-            : [
-                {
-                  label: childrenCount
-                    ? `${label} · ${t("package.kids", { count: childrenCount })}`
-                    : label,
-                  value: money(amount),
-                },
-              ]
-        )
-      : summaryMode === "manual"
-        ? (content?.priceSummaryRows ?? []).map((row) => ({
-            label: pick(row.label),
-            value: pick(row.value),
-          }))
-        : []
-  const summary: FormSummary | undefined = summaryRows.length
-    ? { rows: summaryRows, note: depositNote }
-    : undefined
-  const steps: Step[] = dbType
-    ? dbType.steps.map((s) => ({
-        icon: "",
-        title: pick(s.title),
-        desc: pickLocale(s.description, locale),
-      }))
-    : (messageData.schedule?.steps ?? [])
-  const data: EventItem = {
-    ...messageData,
-    badges: content?.badges?.map(pick).filter(Boolean) ?? messageData.badges,
-    title:
-      pickLocale(dbType?.content?.heroTitle, locale) ||
-      messageData.title ||
-      pickLocale(dbType?.name, locale),
-    description:
-      pickLocale(dbType?.content?.heroDescription, locale) ||
-      messageData.description,
-    schedule: steps.length
-      ? {
-          note: messageData.schedule?.note ?? "",
-          footnote: messageData.schedule?.footnote ?? "",
-          steps,
-        }
-      : undefined,
-    included: dbType
-      ? dbType.packageLines.map((l) => pick(l.label))
-      : messageData.included,
-    extras: dbType
-      ? dbType.upgrades.map((u) => ({
-          title: pick(u.label),
-          price: u.amount != null ? money(u.amount) : "",
-        }))
-      : messageData.extras,
-    allowed: content?.allowedItems?.map(pick) ?? messageData.allowed,
-    forbidden: content?.forbiddenItems?.map(pick) ?? messageData.forbidden,
-    rulesFootnote: pickOr(content?.rulesNote, messageData.rulesFootnote),
-    policy:
-      content?.policyItems?.map((row) => ({
-        title: pick(row.title),
-        desc: pick(row.description),
-      })) ?? messageData.policy,
-    policyFootnote: pickOr(content?.policyNote, messageData.policyFootnote),
-  }
-  const bookingTexts: BookingTexts = {
-    intro: pickOr(content?.formIntro, t("form.desc")),
-    terms: pickLocale(content?.formTerms, locale) || t("form.termsConfirm"),
-    footnote: pickOr(content?.formFootnote, t("form.footnote")),
-    upgradesTitle:
-      pickLocale(content?.upgradesTitle, locale) || t("form.upgradesTitle"),
-    upgradesNote:
-      pickLocale(content?.upgradesNote, locale) || t("form.upgradesNote"),
-  }
-
-  const available = dbTypes.length
-    ? Boolean(dbType)
-    : branch.events.includes(slug)
 
   if (!available) {
     return (
@@ -1229,18 +650,10 @@ export function EventDetailPage({
         <div id="book" className="scroll-mt-20">
           <Contact />
         </div>
-      ) : data.form || dbType?.formFields.length ? (
-        <BookingSection
-          event={data.title}
-          slug={slug}
-          texts={bookingTexts}
-          upgrades={data.extras}
-          summary={summary}
-          formFields={
-            dbType?.formFields.length ? dbType.formFields : defaultFormFields
-          }
-          requiresSignature={dbType?.content?.requiresSignature ?? true}
-        />
+      ) : booking ? (
+        <BookingSection intro={booking.intro}>
+          <BookingPanel booking={booking} />
+        </BookingSection>
       ) : null}
     </>
   )
