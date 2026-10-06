@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef } from "react"
 import { useLocale, useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
@@ -10,6 +10,7 @@ import { formatPrice, pickLocale } from "@/lib/localized"
 import { displayPrices, type DisplayPrice } from "@/lib/menu"
 import { useBranch } from "@/components/branch-context"
 import { Container } from "@/components/home/container"
+import { useActiveSection } from "@/hooks/use-active-section"
 
 type Category<Price> = {
   id: string
@@ -53,8 +54,22 @@ export function MenuPage({
   const heading = pickLocale(dbMenu?.menu?.heading, locale) || t("title")
   const intro = pickLocale(dbMenu?.menu?.intro, locale) || t("subtitle")
 
-  const [active, setActive] = useState(categories[0]?.id ?? "")
-  const current = categories.find((c) => c.id === active) ?? categories[0]
+  const [active, setActive] = useActiveSection(
+    categories.map((c) => sectionId(c.id))
+  )
+  const stripRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const strip = stripRef.current
+    const link = strip?.querySelector("[aria-current]")
+    if (!strip || !link) return
+    const s = strip.getBoundingClientRect()
+    const l = link.getBoundingClientRect()
+    strip.scrollBy({
+      left: l.left + l.width / 2 - (s.left + s.width / 2),
+      behavior: "smooth",
+    })
+  }, [active])
 
   return (
     <Container className="py-9 lg:py-16">
@@ -71,72 +86,109 @@ export function MenuPage({
       </div>
 
       <div className="flex flex-col gap-6 lg:flex-row lg:gap-10">
-        <aside className="lg:w-52 lg:flex-none">
-          <div className="flex gap-2 overflow-x-auto pb-1 lg:sticky lg:top-6 lg:flex-col lg:gap-1.5 lg:overflow-visible lg:pb-0">
-            {categories.map((c) => (
-              <button
-                key={c.id}
-                onClick={() => setActive(c.id)}
-                className={cn(
-                  "shrink-0 rounded-sm border px-4 py-2 font-heading text-[13px] font-extrabold transition-colors lg:text-start lg:text-sm",
-                  active === c.id
-                    ? "glow-primary border-primary bg-primary text-primary-foreground"
-                    : "border-border bg-card text-foreground hover:border-primary hover:text-primary"
-                )}
+        <nav
+          aria-label={t("categoriesNav")}
+          className="sticky top-0 z-10 -mx-5 bg-background px-5 py-3 lg:top-6 lg:mx-0 lg:w-52 lg:flex-none lg:self-start lg:bg-transparent lg:p-0"
+        >
+          <div
+            ref={stripRef}
+            className="flex gap-2 overflow-x-auto lg:flex-col lg:gap-1.5 lg:overflow-visible"
+          >
+            {categories.map((c) => {
+              const id = sectionId(c.id)
+              return (
+                <a
+                  key={c.id}
+                  href={`#${id}`}
+                  onClick={() => setActive(id)}
+                  aria-current={active === id ? "location" : undefined}
+                  className={cn(
+                    "shrink-0 rounded-sm border px-4 py-2 font-heading text-[13px] font-extrabold transition-colors lg:text-start lg:text-sm",
+                    active === id
+                      ? "glow-primary border-primary bg-primary text-primary-foreground"
+                      : "border-border bg-card text-foreground hover:border-primary hover:text-primary"
+                  )}
+                >
+                  {c.label}
+                </a>
+              )
+            })}
+          </div>
+        </nav>
+
+        <div className="flex flex-1 flex-col gap-10 lg:gap-12">
+          {categories.map((c) => (
+            <section
+              key={c.id}
+              id={sectionId(c.id)}
+              aria-labelledby={`${sectionId(c.id)}-title`}
+              className="scroll-mt-20 lg:scroll-mt-6"
+            >
+              <h2
+                id={`${sectionId(c.id)}-title`}
+                className="mb-4 font-heading text-2xl font-black text-navy lg:text-[28px]"
               >
                 {c.label}
-              </button>
-            ))}
-          </div>
-        </aside>
-
-        <div className="grid flex-1 grid-cols-1 content-start gap-3 sm:grid-cols-2">
-          {(current?.items ?? []).map((d, i) => {
-            const [single] = d.prices
-            const inline = d.prices.length === 1 && !single.label
-            return (
-              <div
-                key={i}
-                className="rounded-sm border border-border bg-card p-4 transition-colors hover:border-primary"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="font-heading text-[15px] font-black text-navy lg:text-base">
-                    {d.name}
-                  </div>
-                  {inline && (
-                    <div className="shrink-0 font-heading text-[15px] font-black whitespace-nowrap text-rust lg:text-base">
-                      {single.price}
-                    </div>
-                  )}
-                </div>
-                {d.desc && (
-                  <div className="mt-1.5 text-[12.5px] leading-snug font-semibold text-mud">
-                    {d.desc}
-                  </div>
-                )}
-                {!inline && d.prices.length > 0 && (
-                  <ul className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1">
-                    {d.prices.map((p, j) => (
-                      <li key={j} className="flex items-baseline gap-1.5">
-                        {p.label && (
-                          <span className="text-[12.5px] font-semibold text-mud">
-                            {p.label}
-                          </span>
-                        )}
-                        <span className="font-heading text-[15px] font-black whitespace-nowrap text-rust lg:text-base">
-                          {p.price}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+              </h2>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {c.items.map((item, i) => (
+                  <MenuItemCard key={i} item={item} />
+                ))}
               </div>
-            )
-          })}
+            </section>
+          ))}
         </div>
       </div>
 
       <p className="mt-8 text-[12.5px] font-medium text-faint">{t("note")}</p>
     </Container>
+  )
+}
+
+function sectionId(categoryId: string) {
+  return `menu-${categoryId}`
+}
+
+function MenuItemCard({
+  item,
+}: {
+  item: Category<DisplayPrice>["items"][number]
+}) {
+  const [single] = item.prices
+  const inline = item.prices.length === 1 && !single.label
+  return (
+    <div className="rounded-sm border border-border bg-card p-4 transition-colors hover:border-primary">
+      <div className="flex items-start justify-between gap-3">
+        <div className="font-heading text-[15px] font-black text-navy lg:text-base">
+          {item.name}
+        </div>
+        {inline && (
+          <div className="shrink-0 font-heading text-[15px] font-black whitespace-nowrap text-rust lg:text-base">
+            {single.price}
+          </div>
+        )}
+      </div>
+      {item.desc && (
+        <div className="mt-1.5 text-[12.5px] leading-snug font-semibold text-mud">
+          {item.desc}
+        </div>
+      )}
+      {!inline && item.prices.length > 0 && (
+        <ul className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1">
+          {item.prices.map((p, j) => (
+            <li key={j} className="flex items-baseline gap-1.5">
+              {p.label && (
+                <span className="text-[12.5px] font-semibold text-mud">
+                  {p.label}
+                </span>
+              )}
+              <span className="font-heading text-[15px] font-black whitespace-nowrap text-rust lg:text-base">
+                {p.price}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   )
 }

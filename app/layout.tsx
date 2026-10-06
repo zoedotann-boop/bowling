@@ -39,8 +39,9 @@ export default async function RootLayout({
     <html
       lang={locale}
       dir={locale === "he" ? "rtl" : "ltr"}
+      data-scroll-behavior="smooth"
       className={cn(
-        "dark antialiased",
+        "dark antialiased motion-safe:scroll-smooth",
         rubik.variable,
         heebo.variable,
         "font-sans"
