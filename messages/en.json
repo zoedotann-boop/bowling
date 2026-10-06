@@ -291,6 +291,7 @@
     "title": "Our menu",
     "subtitle": "Fresh food from our kitchen, served right to your lane.",
     "note": "* The menu is updated from time to time and may vary by season and availability.",
+    "categoriesNav": "Menu categories",
     "categories": [
       {
         "id": "snacks",
