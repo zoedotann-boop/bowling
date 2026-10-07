@@ -225,7 +225,10 @@ The public pages render the admin's content live from the database:
   plus a note under the heading, stored as `event_type_content.price_options`
   / `price_note`. While they are NULL the page and the admin editor use the
   defaults in `messages/*` (`eventDetails[.branch.<id>].<slug>.price`); an
-  empty list hides the Price section. The "Price summary" box above the booking
+  empty list hides the Price section. Each option's line under the price
+  ("עד 20 משתתפים") is its `participantsNote`; options saved without one show
+  "Up to N participants" from the participant count, and blank text hides the
+  line. The "Price summary" box above the booking
   form follows `price_summary_mode`: `auto` builds its rows from the price
   options, `manual` shows `price_summary_rows`, `hidden` hides it (NULL = `auto`
   where the messages set `showPriceSummary`, else hidden). The deposit line

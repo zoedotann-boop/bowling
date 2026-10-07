@@ -229,6 +229,7 @@ const eventPriceOptionSchema = z.object({
   amount: optionalMoney,
   childrenCount: z.number().int().nonnegative().nullable(),
   extraChildAmount: optionalMoney,
+  participantsNote: localizedSchema,
 })
 const eventSummaryRowSchema = z.object({
   label: localizedSchema,

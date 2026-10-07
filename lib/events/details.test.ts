@@ -8,6 +8,8 @@ import {
   defaultBookingFields,
   defaultFormFields,
   eventDetailDefaults,
+  eventDetailDraft,
+  participantsNote,
   withTimeField,
 } from "./detail-defaults"
 import {
@@ -478,5 +480,64 @@ describe("withTimeField", () => {
 
   test("leaves an empty form empty, so the built-in fields still apply", () => {
     expect(withTimeField([])).toEqual([])
+  })
+})
+
+describe("participantsNote", () => {
+  test("writes the participant count in both languages", () => {
+    expect(participantsNote(20)).toEqual({
+      he: "עד 20 משתתפים",
+      en: "Up to 20 participants",
+    })
+  })
+
+  test("is empty when the price has no participant count", () => {
+    expect(participantsNote(null)).toEqual({ he: "", en: "" })
+    expect(participantsNote(0)).toEqual({ he: "", en: "" })
+  })
+})
+
+describe("eventDetailDraft", () => {
+  const midweek = DEFAULTS.priceOptions[0]
+
+  test("prefills the text under each default price from its participant count", () => {
+    const draft = eventDetailDraft(null, "rishon", "birthdays")
+    expect(draft.priceOptions.map((option) => option.participantsNote)).toEqual(
+      [participantsNote(20), participantsNote(20)]
+    )
+    expect(
+      eventDetailDraft(null, "rishon", "team").priceOptions.map(
+        (option) => option.participantsNote
+      )
+    ).toEqual([participantsNote(null), participantsNote(null)])
+  })
+
+  test("fills prices saved before the text existed from their participant count", () => {
+    const draft = eventDetailDraft(
+      { priceOptions: [midweek] },
+      "ramat-gan",
+      "birthdays"
+    )
+    expect(draft.priceOptions).toEqual([
+      { ...midweek, participantsNote: participantsNote(20) },
+    ])
+  })
+
+  test("keeps saved text, including blank text that hides the line", () => {
+    const custom = { he: "עד 25 ילדים", en: "Up to 25 kids" }
+    const blank = { he: "", en: "" }
+    const draft = eventDetailDraft(
+      {
+        priceOptions: [
+          { ...midweek, participantsNote: custom },
+          { ...midweek, participantsNote: blank },
+        ],
+      },
+      "ramat-gan",
+      "birthdays"
+    )
+    expect(draft.priceOptions.map((option) => option.participantsNote)).toEqual(
+      [custom, blank]
+    )
   })
 })

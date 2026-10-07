@@ -98,6 +98,7 @@ function newPriceOption(): EventPriceOptionDraft {
     amount: null,
     childrenCount: null,
     extraChildAmount: null,
+    participantsNote: emptyLocalized(),
   }
 }
 
@@ -820,6 +821,12 @@ function PriceOptionEditor({
           }
         />
       </div>
+      <LocalizedField
+        label={t("priceOptionParticipants")}
+        tooltip={t("priceOptionParticipantsTip")}
+        value={option.participantsNote}
+        onChange={(participantsNote) => update({ ...option, participantsNote })}
+      />
     </>
   )
 }

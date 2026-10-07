@@ -21,6 +21,7 @@ export interface EventPriceOption {
   amount: number | null
   childrenCount: number | null
   extraChildAmount: number | null
+  participantsNote?: Localized
 }
 
 export interface EventDetailTexts {

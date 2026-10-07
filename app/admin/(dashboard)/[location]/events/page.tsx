@@ -5,10 +5,9 @@ import type { EventsDraft } from "@/lib/actions/admin/schemas"
 import { getEventsEditor } from "@/lib/db/queries/admin"
 import {
   defaultFormFields,
-  eventDetailDefaults,
+  eventDetailDraft,
   withTimeField,
 } from "@/lib/events/detail-defaults"
-import { withEventDetailDefaults } from "@/lib/events/details"
 
 export default async function EventsPage({
   params,
@@ -31,10 +30,7 @@ export default async function EventsPage({
         heroDescription: toLocalized(type.content?.heroDescription),
         heroImageUrl: type.content?.heroImageUrl ?? "",
         depositAmount: type.content?.depositAmount ?? null,
-        ...withEventDetailDefaults(
-          type.content,
-          eventDetailDefaults(slug, type.slug)
-        ),
+        ...eventDetailDraft(type.content, slug, type.slug),
         requiresSignature: type.content?.requiresSignature ?? false,
       },
       steps: type.steps.map((step) => ({

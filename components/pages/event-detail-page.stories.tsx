@@ -109,6 +109,7 @@ export const CustomizedInAdmin: Story = {
             amount: 1100,
             childrenCount: 15,
             extraChildAmount: 25,
+            participantsNote: { he: "עד 15 ילדים · מבוגרים חינם" },
           },
           {
             label: { he: "אמצע שבוע" },
@@ -117,6 +118,7 @@ export const CustomizedInAdmin: Story = {
             amount: 1000,
             childrenCount: 15,
             extraChildAmount: 23,
+            participantsNote: blank,
           },
           {
             label: { he: "בוקר" },
