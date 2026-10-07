@@ -39,7 +39,8 @@ export function newFieldKey(): string {
   return `field_${crypto.randomUUID().replaceAll("-", "").slice(0, 12)}`
 }
 
-const MINUTES_PER_DAY = 24 * 60
+const FIRST_TIME_MINUTES = 10 * 60
+const LAST_TIME_MINUTES = 20 * 60
 const TIME_STEP_MINUTES = 15
 
 export function clockTime(minutes: number): string {
@@ -48,9 +49,9 @@ export function clockTime(minutes: number): string {
 }
 
 export const TIME_OPTIONS: FormFieldOption[] = Array.from(
-  { length: MINUTES_PER_DAY / TIME_STEP_MINUTES },
+  { length: (LAST_TIME_MINUTES - FIRST_TIME_MINUTES) / TIME_STEP_MINUTES + 1 },
   (_, index) => {
-    const time = clockTime(index * TIME_STEP_MINUTES)
+    const time = clockTime(FIRST_TIME_MINUTES + index * TIME_STEP_MINUTES)
     return { value: time, label: { he: time, en: time } }
   }
 )
