@@ -10,7 +10,11 @@ import {
   text,
 } from "@/lib/db/testing/admin-actions"
 
-import type { EventsDraft, EventTypeDraft } from "./schemas"
+import type {
+  EventPriceOptionDraft,
+  EventsDraft,
+  EventTypeDraft,
+} from "./schemas"
 
 const { saveEvents } = await import("./events")
 
@@ -244,6 +248,7 @@ describe("saveEvents", () => {
       amount: 1280,
       childrenCount: 20,
       extraChildAmount: 64,
+      participantsNote: text("עד 20 ילדים, מבוגרים חינם"),
     }
     const midweek = {
       label: text("אמצע שבוע"),
@@ -252,6 +257,7 @@ describe("saveEvents", () => {
       amount: 1180,
       childrenCount: 20,
       extraChildAmount: 59,
+      participantsNote: text(""),
     }
     await save({
       eventTypes: [
@@ -282,6 +288,31 @@ describe("saveEvents", () => {
     })
     const [updated] = await load(access.location.id)
     expect(updated.content?.priceOptions).toEqual([midweek])
+  })
+
+  test("rejects a price option without the text under the price", async () => {
+    const draft = eventTypeDraft("birthdays")
+    const result = await save({
+      eventTypes: [
+        {
+          ...draft,
+          content: {
+            ...draft.content,
+            priceOptions: [
+              {
+                label: text("אמצע שבוע"),
+                days: text(""),
+                badge: text(""),
+                amount: 1180,
+                childrenCount: 20,
+                extraChildAmount: 59,
+              } as EventPriceOptionDraft,
+            ],
+          },
+        },
+      ],
+    })
+    expect(result).toEqual({ ok: false, error: "invalid" })
   })
 
   test("keeps an emptied price list empty so the section stays hidden", async () => {
@@ -349,6 +380,7 @@ describe("saveEvents", () => {
       amount: -5,
       childrenCount: null,
       extraChildAmount: null,
+      participantsNote: text(""),
     }
     for (const bad of [option, { ...option, amount: 10.5 }]) {
       const result = await save({

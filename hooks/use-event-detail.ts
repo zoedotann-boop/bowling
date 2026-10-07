@@ -25,6 +25,7 @@ export interface PriceOption {
   amount: number | null
   childrenCount?: number | null
   extraChildAmount?: number | null
+  participantsNote?: string
 }
 export interface PolicyRow {
   title: string
@@ -87,14 +88,22 @@ export function useEventDetail({
     fallback: T
   ): string | T => (value ? pick(value) : fallback)
   const money = (amount: number) => formatPrice(amount, locale)
+  const upTo = (count?: number | null) =>
+    count ? t("package.upTo", { count }) : undefined
   const priceOptions: PriceOption[] =
-    content?.priceOptions?.map((option) => ({
+    content?.priceOptions?.map(({ participantsNote, ...option }) => ({
       ...option,
       badge: pick(option.badge),
       days: pick(option.days),
       label: pick(option.label),
+      participantsNote: participantsNote
+        ? pick(participantsNote)
+        : upTo(option.childrenCount),
     })) ??
-    messageData.price?.options ??
+    messageData.price?.options.map((option) => ({
+      ...option,
+      participantsNote: upTo(option.childrenCount),
+    })) ??
     []
   const depositNote =
     content?.depositAmount != null

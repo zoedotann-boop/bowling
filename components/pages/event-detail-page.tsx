@@ -526,14 +526,13 @@ export function EventDetailPage({
     amount,
     childrenCount,
     extraChildAmount,
+    participantsNote,
   }: PriceOption): PriceCard => ({
     tag: badge || undefined,
     sub: days || undefined,
     label,
     price: amount != null ? money(amount) : undefined,
-    note: childrenCount
-      ? t("package.upTo", { count: childrenCount })
-      : undefined,
+    note: participantsNote || undefined,
     note2:
       extraChildAmount == null
         ? undefined

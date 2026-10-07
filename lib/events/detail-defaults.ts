@@ -3,7 +3,10 @@ import "server-only"
 import type { EventFormFieldDraft } from "@/lib/actions/admin/schemas"
 import { toFormFieldDraft } from "@/lib/admin/drafts"
 import type { Localized } from "@/lib/db/schema/_shared"
-import type { EventDetailTexts } from "@/lib/events/details"
+import {
+  withEventDetailDefaults,
+  type EventDetailTexts,
+} from "@/lib/events/details"
 import type { BookingFormField } from "@/lib/events/fields"
 import en from "@/messages/en.json"
 import he from "@/messages/he.json"
@@ -115,6 +118,33 @@ export function eventDetailDefaults(
       he: he.eventDetails.form.upgradesNote,
       en: en.eventDetails.form.upgradesNote,
     },
+  }
+}
+
+export function participantsNote(count: number | null): Localized {
+  if (!count) return { he: "", en: "" }
+  return {
+    he: he.eventDetails.package.upTo.replace("{count}", String(count)),
+    en: en.eventDetails.package.upTo.replace("{count}", String(count)),
+  }
+}
+
+export function eventDetailDraft(
+  stored: Parameters<typeof withEventDetailDefaults>[0],
+  branchId: string,
+  slug: string
+) {
+  const texts = withEventDetailDefaults(
+    stored,
+    eventDetailDefaults(branchId, slug)
+  )
+  return {
+    ...texts,
+    priceOptions: texts.priceOptions.map((option) => ({
+      ...option,
+      participantsNote:
+        option.participantsNote ?? participantsNote(option.childrenCount),
+    })),
   }
 }
 
