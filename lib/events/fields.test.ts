@@ -37,17 +37,24 @@ describe("clockTime", () => {
 describe("TIME_OPTIONS", () => {
   const values = TIME_OPTIONS.map((option) => option.value)
 
-  test("covers the whole day in quarter hours, in order", () => {
-    expect(values).toHaveLength(96)
+  test("covers 10:00 to 20:00 in quarter hours, in order", () => {
+    expect(values).toHaveLength(41)
     expect(values.slice(0, 5)).toEqual([
-      "00:00",
-      "00:15",
-      "00:30",
-      "00:45",
-      "01:00",
+      "10:00",
+      "10:15",
+      "10:30",
+      "10:45",
+      "11:00",
     ])
-    expect(values.at(-1)).toBe("23:45")
+    expect(values.at(-1)).toBe("20:00")
     expect(values).toEqual([...values].sort())
+  })
+
+  test("leaves out times outside opening hours", () => {
+    expect(values).not.toContain("00:00")
+    expect(values).not.toContain("09:45")
+    expect(values).not.toContain("20:15")
+    expect(values).not.toContain("23:45")
   })
 
   test("includes every full, half and quarter hour once", () => {

@@ -158,8 +158,8 @@ other session. One-time codes keep working whether or not a password is set.
   for event types), booking-form fields get an auto-generated key (the inquiry
   email shows the field's label), dropdown option values follow their
   Hebrew label, and every booking form has exactly one fixed **שעה** field
-  that staff can move but not edit or delete: the customer picks from every
-  quarter hour (`TIME_OPTIONS`, 00:00–23:45) with a note that the invitation
+  that staff can move but not edit or delete: the customer picks a quarter
+  hour between 10:00 and 20:00 (`TIME_OPTIONS`) with a note that the invitation
   shows a time 15 minutes earlier. `withTimeField` (`lib/events/detail-defaults.ts`)
   adds or resets it when the editor loads and again on save. SEO texts and the Google Place ID are owner-only (in the UI and
   in the save actions).
