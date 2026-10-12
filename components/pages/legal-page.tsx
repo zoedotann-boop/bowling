@@ -26,9 +26,7 @@ function formatUpdated(date: Date, locale: Locale): string {
 function Blocks({ blocks }: { blocks: LegalBlock[] }) {
   return blocks.map((block, index) =>
     block.type === "paragraph" ? (
-      <p key={index} className="whitespace-pre-line">
-        {block.text}
-      </p>
+      <p key={index}>{block.text}</p>
     ) : (
       <ul key={index} className="flex flex-col gap-3">
         {block.items.map((item, itemIndex) => (
