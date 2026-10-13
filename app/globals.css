@@ -331,6 +331,8 @@
   }
   body {
     @apply bg-cream text-foreground;
+    /* Line breaks typed in the admin (Enter) render as line breaks everywhere. */
+    white-space: pre-line;
     /* Exposed-concrete grain — a faint fixed texture over the dark base. */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
     background-repeat: repeat;
