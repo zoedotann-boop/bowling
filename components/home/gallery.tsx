@@ -13,6 +13,7 @@ import Image from "next/image"
 import { useLocale, useTranslations } from "next-intl"
 
 import { cn, isRemoteImage } from "@/lib/utils"
+import { DEFAULT_GALLERY, defaultPhotoRatio } from "@/lib/gallery"
 import { pickLocale } from "@/lib/localized"
 import { useSiteContent } from "@/components/site-content-context"
 import { LedDot } from "@/components/decor/led-dot"
@@ -24,13 +25,6 @@ interface Tile {
   ratio?: number
 }
 
-const TILES: Tile[] = [
-  { src: "/gallery/1.png", ratio: 795 / 463 },
-  { src: "/gallery/2.png", ratio: 782 / 459 },
-  { src: "/gallery/3.png", ratio: 756 / 461 },
-  { src: "/gallery/4.png", ratio: 757 / 461 },
-  { src: "/gallery/5.png", ratio: 862 / 1252 },
-]
 const TILE_CLASSES: Partial<Record<number, string>> = {
   2: "col-span-2 lg:col-span-1 lg:col-start-3 lg:row-start-1 lg:row-span-2",
 }
@@ -45,15 +39,15 @@ export function Gallery() {
   const locale = useLocale() as "he" | "en"
   const content = useSiteContent()
   const title = pickLocale(content?.home?.galleryTitle, locale)
-  const images = (content?.galleryImages ?? []).filter((image) =>
-    image.imageUrl.trim()
-  )
-  const tiles: Tile[] = images.length
-    ? images.map((image) => ({
-        src: image.imageUrl,
-        alt: pickLocale(image.alt, locale),
-      }))
-    : TILES
+  const tiles: Tile[] = content
+    ? content.galleryImages
+        .filter((image) => image.imageUrl.trim())
+        .map((image) => ({
+          src: image.imageUrl,
+          alt: pickLocale(image.alt, locale),
+          ratio: defaultPhotoRatio(image.imageUrl),
+        }))
+    : DEFAULT_GALLERY
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const portalTarget = useSyncExternalStore(
     subscribe,
@@ -106,6 +100,8 @@ export function Gallery() {
       document.body.style.overflow = ""
     }
   }, [openIndex, close, show])
+
+  if (tiles.length === 0) return null
 
   return (
     <section className="mt-6 border-y border-navy py-7 lg:mt-14 lg:py-14">

@@ -5,6 +5,7 @@ import postgres from "postgres"
 import * as schema from "@/lib/db/schema"
 import type { Localized } from "@/lib/db/schema/_shared"
 import { BRANCHES, type BranchId } from "@/lib/branches"
+import { DEFAULT_GALLERY } from "@/lib/gallery"
 import heMessages from "@/messages/he.json"
 import enMessages from "@/messages/en.json"
 
@@ -75,6 +76,9 @@ async function backfill() {
     await db
       .delete(schema.homeService)
       .where(eq(schema.homeService.locationId, locationId))
+    await db
+      .delete(schema.galleryImage)
+      .where(eq(schema.galleryImage.locationId, locationId))
     await db
       .delete(schema.contactSubject)
       .where(eq(schema.contactSubject.locationId, locationId))
@@ -159,6 +163,14 @@ async function backfill() {
         locationId,
         title: L(["services", "items", i, "title"]),
         description: L(["services", "items", i, "desc"]),
+        sortOrder: i,
+      }))
+    )
+
+    await db.insert(schema.galleryImage).values(
+      DEFAULT_GALLERY.map((photo, i) => ({
+        locationId,
+        imageUrl: photo.src,
         sortOrder: i,
       }))
     )
