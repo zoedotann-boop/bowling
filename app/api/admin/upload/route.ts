@@ -2,7 +2,6 @@ import { handleUpload, type HandleUploadBody } from "@vercel/blob/client"
 import { NextResponse } from "next/server"
 
 import { getSessionUser } from "@/lib/admin/access"
-import { can } from "@/lib/admin/permissions"
 import { IMAGE_UPLOAD_MAX_BYTES, IMAGE_UPLOAD_TYPES } from "@/lib/images"
 
 export async function POST(request: Request) {
@@ -13,7 +12,7 @@ export async function POST(request: Request) {
       request,
       onBeforeGenerateToken: async () => {
         const user = await getSessionUser()
-        if (!user || !can(user.role, "content")) {
+        if (!user) {
           throw new Error("Unauthorized")
         }
         return {

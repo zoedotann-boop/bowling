@@ -10,7 +10,7 @@ export default async function MenuPage({
   params: Promise<{ location: string }>
 }) {
   const { location: slug } = await params
-  const { location: loc } = await requireLocationAccess(slug, "content")
+  const { location: loc } = await requireLocationAccess(slug)
   const data = await getMenuEditor(loc.id)
 
   const draft: MenuDraft = {

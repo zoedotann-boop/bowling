@@ -11,7 +11,7 @@ export default async function LegalPage({
   params: Promise<{ location: string }>
 }) {
   const { location: slug } = await params
-  const { location: loc } = await requireLocationAccess(slug, "settings")
+  const { location: loc } = await requireLocationAccess(slug)
   const rows = await getLegalEditor(loc.id)
 
   const bodyOf = (kind: LegalPageKind) =>

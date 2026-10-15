@@ -23,17 +23,13 @@ import { useState, useSyncExternalStore } from "react"
 import { Button } from "@/components/ui/button"
 import { AdminSelect } from "@/components/admin/admin-ui"
 import { ToastProvider } from "@/components/admin/toast"
-import {
-  can,
-  type AdminCapability,
-  type AdminRole,
-} from "@/lib/admin/permissions"
+import type { AdminRole } from "@/lib/admin/permissions"
 import {
   ADMIN_LOGIN_PATH,
-  ADMIN_SECTIONS,
   DEFAULT_ADMIN_SECTION,
   locationSectionPath,
   OWNER_SECTIONS,
+  sectionsFor,
 } from "@/lib/admin/routes"
 import { authClient } from "@/lib/auth-client"
 import type { Localized } from "@/lib/db/schema/_shared"
@@ -110,9 +106,7 @@ export function AdminShell({
     router.push(locationSectionPath(slug, currentSection))
   }
 
-  const sections = ADMIN_SECTIONS.filter((section) =>
-    can(user.role, section.capability as AdminCapability)
-  )
+  const sections = sectionsFor(user.role)
 
   async function handleSignOut() {
     await authClient.signOut()

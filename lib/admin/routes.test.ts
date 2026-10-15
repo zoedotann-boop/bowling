@@ -1,30 +1,42 @@
 import { describe, expect, test } from "bun:test"
 
-import { ADMIN_ROLES, can } from "./permissions"
+import { ADMIN_ROLES } from "./permissions"
 import {
-  ADMIN_SECTIONS,
   DEFAULT_ADMIN_SECTION,
   locationSectionPath,
+  sectionsFor,
   setPasswordPath,
 } from "./routes"
 
-describe("DEFAULT_ADMIN_SECTION", () => {
-  const section = ADMIN_SECTIONS.find(
-    ({ key }) => key === DEFAULT_ADMIN_SECTION
-  )
+const keysFor = (role: (typeof ADMIN_ROLES)[number]) =>
+  sectionsFor(role).map(({ key }) => key)
 
+describe("DEFAULT_ADMIN_SECTION", () => {
   test("lands on the home section", () => {
     expect(locationSectionPath("rishon", DEFAULT_ADMIN_SECTION)).toBe(
       "/admin/rishon/home"
     )
   })
 
-  test("is a registered section", () => {
-    expect(section).toBeDefined()
+  test.each([...ADMIN_ROLES])("is accessible to the %s role", (role) => {
+    expect(keysFor(role)).toContain(DEFAULT_ADMIN_SECTION)
+  })
+})
+
+describe("sectionsFor", () => {
+  test("managers run the day-to-day branch sections", () => {
+    expect(keysFor("manager")).toEqual([
+      "general",
+      "home",
+      "menu",
+      "events",
+      "legal",
+    ])
   })
 
-  test.each([...ADMIN_ROLES])("is accessible to the %s role", (role) => {
-    expect(can(role, section!.capability)).toBe(true)
+  test("Google reviews are for owners only", () => {
+    expect(keysFor("owner")).toContain("reviews")
+    expect(keysFor("manager")).not.toContain("reviews")
   })
 })
 

@@ -11,7 +11,7 @@ export default async function HomePage({
   params: Promise<{ location: string }>
 }) {
   const { location: slug } = await params
-  const { location: loc } = await requireLocationAccess(slug, "content")
+  const { location: loc } = await requireLocationAccess(slug)
   const data = await getHomeEditor(loc.id)
 
   const draft: HomeDraft = {

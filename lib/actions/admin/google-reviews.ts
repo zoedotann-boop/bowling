@@ -47,10 +47,9 @@ type SyncResult =
   | { ok: false; error: string }
 
 export async function syncGoogleReviews(input: unknown): Promise<SyncResult> {
-  const { location: loc } = await requireLocationAccess(
-    readSlug(input),
-    "content"
-  )
+  const { location: loc } = await requireLocationAccess(readSlug(input), {
+    ownerOnly: true,
+  })
   if (!loc.googlePlaceId) return { ok: false, error: "missing-place-id" }
 
   const result = await syncLocationReviews({
@@ -64,10 +63,9 @@ export async function syncGoogleReviews(input: unknown): Promise<SyncResult> {
 }
 
 export async function saveGoogleReviews(input: unknown): Promise<ActionResult> {
-  const { user, location: loc } = await requireLocationAccess(
-    readSlug(input),
-    "content"
-  )
+  const { location: loc } = await requireLocationAccess(readSlug(input), {
+    ownerOnly: true,
+  })
 
   const parsed = reviewsSchema.safeParse(input)
   if (!parsed.success) return { ok: false, error: "invalid" }
@@ -80,9 +78,7 @@ export async function saveGoogleReviews(input: unknown): Promise<ActionResult> {
     await tx
       .update(location)
       .set({
-        ...(user.role === "owner" && {
-          googlePlaceId: data.googlePlaceId.trim() || null,
-        }),
+        googlePlaceId: data.googlePlaceId.trim() || null,
         googleReviewsAutoSync: data.autoSync,
       })
       .where(eq(location.id, loc.id))

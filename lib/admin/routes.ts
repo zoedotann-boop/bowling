@@ -1,4 +1,4 @@
-import type { AdminCapability } from "./permissions"
+import type { AdminRole } from "./permissions"
 
 export const ADMIN_ROOT = "/admin"
 export const ADMIN_LOGIN_PATH = "/admin/login"
@@ -8,19 +8,25 @@ export function locationSectionPath(slug: string, section: string): string {
   return `${ADMIN_ROOT}/${slug}/${section}`
 }
 
-export interface AdminSection {
+interface AdminSection {
   key: string
-  capability: AdminCapability
+  ownerOnly?: boolean
 }
 
-export const ADMIN_SECTIONS: AdminSection[] = [
-  { key: "general", capability: "settings" },
-  { key: "home", capability: "content" },
-  { key: "reviews", capability: "content" },
-  { key: "menu", capability: "content" },
-  { key: "events", capability: "content" },
-  { key: "legal", capability: "settings" },
+const ADMIN_SECTIONS: AdminSection[] = [
+  { key: "general" },
+  { key: "home" },
+  { key: "reviews", ownerOnly: true },
+  { key: "menu" },
+  { key: "events" },
+  { key: "legal" },
 ]
+
+export function sectionsFor(role: AdminRole): AdminSection[] {
+  return ADMIN_SECTIONS.filter(
+    (section) => !section.ownerOnly || role === "owner"
+  )
+}
 
 export const OWNER_SECTIONS = [
   { key: "locations", path: `${ADMIN_ROOT}/locations` },
