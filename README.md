@@ -128,7 +128,10 @@ config against it and capture outgoing emails via `lib/db/testing/auth.ts`.
 **One-time code** tab, or choose **Forgot your password, or don't have one
 yet?** on the Password tab to get a link for choosing one. There is no public
 signup: owners add everyone else under **Team** (`/admin/team`) — name, email,
-role, and (for managers/staff) the locations they may edit.
+role, and (for managers) the locations they may edit. There are two roles:
+**owners** see every location plus Team, Locations, SEO and Google reviews;
+**managers** run their assigned locations day to day (hours, contact details,
+gallery, texts, menu, events, legal pages).
 
 Adding a member emails them an **invitation** with a link to
 `/admin/set-password`, where they choose a password (min. 8 characters) and are
@@ -144,7 +147,8 @@ other session. One-time codes keep working whether or not a password is set.
   `relations.ts`). Localized text is a `jsonb` `{ he, en }` column; `he` is the
   source language and falls back for missing translations.
 - **Access** `lib/admin/{access,permissions,routes}.ts` — a single gate.
-  Every page/action calls `requireLocationAccess(slug, capability)`.
+  Every page/action calls `requireLocationAccess(slug)` (pass
+  `{ ownerOnly: true }` for owner-only sections like Google reviews).
 - **Shared UI** `components/admin/*` — `AdminShell`, `SectionForm` (holds the
   draft + language toggle + single publish action), `AdminTabs` (splits a long
   section into tabs), `CollectionEditor` (side list + detail panel for

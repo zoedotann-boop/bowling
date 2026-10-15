@@ -90,7 +90,7 @@ const homeServiceSchema = z.object({
 })
 const galleryImageSchema = z.object({
   id: rowIdSchema,
-  imageUrl: z.string(),
+  imageUrl: imageUrlSchema,
   alt: localizedSchema,
 })
 const contactSubjectSchema = z.object({

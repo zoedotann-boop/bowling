@@ -18,10 +18,7 @@ import { legalSchema } from "./schemas"
 import { type ActionResult, OK, readSlug } from "./shared"
 
 export async function saveLegal(input: unknown): Promise<ActionResult> {
-  const { location: loc } = await requireLocationAccess(
-    readSlug(input),
-    "settings"
-  )
+  const { location: loc } = await requireLocationAccess(readSlug(input))
 
   const parsed = legalSchema.safeParse(input)
   if (!parsed.success) return { ok: false, error: "invalid" }

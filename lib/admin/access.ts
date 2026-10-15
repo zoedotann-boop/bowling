@@ -8,8 +8,7 @@ import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { location, locationMember } from "@/lib/db/schema"
 
-import type { AdminCapability, AdminRole } from "./permissions"
-import { can } from "./permissions"
+import type { AdminRole } from "./permissions"
 import { ADMIN_LOGIN_PATH } from "./routes"
 
 export interface AdminUser {
@@ -23,7 +22,7 @@ export async function getSessionUser(): Promise<AdminUser | null> {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) return null
   const { id, name, email, role } = session.user
-  return { id, name, email, role: (role as AdminRole) ?? "staff" }
+  return { id, name, email, role: (role as AdminRole) ?? "manager" }
 }
 
 export async function requireAdminUser(): Promise<AdminUser> {
@@ -40,16 +39,15 @@ export async function requireOwnerAccess(): Promise<AdminUser> {
 
 export async function requireLocationAccess(
   slug: string,
-  capability?: AdminCapability
+  { ownerOnly = false }: { ownerOnly?: boolean } = {}
 ) {
   const user = await requireAdminUser()
+  if (ownerOnly && user.role !== "owner") notFound()
 
   const loc = await db.query.location.findFirst({
     where: eq(location.slug, slug),
   })
   if (!loc) notFound()
-
-  if (capability && !can(user.role, capability)) notFound()
 
   if (user.role !== "owner") {
     const membership = await db.query.locationMember.findFirst({

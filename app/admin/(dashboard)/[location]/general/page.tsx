@@ -10,7 +10,7 @@ export default async function GeneralPage({
   params: Promise<{ location: string }>
 }) {
   const { location: slug } = await params
-  const { user, location: loc } = await requireLocationAccess(slug, "settings")
+  const { user, location: loc } = await requireLocationAccess(slug)
   const data = await getGeneralEditor(loc.id)
 
   const draft: GeneralDraft = {

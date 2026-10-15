@@ -20,10 +20,7 @@ import { type ActionResult, OK, readSlug } from "./shared"
 import { syncRows, upsert, withIds } from "./sync"
 
 export async function saveHome(input: unknown): Promise<ActionResult> {
-  const { location: loc } = await requireLocationAccess(
-    readSlug(input),
-    "content"
-  )
+  const { location: loc } = await requireLocationAccess(readSlug(input))
   const locationId = loc.id
 
   const parsed = homeSchema.safeParse(input)

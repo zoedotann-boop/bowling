@@ -134,6 +134,20 @@
       "when": 1791103772162,
       "tag": "0018_booking_time_field",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1792054012149,
+      "tag": "0019_gallery_default_photos",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1792054012527,
+      "tag": "0020_two_admin_roles",
+      "breakpoints": true
     }
   ]
 }

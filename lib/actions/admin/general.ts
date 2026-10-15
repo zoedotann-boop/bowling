@@ -12,10 +12,7 @@ import { type ActionResult, OK, readSlug } from "./shared"
 import { upsert } from "./sync"
 
 export async function saveGeneral(input: unknown): Promise<ActionResult> {
-  const { user, location: loc } = await requireLocationAccess(
-    readSlug(input),
-    "settings"
-  )
+  const { user, location: loc } = await requireLocationAccess(readSlug(input))
 
   const parsed = generalSchema.safeParse(input)
   if (!parsed.success) return { ok: false, error: "invalid" }

@@ -15,7 +15,7 @@ export default async function EventsPage({
   params: Promise<{ location: string }>
 }) {
   const { location: slug } = await params
-  const { location: loc } = await requireLocationAccess(slug, "content")
+  const { location: loc } = await requireLocationAccess(slug)
   const data = await getEventsEditor(loc.id)
 
   const draft: EventsDraft = {

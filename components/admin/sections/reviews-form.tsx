@@ -28,11 +28,9 @@ interface ReviewsDraft {
 
 export function ReviewsForm({
   slug,
-  canConnect,
   initial,
 }: {
   slug: string
-  canConnect: boolean
   initial: ReviewsDraft
 }) {
   const t = useTranslations("admin.reviews")
@@ -108,7 +106,7 @@ export function ReviewsForm({
       >
         {!hasPlaceId && (
           <p className="rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground">
-            {canConnect ? t("syncMissingPlaceId") : t("notConnected")}
+            {t("syncMissingPlaceId")}
           </p>
         )}
         <AdminFlag
@@ -176,38 +174,36 @@ export function ReviewsForm({
           </ul>
         )}
       </AdminCard>
-      {canConnect && (
-        <details
-          open={!hasPlaceId}
-          className="group rounded-lg border border-border bg-card text-card-foreground"
-        >
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4 outline-none focus-visible:ring-2 focus-visible:ring-ring/50">
-            <span>
-              <span className="block text-base font-semibold">
-                {t("googleTitle")}
-              </span>
-              <span className="mt-0.5 block text-sm text-muted-foreground">
-                {t("googleDescription")}
-              </span>
+      <details
+        open={!hasPlaceId}
+        className="group rounded-lg border border-border bg-card text-card-foreground"
+      >
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4 outline-none focus-visible:ring-2 focus-visible:ring-ring/50">
+          <span>
+            <span className="block text-base font-semibold">
+              {t("googleTitle")}
             </span>
-            <ChevronDown className="size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" />
-          </summary>
-          <div className="px-4 pb-4">
-            <AdminField label={t("placeId")} tooltip={t("placeIdTip")}>
-              <AdminInput
-                dir="ltr"
-                value={draft.googlePlaceId}
-                onChange={(event) =>
-                  setDraft((prev) => ({
-                    ...prev,
-                    googlePlaceId: event.target.value,
-                  }))
-                }
-              />
-            </AdminField>
-          </div>
-        </details>
-      )}
+            <span className="mt-0.5 block text-sm text-muted-foreground">
+              {t("googleDescription")}
+            </span>
+          </span>
+          <ChevronDown className="size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" />
+        </summary>
+        <div className="px-4 pb-4">
+          <AdminField label={t("placeId")} tooltip={t("placeIdTip")}>
+            <AdminInput
+              dir="ltr"
+              value={draft.googlePlaceId}
+              onChange={(event) =>
+                setDraft((prev) => ({
+                  ...prev,
+                  googlePlaceId: event.target.value,
+                }))
+              }
+            />
+          </AdminField>
+        </div>
+      </details>
     </SectionForm>
   )
 }
