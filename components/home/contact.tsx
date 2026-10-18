@@ -6,8 +6,10 @@ import { useLocale, useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
 import { whatsappUrl } from "@/lib/contact"
+import { HONEYPOT_FIELD } from "@/lib/honeypot"
 import { pickLocale } from "@/lib/localized"
 import { useBranch } from "@/components/branch-context"
+import { HoneypotField } from "@/components/honeypot-field"
 import { useSiteContent } from "@/components/site-content-context"
 import { LedDot } from "@/components/decor/led-dot"
 import { Container } from "./container"
@@ -54,9 +56,10 @@ export function Contact() {
   const eyebrow = pickLocale(site?.contactIntro, locale) || t("eyebrow")
   const title = pickLocale(site?.contactTitle, locale) || t("title")
 
-  async function handleSubmit(event: React.FormEvent) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (status === "sending") return
+    const honeypot = new FormData(event.currentTarget).get(HONEYPOT_FIELD)
     setStatus("sending")
     try {
       const res = await fetch("/api/contact", {
@@ -69,6 +72,7 @@ export function Contact() {
           email: emailValue,
           topic,
           message,
+          [HONEYPOT_FIELD]: honeypot,
         }),
       })
       if (!res.ok) throw new Error("request failed")
@@ -139,6 +143,7 @@ export function Contact() {
           <div className="mb-4 font-heading text-[21px] font-black text-navy lg:mb-5 lg:text-2xl">
             {t("formTitle")}
           </div>
+          <HoneypotField label={t("honeypotLabel")} />
           <div className="mb-3.5 flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:gap-3.5">
             <input
               type="text"

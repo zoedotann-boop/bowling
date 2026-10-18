@@ -60,6 +60,10 @@ Each location's **Inquiries inbox** (admin → Settings) takes priority over
 `EVENTS_TO_EMAIL`; if neither is set, or `RESEND_API_KEY`/`CONTACT_FROM_EMAIL`
 is missing, the route responds with `500 { error: "Email service is not configured." }`.
 
+The contact form also carries a hidden honeypot field (`website`, see
+`lib/honeypot.ts`). Real visitors never see it; if a bot fills it in, the route
+answers `200 { ok: true }` without sending any email.
+
 ### Invitation PDF
 
 Every booking form ("טופס אישור והתחייבות") also sends the customer an

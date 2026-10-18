@@ -2,9 +2,11 @@ import { NextResponse } from "next/server"
 
 import { resolveBranch, resolveInquiriesRecipient, sendMail } from "@/lib/email"
 import { BRAND_HE, detailTable, emailShell } from "@/lib/email-template"
+import { isHoneypotFilled } from "@/lib/honeypot"
 import type { Branch } from "@/lib/branches"
 
 interface ContactPayload {
+  [key: string]: unknown
   branch?: string
   name?: string
   phone?: string
@@ -60,6 +62,8 @@ export async function POST(request: Request) {
       { status: 400 }
     )
   }
+
+  if (isHoneypotFilled(payload)) return NextResponse.json({ ok: true })
 
   const { name, phone, email } = payload
   if (!name?.trim() || !phone?.trim()) {
