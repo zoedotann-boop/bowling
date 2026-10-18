@@ -187,7 +187,8 @@
     "submit": "Send message",
     "sending": "Sending…",
     "success": "Message sent! We'll get back to you soon.",
-    "error": "Couldn't send your message. Please try again or call us."
+    "error": "Couldn't send your message. Please try again or call us.",
+    "honeypotLabel": "Leave this field empty"
   },
   "footer": {
     "tagline": "Israel's leading bowling venue. Open every day.",
