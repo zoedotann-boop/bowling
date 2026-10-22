@@ -90,7 +90,8 @@ The admin lives under `/admin` (login at `/admin/login`) and manages per-locatio
 content: settings, home page, menu, events (multiple event types, each with
 its own page image, the small badges above the page title, upgrades (plus the booking form's upgrades-box title and
 explanation), "what to bring" lists, booking policy and confirmation-form
-texts — unsaved ones show the `messages/*` defaults), the
+texts, including the message shown after the form is sent — unsaved ones show
+the `messages/*` defaults), the
 **Terms & accessibility** pages, plus owner-only Locations and Team. It uses **Drizzle ORM + PostgreSQL** and
 **Better Auth**. The login page (`/admin/login`) has two tabs: **Password**
 (`emailAndPassword`) and **One-time code** (the `emailOTP` plugin emails a

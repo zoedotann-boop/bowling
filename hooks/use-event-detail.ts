@@ -214,6 +214,8 @@ export function useEventDetail({
             items: data.extras ?? [],
           },
           footnote: pickOr(content?.formFootnote, t("form.footnote")),
+          success:
+            pickLocale(content?.formSuccess, locale) || t("form.success"),
         },
       }
     : null

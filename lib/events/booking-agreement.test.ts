@@ -45,6 +45,7 @@ const TEXTS: EventDetailTexts = {
   formIntro: text(""),
   formTerms: text("אני מאשר <הכל>"),
   formFootnote: text(""),
+  formSuccess: text(""),
   upgradesTitle: text(""),
   upgradesNote: text(""),
 }

@@ -216,6 +216,7 @@ interface BookingFormProps {
     items: BookingUpgrade[]
   }
   footnote: string
+  success: string
 }
 
 interface BookingSummary {
@@ -238,6 +239,7 @@ function BookingForm({
   requiresSignature,
   upgrades,
   footnote,
+  success,
 }: BookingFormProps) {
   const t = useTranslations("eventDetails.form")
   const locale = useLocale() as "he" | "en"
@@ -389,7 +391,7 @@ function BookingForm({
       <div aria-live="polite" className="empty:hidden">
         {status === "sent" ? (
           <p className="text-center text-[13.5px] font-bold text-secondary">
-            {t("success")}
+            {success}
           </p>
         ) : null}
         {error ? (

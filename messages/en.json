@@ -1784,6 +1784,8 @@
       "formTermsTip": "The text next to the checkbox the customer must tick before submitting. Falls back to the default text when empty.",
       "formFootnote": "Form footnote",
       "formFootnoteTip": "A small line under the submit button. Leave empty to hide it.",
+      "formSuccess": "Message after sending",
+      "formSuccessTip": "The message the customer sees once the form was sent. Falls back to the default message when empty.",
       "requiresSignature": "Requires signature",
       "requiresSignatureTip": "When on, the booking form adds a signature field the customer must sign to submit.",
       "waiverLink": "Personal commitment form link",

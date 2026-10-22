@@ -254,6 +254,7 @@ const eventTypeContentSchema = z.object({
   formIntro: localizedSchema,
   formTerms: localizedSchema,
   formFootnote: localizedSchema,
+  formSuccess: localizedSchema,
   upgradesTitle: localizedSchema,
   upgradesNote: localizedSchema,
   requiresSignature: z.boolean(),

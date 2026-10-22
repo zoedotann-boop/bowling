@@ -148,6 +148,13 @@
       "when": 1792054012527,
       "tag": "0020_two_admin_roles",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1792671130829,
+      "tag": "0021_booking_success_message",
+      "breakpoints": true
     }
   ]
 }

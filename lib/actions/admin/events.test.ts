@@ -45,6 +45,7 @@ function eventTypeDraft(
       formIntro: text(""),
       formTerms: text(""),
       formFootnote: text(""),
+      formSuccess: text(""),
       upgradesTitle: text(""),
       upgradesNote: text(""),
       requiresSignature: false,
@@ -237,6 +238,25 @@ describe("saveEvents", () => {
     expect(birthdays.content?.upgradesTitle).toEqual(text("רוצים להוסיף?"))
     expect(birthdays.content?.upgradesNote).toEqual(text("הפקידה תחזור אליכם"))
     expect(birthdays.upgrades.map((u) => u.label.he)).toEqual(["בלונים"])
+  })
+
+  test("stores the message shown after the booking form is sent", async () => {
+    const draft = eventTypeDraft("birthdays")
+    await save({
+      eventTypes: [
+        {
+          ...draft,
+          content: {
+            ...draft.content,
+            formSuccess: text("תודה! נחזור אליכם\nעד סוף היום."),
+          },
+        },
+      ],
+    })
+    const [birthdays] = await load(access.location.id)
+    expect(birthdays.content?.formSuccess).toEqual(
+      text("תודה! נחזור אליכם\nעד סוף היום.")
+    )
   })
 
   test("stores several price options in order with the price note", async () => {
