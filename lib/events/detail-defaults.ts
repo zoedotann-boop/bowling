@@ -110,6 +110,10 @@ export function eventDetailDefaults(
       he: he.eventDetails.form.footnote,
       en: en.eventDetails.form.footnote,
     },
+    formSuccess: {
+      he: he.eventDetails.form.success,
+      en: en.eventDetails.form.success,
+    },
     upgradesTitle: {
       he: he.eventDetails.form.upgradesTitle,
       en: en.eventDetails.form.upgradesTitle,

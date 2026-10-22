@@ -69,6 +69,7 @@ function newEventType(slug: string): EventTypeDraft {
       formIntro: emptyLocalized(),
       formTerms: emptyLocalized(),
       formFootnote: emptyLocalized(),
+      formSuccess: emptyLocalized(),
       upgradesTitle: emptyLocalized(),
       upgradesNote: emptyLocalized(),
       requiresSignature: false,
@@ -740,6 +741,13 @@ function EventTypeEditor({
           multiline
           value={type.content.formFootnote}
           onChange={(formFootnote) => setContent({ formFootnote })}
+        />
+        <LocalizedField
+          label={t("formSuccess")}
+          tooltip={t("formSuccessTip")}
+          multiline
+          value={type.content.formSuccess}
+          onChange={(formSuccess) => setContent({ formSuccess })}
         />
         <AdminFlag
           label={t("requiresSignature")}

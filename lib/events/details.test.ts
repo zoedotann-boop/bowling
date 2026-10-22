@@ -47,6 +47,7 @@ const DEFAULTS: EventDetailTexts = {
   formIntro: { he: "פתיחה", en: "Intro" },
   formTerms: { he: "אני מאשר", en: "I agree" },
   formFootnote: { he: "הערת טופס", en: "Form note" },
+  formSuccess: { he: "נשלח!", en: "Sent!" },
   upgradesTitle: { he: "שדרוגים", en: "Upgrades" },
   upgradesNote: { he: "הפקידה תחזור אליכם", en: "The clerk will call" },
 }
@@ -61,6 +62,7 @@ describe("withEventDetailDefaults", () => {
     const stored = {
       allowedItems: null,
       rulesNote: null,
+      formSuccess: null,
       formTerms: { he: "טקסט חדש" },
     }
     expect(withEventDetailDefaults(stored, DEFAULTS)).toEqual({
@@ -104,6 +106,10 @@ describe("withEventDetailDefaults", () => {
       formIntro: { he: "ג", en: "c" },
       formTerms: { he: "ד", en: "d" },
       formFootnote: { he: "ה", en: "e" },
+      formSuccess: {
+        he: "תודה! נחזור אליכם היום.",
+        en: "Thanks! We'll call today.",
+      },
       upgradesTitle: { he: "ו", en: "f" },
       upgradesNote: { he: "ז", en: "g" },
     }
@@ -292,6 +298,18 @@ describe("eventDetailDefaults", () => {
     expect(defaults.formFootnote).toEqual({
       he: he.eventDetails.form.footnote,
       en: en.eventDetails.form.footnote,
+    })
+    expect(defaults.formSuccess).toEqual({
+      he: he.eventDetails.form.success,
+      en: en.eventDetails.form.success,
+    })
+  })
+
+  test("prefills the success message even for an event with no default copy", () => {
+    const defaults = eventDetailDefaults("ramat-gan", "brand-new-event")
+    expect(defaults.formSuccess).toEqual({
+      he: "הטופס נשלח בהצלחה! ניצור קשר לאישור סופי.",
+      en: en.eventDetails.form.success,
     })
   })
 

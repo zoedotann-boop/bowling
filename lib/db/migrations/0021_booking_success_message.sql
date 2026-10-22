@@ -1,0 +1,1 @@
+ALTER TABLE "event_type_content" ADD COLUMN "form_success" jsonb;
