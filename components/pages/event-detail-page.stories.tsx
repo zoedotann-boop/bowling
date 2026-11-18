@@ -36,6 +36,7 @@ const DEFAULT_FIELDS = [
 interface HeroAndPricing {
   heroImageUrl: string | null
   depositAmount: number | null
+  showFormOnPage: boolean
 }
 
 function birthdaysWith(
@@ -60,6 +61,7 @@ function birthdaysWith(
       priceSummaryMode: null,
       priceSummaryRows: null,
       requiresSignature: true,
+      showFormOnPage: true,
       allowedItems: null,
       forbiddenItems: null,
       rulesNote: null,
@@ -201,5 +203,11 @@ export const SectionsHidden: Story = {
 export const CustomHeroImage: Story = {
   args: {
     events: birthdaysWith({ heroImageUrl: "/gallery/2.png" }),
+  },
+}
+
+export const FormByLinkOnly: Story = {
+  args: {
+    events: birthdaysWith({ showFormOnPage: false }),
   },
 }

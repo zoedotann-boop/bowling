@@ -32,6 +32,7 @@ export default async function EventsPage({
         depositAmount: type.content?.depositAmount ?? null,
         ...eventDetailDraft(type.content, slug, type.slug),
         requiresSignature: type.content?.requiresSignature ?? false,
+        showFormOnPage: type.content?.showFormOnPage ?? true,
       },
       steps: type.steps.map((step) => ({
         id: step.id,

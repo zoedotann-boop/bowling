@@ -258,6 +258,7 @@ const eventTypeContentSchema = z.object({
   upgradesTitle: localizedSchema,
   upgradesNote: localizedSchema,
   requiresSignature: z.boolean(),
+  showFormOnPage: z.boolean(),
 })
 const eventTypeSchema = z.object({
   id: rowIdSchema,

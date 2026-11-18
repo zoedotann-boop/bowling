@@ -1790,6 +1790,8 @@
       "requiresSignatureTip": "When on, the booking form adds a signature field the customer must sign to submit.",
       "waiverLink": "Personal commitment form link",
       "waiverLinkTip": "A page that shows only this event's commitment form, without the rest of the page. Send the link to customers (e.g. on WhatsApp) or open it on the spot so they can sign. The link isn't shown in the site menu.",
+      "showFormOnPage": "Show the form at the bottom of the event page",
+      "showFormOnPageTip": "When off, the form isn't shown on the event page and opens only through the personal link above, so customers fill it in only after coordinating with you. The bottom of the page shows the contact details instead.",
       "waiverCopy": "Copy link",
       "waiverCopied": "Link copied",
       "waiverVisit": "Open form",

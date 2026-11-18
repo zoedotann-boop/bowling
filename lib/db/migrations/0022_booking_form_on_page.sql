@@ -1,0 +1,1 @@
+ALTER TABLE "event_type_content" ADD COLUMN "show_form_on_page" boolean DEFAULT true NOT NULL;

@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils"
 import { branchPath, type BranchId } from "@/lib/branches"
 import type { SiteEventLocation } from "@/lib/db/queries/site"
 import type { BookingFormField } from "@/lib/events/fields"
-import { usesContactForm } from "@/lib/events/slugs"
+import { eventPageClosing } from "@/lib/events/slugs"
 import { isOptimizableImage } from "@/lib/images"
 import { formatPrice, pickLocale } from "@/lib/localized"
 import { useBranch } from "@/components/branch-context"
@@ -518,6 +518,11 @@ export function EventDetailPage({
     eventTypes: events[branch.id]?.eventTypes ?? [],
     defaultFormFields,
   })
+  const closing = eventPageClosing({
+    slug,
+    hasBookingForm: Boolean(booking),
+    showFormOnPage: content?.showFormOnPage ?? true,
+  })
   const money = (amount: number) => formatPrice(amount, locale)
   const priceCard = ({
     badge,
@@ -645,11 +650,11 @@ export function EventDetailPage({
         </section>
       ) : null}
 
-      {usesContactForm(slug) ? (
+      {closing === "contact" ? (
         <div id="book" className="scroll-mt-20">
           <Contact />
         </div>
-      ) : booking ? (
+      ) : closing === "booking" && booking ? (
         <BookingSection intro={booking.intro}>
           <BookingPanel booking={booking} />
         </BookingSection>

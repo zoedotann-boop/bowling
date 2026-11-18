@@ -155,6 +155,13 @@
       "when": 1792671130829,
       "tag": "0021_booking_success_message",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1795015404085,
+      "tag": "0022_booking_form_on_page",
+      "breakpoints": true
     }
   ]
 }

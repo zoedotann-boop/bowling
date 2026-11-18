@@ -205,6 +205,11 @@ copy / open buttons, plus a "Commitment form" button next to "View page");
 events that use the contact form (team / corporate), events the branch doesn't
 offer, and custom events with no form fields (`waiverEventTitle` in
 `lib/events/waiver.ts`).
+Under that link, the "Show the form at the bottom of the event page" switch
+(`event_type_content.show_form_on_page`, on by default) lets staff make the form
+reachable only through the personal link, so customers coordinate before filling
+it in. When it's off, the event page ends with the contact section instead
+(`eventPageClosing` in `lib/events/slugs.ts`), and the waiver page still works.
 Pre-branch URLs (`/menu`, `/events/*`, `/contact`, `/terms`, `/accessibility`)
 redirect permanently to the default branch (`next.config.ts`).
 

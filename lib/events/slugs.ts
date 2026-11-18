@@ -12,6 +12,20 @@ export function usesContactForm(slug: string): boolean {
   return CONTACT_FORM_EVENTS.includes(slug)
 }
 
+export function eventPageClosing({
+  slug,
+  hasBookingForm,
+  showFormOnPage,
+}: {
+  slug: string
+  hasBookingForm: boolean
+  showFormOnPage: boolean
+}): "contact" | "booking" | null {
+  if (usesContactForm(slug)) return "contact"
+  if (!hasBookingForm) return null
+  return showFormOnPage ? "booking" : "contact"
+}
+
 const BIRTHDAY_EVENTS: readonly string[] = ["birthdays", "gymboree", "no-room"]
 
 export function isBirthdayEvent(slug: unknown): boolean {
