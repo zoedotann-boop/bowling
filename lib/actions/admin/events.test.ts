@@ -49,6 +49,7 @@ function eventTypeDraft(
       upgradesTitle: text(""),
       upgradesNote: text(""),
       requiresSignature: false,
+      showFormOnPage: true,
     },
     steps: [],
     packageLines: [],
@@ -257,6 +258,25 @@ describe("saveEvents", () => {
     expect(birthdays.content?.formSuccess).toEqual(
       text("תודה! נחזור אליכם\nעד סוף היום.")
     )
+  })
+
+  test("keeps the booking form on the event page unless turned off", async () => {
+    const draft = eventTypeDraft("birthdays")
+    await save({ eventTypes: [draft] })
+    const [saved] = await load(access.location.id)
+    expect(saved.content?.showFormOnPage).toBe(true)
+
+    await save({
+      eventTypes: [
+        {
+          ...draft,
+          id: saved.id,
+          content: { ...draft.content, showFormOnPage: false },
+        },
+      ],
+    })
+    const [linkOnly] = await load(access.location.id)
+    expect(linkOnly.content?.showFormOnPage).toBe(false)
   })
 
   test("stores several price options in order with the price note", async () => {

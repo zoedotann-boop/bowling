@@ -63,6 +63,7 @@ export const eventTypeContent = pgTable("event_type_content", {
   upgradesTitle: localized(),
   upgradesNote: localized(),
   requiresSignature: boolean("requires_signature").notNull().default(false),
+  showFormOnPage: boolean("show_form_on_page").notNull().default(true),
   ...timestamps,
 })
 

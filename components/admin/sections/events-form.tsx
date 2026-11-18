@@ -73,6 +73,7 @@ function newEventType(slug: string): EventTypeDraft {
       upgradesTitle: emptyLocalized(),
       upgradesNote: emptyLocalized(),
       requiresSignature: false,
+      showFormOnPage: true,
     },
     steps: [],
     packageLines: [],
@@ -678,6 +679,12 @@ function EventTypeEditor({
             {t(`waiverUnavailable.${waiver}`)}
           </p>
         )}
+        <AdminFlag
+          label={t("showFormOnPage")}
+          description={t("showFormOnPageTip")}
+          checked={type.content.showFormOnPage}
+          onCheckedChange={(showFormOnPage) => setContent({ showFormOnPage })}
+        />
       </AdminSubsection>
 
       <AdminSubsection title={t("formFields")} description={t("formFieldsTip")}>
